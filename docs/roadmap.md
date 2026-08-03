@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-03 · Status: **Bootstrap selesai — Tahap 1 (Inventory) siap dikerjakan.**
+> Diperbarui: 2026-08-03 · Status: **Tahap 1 in progress — auth + admin shell done, semua plan+prompt siap eksekusi.**
 
 ---
 
@@ -18,7 +18,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | # | Item | Kenapa MVP | Status |
 |---|---|---|---|
 | ✅ | ~~Bootstrap projek (scaffold + UI kit + PWA + schema)~~ | Fondasi coding — **DONE** (`sb-ow9`). | ✅ |
-| 1 | **Auth + manajemen user + hak akses per role** | Login wajib ada sebelum fitur lain | ⏳ |
+| 1 | **Auth + manajemen user + hak akses per role** | Login wajib ada sebelum fitur lain | 🔄 auth+shell ✅, user mgmt (jpn.3) plan siap |
 | 2 | Master data (kategori, satuan, supplier, bahan) | CRUD master = prerequisite semua transaksi | ⏳ |
 | 3 | Barang masuk + detail | Pencatatan bahan dari supplier | ⏳ |
 | 4 | Barang keluar + detail | Pengeluaran bahan ke produksi | ⏳ |
@@ -59,32 +59,46 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Schema Tahap 1 + migration | ✅ | `src/db/schema.ts`, `drizzle/` | 14 tabel, `numeric` untuk duit, immutable mutasi |
 | Dokumen (CLAUDE.md, reference-projects, konsep-produksi) | ✅ | `docs/` | — |
 | Build clean + TypeScript | ✅ | — | `pnpm run build` green (pnpm@10.33.0) |
-| Auth + user management | ⏳ | `/signin`, `/signup` | Next: Supabase Auth + role check |
+| Auth (signin username-based) | ✅ | `/signin` | Supabase Auth, email sintetis @owncrave.local |
+| Admin shell (sidebar+header+dark) | ✅ | `(with-layout)` | Port dari PMS (oims-93g) |
+| User management + roles | 🔄 | `/sistem/pengguna` | Plan siap (jpn.3), belum eksekusi |
 | Master data | ⏳ | `/master/*` | — |
 | Inventory (barang masuk/keluar/stok/mutasi) | ⏳ | `/inventory/*` | — |
 | Dashboard | ⏳ | `/dashboard` | Saat ini placeholder |
 | Laporan | ⏳ | `/laporan/*` | — |
 
-**Ringkasan:** Bootstrap selesai (scaffold + UI kit + PWA + schema + dokumen). 6 dari 11 item fondasi jadi. Siap mulai coding fitur Tahap 1.
+**Ringkasan:** Bootstrap + auth + admin shell selesai. **13 plan Tahap 1 + prompt Antigravity siap** (jpn.1-14). Eksekusi tinggal paste prompt ke Antigravity per urutan dependency.
 
 ---
 
-## 🚧 Next Up
+## 🚧 Next Up — Urutan Eksekusi (dependency-ordered)
 
-Urutan: fondasi auth dulu (semua fitur butuh login), lalu master data (prerequisite transaksi), baru transaksi inventory.
+Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekusi per urutan (blocker naik dari atas).
 
-### 🔴 P1 — Critical
-- [ ] `oims-xxx` — Auth: signin + signup + session (Supabase Auth + `@supabase/ssr`)
-- [ ] `oims-xxx` — Role-based access control (middleware + per-route guard)
+### 🔴 GELOMBANG 1 — Fondasi (kerjakan dulu, bisa paralel)
+- [ ] `oims-jpn.3` — User management + roles (P1) — **prasyarat `requireRole` semua fitur**
+- [ ] `oims-jpn.2` — Master kategori (P2)
+- [ ] `oims-jpn.1` — Master satuan (P2)
+- [ ] `oims-jpn.6` — Master supplier (P2)
 
-### ⚡ P2 — Penting
-- [ ] `oims-xxx` — Master data: kategori, satuan, supplier, bahan (CRUD + soft delete)
-- [ ] `oims-xxx` — Barang masuk (header + detail + generate nomor dokumen)
-- [ ] `oims-xxx` — Barang keluar + otomatis update mutasi stok
+### ⚡ GELOMBANG 2 — Bahan + Transaksi
+- [ ] `oims-jpn.7` — Master bahan (butuh: kategori+satuan+supplier+user mgmt)
+- [ ] `oims-jpn.5` — Barang masuk (butuh: bahan) — weighted avg + mutasi
+- [ ] `oims-jpn.8` — Barang keluar (butuh: bahan+barang masuk) — guard stok + snapshot
 
-### 🧹 P3 — Kualitas / Nice-to-have
-- [ ] `oims-xxx` — Tambah ikon PWA nyata (ganti placeholder 1x1px)
-- [ ] `oims-xxx` — Vitest unit test untuk schema helpers + nomor dokumen generator
+### 🟢 GELOMBANG 3 — View + Approval
+- [ ] `oims-jpn.9` — Stok bahan (view)
+- [ ] `oims-jpn.11` — Mutasi stok (view ledger)
+- [ ] `oims-jpn.12` — Penyesuaian stok (approval flow)
+
+### 🔵 GELOMBANG 4 — Dashboard + Laporan + Audit
+- [ ] `oims-jpn.10` — Dashboard inventory
+- [ ] `oims-jpn.13` — Laporan Tahap 1 (P3)
+- [ ] `oims-jpn.14` — Audit log viewer (P3)
+
+### 🧹 Nice-to-have (kapan saja)
+- [ ] Ikon PWA nyata (ganti placeholder)
+- [ ] Vitest untuk document-number generator + weighted average
 
 ---
 
@@ -100,4 +114,5 @@ Urutan: fondasi auth dulu (semua fitur butuh login), lalu master data (prerequis
 
 ## 📜 Changelog
 
+- **2026-08-03** — Auth (username signin) + admin shell (sidebar+header+dark mode, port PMS) + user mgmt plan selesai. 13 plan Tahap 1 + prompt Antigravity dibuat (jpn.1-14). Supabase MCP tersambung, test user superadmin (owner).
 - **2026-08-03** — Roadmap dibuat. Bootstrap projek selesai (sb-ow9): scaffold, UI kit, PWA, schema Tahap 1, dokumen. Migrasi npm→pnpm selesai. Penawaran direvisi (Opsi B default, anchoring total, catatan Fase 2).
