@@ -1,6 +1,6 @@
 # OIMS Owncrave — Operating Manual for AI
 
-ERP produksi garmen Owncrave, dibangun bertahap (Tahap 1-5). Stack: Next.js 16 + React 19 + TS strict, Tailwind v4, Drizzle + Supabase, TanStack Query, Zustand, rhf+zod, PWA manual.
+ERP produksi garmen Owncrave, dibangun bertahap (Tahap 1-5). Stack: Next.js 16 + React 19 + TS strict, Tailwind v4, Drizzle + Supabase, TanStack Query, Zustand, rhf+zod, next-themes (dark mode), class-variance-authority, PWA manual.
 
 ## Peranmu Di Sini
 
@@ -36,7 +36,7 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 
 ### Komponen UI
 
-- **Tailwind v4** — `bg-linear-to-*` (bukan `bg-gradient-to-*`), gak ada `dark:*` (OIMS belum dark mode).
+- **Tailwind v4** — `bg-linear-to-*` (bukan `bg-gradient-to-*`). **Dark mode AKTIF** (next-themes, class strategy `attribute="class"`). Gunakan `dark:*` classes — token via `@theme` di `globals.css`.
 - `cn()` dari `src/lib/utils.ts` untuk conditional classes.
 - UI kit tersedia di `src/components/ui/`: Button, Input, Select, MultiSelect, ComboSelect, ConfirmDialog, Tooltip. **Cek dulu sebelum buat baru.**
 - Form: `react-hook-form` + `@hookform/resolvers/zod`. Zod schema di `src/lib/schemas/`.
@@ -53,19 +53,24 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 ```
 src/
   app/           # Next.js App Router
-    (auth)/      # signin, signup
-    dashboard/   # halaman utama
-    master/      # kategori, satuan, supplier, bahan
-    inventory/   # barang masuk, keluar, stok, mutasi, penyesuaian
-    ...
+    (auth)/      # signin — tanpa sidebar
+    (with-layout)/  # semua halaman dengan sidebar
+      dashboard/ # halaman utama
+      master/    # kategori, satuan, supplier, bahan
+      inventory/ # barang masuk, keluar, stok, mutasi, penyesuaian
+      sistem/    # pengguna, log, pengaturan
+      ...
+  assets/        # SVG logos, icons
   components/
     ui/          # UI kit (Button, Input, Select, MultiSelect, ComboSelect, ...)
+    layouts/     # app shell: sidebar/, header/, main-content.tsx
+    providers/   # theme-provider.tsx (next-themes)
     PWA/         # PWA components (index.tsx = main, debug, settings)
     [feature]/   # komponen domain per fitur
   db/
     index.ts     # Drizzle client
     schema.ts    # semua tabel (Tahap 1 aktif)
-  hooks/         # TanStack Query hooks per domain
+  hooks/         # TanStack Query hooks per domain + use-mobile.ts
   lib/
     utils.ts     # cn(), isMobile(), isIOS()
     pwaUtils.ts  # isInStandaloneMode(), canInstallPWA()
@@ -100,7 +105,7 @@ Manual, zero-dependency. `public/sw.js` pakai `BUILD_VERSION` — **update BUILD
 | 3 | **Hard Delete** | `DELETE FROM bahan WHERE id = ?` | Set `deleted_at = NOW()`, filter query |
 | 4 | **No Audit** | Aksi penting tanpa tulis `audit_log` | Tiap CREATE/UPDATE/APPROVE → log |
 | 5 | **Client-side DB** | `import { db } from "@/db"` di komponen client | DB hanya di Server Action/Server Component |
-| 6 | **Dark Mode Classes** | `dark:bg-gray-800` | Hapus — belum dark mode |
+| 6 | **Dark Mode Token Salah** | Pakai warna arbitrary `dark:bg-[#xxx]` tanpa token | Gunakan token @theme: `dark:bg-gray-dark`, `dark:text-white`, `dark:border-stroke-dark` — lihat globals.css |
 | 7 | **Gradient v3** | `bg-gradient-to-r` | Ganti `bg-linear-to-r` (Tailwind v4) |
 | 8 | **Phantom Committer** | `git commit` tanpa diminta | Tunggu Abu minta eksplisit |
 
