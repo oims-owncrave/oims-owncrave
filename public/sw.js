@@ -1,0 +1,159 @@
+// Optimized Service Worker for OIMS Owncrave
+// ERP Produksi Garmen PWA
+// UPDATE BUILD_VERSION on every meaningful deploy so old caches are purged automatically.
+
+const BUILD_VERSION = '2026-08-03';
+const CACHE_NAME = `oims-owncrave-${BUILD_VERSION}`;
+const STATIC_CACHE = `oims-static-${BUILD_VERSION}`;
+
+// Static assets to cache
+const STATIC_ASSETS = [
+  '/manifest.json',
+  '/icons/icon-192.png',
+  '/images/logo/logo.svg'
+];
+
+// Install event - cache essential files
+self.addEventListener('install', (event) => {
+  console.log('🔧 OIMS Service Worker installing...');
+  
+  event.waitUntil(
+    Promise.all([
+      // Cache static assets
+      caches.open(STATIC_CACHE).then(cache => {
+        console.log('📦 OIMS caching static assets');
+        return cache.addAll(STATIC_ASSETS).catch(err => {
+          console.warn('⚠️ Some static assets failed to cache:', err);
+        });
+      }),
+      // Skip waiting to activate immediately
+      self.skipWaiting()
+    ]).then(() => {
+      console.log('✅ OIMS Service Worker installed');
+    }).catch(err => {
+      console.error('❌ Service Worker installation failed:', err);
+    })
+  );
+});
+
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  console.log('🔧 Warlob Service Worker activating...');
+  
+  event.waitUntil(
+    Promise.all([
+      // Clean up old caches
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheName !== CACHE_NAME && cacheName !== STATIC_CACHE) {
+              console.log('🗑️ Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      // Claim all clients
+      self.clients.claim()
+    ]).then(() => {
+      console.log('✅ Warlob Service Worker activated');
+    })
+  );
+});
+
+// Fetch event - optimized caching strategy
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const { url, method } = request;
+
+  // Skip non-GET requests
+  if (method !== 'GET') {
+    return;
+  }
+
+  // Skip non-http requests
+  if (!url.startsWith('http')) {
+    return;
+  }
+
+  // Skip Next.js internal files and API routes
+  if (url.includes('/_next/') ||
+      url.includes('/api/') ||
+      url.includes('/auth/')) {
+    return;
+  }
+
+  // Skip third-party external domains
+  if (!url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // Handle different types of requests
+  event.respondWith(handleRequest(request));
+});
+
+async function handleRequest(request) {
+  const url = new URL(request.url);
+  
+  try {
+    // For static assets, try cache first
+    if (isStaticAsset(url)) {
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+    }
+
+    // HTML pages: network-only, NEVER cache.
+    // Caching HTML across deploys causes stale chunk references (404) -> app crash -> logout.
+    if (isHTMLPage(url)) {
+      return await fetch(request);
+    }
+
+    // For other requests, try network first
+    try {
+      const networkResponse = await fetch(request);
+      return networkResponse;
+    } catch (error) {
+      // Fallback to cache if available
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      throw error;
+    }
+  } catch (error) {
+    console.error('❌ Fetch failed:', error);
+    // Return a basic offline page for HTML requests
+    if (isHTMLPage(url)) {
+      return new Response(
+        '<html><body><h1>Offline</h1><p>Please check your connection and try again.</p></body></html>',
+        { 
+          headers: { 'Content-Type': 'text/html' },
+          status: 503 
+        }
+      );
+    }
+    throw error;
+  }
+}
+
+function isStaticAsset(url) {
+  return url.pathname.startsWith('/images/') ||
+         url.pathname.startsWith('/icons/') ||
+         url.pathname.startsWith('/audio/') ||
+         url.pathname.endsWith('.svg') ||
+         url.pathname.endsWith('.png') ||
+         url.pathname.endsWith('.jpg') ||
+         url.pathname.endsWith('.jpeg') ||
+         url.pathname.endsWith('.gif') ||
+         url.pathname.endsWith('.webp');
+}
+
+function isHTMLPage(url) {
+  return url.pathname.endsWith('/') ||
+         !url.pathname.includes('.') ||
+         url.pathname.endsWith('.html');
+}
+
+console.log('🚀 Warlob School Management Service Worker loaded');
