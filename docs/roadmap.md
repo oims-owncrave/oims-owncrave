@@ -102,6 +102,37 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 
 ---
 
+## 📋 Urutan Eksekusi Prompt (Antigravity)
+
+Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum lanjut. **Jangan lompat gelombang.**
+
+| # | Issue | Prompt file |
+|---|---|---|
+| **G1 — Fondasi** | | |
+| 1 | `jpn.3` user management ← **WAJIB PERTAMA** (bikin `requireRole`). Task 1 (seed superadmin via MCP) ✅ Claude, Antigravity mulai Task 2 | `docs/prompts/2026-08-03-oims-jpn.3-user-management.md` |
+| 2 | `jpn.2` master kategori | `docs/prompts/2026-08-03-oims-jpn.2-master-kategori.md` |
+| 3 | `jpn.1` master satuan | `docs/prompts/2026-08-03-oims-jpn.1-master-satuan.md` |
+| 4 | `jpn.6` master supplier | `docs/prompts/2026-08-03-oims-jpn.6-master-supplier.md` |
+| **G2 — Bahan + Transaksi** | | |
+| 5 | `jpn.7` master bahan ← butuh 1,2,3,6 | `docs/prompts/2026-08-03-oims-jpn.7-master-bahan.md` |
+| 6 | `jpn.5` barang masuk ← butuh bahan | `docs/prompts/2026-08-03-oims-jpn.5-barang-masuk.md` |
+| 7 | `jpn.8` barang keluar ← butuh barang masuk | `docs/prompts/2026-08-03-oims-jpn.8-barang-keluar.md` |
+| **G3 — View + Approval** | | |
+| 8 | `jpn.9` stok bahan | `docs/prompts/2026-08-03-oims-jpn.9-stok-bahan.md` |
+| 9 | `jpn.11` mutasi stok | `docs/prompts/2026-08-03-oims-jpn.11-mutasi-stok.md` |
+| 10 | `jpn.12` penyesuaian stok | `docs/prompts/2026-08-03-oims-jpn.12-penyesuaian-stok.md` |
+| **G4 — Dashboard + Laporan + Audit** | | |
+| 11 | `jpn.10` dashboard | `docs/prompts/2026-08-03-oims-jpn.10-dashboard-inventory.md` |
+| 12 | `jpn.13` laporan | `docs/prompts/2026-08-03-oims-jpn.13-laporan-tahap1.md` |
+| 13 | `jpn.14` audit log | `docs/prompts/2026-08-03-oims-jpn.14-audit-log.md` |
+
+**Aturan:**
+- **Jangan lompat gelombang** — G2 butuh G1 selesai (import `requireRole`, FK master).
+- Dalam 1 gelombang urutan bebas, **kecuali jpn.3 wajib pertama** (bikin `src/lib/auth.ts`).
+- Per issue: paste prompt → Antigravity eksekusi → **sesi Claude baru (Opus) review** → commit kalau lolos → `bd close`.
+
+---
+
 ## 📌 Catatan
 
 - Stack **Opsi B (web-app) untuk semua tahap** — termasuk Tahap 5 keuangan. GAS+Sheets DITOLAK untuk keuangan (risiko integritas data).

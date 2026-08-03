@@ -10,11 +10,16 @@ import { NAV_DATA } from "./data";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
 
-export function Sidebar() {
+export function Sidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const collapsed = !isOpen && !isMobile;
+
+  // Filter sections based on role — ownerOnly sections hidden for non-owners
+  const visibleSections = NAV_DATA.filter(
+    (section) => !section.ownerOnly || userRole === "owner",
+  );
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
@@ -22,7 +27,7 @@ export function Sidebar() {
 
   useEffect(() => {
     // Auto-expand submenu when its subpage is active
-    NAV_DATA.some((section) => {
+    visibleSections.some((section) => {
       return section.items.some((item) => {
         return item.items.some((subItem) => {
           if (subItem.url === pathname) {
@@ -103,7 +108,7 @@ export function Sidebar() {
               collapsed ? "pr-0" : "pr-3",
             )}
           >
-            {NAV_DATA.map((section) => (
+            {visibleSections.map((section) => (
               <div key={section.label} className="mb-6">
                 {!collapsed ? (
                   <h2

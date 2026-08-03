@@ -21,6 +21,7 @@ type NavItem = {
 
 type NavSection = {
   label: string;
+  ownerOnly?: boolean;
   items: NavItem[];
 };
 
@@ -79,6 +80,7 @@ export const NAV_DATA: NavSection[] = [
   },
   {
     label: "SISTEM",
+    ownerOnly: true,
     items: [
       {
         title: "Sistem",
