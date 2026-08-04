@@ -58,14 +58,14 @@ export function Sidebar({ userRole }: { userRole: string }) {
           isMobile
             ? cn(
                 "fixed inset-y-0 left-0 z-50",
-                isOpen ? "w-[290px]" : "w-0 border-r-0 overflow-hidden",
+                isOpen ? "w-72.5" : "w-0 border-r-0 overflow-hidden",
               )
-            : cn("sticky z-30 shrink-0", isOpen ? "w-[290px]" : "w-[100.5px]"),
+            : cn("sticky z-30 shrink-0", isOpen ? "w-72.5" : "w-[100.5px]"),
         )}
         aria-label="Main navigation"
         aria-hidden={isMobile && !isOpen}
       >
-        <div className="flex h-full flex-col pt-5 pb-10 pl-[25px] pr-[7px]">
+        <div className="flex h-full flex-col pt-5 pb-10 pl-6.25 pr-1.75">
           <div className="flex items-center gap-3 py-2.5 min-[850px]:py-0 pr-2">
             {isMobile && isOpen ? (
               <button
@@ -183,7 +183,7 @@ export function Sidebar({ userRole }: { userRole: string }) {
                                 "ml-9 mr-0 space-y-1.5 pr-0 overflow-hidden transition-all duration-500 ease-in-out",
                                 !collapsed &&
                                   expandedItems.includes(item.title)
-                                  ? "max-h-96 opacity-100 pb-[15px] pt-2"
+                                  ? "max-h-96 opacity-100 pb-3.75 pt-2"
                                   : "max-h-0 opacity-0 pb-0 pt-0",
                               )}
                               role="menu"

@@ -25,7 +25,7 @@ export function ThemeToggleSwitch() {
   return (
     <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="group rounded-full bg-gray-3 p-[5px] text-[#111928] outline-1 outline-primary focus-visible:outline dark:bg-[#020D1A] dark:text-current"
+      className="group rounded-full bg-gray-3 p-1.25 text-dark outline-1 outline-primary focus-visible:outline dark:bg-[#020D1A] dark:text-current"
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
     >
       <span className="sr-only">
@@ -34,13 +34,13 @@ export function ThemeToggleSwitch() {
 
       <span aria-hidden className="relative flex gap-2.5">
         {/* Sliding indicator */}
-        <span className="absolute size-[38px] rounded-full border border-gray-200 bg-white transition-all dark:translate-x-[48px] dark:border-none dark:bg-dark-2 dark:group-hover:bg-dark-3" />
+        <span className="absolute size-9.5 rounded-full border border-gray-200 bg-white transition-all dark:translate-x-12 dark:border-none dark:bg-dark-2 dark:group-hover:bg-dark-3" />
 
         {THEMES.map(({ name, Icon }) => (
           <span
             key={name}
             className={cn(
-              "relative grid size-[38px] place-items-center rounded-full",
+              "relative grid size-9.5 place-items-center rounded-full",
               name === "dark" && "dark:text-white",
             )}
           >

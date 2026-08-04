@@ -33,9 +33,9 @@ export function ColumnToggle<TData>({ table, className }: { table: TableState<TD
       </DropdownTrigger>
       <DropdownContent align="end" className="bg-white dark:bg-dark-2 border border-stroke dark:border-dark-3 rounded-lg shadow-2 p-3 min-w-[320px]">
         <div className="mb-2 grid grid-cols-[1fr_4.5rem_4.5rem] px-2">
-          <span className="text-[12px] font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest">Kolom</span>
-          <span className="text-[12px] font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Tampil</span>
-          <span className="text-[12px] font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Pin</span>
+          <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest">Kolom</span>
+          <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Tampil</span>
+          <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Pin</span>
         </div>
         
         <div className="grid grid-cols-[1fr_4.5rem_4.5rem] items-center rounded px-2 py-2 my-3 bg-primary/5 border border-primary/10 dark:bg-primary/10 dark:border-primary/20">

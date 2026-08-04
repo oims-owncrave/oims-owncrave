@@ -1,5 +1,12 @@
 # Agent Instructions
 
+## Coding Rules (subset — lihat CLAUDE.md untuk lengkap)
+
+- **Tailwind v4 canonical classes**: pakai `z-70` bukan `z-[70]`, `w-72.5` bukan `w-[290px]`, `text-xs` bukan `text-[12px]`. Arbitrary hanya jika tidak ada canonical (mis. `grid-cols-[1fr_4rem]`, breakpoint `min-[850px]`).
+- **Colocation**: komponen 1 halaman → `_components/` dalam folder route, bukan `src/components/[feature]/`.
+- **Primary color**: token `bg-primary`/`text-primary` (bukan `bg-blue-600` hardcoded). Token di `globals.css`.
+
+
 This project uses **bd** (beads) for issue tracking. Run `bd prime` for full workflow context.
 
 > **Architecture in one line:** Issues live in a local Dolt database

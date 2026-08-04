@@ -37,6 +37,7 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 ### Komponen UI
 
 - **Tailwind v4** — `bg-linear-to-*` (bukan `bg-gradient-to-*`). **Dark mode AKTIF** (next-themes, class strategy `attribute="class"`). Gunakan `dark:*` classes — token via `@theme` di `globals.css`.
+- **Tailwind v4 canonical classes** — JANGAN pakai arbitrary values kalau ada canonical equivalent. Contoh: `z-70` bukan `z-[70]`, `w-72.5` bukan `w-[290px]`, `text-xs` bukan `text-[12px]`, `min-w-70` bukan `min-w-[17.5rem]`. Arbitrary BOLEH hanya jika tidak ada canonical (mis. `w-[100.5px]`, `grid-cols-[1fr_4rem]`, breakpoint custom `min-[850px]`).
 - `cn()` dari `src/lib/utils.ts` untuk conditional classes.
 - UI kit tersedia di `src/components/ui/`: Button, Input, Select, MultiSelect, ComboSelect, ConfirmDialog, Tooltip. **Cek dulu sebelum buat baru.**
 - **Colocation komponen halaman**: komponen yang cuma dipakai 1 halaman taruh di `_components/` DALAM folder route halaman itu (mis. `src/app/(with-layout)/sistem/pengguna/_components/UserTable.tsx`), BUKAN di `src/components/[feature]/`. Prefix `_` = private folder (tak jadi route). Pola PMS. Komponen reusable lintas-halaman → `src/components/ui/`.
