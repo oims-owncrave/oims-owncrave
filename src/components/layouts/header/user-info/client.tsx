@@ -56,13 +56,13 @@ export function UserInfoClient({ displayName, email }: UserInfoClientProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-30"
+            className="fixed inset-0 z-50"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
 
           {/* Dropdown */}
-          <div className="absolute right-0 top-full z-40 mt-2 min-w-[17.5rem] rounded-xl border border-stroke bg-white shadow-md dark:border-dark-3 dark:bg-gray-dark">
+          <div className="absolute right-0 top-full z-60 mt-2 min-w-[17.5rem] rounded-xl border border-stroke bg-white shadow-md dark:border-dark-3 dark:bg-gray-dark">
             <h2 className="sr-only">User information</h2>
 
             <figure className="flex items-center gap-2.5 px-5 py-3.5">

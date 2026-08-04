@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/Button";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import {
@@ -66,9 +67,9 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
       <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-dark">
@@ -147,9 +148,8 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
               required
               {...createForm.register("displayName")}
             />
-            <Input
+            <PasswordInput
               id="create-password"
-              type="password"
               label="Password"
               error={createForm.formState.errors.password?.message}
               required

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
 import { UserTable } from "./UserTable";
 import { UserFormModal } from "./UserFormModal";
 import type { User } from "@/db/schema";
@@ -21,28 +20,15 @@ export function UserPageClient({ initialUsers, currentUserId }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-dark dark:text-white">
-            Manajemen Pengguna
-          </h2>
-          <p className="text-sm text-dark-5 dark:text-dark-6">
-            Kelola akun dan hak akses tim Owncrave
-          </p>
-        </div>
-        <Button
-          onClick={() => {
-            setEditUser(null);
-            setModalOpen(true);
-          }}
-        >
-          + Tambah User
-        </Button>
-      </div>
+      <h2 className="text-2xl font-bold text-dark dark:text-white">Manajemen Pengguna</h2>
 
       <UserTable
         data={users}
         currentUserId={currentUserId}
+        onAdd={() => {
+          setEditUser(null);
+          setModalOpen(true);
+        }}
         onEdit={(user) => {
           setEditUser(user);
           setModalOpen(true);

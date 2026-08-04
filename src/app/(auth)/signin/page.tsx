@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { signinSchema, type SigninInput } from "@/lib/schemas/auth";
 import { signInAction } from "@/services/auth";
 
@@ -43,9 +44,8 @@ export default function SigninPage() {
             required
             {...register("username")}
           />
-          <Input
+          <PasswordInput
             id="password"
-            type="password"
             label="Password"
             placeholder="••••••••"
             error={errors.password?.message}

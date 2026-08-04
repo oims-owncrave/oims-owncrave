@@ -19,7 +19,7 @@ export function TableSearch<TData>({ table, placeholder = "Cari...", className }
         value={table.searchQuery}
         onChange={(e) => table.setSearchQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full sm:w-64 rounded-lg border border-stroke bg-transparent py-2.5 pl-10 pr-4 text-sm text-dark placeholder:text-dark-5 outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:placeholder:text-dark-6 dark:focus:border-primary"
+        className="w-full sm:w-64 rounded-lg border border-gray-400 bg-transparent py-2.5 pl-10 pr-4 text-sm text-dark placeholder:text-dark-5 outline-none transition focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:placeholder:text-dark-6 dark:focus:border-primary"
       />
     </div>
   )

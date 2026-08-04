@@ -4,7 +4,8 @@
 
 @theme {
   /* === Colors === */
-  --color-primary: #5750f1;
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
   --color-stroke: #e6ebf1;
   --color-stroke-dark: #27303e;
 

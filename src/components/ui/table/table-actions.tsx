@@ -37,7 +37,7 @@ export function TableActions<TData>({ item, actions, className }: TableActionsPr
             disabled={isDisabled}
             onClick={(e) => { e.stopPropagation(); action.onClick(item) }}
             className={cn(
-              "transition",
+              "transition cursor-pointer",
               variantClass[action.variant ?? "default"],
               isDisabled && "opacity-40 cursor-not-allowed",
             )}

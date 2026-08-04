@@ -46,7 +46,7 @@ export function Sidebar({ userRole }: { userRole: string }) {
       {/* Mobile Overlay */}
       {isMobile && isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300"
+          className="fixed inset-0 z-50 bg-black/50 transition-opacity duration-300"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
@@ -60,7 +60,7 @@ export function Sidebar({ userRole }: { userRole: string }) {
                 "fixed inset-y-0 left-0 z-50",
                 isOpen ? "w-[290px]" : "w-0 border-r-0 overflow-hidden",
               )
-            : cn("sticky shrink-0", isOpen ? "w-[290px]" : "w-[100.5px]"),
+            : cn("sticky z-30 shrink-0", isOpen ? "w-[290px]" : "w-[100.5px]"),
         )}
         aria-label="Main navigation"
         aria-hidden={isMobile && !isOpen}

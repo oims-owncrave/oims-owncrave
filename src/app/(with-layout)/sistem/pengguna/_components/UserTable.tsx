@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useDeactivateUser } from "@/hooks/useUser";
 import type { User } from "@/db/schema";
+import { Pencil, Ban } from "lucide-react";
 import {
   DataTable,
   useTable,
@@ -13,6 +14,9 @@ import {
   TableToolbar,
   TableSearch,
   TablePagination,
+  ColumnToggle,
+  TableActions,
+  TableAction,
 } from "@/components/ui/table";
 
 const ROLE_LABELS: Record<User["role"], string> = {
@@ -39,11 +43,28 @@ interface Props {
   data: User[];
   currentUserId: string;
   onEdit: (user: User) => void;
+  onAdd: () => void;
 }
 
-export function UserTable({ data, currentUserId, onEdit }: Props) {
+export function UserTable({ data, currentUserId, onEdit, onAdd }: Props) {
   const [deactivateId, setDeactivateId] = useState<string | null>(null);
   const deactivate = useDeactivateUser();
+
+  const actions: TableAction<User>[] = [
+    {
+      icon: <Pencil size={16} />,
+      title: "Edit",
+      onClick: (u) => onEdit(u),
+      variant: "default",
+    },
+    {
+      icon: <Ban size={16} />,
+      title: "Nonaktifkan",
+      onClick: (u) => setDeactivateId(u.id),
+      variant: "danger",
+      hidden: (u) => u.id === currentUserId || !u.isActive,
+    },
+  ];
 
   const columns: ColumnDef<User>[] = [
     {
@@ -86,30 +107,12 @@ export function UserTable({ data, currentUserId, onEdit }: Props) {
       ),
     },
     {
-      key: "id", // Using id just as a unique key for the column
+      key: "id",
       label: "Aksi",
       sortable: false,
       searchable: false,
-      renderCell: (u) => {
-        const isSelf = u.id === currentUserId;
-        return (
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline" onClick={() => onEdit(u)}>
-              Edit
-            </Button>
-            {!isSelf && u.isActive && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-900 dark:hover:bg-red-900/20"
-                onClick={() => setDeactivateId(u.id)}
-              >
-                Nonaktifkan
-              </Button>
-            )}
-          </div>
-        );
-      },
+      align: "center",
+      renderCell: (u) => <TableActions item={u} actions={actions} />,
     },
   ];
 
@@ -122,16 +125,18 @@ export function UserTable({ data, currentUserId, onEdit }: Props) {
 
   return (
     <>
-      <div className="space-y-4">
-        <TableToolbar className="px-0 sm:px-0 py-0 sm:py-0">
+      <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
+        <TableToolbar>
           <TableSearch table={table} placeholder="Cari user..." />
+          <div className="flex items-center gap-2">
+            <ColumnToggle table={table} />
+            <Button onClick={onAdd}>+ Tambah User</Button>
+          </div>
         </TableToolbar>
-        
+
         <DataTable table={table} />
-        
-        {table.totalPages > 1 && (
-          <TablePagination table={table} className="border-none px-0" />
-        )}
+
+        <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>
 
       <ConfirmDialog

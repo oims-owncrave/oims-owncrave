@@ -167,7 +167,7 @@ export function DropdownContent({
       role="menu"
       aria-orientation="vertical"
       style={panelStyle}
-      className={cn("z-50 rounded-lg pointer-events-auto", className)}
+      className={cn("z-60 rounded-lg pointer-events-auto", className)}
     >
       {children}
     </div>,
