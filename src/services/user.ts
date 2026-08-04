@@ -95,18 +95,20 @@ export async function updateUser(id: string, input: UserUpdateInput) {
     return { error: "Tidak bisa mengubah role diri sendiri" };
   }
 
+  const { newPassword: _, ...dbInput } = input
   const [updated] = await db
     .update(users)
-    .set({ ...input, updatedAt: new Date() })
+    .set({ ...dbInput, updatedAt: new Date() })
     .where(eq(users.id, id))
     .returning();
 
-  // Sync role to auth app_metadata so JWT reflects new role on next login
-  if (input.role && input.role !== before.role) {
+  // Sync role + optional password reset to Supabase auth
+  const authUpdate: Record<string, unknown> = {}
+  if (input.role && input.role !== before.role) authUpdate.app_metadata = { role: input.role }
+  if (input.newPassword) authUpdate.password = input.newPassword
+  if (Object.keys(authUpdate).length) {
     const admin = adminClient();
-    await admin.auth.admin.updateUserById(id, {
-      app_metadata: { role: input.role },
-    });
+    await admin.auth.admin.updateUserById(id, authUpdate);
   }
 
   await writeAudit("UPDATE", id, before, updated, currentUser.id);

@@ -110,6 +110,13 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
                 Aktif
               </label>
             </div>
+            <PasswordInput
+              id="edit-newPassword"
+              label="Password Baru (opsional)"
+              placeholder="Kosongkan jika tidak ingin ganti"
+              error={editForm.formState.errors.newPassword?.message}
+              {...editForm.register("newPassword")}
+            />
             <div className="flex gap-3 pt-2">
               <Button
                 type="button"

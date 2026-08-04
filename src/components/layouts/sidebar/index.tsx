@@ -78,7 +78,7 @@ export function Sidebar({ userRole }: { userRole: string }) {
             ) : (
               <button
                 onClick={toggleSidebar}
-                className="rounded-lg border ml-1 px-1.5 py-1 translate-y-3 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A]"
+                className="rounded-lg border border-gray-400 ml-1 px-1.5 py-1 translate-y-3 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A]"
                 aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
               >
                 <MenuIcon className="size-6 text-dark dark:text-white" />

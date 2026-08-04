@@ -7,13 +7,15 @@ import { Dropdown, DropdownTrigger, DropdownContent } from "@/components/ui/Drop
 import { Checkbox } from "@/components/ui/Checkbox"
 import { TableState } from "./use-table"
 
-export function ColumnToggle<TData>({ table, className }: { table: TableState<TData>; className?: string }) {
+export function ColumnToggle<TData>({ table, className, showPin = false }: { table: TableState<TData>; className?: string; showPin?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const hideableColumns = table.columns.filter((col) => col.hideable !== false)
   const hiddenCount = hideableColumns.filter((col) => table.columnVisibility[col.key] === false).length
   const pinnedCount = hideableColumns.filter((col) => table.isPinned(col.key)).length
   const total = hideableColumns.length
+
+  const gridCols = showPin ? "grid-cols-[1fr_4.5rem_4.5rem]" : "grid-cols-[1fr_4.5rem]"
 
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -25,20 +27,20 @@ export function ColumnToggle<TData>({ table, className }: { table: TableState<TD
       >
         <Columns3 size={16} />
         <span>Kolom</span>
-        {(hiddenCount > 0 || pinnedCount > 0) && (
+        {(hiddenCount > 0 || (showPin && pinnedCount > 0)) && (
           <span className="inline-flex min-w-5 h-5 px-1 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
             {total - hiddenCount}/{total}
           </span>
         )}
       </DropdownTrigger>
       <DropdownContent align="end" className="bg-white dark:bg-dark-2 border border-stroke dark:border-dark-3 rounded-lg shadow-2 p-3 min-w-[320px]">
-        <div className="mb-2 grid grid-cols-[1fr_4.5rem_4.5rem] px-2">
+        <div className={cn("mb-2 grid px-2", gridCols)}>
           <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest">Kolom</span>
           <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Tampil</span>
-          <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Pin</span>
+          {showPin && <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-widest text-center">Pin</span>}
         </div>
-        
-        <div className="grid grid-cols-[1fr_4.5rem_4.5rem] items-center rounded px-2 py-2 my-3 bg-primary/5 border border-primary/10 dark:bg-primary/10 dark:border-primary/20">
+
+        <div className={cn("items-center rounded px-2 py-2 my-3 bg-primary/5 border border-primary/10 dark:bg-primary/10 dark:border-primary/20 grid", gridCols)}>
           <span className="text-sm font-semibold text-primary">Toggle Semua</span>
           <div className="flex justify-center">
             <Checkbox
@@ -47,10 +49,13 @@ export function ColumnToggle<TData>({ table, className }: { table: TableState<TD
               onChange={(checked) => table.setAllColumnVisibility(checked)}
             />
           </div>
-          <div className="flex justify-center">
-            <span className="text-primary/40 text-sm font-bold">-</span>
-          </div>
+          {showPin && (
+            <div className="flex justify-center">
+              <span className="text-primary/40 text-sm font-bold">-</span>
+            </div>
+          )}
         </div>
+
         {hideableColumns.map((col) => {
           const isVisible = table.columnVisibility[col.key] !== false
           const pinned = table.isPinned(col.key)
@@ -58,7 +63,7 @@ export function ColumnToggle<TData>({ table, className }: { table: TableState<TD
           return (
             <div
               key={col.key}
-              className="grid grid-cols-[1fr_4.5rem_4.5rem] whitespace-nowrap items-center rounded px-2 py-1.5 hover:bg-gray-1 dark:hover:bg-dark-3"
+              className={cn("whitespace-nowrap items-center rounded px-2 py-1.5 hover:bg-gray-1 dark:hover:bg-dark-3 grid", gridCols)}
             >
               <span className="text-sm text-dark dark:text-white">{label}</span>
               <div className="flex justify-center">
@@ -68,13 +73,15 @@ export function ColumnToggle<TData>({ table, className }: { table: TableState<TD
                   size="sm"
                 />
               </div>
-              <div className="flex justify-center">
-                <Checkbox
-                  checked={pinned}
-                  onChange={() => table.togglePin(col.key)}
-                  size="sm"
-                />
-              </div>
+              {showPin && (
+                <div className="flex justify-center">
+                  <Checkbox
+                    checked={pinned}
+                    onChange={() => table.togglePin(col.key)}
+                    size="sm"
+                  />
+                </div>
+              )}
             </div>
           )
         })}

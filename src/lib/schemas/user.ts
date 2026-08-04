@@ -20,7 +20,10 @@ export const userSchema = z.object({
 // Update schema: pick from base + add isActive (only relevant on update, not create)
 export const userUpdateSchema = userSchema
   .pick({ displayName: true, role: true })
-  .extend({ isActive: z.boolean() })
+  .extend({
+    isActive: z.boolean(),
+    newPassword: z.string().min(6, "Password minimal 6 karakter").optional().or(z.literal("")),
+  })
   .partial();
 
 export type UserInput = z.infer<typeof userSchema>;

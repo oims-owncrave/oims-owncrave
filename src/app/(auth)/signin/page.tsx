@@ -38,7 +38,7 @@ export default function SigninPage() {
             id="username"
             type="text"
             label="Username"
-            placeholder="superadmin"
+            placeholder="username"
             autoComplete="username"
             error={errors.username?.message}
             required
