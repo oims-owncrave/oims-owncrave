@@ -44,6 +44,7 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
   useEffect(() => {
     if (editUser) {
       editForm.reset({
+        username: editUser.email.split("@")[0],
         displayName: editUser.displayName,
         role: editUser.role,
         isActive: editUser.isActive,
@@ -83,6 +84,13 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
             onSubmit={editForm.handleSubmit(onEditSubmit)}
             className="flex flex-col gap-4"
           >
+            <Input
+              id="edit-username"
+              label="Username"
+              error={editForm.formState.errors.username?.message}
+              required
+              {...editForm.register("username")}
+            />
             <Input
               id="edit-displayName"
               label="Nama"

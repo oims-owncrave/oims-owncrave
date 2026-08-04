@@ -3,7 +3,7 @@
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { db } from "@/db";
 import { users, auditLog } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, ne } from "drizzle-orm";
 import { requireRole } from "@/lib/auth";
 import type { UserInput, UserUpdateInput } from "@/lib/schemas/user";
 
@@ -95,20 +95,45 @@ export async function updateUser(id: string, input: UserUpdateInput) {
     return { error: "Tidak bisa mengubah role diri sendiri" };
   }
 
-  const { newPassword: _, ...dbInput } = input
+  // Username change: derive new email, guard uniqueness (username = email prefix @owncrave.local)
+  const beforeUsername = before.email.split("@")[0];
+  const usernameChanged = !!input.username && input.username !== beforeUsername;
+  let newEmail = before.email;
+  if (usernameChanged) {
+    newEmail = `${input.username!.toLowerCase()}@owncrave.local`;
+    const [dupe] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.email, newEmail), ne(users.id, id)))
+      .limit(1);
+    if (dupe) return { error: `Username "${input.username}" sudah dipakai` };
+  }
+
+  // Strip non-column fields before db update
+  const { newPassword: _pw, username: _un, ...dbInput } = input;
   const [updated] = await db
     .update(users)
-    .set({ ...dbInput, updatedAt: new Date() })
+    .set({ ...dbInput, ...(usernameChanged ? { email: newEmail } : {}), updatedAt: new Date() })
     .where(eq(users.id, id))
     .returning();
 
-  // Sync role + optional password reset to Supabase auth
-  const authUpdate: Record<string, unknown> = {}
-  if (input.role && input.role !== before.role) authUpdate.app_metadata = { role: input.role }
-  if (input.newPassword) authUpdate.password = input.newPassword
+  // Sync to Supabase auth: role, password, email + username metadata
+  const authUpdate: Record<string, unknown> = {};
+  if (input.role && input.role !== before.role) authUpdate.app_metadata = { role: input.role, username: input.username ?? beforeUsername };
+  if (input.newPassword) authUpdate.password = input.newPassword;
+  // Lift ban when reactivating, set ban when deactivating via updateUser
+  if (input.isActive === true && before.isActive === false) authUpdate.ban_duration = "none";
+  if (input.isActive === false && before.isActive === true) authUpdate.ban_duration = "876000h";
+  if (usernameChanged) {
+    authUpdate.email = newEmail;
+    authUpdate.user_metadata = { username: input.username, full_name: input.displayName ?? before.displayName };
+    // merge username into app_metadata even if role unchanged
+    authUpdate.app_metadata = { role: input.role ?? before.role, username: input.username };
+  }
   if (Object.keys(authUpdate).length) {
     const admin = adminClient();
-    await admin.auth.admin.updateUserById(id, authUpdate);
+    const { error: authErr } = await admin.auth.admin.updateUserById(id, authUpdate);
+    if (authErr) return { error: `Gagal update auth: ${authErr.message}` };
   }
 
   await writeAudit("UPDATE", id, before, updated, currentUser.id);
@@ -134,9 +159,10 @@ export async function deactivateUser(id: string) {
     .where(eq(users.id, id))
     .returning();
 
-  // Revoke all active sessions
+  // Revoke all active sessions + ban from new logins
   const admin = adminClient();
   await admin.auth.admin.signOut(id, "global");
+  await admin.auth.admin.updateUserById(id, { ban_duration: "876000h" });
 
   await writeAudit("DEACTIVATE", id, before, updated, currentUser.id);
   return { data: updated };

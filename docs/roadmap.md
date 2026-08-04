@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-03 · Status: **Tahap 1 in progress — auth + admin shell done, semua plan+prompt siap eksekusi.**
+> Diperbarui: 2026-08-04 · Status: **Tahap 1 in progress — auth + user mgmt + master kategori done. Pola master CRUD standar ditetapkan (`docs/plans/_pola-master-crud.md`).**
 
 ---
 
@@ -18,8 +18,8 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | # | Item | Kenapa MVP | Status |
 |---|---|---|---|
 | ✅ | ~~Bootstrap projek (scaffold + UI kit + PWA + schema)~~ | Fondasi coding — **DONE** (`sb-ow9`). | ✅ |
-| 1 | **Auth + manajemen user + hak akses per role** | Login wajib ada sebelum fitur lain | 🔄 auth+shell ✅, user mgmt (jpn.3) plan siap |
-| 2 | Master data (kategori, satuan, supplier, bahan) | CRUD master = prerequisite semua transaksi | ⏳ |
+| ✅ | ~~**Auth + manajemen user + hak akses per role**~~ | Login wajib ada sebelum fitur lain | ✅ auth+shell+user mgmt (jpn.3,4) **DONE** |
+| 2 | Master data (kategori, satuan, supplier, bahan) | CRUD master = prerequisite semua transaksi | 🔄 kategori (jpn.2) ✅ · satuan/supplier/bahan pending |
 | 3 | Barang masuk + detail | Pencatatan bahan dari supplier | ⏳ |
 | 4 | Barang keluar + detail | Pengeluaran bahan ke produksi | ⏳ |
 | 5 | Stok + mutasi stok (immutable ledger) | Core inventory — append-only, no manual edit | ⏳ |
@@ -61,13 +61,13 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Build clean + TypeScript | ✅ | — | `pnpm run build` green (pnpm@10.33.0) |
 | Auth (signin username-based) | ✅ | `/signin` | Supabase Auth, email sintetis @owncrave.local |
 | Admin shell (sidebar+header+dark) | ✅ | `(with-layout)` | Port dari PMS (oims-93g) |
-| User management + roles | 🔄 | `/sistem/pengguna` | Plan siap (jpn.3), belum eksekusi |
-| Master data | ⏳ | `/master/*` | — |
+| User management + roles | ✅ | `/sistem/pengguna` | jpn.3 done — CRUD user, roles, password reset |
+| Master data | 🔄 | `/master/*` | kategori ✅ (jpn.2) · satuan/supplier/bahan pending |
 | Inventory (barang masuk/keluar/stok/mutasi) | ⏳ | `/inventory/*` | — |
 | Dashboard | ⏳ | `/dashboard` | Saat ini placeholder |
 | Laporan | ⏳ | `/laporan/*` | — |
 
-**Ringkasan:** Bootstrap + auth + admin shell selesai. **13 plan Tahap 1 + prompt Antigravity siap** (jpn.1-14). Eksekusi tinggal paste prompt ke Antigravity per urutan dependency.
+**Ringkasan:** Bootstrap + auth + user mgmt + master kategori selesai. Pola master CRUD distandarisasi (`_pola-master-crud.md`) — semua plan/prompt point ke sana. Berikutnya: master satuan (jpn.1) + supplier (jpn.6) paralel.
 
 ---
 
@@ -76,10 +76,10 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekusi per urutan (blocker naik dari atas).
 
 ### 🔴 GELOMBANG 1 — Fondasi (kerjakan dulu, bisa paralel)
-- [ ] `oims-jpn.3` — User management + roles (P1) — **prasyarat `requireRole` semua fitur**
-- [ ] `oims-jpn.2` — Master kategori (P2)
-- [ ] `oims-jpn.1` — Master satuan (P2)
-- [ ] `oims-jpn.6` — Master supplier (P2)
+- [x] `oims-jpn.3` — User management + roles (P1) ✅ **DONE**
+- [x] `oims-jpn.2` — Master kategori (P2) ✅ **DONE**
+- [ ] `oims-jpn.1` — Master satuan (P2) ← **BERIKUTNYA (paralel jpn.6)**
+- [ ] `oims-jpn.6` — Master supplier (P2) ← **BERIKUTNYA (paralel jpn.1)**
 
 ### ⚡ GELOMBANG 2 — Bahan + Transaksi
 - [ ] `oims-jpn.7` — Master bahan (butuh: kategori+satuan+supplier+user mgmt)
@@ -144,6 +144,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-04** — Master kategori (jpn.2) selesai: CRUD + partial unique index (soft-delete safe) + toast semantik + Checkbox label. Pola master CRUD distandarisasi ke `docs/plans/_pola-master-crud.md` + `ui_conventions.md` (vault, global). Skill new-project-bootstrap diperbaiki (point ke standar UI). Semua plan+prompt jpn.1-13 sync ke standar.
 
 - **2026-08-03** — Auth (username signin) + admin shell (sidebar+header+dark mode, port PMS) + user mgmt plan selesai. 13 plan Tahap 1 + prompt Antigravity dibuat (jpn.1-14). Supabase MCP tersambung, test user superadmin (owner).
 - **2026-08-03** — Roadmap dibuat. Bootstrap projek selesai (sb-ow9): scaffold, UI kit, PWA, schema Tahap 1, dokumen. Migrasi npm→pnpm selesai. Penawaran direvisi (Opsi B default, anchoring total, catatan Fase 2).
