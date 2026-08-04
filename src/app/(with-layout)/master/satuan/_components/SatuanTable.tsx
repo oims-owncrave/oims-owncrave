@@ -90,10 +90,7 @@ export function SatuanTable({ data, onAdd, onEdit, onDelete }: Props) {
         <TableSearch table={table} placeholder="Cari satuan..." />
         <div className="flex items-center gap-2">
           <ColumnToggle table={table} />
-          <Button onClick={onAdd}>
-            <Plus size={16} className="mr-2" />
-            Tambah Satuan
-          </Button>
+          <Button onClick={onAdd}>+ Tambah Satuan</Button>
         </div>
       </TableToolbar>
 

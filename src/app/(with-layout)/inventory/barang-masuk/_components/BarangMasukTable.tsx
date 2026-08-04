@@ -98,10 +98,7 @@ export function BarangMasukTable({ data }: Props) {
         <div className="flex items-center gap-2">
           <ColumnToggle table={table} />
           <Link href="/inventory/barang-masuk/baru">
-            <Button>
-              <Plus size={16} className="mr-2" />
-              Barang Masuk Baru
-            </Button>
+            <Button>+ Barang Masuk Baru</Button>
           </Link>
         </div>
       </TableToolbar>
