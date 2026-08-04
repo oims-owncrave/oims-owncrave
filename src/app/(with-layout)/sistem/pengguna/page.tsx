@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { listUsers } from "@/services/user";
-import { UserPageClient } from "@/components/user/UserPageClient";
+import { UserPageClient } from "./_components/UserPageClient";
 
 export default async function PenggunaPage() {
   const currentUser = await getCurrentUser();

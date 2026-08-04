@@ -39,6 +39,7 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 - **Tailwind v4** — `bg-linear-to-*` (bukan `bg-gradient-to-*`). **Dark mode AKTIF** (next-themes, class strategy `attribute="class"`). Gunakan `dark:*` classes — token via `@theme` di `globals.css`.
 - `cn()` dari `src/lib/utils.ts` untuk conditional classes.
 - UI kit tersedia di `src/components/ui/`: Button, Input, Select, MultiSelect, ComboSelect, ConfirmDialog, Tooltip. **Cek dulu sebelum buat baru.**
+- **Colocation komponen halaman**: komponen yang cuma dipakai 1 halaman taruh di `_components/` DALAM folder route halaman itu (mis. `src/app/(with-layout)/sistem/pengguna/_components/UserTable.tsx`), BUKAN di `src/components/[feature]/`. Prefix `_` = private folder (tak jadi route). Pola PMS. Komponen reusable lintas-halaman → `src/components/ui/`.
 - Form: `react-hook-form` + `@hookform/resolvers/zod`. Zod schema di `src/lib/schemas/`.
 - Toast: `sonner` (sudah di layout). Import `toast` dari `sonner`.
 - Jangan install dependency baru tanpa diskusi — reuse yang sudah ada.
@@ -59,6 +60,7 @@ src/
       master/    # kategori, satuan, supplier, bahan
       inventory/ # barang masuk, keluar, stok, mutasi, penyesuaian
       sistem/    # pengguna, log, pengaturan
+      # tiap halaman: page.tsx + _components/ (komponen khusus halaman itu)
       ...
   assets/        # SVG logos, icons
   components/
@@ -66,7 +68,7 @@ src/
     layouts/     # app shell: sidebar/, header/, main-content.tsx
     providers/   # theme-provider.tsx (next-themes)
     PWA/         # PWA components (index.tsx = main, debug, settings)
-    [feature]/   # komponen domain per fitur
+    # komponen per-halaman → colocated di app/**/_components/ (bukan di sini)
   db/
     index.ts     # Drizzle client
     schema.ts    # semua tabel (Tahap 1 aktif)
