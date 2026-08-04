@@ -47,6 +47,9 @@ export default async function MasterXxxPage() {
 
 ## 4. XxxTable.tsx — DataTable kit (WAJIB)
 
+> **EXECUTOR (Antigravity/junior): COPY struktur JSX dari `KategoriTable.tsx` PERSIS**, cuma ganti nama field/label/entity. JANGAN tulis ulang dari deskripsi di bawah — deskripsi = checklist verifikasi, bukan sumber. Sering meleset: card wrapper hilang, icon `Edit2` (harusnya `Pencil`), pagination conditional (harusnya selalu tampil + `pageSizeOptions={[10,25,50]}`), override CSS `border-none` yang tak perlu.
+
+
 - Card wrapper: `rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden`
 - **Kolom "No."**: `<DataTable table={table} showRowNumber />` — nomor urut otomatis di kiri, lanjut antar halaman (page 2 mulai 11). Built-in kit, jangan bikin kolom nomor manual di `columns`.
 - `TableToolbar`: search kiri, `ColumnToggle` + `Button` Add kanan (Add **di toolbar**, bukan di header halaman).
