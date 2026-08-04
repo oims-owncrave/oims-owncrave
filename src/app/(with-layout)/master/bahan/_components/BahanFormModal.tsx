@@ -151,10 +151,9 @@ export function BahanFormModal({
             <ComboSelect
               label="Kategori"
               placeholder="Pilih kategori"
-              options={kategoriOptions.map((k) => ({
-                label: k.nama,
-                value: k.id,
-              }))}
+              options={kategoriOptions
+                .filter((k) => k.isActive || k.id === watch("kategoriId"))
+                .map((k) => ({ label: k.nama, value: k.id }))}
               value={watch("kategoriId") || null}
               onChange={(v) => setValue("kategoriId", (v as string) ?? "", { shouldValidate: true })}
               error={errors.kategoriId}
@@ -163,10 +162,9 @@ export function BahanFormModal({
             <ComboSelect
               label="Satuan"
               placeholder="Pilih satuan"
-              options={satuanOptions.map((s) => ({
-                label: s.nama,
-                value: s.id,
-              }))}
+              options={satuanOptions
+                .filter((s) => s.isActive || s.id === watch("satuanId"))
+                .map((s) => ({ label: s.nama, value: s.id }))}
               value={watch("satuanId") || null}
               onChange={(v) => setValue("satuanId", (v as string) ?? "", { shouldValidate: true })}
               error={errors.satuanId}
@@ -203,7 +201,7 @@ export function BahanFormModal({
             >
               Batal
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" loading={isPending}>
               {isPending ? "Menyimpan..." : "Simpan"}
             </Button>
           </div>

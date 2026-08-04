@@ -124,7 +124,7 @@ export function SatuanFormModal({ open, onClose, initialData }: Props) {
             >
               Batal
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" loading={isPending}>
               {isPending ? "Menyimpan..." : "Simpan"}
             </Button>
           </div>

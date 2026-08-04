@@ -3,7 +3,18 @@
 import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import Link from "next/link";
+import { useLinkStatus } from "next/link";
+import { Spinner } from "@/components/ui/Spinner";
 import { useSidebarContext } from "./sidebar-context";
+
+/** Shows a spinner while THIS link's navigation is pending (Next.js useLinkStatus).
+ *  Must be rendered as a descendant of <Link>. */
+function NavPending() {
+  const { pending } = useLinkStatus();
+  return pending ? (
+    <Spinner size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-primary" />
+  ) : null;
+}
 
 const menuItemBaseStyles = cva(
   "rounded-lg px-3 font-medium text-dark-4 transition-all duration-200 dark:text-dark-6",
@@ -53,6 +64,7 @@ export function MenuItem(
         )}
       >
         {props.children}
+        <NavPending />
       </Link>
     );
   }

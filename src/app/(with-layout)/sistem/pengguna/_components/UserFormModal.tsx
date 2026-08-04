@@ -131,7 +131,7 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
               <Button
                 type="submit"
                 className="flex-1"
-                disabled={update.isPending}
+                loading={update.isPending}
               >
                 {update.isPending ? "Menyimpan..." : "Simpan"}
               </Button>
@@ -183,7 +183,7 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
               <Button
                 type="submit"
                 className="flex-1"
-                disabled={create.isPending}
+                loading={create.isPending}
               >
                 {create.isPending ? "Membuat..." : "Buat User"}
               </Button>

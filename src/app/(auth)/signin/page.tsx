@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -10,19 +11,24 @@ import { signinSchema, type SigninInput } from "@/lib/schemas/auth";
 import { signInAction } from "@/services/auth";
 
 export default function SigninPage() {
+  const [isPending, startTransition] = useTransition();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SigninInput>({
     resolver: zodResolver(signinSchema),
   });
 
-  async function onSubmit(data: SigninInput) {
-    const result = await signInAction(data);
-    if (result?.error) {
-      toast.error(result.error);
-    }
+  function onSubmit(data: SigninInput) {
+    // startTransition stays pending through the redirect navigation,
+    // so the spinner never blinks off before the page actually changes.
+    startTransition(async () => {
+      const result = await signInAction(data);
+      if (result?.error) {
+        toast.error(result.error);
+      }
+    });
   }
 
   return (
@@ -55,9 +61,9 @@ export default function SigninPage() {
           <Button
             type="submit"
             className="mt-2 w-full"
-            disabled={isSubmitting}
+            loading={isPending}
           >
-            {isSubmitting ? "Masuk..." : "Masuk"}
+            {isPending ? "Masuk..." : "Masuk"}
           </Button>
         </form>
       </div>

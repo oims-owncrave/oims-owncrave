@@ -1,11 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Spinner } from "./Spinner";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "outline" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
   icon?: React.ReactNode;
+  loading?: boolean;
 };
 
 const VARIANTS: Record<NonNullable<ButtonProps["variant"]>, string> = {
@@ -25,12 +27,15 @@ export function Button({
   variant = "primary",
   size = "md",
   icon,
+  loading = false,
   className,
   children,
+  disabled,
   ...props
 }: ButtonProps) {
   return (
     <button
+      disabled={disabled || loading}
       className={cn(
         "inline-flex items-center justify-center rounded-lg font-medium transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-50 disabled:cursor-not-allowed",
         VARIANTS[variant],
@@ -39,7 +44,11 @@ export function Button({
       )}
       {...props}
     >
-      {icon && <span className="-ml-0.5 shrink-0">{icon}</span>}
+      {loading ? (
+        <Spinner size={16} className="-ml-0.5 shrink-0" />
+      ) : (
+        icon && <span className="-ml-0.5 shrink-0">{icon}</span>
+      )}
       {children}
     </button>
   );

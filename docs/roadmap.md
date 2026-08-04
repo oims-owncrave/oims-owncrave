@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-04 · Status: **Tahap 1 in progress — auth + user mgmt + master kategori/satuan/supplier done. Berikutnya master bahan (jpn.7), lalu transaksi.**
+> Diperbarui: 2026-08-04 · Status: **Tahap 1 in progress — SEMUA master data selesai (kategori/satuan/supplier/bahan). Masuk fase transaksi: barang masuk (jpn.5) berikutnya.**
 
 ---
 
@@ -19,7 +19,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 |---|---|---|---|
 | ✅ | ~~Bootstrap projek (scaffold + UI kit + PWA + schema)~~ | Fondasi coding — **DONE** (`sb-ow9`). | ✅ |
 | ✅ | ~~**Auth + manajemen user + hak akses per role**~~ | Login wajib ada sebelum fitur lain | ✅ auth+shell+user mgmt (jpn.3,4) **DONE** |
-| 2 | Master data (kategori, satuan, supplier, bahan) | CRUD master = prerequisite semua transaksi | 🔄 kategori/satuan/supplier ✅ · bahan (jpn.7) berikutnya |
+| ✅ | ~~Master data (kategori, satuan, supplier, bahan)~~ | CRUD master = prerequisite semua transaksi | ✅ semua master (jpn.1,2,6,7) **DONE** |
 | 3 | Barang masuk + detail | Pencatatan bahan dari supplier | ⏳ |
 | 4 | Barang keluar + detail | Pengeluaran bahan ke produksi | ⏳ |
 | 5 | Stok + mutasi stok (immutable ledger) | Core inventory — append-only, no manual edit | ⏳ |
@@ -62,12 +62,13 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Auth (signin username-based) | ✅ | `/signin` | Supabase Auth, email sintetis @owncrave.local |
 | Admin shell (sidebar+header+dark) | ✅ | `(with-layout)` | Port dari PMS (oims-93g) |
 | User management + roles | ✅ | `/sistem/pengguna` | jpn.3 done — CRUD user, roles, password reset |
-| Master data | 🔄 | `/master/*` | kategori/satuan/supplier ✅ · bahan (jpn.7) pending |
+| Master data | ✅ | `/master/*` | kategori/satuan/supplier/bahan semua ✅ (jpn.1,2,6,7) |
+| Loading UX (nav + button spinner) | ✅ | global | oims-99y — Spinner, Button loading, useLinkStatus nav, auth spinner |
 | Inventory (barang masuk/keluar/stok/mutasi) | ⏳ | `/inventory/*` | — |
 | Dashboard | ⏳ | `/dashboard` | Saat ini placeholder |
 | Laporan | ⏳ | `/laporan/*` | — |
 
-**Ringkasan:** Bootstrap + auth + user mgmt + master kategori selesai. Pola master CRUD distandarisasi (`_pola-master-crud.md`) — semua plan/prompt point ke sana. Berikutnya: master satuan (jpn.1) + supplier (jpn.6) paralel.
+**Ringkasan:** Fondasi + SEMUA master data (kategori/satuan/supplier/bahan) selesai + loading UX (spinner nav/button). Pola master CRUD + UI (loading, FK dropdown filter) distandarisasi di `_pola-master-crud.md` + `ui_conventions.md`. Berikutnya: fase transaksi — barang masuk (jpn.5).
 
 ---
 
@@ -82,8 +83,8 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 - [x] `oims-jpn.6` — Master supplier (P2) ✅ **DONE**
 
 ### ⚡ GELOMBANG 2 — Bahan + Transaksi
-- [ ] `oims-jpn.7` — Master bahan (butuh: kategori+satuan+supplier+user mgmt) ← **BERIKUTNYA**
-- [ ] `oims-jpn.5` — Barang masuk (butuh: bahan) — weighted avg + mutasi
+- [x] `oims-jpn.7` — Master bahan ✅ **DONE**
+- [ ] `oims-jpn.5` — Barang masuk (butuh: bahan) — weighted avg + mutasi ← **BERIKUTNYA (transaksi pertama)**
 - [ ] `oims-jpn.8` — Barang keluar (butuh: bahan+barang masuk) — guard stok + snapshot
 
 ### 🟢 GELOMBANG 3 — View + Approval
@@ -144,6 +145,10 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-04** — Loading UX (oims-99y): Spinner component + Button `loading` prop + nav loading inline (useLinkStatus) + spinner login/logout. Fix FK dropdown tampil entitas nonaktif (filter isActive, keep-selected). Distandarisasi ke `_pola` + `ui_conventions` (§12) + bootstrap.
+
+- **2026-08-04** — Master bahan (jpn.7) selesai + reviewed (kolom harga dibuang, stok format Number(), dropdown ComboSelect, createBahan transaction). SEMUA master data Tahap 1 SELESAI (kategori/satuan/supplier/bahan). Berikutnya fase transaksi: jpn.5 barang masuk (weighted avg + mutasi + nomor dokumen).
 
 - **2026-08-04** — Master satuan (jpn.1) + supplier (jpn.6) selesai + reviewed. Directive copy-JSX ditambah ke semua prompt tabel (executor Antigravity tak meleset visual lagi — supplier zero perbaikan). Gelombang 1 (fondasi master) SELESAI. Berikutnya jpn.7 (bahan).
 

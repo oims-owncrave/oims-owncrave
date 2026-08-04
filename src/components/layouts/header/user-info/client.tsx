@@ -3,7 +3,8 @@
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/services/auth";
 import { ChevronDown, LogOut, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { Spinner } from "@/components/ui/Spinner";
 
 function getInitials(name: string): string {
   return name
@@ -20,6 +21,7 @@ type UserInfoClientProps = {
 };
 
 export function UserInfoClient({ displayName, email }: UserInfoClientProps) {
+  const [isLoggingOut, startLogout] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -95,15 +97,19 @@ export function UserInfoClient({ displayName, email }: UserInfoClientProps) {
             <hr className="border-stroke dark:border-dark-3" />
 
             <div className="p-2">
-              <form action={signOutAction}>
-                <button
-                  type="submit"
-                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-dark-4 hover:bg-gray-2 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-3 dark:hover:text-white"
-                >
+              <button
+                type="button"
+                disabled={isLoggingOut}
+                onClick={() => startLogout(async () => { await signOutAction(); })}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-dark-4 hover:bg-gray-2 hover:text-dark disabled:opacity-50 disabled:cursor-not-allowed dark:text-dark-6 dark:hover:bg-dark-3 dark:hover:text-white"
+              >
+                {isLoggingOut ? (
+                  <Spinner size={16} className="text-current" />
+                ) : (
                   <LogOut className="size-4" aria-hidden />
-                  <span>Keluar</span>
-                </button>
-              </form>
+                )}
+                <span>{isLoggingOut ? "Keluar..." : "Keluar"}</span>
+              </button>
             </div>
           </div>
         </>

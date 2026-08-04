@@ -63,6 +63,8 @@ export default async function MasterXxxPage() {
 - Container: `className="fixed inset-0 z-70 flex items-center justify-center p-4"`
 - Backdrop: `className="fixed inset-0 bg-black/50 backdrop-blur-sm"` (**fixed**, bukan absolute — kalau absolute, header/sidebar nembus modal).
 - Submit: pakai `mutateAsync` (bukan `mutate` + override onSuccess) → biar toast dari hook jalan + error ke-propagate.
+- **Button loading**: submit button pakai `<Button type="submit" loading={mutation.isPending}>` — spinner otomatis + disable (bukan cuma `disabled` + text change). `Button` punya prop `loading`.
+- **FK dropdown filter aktif**: dropdown pilih entitas lain (kategori/satuan/supplier/bahan) HARUS filter `isActive` — TAPI keep yang sedang terpilih (biar edit value existing tak hilang walau entitas jadi nonaktif): `options.filter((o) => o.isActive || o.id === watch("fieldId"))`. Jangan tampilkan nonaktif di dropdown pilihan baru.
 
 ---
 
