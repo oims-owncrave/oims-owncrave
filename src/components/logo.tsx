@@ -4,7 +4,7 @@ import darkLogo from "@/assets/logos/logo-dark.svg";
 
 export function Logo() {
   return (
-    <div className="relative translate-x-8 translate-y-3">
+    <div className="relative translate-x-7 translate-y-3">
       <Image
         src={logo}
         className="dark:hidden"

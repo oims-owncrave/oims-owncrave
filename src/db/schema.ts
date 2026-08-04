@@ -123,7 +123,8 @@ export const stok = pgTable("stok", {
   id: uuid("id").primaryKey().defaultRandom(),
   bahanId: uuid("bahan_id").notNull().unique().references(() => bahan.id),
   // stok aktual = hasil aggregate mutasi_stok, bukan field ini
-  // field ini = cache untuk read cepat, di-update lewat DB trigger
+  // cache: di-update MANUAL dalam transaksi barang masuk/keluar (BELUM ada DB trigger).
+  // JANGAN hapus update manual di service — sumber kebenaran = SUM(mutasi_stok).
   kuantitas: numeric("kuantitas", { precision: 15, scale: 3 }).notNull().default("0"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

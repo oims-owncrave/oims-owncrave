@@ -43,7 +43,7 @@
 /* Base scale — 14px basis (default 16px) for denser admin UI.
    Relative % respects user browser font setting (a11y). Tune this one value if too small/large. */
 html {
-  font-size: 87.5%;
+  font-size: 90%;
 }
 
 /* Glass morphism */

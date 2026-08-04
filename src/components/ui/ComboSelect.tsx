@@ -181,10 +181,10 @@ export function ComboSelect({
   }
 
   const triggerClass = cn(
-    "flex items-center justify-between gap-2 rounded-lg border outline-none transition disabled:cursor-not-allowed disabled:opacity-60 text-left w-full",
+    "flex items-center justify-between gap-2 rounded-lg border outline-none transition disabled:cursor-not-allowed disabled:opacity-60 text-left text-sm w-full",
     isFilter
       ? "bg-transparent px-3 py-2 border-blue-600 text-blue-600"
-      : "bg-white px-4 py-3 border-gray-300 text-gray-900 disabled:bg-gray-100",
+      : "bg-white px-4 py-2.5 border-gray-300 text-gray-900 disabled:bg-gray-100",
     error && !isFilter && "border-red-500",
     isOpen && !error && "border-blue-600",
   )
@@ -278,9 +278,9 @@ export function ComboSelect({
   }
 
   return (
-    <div ref={containerRef} className={cn("flex flex-col gap-1", className)}>
+    <div ref={containerRef} className={cn("flex flex-col gap-1.5", className)}>
       {label && (
-        <label className="mb-3 text-sm font-medium text-gray-900">
+        <label className="text-sm font-medium text-gray-900">
           {label}
           {required && <span className="ml-0.5 text-red-500">*</span>}
         </label>

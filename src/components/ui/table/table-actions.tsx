@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { Spinner } from "@/components/ui/Spinner"
 
 export interface TableAction<TData = unknown> {
   icon: React.ReactNode
@@ -9,6 +10,8 @@ export interface TableAction<TData = unknown> {
   variant?: "default" | "danger" | "warning" | "success"
   hidden?: (item: TData) => boolean
   disabled?: (item: TData) => boolean
+  /** Show a spinner instead of the icon while this action is pending for the row. */
+  loading?: (item: TData) => boolean
 }
 
 interface TableActionsProps<TData> {
@@ -29,7 +32,8 @@ export function TableActions<TData>({ item, actions, className }: TableActionsPr
     <div className={cn("flex items-center justify-center gap-3", className)}>
       {actions.map((action, i) => {
         if (action.hidden?.(item)) return null
-        const isDisabled = action.disabled?.(item) ?? false
+        const isLoading = action.loading?.(item) ?? false
+        const isDisabled = (action.disabled?.(item) ?? false) || isLoading
         return (
           <button
             key={i}
@@ -42,7 +46,7 @@ export function TableActions<TData>({ item, actions, className }: TableActionsPr
               isDisabled && "opacity-40 cursor-not-allowed",
             )}
           >
-            {action.icon}
+            {isLoading ? <Spinner size={16} /> : action.icon}
           </button>
         )
       })}
