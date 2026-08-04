@@ -9,24 +9,24 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import {
-  barangMasukSchema,
-  type BarangMasukFormInput,
-  type BarangMasukInput,
-} from "@/lib/schemas/barang-masuk";
-import { useBarangMasukMutation } from "@/hooks/useBarangMasuk";
+  barangKeluarSchema,
+  type BarangKeluarFormInput,
+  type BarangKeluarInput,
+} from "@/lib/schemas/barang-keluar";
+import { useBarangKeluarMutation } from "@/hooks/useBarangKeluar";
 
 type BahanOption = {
   id: string;
   kode: string;
   nama: string;
   satuanSingkatan: string | null;
+  hargaRataRata: string;
+  kuantitasStok: string;
   isActive: boolean;
 };
-type SupplierOption = { id: string; nama: string; isActive: boolean };
 
 interface Props {
   bahanOptions: BahanOption[];
-  supplierOptions: SupplierOption[];
 }
 
 const rupiah = (n: number) =>
@@ -40,9 +40,9 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
+export function BarangKeluarForm({ bahanOptions }: Props) {
   const router = useRouter();
-  const { create } = useBarangMasukMutation();
+  const { create } = useBarangKeluarMutation();
   const [isCancelling, startCancel] = useTransition();
 
   const {
@@ -52,32 +52,30 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<BarangMasukFormInput>({
-    resolver: zodResolver(barangMasukSchema),
+  } = useForm<BarangKeluarFormInput>({
+    resolver: zodResolver(barangKeluarSchema),
     defaultValues: {
-      supplierId: "",
-      nomorInvoice: "",
+      tujuan: "",
       tanggal: todayISO(),
       catatan: "",
-      detail: [{ bahanId: "", kuantitas: 0, hargaSatuan: 0 }],
+      detail: [{ bahanId: "", kuantitas: 0 }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: "detail" });
   const detail = watch("detail");
 
-  const total = (detail ?? []).reduce(
-    (sum, d) => sum + (Number(d.kuantitas) || 0) * (Number(d.hargaSatuan) || 0),
-    0,
-  );
+  const total = (detail ?? []).reduce((sum, d) => {
+    const bahan = bahanOptions.find((b) => b.id === d.bahanId);
+    const harga = Number(bahan?.hargaRataRata ?? 0);
+    return sum + (Number(d.kuantitas) || 0) * harga;
+  }, 0);
 
-  async function onSubmit(raw: BarangMasukFormInput) {
-    // resolver sudah coerce ke number; cast ke output type untuk Server Action
-    const res = await create.mutateAsync(raw as unknown as BarangMasukInput);
-    if (!res.error) router.push("/inventory/barang-masuk");
+  async function onSubmit(raw: BarangKeluarFormInput) {
+    const res = await create.mutateAsync(raw as unknown as BarangKeluarInput);
+    if (!res.error) router.push("/inventory/barang-keluar");
   }
 
-  const activeSupplier = supplierOptions.filter((s) => s.isActive);
   const activeBahan = bahanOptions.filter((b) => b.isActive);
 
   return (
@@ -85,19 +83,11 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
       {/* Header card */}
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <ComboSelect
-            label="Supplier"
-            placeholder="Pilih supplier (opsional)"
-            options={activeSupplier.map((s) => ({ label: s.nama, value: s.id }))}
-            value={watch("supplierId") || null}
-            onChange={(v) => setValue("supplierId", (v as string) ?? "")}
-            error={errors.supplierId}
-          />
           <Input
-            label="Nomor Invoice"
-            placeholder="Opsional"
-            {...register("nomorInvoice")}
-            error={errors.nomorInvoice?.message}
+            label="Tujuan"
+            placeholder="Misal: Produksi PO-001"
+            {...register("tujuan")}
+            error={errors.tujuan?.message}
           />
           <Input
             type="date"
@@ -109,6 +99,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
           <Input
             label="Catatan"
             placeholder="Opsional"
+            className="md:col-span-2"
             {...register("catatan")}
             error={errors.catatan?.message}
           />
@@ -125,9 +116,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() =>
-              append({ bahanId: "", kuantitas: 0, hargaSatuan: 0 })
-            }
+            onClick={() => append({ bahanId: "", kuantitas: 0 })}
           >
             <Plus size={16} className="mr-1.5" />
             Tambah Bahan
@@ -141,46 +130,54 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
         <div className="space-y-3">
           {fields.map((field, i) => {
             const row = detail?.[i];
-            const subtotal =
-              (Number(row?.kuantitas) || 0) * (Number(row?.hargaSatuan) || 0);
-            const satuan = activeBahan.find(
-              (b) => b.id === row?.bahanId,
-            )?.satuanSingkatan;
+            const bahanInfo = activeBahan.find((b) => b.id === row?.bahanId);
+            const harga = Number(bahanInfo?.hargaRataRata ?? 0);
+            const subtotal = (Number(row?.kuantitas) || 0) * harga;
+            const satuan = bahanInfo?.satuanSingkatan;
+            const stokTersedia = bahanInfo?.kuantitasStok;
 
             return (
               <div
                 key={field.id}
-                className="grid grid-cols-1 gap-3 border-b border-stroke pb-3 last:border-none dark:border-dark-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)_2.5rem]"
+                className="grid grid-cols-1 gap-3 border-b border-stroke pb-3 last:border-none dark:border-dark-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_2.5rem]"
               >
-                <ComboSelect
-                  label={i === 0 ? "Bahan" : undefined}
-                  placeholder="Pilih bahan"
-                  options={activeBahan.map((b) => ({
-                    label: `${b.kode} — ${b.nama}`,
-                    value: b.id,
-                  }))}
-                  value={row?.bahanId || null}
-                  onChange={(v) =>
-                    setValue(`detail.${i}.bahanId`, (v as string) ?? "", {
-                      shouldValidate: true,
-                    })
-                  }
-                  error={errors.detail?.[i]?.bahanId}
-                />
+                <div>
+                  <ComboSelect
+                    label={i === 0 ? "Bahan" : undefined}
+                    placeholder="Pilih bahan"
+                    options={activeBahan.map((b) => ({
+                      label: `${b.kode} — ${b.nama} (Stok: ${Number(b.kuantitasStok)} ${b.satuanSingkatan || ""})`,
+                      value: b.id,
+                    }))}
+                    value={row?.bahanId || null}
+                    onChange={(v) =>
+                      setValue(`detail.${i}.bahanId`, (v as string) ?? "", {
+                        shouldValidate: true,
+                      })
+                    }
+                    error={errors.detail?.[i]?.bahanId}
+                  />
+                </div>
                 <Input
                   type="number"
                   step="0.001"
-                  label={i === 0 ? `Kuantitas${satuan ? ` (${satuan})` : ""}` : undefined}
+                  label={
+                    i === 0 ? `Kuantitas${satuan ? ` (${satuan})` : ""}` : undefined
+                  }
                   {...register(`detail.${i}.kuantitas`, { valueAsNumber: true })}
                   error={errors.detail?.[i]?.kuantitas?.message}
                 />
-                <Input
-                  type="number"
-                  step="1"
-                  label={i === 0 ? "Harga Satuan" : undefined}
-                  {...register(`detail.${i}.hargaSatuan`, { valueAsNumber: true })}
-                  error={errors.detail?.[i]?.hargaSatuan?.message}
-                />
+                
+                {/* Harga Rata2 (Info) — label placeholder agar selalu sejajar */}
+                <div>
+                  <label className={`mb-2 block text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
+                    Harga Rata²
+                  </label>
+                  <div className="flex h-11 items-center px-4 rounded-lg border border-stroke bg-gray-100 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
+                    {bahanInfo ? rupiah(harga) : "-"}
+                  </div>
+                </div>
+
                 {/* Subtotal — label placeholder agar selalu sejajar */}
                 <div>
                   <label className={`mb-2 block text-right text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
@@ -190,6 +187,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
                     {rupiah(subtotal)}
                   </div>
                 </div>
+
                 {/* Delete — label placeholder agar tombol sejajar dengan input */}
                 <div>
                   <div className={`mb-2 h-5 ${i === 0 ? "block" : "invisible"}`} aria-hidden />
@@ -212,7 +210,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
 
         <div className="mt-4 flex justify-end border-t border-stroke pt-4 dark:border-dark-3">
           <div className="text-right">
-            <span className="text-sm text-dark-5 dark:text-dark-6">Total</span>
+            <span className="text-sm text-dark-5 dark:text-dark-6">Total Nilai Keluar</span>
             <p className="text-lg font-bold text-dark dark:text-white">
               {rupiah(total)}
             </p>
@@ -225,7 +223,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
           type="button"
           variant="outline"
           loading={isCancelling}
-          onClick={() => startCancel(() => router.push("/inventory/barang-masuk"))}
+          onClick={() => startCancel(() => router.push("/inventory/barang-keluar"))}
         >
           Batal
         </Button>

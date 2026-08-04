@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-04 · Status: **Tahap 1 in progress — SEMUA master data selesai (kategori/satuan/supplier/bahan). Masuk fase transaksi: barang masuk (jpn.5) berikutnya.**
+> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — SEMUA master data + transaksi inventory (barang masuk/keluar) selesai. Berikutnya: view stok (jpn.9), mutasi (jpn.11), penyesuaian (jpn.12).**
 
 ---
 
@@ -20,8 +20,8 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | ✅ | ~~Bootstrap projek (scaffold + UI kit + PWA + schema)~~ | Fondasi coding — **DONE** (`sb-ow9`). | ✅ |
 | ✅ | ~~**Auth + manajemen user + hak akses per role**~~ | Login wajib ada sebelum fitur lain | ✅ auth+shell+user mgmt (jpn.3,4) **DONE** |
 | ✅ | ~~Master data (kategori, satuan, supplier, bahan)~~ | CRUD master = prerequisite semua transaksi | ✅ semua master (jpn.1,2,6,7) **DONE** |
-| 3 | Barang masuk + detail | Pencatatan bahan dari supplier | ⏳ |
-| 4 | Barang keluar + detail | Pengeluaran bahan ke produksi | ⏳ |
+| ✅ | ~~Barang masuk + detail~~ | Pencatatan bahan dari supplier | ✅ jpn.5 **DONE** |
+| ✅ | ~~Barang keluar + detail~~ | Pengeluaran bahan ke produksi | ✅ jpn.8 **DONE** |
 | 5 | Stok + mutasi stok (immutable ledger) | Core inventory — append-only, no manual edit | ⏳ |
 | 6 | Penyesuaian stok (dengan approval flow) | PRD mensyaratkan approval owner | ⏳ |
 | 7 | Dashboard inventory (ringkasan + panel peringatan) | Owner perlu visibilitas tanpa buka tabel | ⏳ |
@@ -64,11 +64,13 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | User management + roles | ✅ | `/sistem/pengguna` | jpn.3 done — CRUD user, roles, password reset |
 | Master data | ✅ | `/master/*` | kategori/satuan/supplier/bahan semua ✅ (jpn.1,2,6,7) |
 | Loading UX (nav + button spinner) | ✅ | global | oims-99y — Spinner, Button loading, useLinkStatus nav, auth spinner |
-| Inventory (barang masuk/keluar/stok/mutasi) | ⏳ | `/inventory/*` | — |
+| Barang masuk | ✅ | `/inventory/barang-masuk` | jpn.5 done — header+detail, weighted avg, mutasi, nomor BM |
+| Barang keluar | ✅ | `/inventory/barang-keluar` | jpn.8 done — guard stok, snapshot harga, mutasi negatif, nomor BK |
+| Stok/mutasi/penyesuaian | ⏳ | `/inventory/*` | jpn.9,11,12 belum |
 | Dashboard | ⏳ | `/dashboard` | Saat ini placeholder |
 | Laporan | ⏳ | `/laporan/*` | — |
 
-**Ringkasan:** Fondasi + SEMUA master data (kategori/satuan/supplier/bahan) selesai + loading UX (spinner nav/button). Pola master CRUD + UI (loading, FK dropdown filter) distandarisasi di `_pola-master-crud.md` + `ui_conventions.md`. Berikutnya: fase transaksi — barang masuk (jpn.5).
+**Ringkasan:** Fondasi + SEMUA master data selesai + SEMUA transaksi inventory (barang masuk jpn.5 + barang keluar jpn.8) selesai. Loading UX + pola CRUD distandarisasi. Berikutnya: view pages (stok jpn.9, mutasi jpn.11) + approval (penyesuaian jpn.12).
 
 ---
 
@@ -84,8 +86,8 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 
 ### ⚡ GELOMBANG 2 — Bahan + Transaksi
 - [x] `oims-jpn.7` — Master bahan ✅ **DONE**
-- [ ] `oims-jpn.5` — Barang masuk (butuh: bahan) — weighted avg + mutasi ← **BERIKUTNYA (transaksi pertama)**
-- [ ] `oims-jpn.8` — Barang keluar (butuh: bahan+barang masuk) — guard stok + snapshot
+- [x] `oims-jpn.5` — Barang masuk ✅ **DONE** — weighted avg + mutasi + nomor BM
+- [x] `oims-jpn.8` — Barang keluar ✅ **DONE** — guard stok + snapshot harga + nomor BK
 
 ### 🟢 GELOMBANG 3 — View + Approval
 - [ ] `oims-jpn.9` — Stok bahan (view)
@@ -145,6 +147,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — Barang masuk (jpn.5) + Barang keluar (jpn.8) selesai + reviewed. Guard stok (FOR UPDATE + duplicate bahanId aggregation), snapshot harga rata2, mutasi negatif, retry nomor dokumen. Loading button nav (useTransition) diterapkan konsisten. Berikutnya: view stok (jpn.9).
 
 - **2026-08-04** — Loading UX (oims-99y): Spinner component + Button `loading` prop + nav loading inline (useLinkStatus) + spinner login/logout. Fix FK dropdown tampil entitas nonaktif (filter isActive, keep-selected). Distandarisasi ke `_pola` + `ui_conventions` (§12) + bootstrap.
 
