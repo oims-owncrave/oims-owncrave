@@ -5,6 +5,7 @@
 - **Tailwind v4 canonical classes**: pakai `z-70` bukan `z-[70]`, `w-72.5` bukan `w-[290px]`, `text-xs` bukan `text-[12px]`. Arbitrary hanya jika tidak ada canonical (mis. `grid-cols-[1fr_4rem]`, breakpoint `min-[850px]`).
 - **Colocation**: komponen 1 halaman → `_components/` dalam folder route, bukan `src/components/[feature]/`.
 - **Primary color**: token `bg-primary`/`text-primary` (bukan `bg-blue-600` hardcoded). Token di `globals.css`.
+- **Soft delete + unique = partial index (WAJIB)**: kolom dengan `deleted_at` + unique (kode/nama) HARUS pakai partial unique index `WHERE deleted_at IS NULL`, bukan `.unique()` flat — kalau tidak, crash 500 saat hapus lalu buat ulang value sama. Drizzle: `text("kode").notNull()` + `(t) => [uniqueIndex("<tabel>_<kolom>_active_unique").on(t.kode).where(isNull(t.deletedAt))]`. Guard `isNull` di Server Action tetap dipakai untuk pesan error yang bagus.
 
 
 This project uses **bd** (beads) for issue tracking. Run `bd prime` for full workflow context.

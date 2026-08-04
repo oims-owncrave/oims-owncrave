@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listUsers, createUser, updateUser, deactivateUser } from "@/services/user";
 import { toast } from "sonner";
+import { toastStyles } from "@/lib/utils";
 
 export function useUsers() {
   return useQuery({
@@ -20,7 +21,7 @@ export function useCreateUser() {
         toast.error(res.error);
         return;
       }
-      toast.success("User berhasil dibuat");
+      toast.success("User berhasil dibuat", toastStyles.primary);
       qc.invalidateQueries({ queryKey: ["users"] });
     },
   });
@@ -41,7 +42,7 @@ export function useUpdateUser() {
         toast.error(res.error);
         return;
       }
-      toast.success("User diperbarui");
+      toast.success("User diperbarui", toastStyles.primary);
       qc.invalidateQueries({ queryKey: ["users"] });
     },
   });
@@ -56,7 +57,7 @@ export function useDeactivateUser() {
         toast.error(res.error);
         return;
       }
-      toast.success("User dinonaktifkan");
+      toast.error("User dinonaktifkan");
       qc.invalidateQueries({ queryKey: ["users"] });
     },
   });

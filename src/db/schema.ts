@@ -8,7 +8,9 @@ import {
   uuid,
   pgEnum,
   index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { isNull } from "drizzle-orm";
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -48,43 +50,56 @@ export const users = pgTable("users", {
 
 // ─── Master Data ──────────────────────────────────────────────────────────────
 
-export const kategori = pgTable("kategori", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  kode: text("kode").notNull().unique(), // e.g. "KTN"
-  nama: text("nama").notNull(),
-  isActive: boolean("is_active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-  deletedAt: timestamp("deleted_at", { withTimezone: true }), // soft delete
-});
+export const kategori = pgTable(
+  "kategori",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // e.g. "KTN" — unik hanya untuk baris aktif (partial index)
+    nama: text("nama").notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }), // soft delete
+  },
+  // Soft delete + unique = partial: kode boleh dipakai ulang setelah baris dihapus
+  (t) => [uniqueIndex("kategori_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
+);
 
-export const satuan = pgTable("satuan", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  nama: text("nama").notNull().unique(), // e.g. "Meter", "Kg", "Pcs"
-  singkatan: text("singkatan").notNull(), // e.g. "m", "kg", "pcs"
-  isActive: boolean("is_active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  deletedAt: timestamp("deleted_at", { withTimezone: true }),
-});
+export const satuan = pgTable(
+  "satuan",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nama: text("nama").notNull(), // e.g. "Meter", "Kg", "Pcs" — unik hanya baris aktif
+    singkatan: text("singkatan").notNull(), // e.g. "m", "kg", "pcs"
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("satuan_nama_active_unique").on(t.nama).where(isNull(t.deletedAt))]
+);
 
-export const supplier = pgTable("supplier", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  kode: text("kode").notNull().unique(),
-  nama: text("nama").notNull(),
-  kontak: text("kontak"),
-  alamat: text("alamat"),
-  isActive: boolean("is_active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-  deletedAt: timestamp("deleted_at", { withTimezone: true }),
-});
+export const supplier = pgTable(
+  "supplier",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // unik hanya baris aktif
+    nama: text("nama").notNull(),
+    kontak: text("kontak"),
+    alamat: text("alamat"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("supplier_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
+);
 
 export const bahan = pgTable(
   "bahan",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    // kode otomatis: BH-[KODE_KATEGORI]-[NOMOR] e.g. "BH-KTN-001"
-    kode: text("kode").notNull().unique(),
+    // kode otomatis: BH-[KODE_KATEGORI]-[NOMOR] e.g. "BH-KTN-001" — unik hanya baris aktif
+    kode: text("kode").notNull(),
     nama: text("nama").notNull(),
     kategoriId: uuid("kategori_id").notNull().references(() => kategori.id),
     satuanId: uuid("satuan_id").notNull().references(() => satuan.id),
@@ -96,7 +111,10 @@ export const bahan = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
-  (t) => [index("bahan_kategori_idx").on(t.kategoriId)]
+  (t) => [
+    index("bahan_kategori_idx").on(t.kategoriId),
+    uniqueIndex("bahan_kode_active_unique").on(t.kode).where(isNull(t.deletedAt)),
+  ]
 );
 
 // ─── Stok (immutable — hanya diubah lewat mutasi, tidak pernah di-edit manual) ─

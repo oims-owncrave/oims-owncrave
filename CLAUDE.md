@@ -20,6 +20,7 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 - **Stok immutable**: gak pernah UPDATE `stok.kuantitas` langsung — hanya lewat append ke `mutasi_stok`. `stok.kuantitas` = cache dari DB trigger.
 - **Mutasi stok**: append-only. TIDAK ADA UPDATE/DELETE baris di `mutasi_stok`.
 - **Soft delete**: semua tabel master pakai `deleted_at`. Query selalu `WHERE deleted_at IS NULL`.
+- **Soft delete + unique = partial unique index (WAJIB)**: kalau kolom pakai `deleted_at` DAN punya unique (kode/nama), unique-nya HARUS partial `WHERE deleted_at IS NULL` — bukan `.unique()` flat. Flat constraint bikin crash 500 saat user hapus lalu buat ulang value yang sama (baris soft-deleted masih hitung). Pola Drizzle: `text("kode").notNull()` + `(t) => [uniqueIndex("<tabel>_<kolom>_active_unique").on(t.kode).where(isNull(t.deletedAt))]`. Guard eksplisit di Server Action (cek `isNull` sebelum insert) tetap dipakai untuk pesan error yang bagus, TAPI DB-nya sendiri harus partial.
 - **Audit log**: tiap CREATE/UPDATE/APPROVE tulis ke `audit_log` (aksi, tabel, record_id, data_before JSON, data_after JSON).
 - **Nomor dokumen**: format `[TIPE]-YYYYMM-NNNN`. Auto-generate di Server Action, bukan di client. Unique constraint di DB.
 - **Satuan**: gak ada konversi implicit antar satuan. Satu bahan = satu satuan, konsisten dari masuk sampai keluar.

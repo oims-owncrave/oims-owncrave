@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/Button";
 import { PasswordInput } from "@/components/ui/PasswordInput";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import {
@@ -96,19 +97,12 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
               error={editForm.formState.errors.role?.message}
               {...editForm.register("role")}
             />
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="edit-isActive"
-                {...editForm.register("isActive")}
-                className="size-4"
+            <div className="py-1">
+              <Checkbox
+                checked={editForm.watch("isActive") ?? false}
+                onChange={(checked) => editForm.setValue("isActive", checked)}
+                label="Aktif"
               />
-              <label
-                htmlFor="edit-isActive"
-                className="text-sm font-medium text-dark-4 dark:text-dark-6"
-              >
-                Aktif
-              </label>
             </div>
             <PasswordInput
               id="edit-newPassword"
