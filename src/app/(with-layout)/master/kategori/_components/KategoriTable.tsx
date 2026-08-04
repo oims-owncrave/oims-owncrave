@@ -90,7 +90,7 @@ export function KategoriTable({ data, onEdit, onAdd }: Props) {
             <Button onClick={onAdd}>+ Tambah Kategori</Button>
           </div>
         </TableToolbar>
-        <DataTable table={table} />
+        <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>
 

@@ -48,6 +48,7 @@ export default async function MasterXxxPage() {
 ## 4. XxxTable.tsx — DataTable kit (WAJIB)
 
 - Card wrapper: `rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden`
+- **Kolom "No."**: `<DataTable table={table} showRowNumber />` — nomor urut otomatis di kiri, lanjut antar halaman (page 2 mulai 11). Built-in kit, jangan bikin kolom nomor manual di `columns`.
 - `TableToolbar`: search kiri, `ColumnToggle` + `Button` Add kanan (Add **di toolbar**, bukan di header halaman).
 - `TableActions` icon lucide: `Pencil` (edit, variant `default`), `Trash2`/`Ban` (hapus/nonaktif, variant `danger`).
 - Kolom Aksi: `align: "center"`, `sortable: false`, `searchable: false`.
@@ -109,3 +110,46 @@ Checkbox controlled — di rhf pakai `watch("field")` + `setValue("field", check
 - Soft delete: set `deleted_at`, jangan hard delete. Query selalu `WHERE deleted_at IS NULL`.
 - Audit log tiap CREATE/UPDATE/DELETE/APPROVE (`writeAudit`).
 - Guard delete kalau direferensi (mis. kategori dipakai bahan → tolak, saran nonaktifkan).
+
+
+---
+
+## 10. Client-side vs Server-side table (hemat bandwidth)
+
+Kit tabel dual-mode. Pilih by **pertumbuhan data**, bukan seragam:
+
+| Sumber data | Contoh | Mode | Kenapa |
+|---|---|---|---|
+| Master (row terbatas) | kategori, satuan, supplier, user | **client-side** (`useTable` default) | Puluhan baris, fetch semua = beberapa KB. Search/sort instan, no roundtrip. Server-side di sini malah nambah beban. |
+| Transaksi / ledger / log (tumbuh terus) | mutasi stok, barang masuk/keluar, audit log | **server-side** (`useServerTable`) | Ribuan+ baris. PostgREST cap 1000 → fetch semua diam-diam terpotong. WAJIB paginate di DB. |
+
+**Client-side (default):** pola CRUD di atas — Server Action return semua row, `useTable` filter/sort/slice di browser. Tidak ada yang perlu ditambah.
+
+**Server-side (data transaksi):** infrastruktur SUDAH ADA — `src/components/ui/table/use-server-table.ts`. Pola:
+
+1. **Server Action** terima filter + page, return `PagedResult<T>`:
+```ts
+// services/mutasi.ts
+export async function listMutasi(f: { page: number; limit: number; bahanId?: string }) {
+  const offset = (f.page - 1) * f.limit;
+  const [items, [{ count }]] = await Promise.all([
+    db.select().from(mutasiStok).where(/* filters */).limit(f.limit).offset(offset).orderBy(...),
+    db.select({ count: sql<number>`count(*)` }).from(mutasiStok).where(/* filters */),
+  ]);
+  return { items, meta: { total: count, page: f.page, limit: f.limit, totalPages: Math.ceil(count / f.limit) } };
+}
+```
+
+2. **Client** pakai `useServerTable` → spread `manualProps` ke `useTable`:
+```tsx
+const server = useServerTable({
+  queryKey: ["mutasi"],
+  fetcher: listMutasi,
+  initialFilters: { page: 1, limit: 50 },
+});
+const table = useTable({ data: server.data, columns, ...server.manualProps });
+```
+
+`useServerTable` handle: page/filter state, `keepPreviousData` (no flicker saat ganti page), `meta`. `TablePagination` + `TableSearch` tetap dipakai — cukup wire ke `server.setPage`/`server.setFilters`.
+
+JANGAN bikin pagination ad-hoc sendiri — `useServerTable` sudah ada, pakai itu.

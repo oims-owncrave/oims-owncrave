@@ -134,7 +134,7 @@ export function UserTable({ data, currentUserId, onEdit, onAdd }: Props) {
           </div>
         </TableToolbar>
 
-        <DataTable table={table} />
+        <DataTable table={table} showRowNumber />
 
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>

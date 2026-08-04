@@ -33,6 +33,8 @@ interface DataTableProps<TData> {
   renderExpandedRow?: (item: TData, index: number) => React.ReactNode
   className?: string
   enableSelection?: boolean
+  /** Show a leading "No." column with absolute row number (continues across pages). */
+  showRowNumber?: boolean
   /** Keep the header row visible while the table body scrolls vertically.
    *  Bounds the table in a scroll container (`maxHeight`) and pins `<thead>`. */
   stickyHeader?: boolean
@@ -46,7 +48,7 @@ function getStickyClasses(isLeft: boolean, isRight: boolean) {
   return ""
 }
 
-export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, stickyHeader = false, maxHeight }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, showRowNumber = false, stickyHeader = false, maxHeight }: DataTableProps<TData>) {
   const visibleColumns = useMemo(
     () => table.orderedColumns.filter((col) => table.columnVisibility[col.key] !== false),
     [table.orderedColumns, table.columnVisibility],
@@ -116,6 +118,11 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                   <CheckboxAll table={table} />
                 </TableHead>
               )}
+              {showRowNumber && (
+                <TableHead className="w-14 px-4 text-center text-dark dark:text-white font-medium">
+                  No.
+                </TableHead>
+              )}
               {visibleColumns.map((col) => {
                 const isPinned = table.isPinned(col.key)
                 const isLeft = col.sticky === "left" || isPinned
@@ -161,7 +168,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
               <TableSkeleton columns={visibleColumns.length + (enableSelection ? 1 : 0)} rowCount={5} />
             ) : table.processedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={visibleColumns.length + (enableSelection ? 1 : 0)} className="text-center py-8 text-dark-5 dark:text-dark-6">
+                <TableCell colSpan={visibleColumns.length + (enableSelection ? 1 : 0) + (showRowNumber ? 1 : 0)} className="text-center py-8 text-dark-5 dark:text-dark-6">
                   {table.searchQuery ? "Tidak ada rekaman yang cocok" : "Tidak ada data tersedia"}
                 </TableCell>
               </TableRow>
@@ -186,6 +193,11 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                             onChange={() => table.toggleRowSelection(rowId)}
                             size="sm"
                           />
+                        </TableCell>
+                      )}
+                      {showRowNumber && (
+                        <TableCell className="w-14 px-4 text-center text-dark-5 dark:text-dark-6">
+                          {table.pageStartIndex + rowIndex}
                         </TableCell>
                       )}
                       {visibleColumns.map((col) => {
@@ -213,7 +225,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                     </TableRow>
                     {isExpanded && renderExpandedRow && (
                       <TableRow className="bg-gray-1/50 dark:bg-dark-2">
-                        <TableCell colSpan={visibleColumns.length + (enableSelection ? 1 : 0)} className="p-0">
+                        <TableCell colSpan={visibleColumns.length + (enableSelection ? 1 : 0) + (showRowNumber ? 1 : 0)} className="p-0">
                           {renderExpandedRow(item, rowIndex)}
                         </TableCell>
                       </TableRow>
