@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Plus, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
   DataTable,
@@ -39,6 +38,7 @@ export function BarangMasukTable({ data }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [isPendingNew, startTransitionNew] = useTransition();
 
   const columns: ColumnDef<BarangMasukRow>[] = [
     { key: "nomorDokumen", label: "Nomor" },
@@ -97,9 +97,16 @@ export function BarangMasukTable({ data }: Props) {
         <TableSearch table={table} placeholder="Cari nomor / supplier..." />
         <div className="flex items-center gap-2">
           <ColumnToggle table={table} />
-          <Link href="/inventory/barang-masuk/baru">
-            <Button>+ Barang Masuk Baru</Button>
-          </Link>
+          <Button
+            loading={isPendingNew}
+            onClick={() => {
+              startTransitionNew(() =>
+                router.push("/inventory/barang-masuk/baru"),
+              );
+            }}
+          >
+            + Barang Masuk Baru
+          </Button>
         </div>
       </TableToolbar>
       <DataTable table={table} showRowNumber />

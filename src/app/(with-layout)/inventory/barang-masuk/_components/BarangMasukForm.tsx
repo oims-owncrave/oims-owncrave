@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
+import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
@@ -42,6 +43,7 @@ function todayISO() {
 export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
   const router = useRouter();
   const { create } = useBarangMasukMutation();
+  const [isCancelling, startCancel] = useTransition();
 
   const {
     register,
@@ -216,7 +218,8 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
         <Button
           type="button"
           variant="outline"
-          onClick={() => router.push("/inventory/barang-masuk")}
+          loading={isCancelling}
+          onClick={() => startCancel(() => router.push("/inventory/barang-masuk"))}
         >
           Batal
         </Button>
