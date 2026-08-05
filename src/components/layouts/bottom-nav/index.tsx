@@ -1,8 +1,11 @@
 "use client";
+
 import React, { useState, useCallback, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { MenuSheet } from "./menu-sheet";
+import { NAV_DATA } from "@/components/layouts/sidebar/data";
+import type { NavItem } from "@/components/layouts/sidebar/data";
 
 type BottomNavProps = {
   userRole: string;
@@ -67,25 +70,57 @@ function GridIcon({ className }: { className?: string }) {
   );
 }
 
-type NavSlot = {
-  label: string;
-  baseRoute: string;
-  icon: ({ className }: { className?: string }) => React.ReactElement;
-  url: string;
-  ownerOnly?: boolean;
-};
+function MasterIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+      <polyline points="7.5 4.21 12 6.81 16.5 4.21" />
+      <polyline points="7.5 19.79 7.5 14.6 3 12" />
+      <polyline points="21 12 16.5 14.6 16.5 19.79" />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+      <line x1="12" y1="22.08" x2="12" y2="12" />
+    </svg>
+  );
+}
+
+type NavSlot =
+  | {
+      label: string;
+      baseRoute: string;
+      icon: ({ className }: { className?: string }) => React.ReactElement;
+      type: "leaf";
+      url: string;
+      ownerOnly?: boolean;
+    }
+  | {
+      label: string;
+      baseRoute: string;
+      icon: ({ className }: { className?: string }) => React.ReactElement;
+      type: "parent";
+      navItemTitle: string;
+      ownerOnly?: boolean;
+    };
 
 const NAV_SLOTS: NavSlot[] = [
-  { label: "Dashboard", baseRoute: "/dashboard", icon: HomeIcon, url: "/dashboard" },
-  { label: "Inventory", baseRoute: "/inventory", icon: BoxIcon, url: "/inventory/stok" },
-  { label: "Laporan", baseRoute: "/laporan", icon: ChartIcon, url: "/laporan/stok" },
-  { label: "Sistem", baseRoute: "/sistem", icon: SettingsIcon, url: "/sistem/pengguna", ownerOnly: true },
+  { label: "Dashboard", baseRoute: "/dashboard", icon: HomeIcon, type: "leaf", url: "/dashboard" },
+  { label: "Master", baseRoute: "/master", icon: MasterIcon, type: "parent", navItemTitle: "Master Data" },
+  { label: "Inventory", baseRoute: "/inventory", icon: BoxIcon, type: "parent", navItemTitle: "Inventory" },
+  { label: "Laporan", baseRoute: "/laporan", icon: ChartIcon, type: "parent", navItemTitle: "Laporan" },
 ];
+
+function findNavItem(title: string): NavItem | undefined {
+  for (const section of NAV_DATA) {
+    const found = section.items.find((item) => item.title === title);
+    if (found) return found;
+  }
+  return undefined;
+}
 
 export function BottomNav({ userRole }: BottomNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [loadingUrl, setLoadingUrl] = useState<string | null>(null);
+  const [activeSheetItem, setActiveSheetItem] = useState<NavItem | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Clear loading when navigation completes
@@ -93,21 +128,52 @@ export function BottomNav({ userRole }: BottomNavProps) {
     setLoadingUrl(null);
   }, [pathname]);
 
-  const navigate = useCallback((url: string) => {
-    if (url === pathname) return;
-    setLoadingUrl(url);
-    router.push(url);
-  }, [pathname, router]);
+  const navigate = useCallback(
+    (url: string) => {
+      if (url === pathname) return;
+      setLoadingUrl(url);
+      router.push(url);
+    },
+    [pathname, router]
+  );
+
+  const handleCloseSheet = useCallback(() => {
+    setMenuOpen(false);
+    setActiveSheetItem(null);
+  }, []);
+
+  const handleSlotClick = useCallback(
+    (slot: NavSlot) => {
+      if (slot.type === "leaf") {
+        handleCloseSheet();
+        navigate(slot.url);
+      } else {
+        const item = findNavItem(slot.navItemTitle);
+        if (item) {
+          setMenuOpen(false);
+          setActiveSheetItem(item);
+        }
+      }
+    },
+    [handleCloseSheet, navigate]
+  );
+
+  const handleMenuClick = useCallback(() => {
+    setActiveSheetItem(null);
+    setMenuOpen(true);
+  }, []);
 
   const visibleSlots = NAV_SLOTS.filter((s) => !s.ownerOnly || userRole === "owner");
   const totalCols = visibleSlots.length + 1;
+  const isSheetOpen = menuOpen || activeSheetItem !== null;
 
   return (
     <>
       <MenuSheet
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
+        open={isSheetOpen}
+        onClose={handleCloseSheet}
         userRole={userRole}
+        scopedItem={activeSheetItem ?? undefined}
       />
 
       <nav
@@ -123,27 +189,34 @@ export function BottomNav({ userRole }: BottomNavProps) {
           style={{ gridTemplateColumns: `repeat(${totalCols}, minmax(0, 1fr))` }}
         >
           {visibleSlots.map((slot) => {
-            const isActive = pathname.startsWith(slot.baseRoute);
-            const isLoading = loadingUrl === slot.url;
+            const isRouteActive = pathname.startsWith(slot.baseRoute);
+            const isSheetActive =
+              slot.type === "parent" && activeSheetItem?.title === slot.navItemTitle;
+            const isActive = isRouteActive || isSheetActive;
+            const isLoading =
+              loadingUrl !== null && loadingUrl.startsWith(slot.baseRoute);
+
             return (
               <button
                 key={slot.baseRoute}
-                onClick={() => navigate(slot.url)}
+                onClick={() => handleSlotClick(slot)}
                 disabled={loadingUrl !== null}
                 className={cn(
                   "flex flex-col items-center justify-center gap-0.5 transition-colors",
-                  isActive ? "text-primary" : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white",
+                  isActive
+                    ? "text-primary font-medium"
+                    : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white",
                   isLoading && "opacity-70"
                 )}
                 aria-label={slot.label}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isRouteActive ? "page" : undefined}
               >
                 {isLoading ? (
                   <SpinnerIcon className="size-5.5" />
                 ) : (
                   <slot.icon className="size-5.5" />
                 )}
-                <span className="text-[10px] font-medium">
+                <span className="text-[10px]">
                   {isLoading ? "Loading..." : slot.label}
                 </span>
               </button>
@@ -152,18 +225,18 @@ export function BottomNav({ userRole }: BottomNavProps) {
 
           {/* Menu slot */}
           <button
-            onClick={() => setMenuOpen(true)}
+            onClick={handleMenuClick}
             className={cn(
               "flex flex-col items-center justify-center gap-0.5 transition-colors",
               menuOpen
-                ? "text-primary"
+                ? "text-primary font-medium"
                 : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white"
             )}
             aria-label="Buka menu"
             aria-expanded={menuOpen}
           >
             <GridIcon className="size-5.5" />
-            <span className="text-[10px] font-medium">Menu</span>
+            <span className="text-[10px]">Menu</span>
           </button>
         </div>
       </nav>

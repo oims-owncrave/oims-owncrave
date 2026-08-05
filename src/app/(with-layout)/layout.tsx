@@ -11,12 +11,20 @@ export default async function WithLayoutLayout({
 }) {
   const currentUser = await getCurrentUser();
   const userRole = currentUser?.role ?? "viewer";
+  const userName =
+    currentUser?.displayName ?? currentUser?.email?.split("@")[0] ?? "Pengguna";
 
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
         <Sidebar userRole={userRole} />
-        <MainContent userInfo={<UserInfo />} userRole={userRole}>{children}</MainContent>
+        <MainContent
+          userInfo={<UserInfo />}
+          userRole={userRole}
+          userName={userName}
+        >
+          {children}
+        </MainContent>
       </div>
     </SidebarProvider>
   );

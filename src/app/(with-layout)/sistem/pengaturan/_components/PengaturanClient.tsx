@@ -1,10 +1,16 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { LogOut } from "lucide-react";
 import { usePWAStore } from "@/stores/pwa-store";
+import { ThemeToggleSwitch } from "@/components/layouts/header/theme-toggle";
+import { signOutAction } from "@/services/auth";
+import { Spinner } from "@/components/ui/Spinner";
 
 export function PengaturanClient() {
   const { deferredPrompt, isInstalled, setDeferredPrompt, setIsInstalled } = usePWAStore();
+  const [isLoggingOut, startLogout] = useTransition();
 
   const canInstall = !isInstalled && !!deferredPrompt;
   const isIOS = typeof navigator !== "undefined" && /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -28,6 +34,17 @@ export function PengaturanClient() {
 
   return (
     <div className="max-w-xl space-y-4">
+      {/* Theme Settings */}
+      <div className="rounded-xl border border-stroke bg-white p-6 dark:border-dark-3 dark:bg-gray-dark">
+        <h3 className="mb-1 text-base font-semibold text-dark dark:text-white">
+          Tampilan & Tema
+        </h3>
+        <p className="mb-4 text-sm text-dark-5 dark:text-dark-6">
+          Pilih mode tampilan terang (light) atau gelap (dark) untuk kenyamanan Anda.
+        </p>
+        <ThemeToggleSwitch />
+      </div>
+      {/* Install Application */}
       <div className="rounded-xl border border-stroke bg-white p-6 dark:border-dark-3 dark:bg-gray-dark">
         <h3 className="mb-1 text-base font-semibold text-dark dark:text-white">
           Install Aplikasi
@@ -65,6 +82,28 @@ export function PengaturanClient() {
             Buka OIMS di Chrome, lalu tap ikon install di address bar
           </p>
         )}
+      </div>
+      {/* Account & Session */}
+      <div className="rounded-xl border border-stroke bg-white p-6 dark:border-dark-3 dark:bg-gray-dark">
+        <h3 className="mb-1 text-base font-semibold text-dark dark:text-white">
+          Akun & Sesi
+        </h3>
+        <p className="mb-4 text-sm text-dark-5 dark:text-dark-6">
+          Keluar dari sesi akun Anda di perangkat ini.
+        </p>
+        <button
+          type="button"
+          disabled={isLoggingOut}
+          onClick={() => startLogout(async () => { await signOutAction(); })}
+          className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoggingOut ? (
+            <Spinner size={16} className="text-white" />
+          ) : (
+            <LogOut size={16} />
+          )}
+          <span>{isLoggingOut ? "Keluar..." : "Keluar dari Akun"}</span>
+        </button>
       </div>
     </div>
   );

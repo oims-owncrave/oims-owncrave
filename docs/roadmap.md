@@ -86,8 +86,8 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di gudang/produksi. Semua sudah di-plan.
 
 - [x] `oims-g05.1` — **Fix flash sidebar + buang drawer mobile** (P1 bug) ✅ **DONE** (unblocks g05.2, g05.3)
-- [ ] `oims-g05.2` — Bottom nav parent buka sheet + Menu accordion (P2) ← depends g05.1
-- [ ] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ← depends g05.1
+- [x] `oims-g05.2` — Bottom nav parent buka sheet + Menu accordion (P2) ✅ **DONE**
+- [x] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ✅ **DONE**
 - [ ] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ← independen
 - [ ] `oims-g05.5` — Card view tabel mobile + filter rapi (P2) ← independen
 
@@ -122,6 +122,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — oims-g05.2 + g05.3 selesai + reviewed. Bottom nav slot parent (Master/Inventory/Laporan) buka bottom-sheet child, slot Menu = accordion collapse per parent (scalable Tahap 2-5). Header mobile app-like: greeting card gradient di /dashboard, judul dinamis + back-arrow di halaman lain, desktop header tak berubah. Deviasi: slot Sistem->Master (Sistem ke Menu), Pengaturan dapat section Tema+Logout (kompensasi kontrol yang hilang dari header mobile). Juga: dashboard query timeout fix (oims-yja, commit e8ca4da).
 
 - **2026-08-05** — oims-g05.1 selesai + reviewed. Sidebar desktop-only (mobile pakai bottom nav), branch drawer mobile dibuang → fix bug flash cold-load (root cause: isMobile telat sync di context). Header dead hamburger dihapus. Fix sampingan: next.config images.qualities [75,100] (warning logo quality). g05.2 + g05.3 unblocked.
 

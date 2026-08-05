@@ -7,19 +7,19 @@ import {
   SistemIcon,
 } from "../icons";
 
-type NavSubItem = {
+export type NavSubItem = {
   title: string;
   url: string;
 };
 
-type NavItem = {
+export type NavItem = {
   title: string;
   url?: string;
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" }>;
   items: NavSubItem[];
 };
 
-type NavSection = {
+export type NavSection = {
   label: string;
   ownerOnly?: boolean;
   items: NavItem[];
@@ -95,3 +95,32 @@ export const NAV_DATA: NavSection[] = [
     ],
   },
 ];
+
+export function getPageTitle(pathname: string): string {
+  if (pathname === "/dashboard") return "Dashboard";
+
+  // Exact match
+  for (const section of NAV_DATA) {
+    for (const item of section.items) {
+      if (item.url === pathname) return item.title;
+      for (const sub of item.items) {
+        if (sub.url === pathname) return sub.title;
+      }
+    }
+  }
+
+  // Sub-route match (e.g. /inventory/barang-masuk/baru)
+  for (const section of NAV_DATA) {
+    for (const item of section.items) {
+      for (const sub of item.items) {
+        if (pathname.startsWith(sub.url + "/")) {
+          const subPath = pathname.replace(sub.url + "/", "");
+          if (subPath === "baru") return `Tambah ${sub.title}`;
+          return `Detail ${sub.title}`;
+        }
+      }
+    }
+  }
+
+  return "OIMS";
+}
