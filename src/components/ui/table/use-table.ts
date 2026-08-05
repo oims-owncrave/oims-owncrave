@@ -16,6 +16,8 @@ export interface ColumnDef<TData> {
   sticky?: "left" | "right"
   /** Tooltip text shown on hover over the column header label (abbreviation glossary, etc). */
   headerTooltip?: string
+  /** Override mobile card view role. Default = auto heuristic in DataTable. */
+  mobileRole?: "title" | "highlight" | "detail" | "action" | "hide"
 }
 
 export interface CellMeta {
@@ -106,6 +108,13 @@ export interface TableState<TData> {
 
   // Loading
   isLoading: boolean
+
+  // Mobile view toggle (card | table)
+  mobileView: "card" | "table"
+  setMobileView: (v: "card" | "table") => void
+
+  // Direct sort setter (for sort dropdown — bypasses toggle logic)
+  setSortDirect: (key: string, direction: "asc" | "desc") => void
 }
 
 export function useTable<TData>(options: UseTableOptions<TData>): TableState<TData> {
@@ -125,6 +134,7 @@ export function useTable<TData>(options: UseTableOptions<TData>): TableState<TDa
   const [pinnedColumns, setPinnedColumns] = useState<Set<string>>(
     new Set(defaultPinned ?? [])
   )
+  const [mobileView, setMobileView] = useState<"card" | "table">("card")
 
   const getRowId = useCallback(
     (item: TData, index: number): string | number =>
@@ -199,6 +209,11 @@ export function useTable<TData>(options: UseTableOptions<TData>): TableState<TDa
     })
   }, [])
 
+  // Direct sort setter (used by mobile sort dropdown — not toggle)
+  const setSortDirect = useCallback((key: string, direction: "asc" | "desc") => {
+    setSortChain([{ key, direction }])
+  }, [])
+
   // Column visibility
   const toggleColumnVisibility = useCallback((key: string) => {
     setColumnVisibility((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -269,7 +284,7 @@ export function useTable<TData>(options: UseTableOptions<TData>): TableState<TDa
   return {
     data, columns,
     searchQuery, setSearchQuery,
-    sortChain, handleSort, getSortEntry, getSortPriority,
+    sortChain, handleSort, getSortEntry, getSortPriority, setSortDirect,
     currentPage, pageSize, setCurrentPage, setPageSize,
     totalPages, totalEntries, pageStartIndex, pageEndIndex,
     columnVisibility, toggleColumnVisibility, setAllColumnVisibility,
@@ -279,6 +294,7 @@ export function useTable<TData>(options: UseTableOptions<TData>): TableState<TDa
     processedData,
     getRowId,
     isLoading,
+    mobileView, setMobileView,
   }
 }
 

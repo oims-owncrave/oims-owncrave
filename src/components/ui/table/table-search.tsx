@@ -12,7 +12,7 @@ interface TableSearchProps<TData> {
 
 export function TableSearch<TData>({ table, placeholder = "Cari...", className }: TableSearchProps<TData>) {
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative w-full sm:w-auto", className)}>
       <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary" />
       <input
         type="search"

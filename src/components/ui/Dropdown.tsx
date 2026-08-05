@@ -80,26 +80,44 @@ type DropdownContentProps = {
 function getPanelStyle(
   rect: DOMRect,
   align: "start" | "end" | "center",
+  panelWidth: number = 0,
 ): React.CSSProperties {
   const gap = 8;
-  const base: React.CSSProperties = {
+  const padding = 12;
+  const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 360;
+
+  // Auto-switch left-aligned triggers from "end" to "start" so panel expands rightwards on mobile/left side
+  let effectiveAlign = align;
+  if (rect.left < viewportWidth / 2 && align === "end") {
+    effectiveAlign = "start";
+  }
+
+  let left: number;
+  let transform: string | undefined;
+
+  switch (effectiveAlign) {
+    case "end":
+      left = rect.right;
+      transform = "translateX(-100%)";
+      break;
+    case "start":
+      left = Math.max(padding, Math.min(rect.left, viewportWidth - padding - (panelWidth || 280)));
+      transform = undefined;
+      break;
+    default:
+      left = rect.left + rect.width / 2;
+      transform = "translateX(-50%)";
+      break;
+  }
+
+  return {
     position: "fixed",
     top: rect.bottom + gap,
     minWidth: Math.max(rect.width, 128),
+    maxWidth: `calc(100vw - ${padding * 2}px)`,
+    left,
+    transform,
   };
-
-  switch (align) {
-    case "end":
-      return { ...base, left: rect.right, transform: "translateX(-100%)" };
-    case "start":
-      return { ...base, left: rect.left };
-    default:
-      return {
-        ...base,
-        left: rect.left + rect.width / 2,
-        transform: "translateX(-50%)",
-      };
-  }
 }
 
 export function DropdownContent({
@@ -121,7 +139,8 @@ export function DropdownContent({
   const updatePosition = useCallback(() => {
     const trigger = triggerRef.current;
     if (!trigger) return;
-    setPanelStyle(getPanelStyle(trigger.getBoundingClientRect(), align));
+    const panelWidth = panelRef.current?.getBoundingClientRect().width ?? 0;
+    setPanelStyle(getPanelStyle(trigger.getBoundingClientRect(), align, panelWidth));
   }, [align, triggerRef]);
 
   useLayoutEffect(() => {

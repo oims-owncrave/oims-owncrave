@@ -91,7 +91,7 @@ export function LaporanNilaiPersediaanTable({
   return (
     <div className="space-y-4">
       {/* Summary Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
+      <div className="flex flex-col gap-3 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
         <div>
           <span className="text-xs text-dark-5 dark:text-dark-6">Total Kategori</span>
           <p className="text-base font-bold text-dark dark:text-white">
@@ -99,8 +99,8 @@ export function LaporanNilaiPersediaanTable({
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="text-right leading-tight">
+        <div className="flex items-center justify-between gap-4">
+          <div className="leading-tight">
             <span className="block text-xs font-medium text-dark-5 dark:text-dark-6">Total Nilai Persediaan Keseluruhan</span>
             <p className="mt-0.5 text-lg font-bold text-emerald-600 dark:text-emerald-400">
               {rupiah(totalOverall)}
@@ -121,9 +121,7 @@ export function LaporanNilaiPersediaanTable({
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <TableSearch table={table} placeholder="Cari kategori..." />
-          <div className="flex items-center gap-2">
-            <ColumnToggle table={table} />
-          </div>
+          <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

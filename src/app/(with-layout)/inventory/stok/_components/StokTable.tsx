@@ -38,17 +38,19 @@ export function StokTable({
   kategoriOptions,
 }: Props) {
   const columns: ColumnDef<StokRow>[] = [
-    { key: "kode", label: "Kode" },
-    { key: "nama", label: "Nama Bahan" },
+    { key: "kode", label: "Kode", mobileRole: "detail" },
+    { key: "nama", label: "Nama Bahan", mobileRole: "title" },
     {
       key: "kategoriNama",
       label: "Kategori",
+      mobileRole: "detail",
       renderCell: (item) => item.kategoriNama || "-",
     },
     {
       key: "kuantitas",
       label: "Stok",
       align: "right",
+      mobileRole: "highlight",
       renderCell: (item) =>
         `${Number(item.kuantitas).toLocaleString("id-ID", { maximumFractionDigits: 3 })} ${item.satuanSingkatan || ""}`.trim(),
     },
@@ -56,6 +58,7 @@ export function StokTable({
       key: "stokMinimum",
       label: "Min",
       align: "right",
+      mobileRole: "detail",
       renderCell: (item) =>
         `${Number(item.stokMinimum).toLocaleString("id-ID", { maximumFractionDigits: 3 })} ${item.satuanSingkatan || ""}`.trim(),
     },
@@ -63,18 +66,18 @@ export function StokTable({
       key: "nilai",
       label: "Nilai (Rp)",
       align: "right",
+      mobileRole: "detail",
       renderCell: (item) => rupiah(item.nilai),
     },
     {
       key: "isKritis",
       label: "Status",
-      sortable: false,
-      searchable: false,
       align: "center",
+      mobileRole: "highlight",
       renderCell: (item) => (
         <span
           className={cn(
-            "rounded-full px-2.5 py-1 text-xs font-medium",
+            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
             item.isKritis
               ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
               : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
@@ -101,14 +104,15 @@ export function StokTable({
   return (
     <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
       <TableToolbar>
-        <div className="flex items-center gap-3">
-          <TableSearch table={table} placeholder="Cari kode / nama bahan..." />
+        <TableSearch table={table} placeholder="Cari kode / nama bahan..." />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <ComboSelect
             variant="filter"
             placeholder="Semua Kategori"
             options={kategoriOpts}
             value={kategoriId || null}
             onChange={(v) => onKategoriChange((v as string) ?? "")}
+            className="flex-1 sm:flex-none"
           />
           <ComboSelect
             variant="filter"
@@ -120,9 +124,10 @@ export function StokTable({
             ]}
             value={kritisOnly || null}
             onChange={(v) => onKritisChange((v as string) ?? "")}
+            className="flex-1 sm:flex-none"
           />
         </div>
-        <ColumnToggle table={table} />
+        <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
       </TableToolbar>
       <DataTable table={table} showRowNumber />
       <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

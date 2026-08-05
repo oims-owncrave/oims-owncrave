@@ -270,7 +270,7 @@ export function ComboSelect({
 
   if (isFilter) {
     return (
-      <div ref={containerRef} className={cn("relative w-40", className)}>
+      <div ref={containerRef} className={cn("relative min-w-32", className)}>
         {trigger}
         {panel}
       </div>

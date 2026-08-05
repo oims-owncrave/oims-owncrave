@@ -170,10 +170,11 @@ export function PenyesuaianTable({ data, isOwner, onAdd }: Props) {
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <TableSearch table={table} placeholder="Cari nomor / bahan..." />
-          <div className="flex items-center gap-2">
-            <ColumnToggle table={table} />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
             <Button
               loading={isPendingNew}
+              className="flex-1 sm:flex-none"
               onClick={() =>
                 startTransitionNew(() =>
                   router.push("/inventory/penyesuaian/baru"),

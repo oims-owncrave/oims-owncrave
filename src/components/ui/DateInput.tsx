@@ -11,6 +11,7 @@ interface Props {
   onChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
+  containerClassName?: string;
 }
 
 function toDate(s: string | undefined): Date | undefined {
@@ -26,7 +27,7 @@ function toStr(d: Date): string {
   return `${y}-${m}-${dd}`;
 }
 
-export function DateInput({ value, onChange, placeholder = "Pilih tanggal", className }: Props) {
+export function DateInput({ value, onChange, placeholder = "Pilih tanggal", className, containerClassName }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -44,7 +45,7 @@ export function DateInput({ value, onChange, placeholder = "Pilih tanggal", clas
     : "";
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className={cn("relative", containerClassName)}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

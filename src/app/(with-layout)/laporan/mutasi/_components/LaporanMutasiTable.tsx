@@ -158,8 +158,8 @@ export function LaporanMutasiTable({
   return (
     <div className="space-y-4">
       {/* Date & Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col gap-3 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
           <ComboSelect
             variant="filter"
             placeholder="Semua Bahan"
@@ -172,14 +172,17 @@ export function LaporanMutasiTable({
             ]}
             value={bahanId || null}
             onChange={(v) => onBahanChange((v as string) ?? "")}
+            className="w-full sm:w-40"
           />
-          <DateInput value={from} onChange={onFromChange} placeholder="Dari Tanggal" />
-          <DateInput value={to} onChange={onToChange} placeholder="Sampai Tanggal" />
+          <div className="flex items-center gap-2">
+            <DateInput value={from} onChange={onFromChange} placeholder="Dari Tanggal" containerClassName="flex-1" className="w-full" />
+            <DateInput value={to} onChange={onToChange} placeholder="Sampai Tanggal" containerClassName="flex-1" className="w-full" />
+          </div>
         </div>
 
         <Button
           variant="outline"
-          className="border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white"
+          className="border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white w-full sm:w-auto"
           onClick={handleExport}
         >
           <Download size={16} className="mr-2" />
@@ -191,9 +194,7 @@ export function LaporanMutasiTable({
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <TableSearch table={table} placeholder="Cari bahan / dokumen..." />
-          <div className="flex items-center gap-2">
-            <ColumnToggle table={table} />
-          </div>
+          <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

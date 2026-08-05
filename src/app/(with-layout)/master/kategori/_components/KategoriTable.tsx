@@ -85,9 +85,9 @@ export function KategoriTable({ data, onEdit, onAdd }: Props) {
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <TableSearch table={table} placeholder="Cari kategori..." />
-          <div className="flex items-center gap-2">
-            <ColumnToggle table={table} />
-            <Button onClick={onAdd}>+ Tambah Kategori</Button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
+            <Button onClick={onAdd} className="flex-1 sm:flex-none">+ Tambah Kategori</Button>
           </div>
         </TableToolbar>
         <DataTable table={table} showRowNumber />

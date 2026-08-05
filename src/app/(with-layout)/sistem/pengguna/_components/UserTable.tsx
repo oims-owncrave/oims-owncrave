@@ -128,9 +128,9 @@ export function UserTable({ data, currentUserId, onEdit, onAdd }: Props) {
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <TableSearch table={table} placeholder="Cari user..." />
-          <div className="flex items-center gap-2">
-            <ColumnToggle table={table} />
-            <Button onClick={onAdd}>+ Tambah User</Button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
+            <Button onClick={onAdd} className="flex-1 sm:flex-none">+ Tambah User</Button>
           </div>
         </TableToolbar>
 
