@@ -173,7 +173,7 @@ export function BarangKeluarForm({ bahanOptions }: Props) {
                   <label className={`mb-2 block text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
                     Harga Rata²
                   </label>
-                  <div className="flex h-11 items-center px-4 rounded-lg border border-stroke bg-gray-100 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
+                  <div className="flex h-10 items-center px-4 rounded-lg border border-stroke bg-gray-100 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
                     {bahanInfo ? rupiah(harga) : "-"}
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export function BarangKeluarForm({ bahanOptions }: Props) {
                   <label className={`mb-2 block text-right text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
                     Subtotal
                   </label>
-                  <div className="flex h-11 items-center justify-end px-4 text-sm font-medium text-dark dark:text-white">
+                  <div className="flex h-10 items-center justify-end px-4 text-sm font-medium text-dark dark:text-white">
                     {rupiah(subtotal)}
                   </div>
                 </div>
@@ -191,7 +191,7 @@ export function BarangKeluarForm({ bahanOptions }: Props) {
                 {/* Delete — label placeholder agar tombol sejajar dengan input */}
                 <div>
                   <div className={`mb-2 h-5 ${i === 0 ? "block" : "invisible"}`} aria-hidden />
-                  <div className="flex h-11 items-center justify-center">
+                  <div className="flex h-10 items-center justify-center">
                     <button
                       type="button"
                       onClick={() => fields.length > 1 && remove(i)}

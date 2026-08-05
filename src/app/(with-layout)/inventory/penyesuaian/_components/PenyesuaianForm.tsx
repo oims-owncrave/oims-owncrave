@@ -90,7 +90,7 @@ export function PenyesuaianForm({ bahanOptions }: Props) {
             <label className="mb-2 block text-sm font-medium text-dark dark:text-white">
               Stok Saat Ini
             </label>
-            <div className="flex h-11 items-center rounded-lg border border-stroke bg-gray-100 px-4 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
+            <div className="flex h-10 items-center rounded-lg border border-stroke bg-gray-100 px-4 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
               {selectedBahan
                 ? `${stokSaatIni.toLocaleString("id-ID", { maximumFractionDigits: 3 })} ${selectedBahan.satuanSingkatan || ""}`
                 : "—"}
@@ -113,7 +113,7 @@ export function PenyesuaianForm({ bahanOptions }: Props) {
               Selisih (auto)
             </label>
             <div
-              className={`flex h-11 items-center rounded-lg border px-4 text-sm font-medium ${
+              className={`flex h-10 items-center rounded-lg border px-4 text-sm font-medium ${
                 selisih > 0
                   ? "border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-900/20 dark:text-green-300"
                   : selisih < 0

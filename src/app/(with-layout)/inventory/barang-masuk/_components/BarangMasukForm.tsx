@@ -186,14 +186,14 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
                   <label className={`mb-2 block text-right text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
                     Subtotal
                   </label>
-                  <div className="flex h-11 items-center justify-end px-4 text-sm font-medium text-dark dark:text-white">
+                  <div className="flex h-10 items-center justify-end px-4 text-sm font-medium text-dark dark:text-white">
                     {rupiah(subtotal)}
                   </div>
                 </div>
                 {/* Delete — label placeholder agar tombol sejajar dengan input */}
                 <div>
                   <div className={`mb-2 h-5 ${i === 0 ? "block" : "invisible"}`} aria-hidden />
-                  <div className="flex h-11 items-center justify-center">
+                  <div className="flex h-10 items-center justify-center">
                     <button
                       type="button"
                       onClick={() => fields.length > 1 && remove(i)}
