@@ -155,60 +155,42 @@ export function MutasiTable({
 
   return (
     <div className="space-y-4">
-      {/* Filter bar */}
-      <div className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
-        <div className="flex flex-wrap items-center gap-3">
-          <ComboSelect
-            variant="filter"
-            placeholder="Semua bahan"
-            options={[
-              { label: "Semua bahan", value: "" },
-              ...bahanOptions.map((b) => ({ label: `${b.kode} — ${b.nama}`, value: b.id })),
-            ]}
-            value={filterBahanLabel || null}
-            onChange={(v) => {
-              const id = (v as string) ?? "";
-              const opt = bahanOptions.find((b) => b.id === id);
-              onFilterBahanChange(id, opt ? `${opt.kode} — ${opt.nama}` : "");
-            }}
-          />
-
-          <ComboSelect
-            variant="filter"
-            placeholder="Semua tipe"
-            options={[
-              { label: "Semua tipe", value: "" },
-              { label: "Masuk", value: "masuk" },
-              { label: "Keluar", value: "keluar" },
-              { label: "Penyesuaian", value: "penyesuaian" },
-              { label: "Retur Masuk", value: "retur_masuk" },
-            ]}
-            value={filterTipe || null}
-            onChange={(v) => onFilterTipeChange((v as string) ?? "")}
-          />
-
-          {/* Filter tanggal — tetap input date, tidak ada ComboSelect untuk date */}
-          <DateInput
-            value={filterFrom}
-            onChange={onFilterFromChange}
-            placeholder="Dari Tanggal"
-          />
-
-          <DateInput
-            value={filterTo}
-            onChange={onFilterToChange}
-            placeholder="Sampai Tanggal"
-          />
-        </div>
-      </div>
-
       {/* Tabel */}
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari bahan / dokumen..." />
-          <div className="flex items-center gap-2">
-            <ColumnToggle table={table} />
+          <div className="flex flex-wrap items-center gap-2">
+            <TableSearch table={table} placeholder="Cari bahan / dokumen..." />
+            <ComboSelect
+              variant="filter"
+              placeholder="Semua bahan"
+              options={[
+                { label: "Semua bahan", value: "" },
+                ...bahanOptions.map((b) => ({ label: `${b.kode} — ${b.nama}`, value: b.id })),
+              ]}
+              value={filterBahanLabel || null}
+              onChange={(v) => {
+                const id = (v as string) ?? "";
+                const opt = bahanOptions.find((b) => b.id === id);
+                onFilterBahanChange(id, opt ? `${opt.kode} — ${opt.nama}` : "");
+              }}
+            />
+            <ComboSelect
+              variant="filter"
+              placeholder="Semua tipe"
+              options={[
+                { label: "Semua tipe", value: "" },
+                { label: "Masuk", value: "masuk" },
+                { label: "Keluar", value: "keluar" },
+                { label: "Penyesuaian", value: "penyesuaian" },
+                { label: "Retur Masuk", value: "retur_masuk" },
+              ]}
+              value={filterTipe || null}
+              onChange={(v) => onFilterTipeChange((v as string) ?? "")}
+            />
+            <DateInput value={filterFrom} onChange={onFilterFromChange} placeholder="Dari Tanggal" />
+            <DateInput value={filterTo} onChange={onFilterToChange} placeholder="Sampai Tanggal" />
           </div>
+          <ColumnToggle table={table} />
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[25, 50, 100]} />

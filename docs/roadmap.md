@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — master data + transaksi + view (stok/mutasi) selesai. Berikutnya: penyesuaian stok (jpn.12) + dashboard (jpn.10).**
+> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — master data + transaksi + view + penyesuaian stok selesai. Berikutnya: dashboard (jpn.10) + laporan (jpn.13).**
 
 ---
 
@@ -23,7 +23,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | ✅ | ~~Barang masuk + detail~~ | Pencatatan bahan dari supplier | ✅ jpn.5 **DONE** |
 | ✅ | ~~Barang keluar + detail~~ | Pengeluaran bahan ke produksi | ✅ jpn.8 **DONE** |
 | ✅ | ~~Stok + mutasi stok (immutable ledger)~~ | Core inventory — append-only, no manual edit | ✅ jpn.9+11 **DONE** |
-| 6 | Penyesuaian stok (dengan approval flow) | PRD mensyaratkan approval owner | ⏳ |
+| ✅ | ~~Penyesuaian stok (dengan approval flow)~~ | PRD mensyaratkan approval owner | ✅ jpn.12 **DONE** |
 | 7 | Dashboard inventory (ringkasan + panel peringatan) | Owner perlu visibilitas tanpa buka tabel | ⏳ |
 | 8 | Laporan Tahap 1 (barang masuk/keluar/stok/mutasi/nilai persediaan) | Klien butuh laporan PDF/export | ⏳ |
 | 9 | Audit log (semua aksi penting tercatat) | PRD wajib, fondasi compliance | ⏳ |
@@ -68,11 +68,11 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Barang keluar | ✅ | `/inventory/barang-keluar` | jpn.8 done — guard stok, snapshot harga, mutasi negatif, nomor BK |
 | Stok bahan | ✅ | `/inventory/stok` | jpn.9 done — view + summary cards + alert kritis + filter ComboSelect |
 | Mutasi stok | ✅ | `/inventory/mutasi` | jpn.11 done — ledger server-side paginate + filter bahan/tipe/tanggal |
-| Penyesuaian stok | ⏳ | `/inventory/penyesuaian` | jpn.12 belum |
+| Penyesuaian stok | ✅ | `/inventory/penyesuaian` | jpn.12 done — approval flow (owner approve/reject), mutasi atomik, audit log |
 | Dashboard | ⏳ | `/dashboard` | Saat ini placeholder |
 | Laporan | ⏳ | `/laporan/*` | — |
 
-**Ringkasan:** Fondasi + master data + transaksi (barang masuk/keluar) + view (stok/mutasi) selesai. Berikutnya: penyesuaian stok (jpn.12) + dashboard (jpn.10).
+**Ringkasan:** Fondasi + master data + transaksi + view (stok/mutasi) + penyesuaian stok selesai. Berikutnya: dashboard (jpn.10) + laporan (jpn.13).
 
 ---
 
@@ -94,7 +94,7 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 ### 🟢 GELOMBANG 3 — View + Approval
 - [x] `oims-jpn.9` — Stok bahan ✅ **DONE** — view + summary cards + alert kritis
 - [x] `oims-jpn.11` — Mutasi stok ✅ **DONE** — ledger server-side + filter bahan/tipe/tanggal
-- [ ] `oims-jpn.12` — Penyesuaian stok (approval flow)
+- [x] `oims-jpn.12` — Penyesuaian stok ✅ **DONE** — approval flow owner approve/reject + mutasi atomik
 
 ### 🔵 GELOMBANG 4 — Dashboard + Laporan + Audit
 - [ ] `oims-jpn.10` — Dashboard inventory
@@ -149,6 +149,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — Penyesuaian stok (jpn.12) selesai + reviewed. Approval flow: owner approve/reject, mutasi atomik (FOR UPDATE), audit log tiap aksi. Fix: z.coerce.number schema, rejectPenyesuaian dalam tx. Filter mutasi pindah ke toolbar. Berikutnya: dashboard (jpn.10).
 
 - **2026-08-05** — Stok bahan (jpn.9) + Mutasi stok (jpn.11) selesai + reviewed. Fix: hapus duplicate h2 di PageClient, ganti `<select>` native → ComboSelect (filter kategori stok, bahan mutasi, tipe mutasi), checkbox native → Checkbox kit. Berikutnya: penyesuaian stok (jpn.12).
 
