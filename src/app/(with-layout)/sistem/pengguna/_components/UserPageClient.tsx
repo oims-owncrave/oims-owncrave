@@ -5,6 +5,7 @@ import { UserTable } from "./UserTable";
 import { UserFormModal } from "./UserFormModal";
 import type { User } from "@/db/schema";
 import { useUsers } from "@/hooks/useUser";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 interface Props {
   initialUsers: User[];
@@ -20,7 +21,10 @@ export function UserPageClient({ initialUsers, currentUserId }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-dark dark:text-white">Manajemen Pengguna</h2>
+      <PageHeader
+        title="Manajemen Pengguna"
+        breadcrumb={[{ label: "Sistem" }, { label: "Pengguna" }]}
+      />
 
       <UserTable
         data={users}

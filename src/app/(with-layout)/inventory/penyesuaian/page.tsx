@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { listPenyesuaian } from "@/services/penyesuaian";
 import { PenyesuaianPageClient } from "./_components/PenyesuaianPageClient";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { getCurrentUser } from "@/lib/auth";
 
 export const metadata: Metadata = {
@@ -18,14 +18,10 @@ export default async function PenyesuaianPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Penyesuaian Stok
-        </h2>
-        <Breadcrumb
-          items={[{ label: "Inventory" }, { label: "Penyesuaian Stok" }]}
-        />
-      </div>
+      <PageHeader
+        title="Penyesuaian Stok"
+        breadcrumb={[{ label: "Inventory" }, { label: "Penyesuaian Stok" }]}
+      />
       <PenyesuaianPageClient initialData={data} isOwner={isOwner} />
     </div>
   );

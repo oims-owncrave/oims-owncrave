@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { listBahan } from "@/services/bahan";
 import { requireRole } from "@/lib/auth";
 import { BarangKeluarForm } from "../\_components/BarangKeluarForm";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { db } from "@/db";
 import { stok } from "@/db/schema";
 import { inArray } from "drizzle-orm";
@@ -29,18 +29,14 @@ export default async function BarangKeluarBaruPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Barang Keluar Baru
-        </h2>
-        <Breadcrumb
-          items={[
-            { label: "Inventory", href: "/inventory/barang-keluar" },
-            { label: "Barang Keluar", href: "/inventory/barang-keluar" },
-            { label: "Baru" },
-          ]}
-        />
-      </div>
+      <PageHeader
+        title="Barang Keluar Baru"
+        breadcrumb={[
+          { label: "Inventory", href: "/inventory/barang-keluar" },
+          { label: "Barang Keluar", href: "/inventory/barang-keluar" },
+          { label: "Baru" },
+        ]}
+      />
       <BarangKeluarForm bahanOptions={bahanOptions} />
     </div>
   );

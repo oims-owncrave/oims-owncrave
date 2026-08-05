@@ -7,7 +7,7 @@ import {
   listUsersForAuditFilter,
 } from "@/services/audit";
 import { AuditLogClient } from "./_components/AuditLogClient";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Log Aktivitas | OIMS Owncrave",
@@ -27,17 +27,13 @@ export default async function AuditLogPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Log Aktivitas
-        </h2>
-        <Breadcrumb
-          items={[
-            { label: "Sistem" },
-            { label: "Log Aktivitas" },
-          ]}
-        />
-      </div>
+      <PageHeader
+        title="Log Aktivitas"
+        breadcrumb={[
+          { label: "Sistem" },
+          { label: "Log Aktivitas" },
+        ]}
+      />
       <AuditLogClient
         initialRows={rows}
         initialTotal={total}

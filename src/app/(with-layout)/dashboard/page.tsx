@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getDashboardStats, getBahanKritisList } from "@/services/dashboard";
 import { DashboardPageClient } from "./_components/DashboardPageClient";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Dashboard Inventory | OIMS Owncrave",
@@ -15,12 +15,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Dashboard Inventory
-        </h2>
-        <Breadcrumb items={[{ label: "Dashboard" }]} />
-      </div>
+      <PageHeader
+        title="Dashboard Inventory"
+        breadcrumb={[{ label: "Dashboard" }]}
+      />
       <DashboardPageClient
         initialStats={stats}
         initialKritisList={kritisList}

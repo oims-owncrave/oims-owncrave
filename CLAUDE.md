@@ -41,6 +41,7 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 - **Tailwind v4 canonical classes** — JANGAN pakai arbitrary values kalau ada canonical equivalent. Contoh: `z-70` bukan `z-[70]`, `w-72.5` bukan `w-[290px]`, `text-xs` bukan `text-[12px]`, `min-w-70` bukan `min-w-[17.5rem]`. Arbitrary BOLEH hanya jika tidak ada canonical (mis. `w-[100.5px]`, `grid-cols-[1fr_4rem]`, breakpoint custom `min-[850px]`).
 - `cn()` dari `src/lib/utils.ts` untuk conditional classes.
 - UI kit tersedia di `src/components/ui/`: Button, Input, Select, MultiSelect, ComboSelect, ConfirmDialog, Tooltip. **Cek dulu sebelum buat baru.**
+- **Konvensi UI/halaman (WAJIB baca sebelum bikin halaman)**: READ `docs/claude/ui-components.md` — PageHeader (judul+breadcrumb, bukan h2 manual), header mobile otomatis, card grid 2-kolom mobile, bottom nav.
 - **Colocation komponen halaman**: komponen yang cuma dipakai 1 halaman taruh di `_components/` DALAM folder route halaman itu (mis. `src/app/(with-layout)/sistem/pengguna/_components/UserTable.tsx`), BUKAN di `src/components/[feature]/`. Prefix `_` = private folder (tak jadi route). Pola PMS. Komponen reusable lintas-halaman → `src/components/ui/`.
 - Form: `react-hook-form` + `@hookform/resolvers/zod`. Zod schema di `src/lib/schemas/`.
 - Toast: `sonner` (sudah di layout). Import `toast` dari `sonner`.

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { listMutasi, listBahanForMutasiFilter } from "@/services/mutasi";
 import { LaporanMutasiClient } from "./_components/LaporanMutasiClient";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Laporan Mutasi Stok | OIMS Owncrave",
@@ -15,18 +15,14 @@ export default async function LaporanMutasiPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Laporan Mutasi Stok
-        </h2>
-        <Breadcrumb
-          items={[
-            { label: "Analitik" },
-            { label: "Laporan" },
-            { label: "Mutasi Stok" },
-          ]}
-        />
-      </div>
+      <PageHeader
+        title="Laporan Mutasi Stok"
+        breadcrumb={[
+          { label: "Analitik" },
+          { label: "Laporan" },
+          { label: "Mutasi Stok" },
+        ]}
+      />
       <LaporanMutasiClient
         initialData={initialData}
         bahanOptions={bahanOptions}

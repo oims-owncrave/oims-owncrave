@@ -5,6 +5,7 @@ import { BahanTable } from "./BahanTable";
 import { BahanFormModal } from "./BahanFormModal";
 import { useBahanList } from "@/hooks/useBahan";
 import type { Kategori, Satuan } from "@/db/schema";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 type BahanItem = {
   id: string;
@@ -39,7 +40,10 @@ export function BahanPageClient({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-dark dark:text-white">Master Bahan</h2>
+      <PageHeader
+        title="Master Bahan"
+        breadcrumb={[{ label: "Master" }, { label: "Bahan" }]}
+      />
 
       <BahanTable
         data={items}

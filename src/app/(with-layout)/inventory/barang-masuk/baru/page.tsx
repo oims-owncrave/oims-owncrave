@@ -3,7 +3,7 @@ import { listBahan } from "@/services/bahan";
 import { listSupplier } from "@/services/supplier";
 import { requireRole } from "@/lib/auth";
 import { BarangMasukForm } from "../_components/BarangMasukForm";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Barang Masuk Baru | OIMS Owncrave",
@@ -19,18 +19,14 @@ export default async function BarangMasukBaruPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Barang Masuk Baru
-        </h2>
-        <Breadcrumb
-          items={[
-            { label: "Inventory", href: "/inventory/barang-masuk" },
-            { label: "Barang Masuk", href: "/inventory/barang-masuk" },
-            { label: "Baru" },
-          ]}
-        />
-      </div>
+      <PageHeader
+        title="Barang Masuk Baru"
+        breadcrumb={[
+          { label: "Inventory", href: "/inventory/barang-masuk" },
+          { label: "Barang Masuk", href: "/inventory/barang-masuk" },
+          { label: "Baru" },
+        ]}
+      />
       <BarangMasukForm
         bahanOptions={bahanOptions}
         supplierOptions={supplierOptions}

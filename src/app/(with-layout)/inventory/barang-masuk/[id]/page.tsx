@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getBarangMasukDetail } from "@/services/barang-masuk";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 const rupiah = (n: number | string) =>
   new Intl.NumberFormat("id-ID", {
@@ -30,18 +30,14 @@ export default async function BarangMasukDetailPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          {header.nomorDokumen}
-        </h2>
-        <Breadcrumb
-          items={[
-            { label: "Inventory", href: "/inventory/barang-masuk" },
-            { label: "Barang Masuk", href: "/inventory/barang-masuk" },
-            { label: header.nomorDokumen },
-          ]}
-        />
-      </div>
+      <PageHeader
+        title={header.nomorDokumen}
+        breadcrumb={[
+          { label: "Inventory", href: "/inventory/barang-masuk" },
+          { label: "Barang Masuk", href: "/inventory/barang-masuk" },
+          { label: header.nomorDokumen },
+        ]}
+      />
 
       {/* Header info */}
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">

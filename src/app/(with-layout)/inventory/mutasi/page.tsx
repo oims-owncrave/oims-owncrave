@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { listMutasi, listBahanForMutasiFilter } from "@/services/mutasi";
 import { MutasiPageClient } from "./_components/MutasiPageClient";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Mutasi Stok | OIMS Owncrave",
@@ -15,14 +15,10 @@ export default async function MutasiStokPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-dark dark:text-white">
-          Mutasi Stok
-        </h2>
-        <Breadcrumb
-          items={[{ label: "Inventory" }, { label: "Mutasi Stok" }]}
-        />
-      </div>
+      <PageHeader
+        title="Mutasi Stok"
+        breadcrumb={[{ label: "Inventory" }, { label: "Mutasi Stok" }]}
+      />
       <MutasiPageClient
         initialRows={rows}
         initialTotal={total}

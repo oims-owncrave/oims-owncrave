@@ -5,6 +5,7 @@ import { KategoriTable } from "./KategoriTable";
 import { KategoriFormModal } from "./KategoriFormModal";
 import type { Kategori } from "@/db/schema";
 import { useKategoriList } from "@/hooks/useKategori";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 interface Props {
   initialData: Kategori[];
@@ -19,7 +20,10 @@ export function KategoriPageClient({ initialData }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-dark dark:text-white">Master Kategori</h2>
+      <PageHeader
+        title="Master Kategori"
+        breadcrumb={[{ label: "Master" }, { label: "Kategori" }]}
+      />
 
       <KategoriTable
         data={items}

@@ -90,6 +90,7 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 - [x] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ✅ **DONE**
 - [ ] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ← independen
 - [ ] `oims-g05.5` — Card view tabel mobile + filter rapi (P2) ← independen
+- [x] `oims-g05.6` — PageHeader mobile page title (P3, tambahan owner) ✅ **DONE**
 
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
 > Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.

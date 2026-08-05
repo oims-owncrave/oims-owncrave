@@ -8,6 +8,7 @@ import { SatuanTable } from "./SatuanTable";
 import { SatuanFormModal } from "./SatuanFormModal";
 import { useSatuanList, useSatuanMutation } from "@/hooks/useSatuan";
 import type { Satuan } from "@/db/schema";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 interface Props {
   initialData: Satuan[];
@@ -37,9 +38,10 @@ export function SatuanPageClient({ initialData }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-dark dark:text-white">
-        Master Satuan
-      </h2>
+      <PageHeader
+        title="Master Satuan"
+        breadcrumb={[{ label: "Master" }, { label: "Satuan" }]}
+      />
 
       <SatuanTable
         data={data}

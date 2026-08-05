@@ -7,6 +7,7 @@ import { usePWAStore } from "@/stores/pwa-store";
 import { ThemeToggleSwitch } from "@/components/layouts/header/theme-toggle";
 import { signOutAction } from "@/services/auth";
 import { Spinner } from "@/components/ui/Spinner";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export function PengaturanClient() {
   const { deferredPrompt, isInstalled, setDeferredPrompt, setIsInstalled } = usePWAStore();
@@ -23,17 +24,25 @@ export function PengaturanClient() {
       if (outcome === "accepted") {
         toast.success("OIMS berhasil diinstall!");
         setIsInstalled(true);
-      } else {
-        toast.info("Instalasi dibatalkan");
+        setDeferredPrompt(null);
       }
-      setDeferredPrompt(null);
     } catch {
-      toast.error("Gagal install, coba dari menu browser");
+      toast.error("Gagal membuka dialog install.");
     }
+  }
+
+  function handleLogout() {
+    startLogout(async () => {
+      await signOutAction();
+    });
   }
 
   return (
     <div className="max-w-xl space-y-4">
+      <PageHeader
+        title="Pengaturan Sistem"
+        breadcrumb={[{ label: "Sistem" }, { label: "Pengaturan" }]}
+      />
       {/* Theme Settings */}
       <div className="rounded-xl border border-stroke bg-white p-6 dark:border-dark-3 dark:bg-gray-dark">
         <h3 className="mb-1 text-base font-semibold text-dark dark:text-white">
