@@ -2,7 +2,7 @@
 // ERP Produksi Garmen PWA
 // UPDATE BUILD_VERSION on every meaningful deploy so old caches are purged automatically.
 
-const BUILD_VERSION = '2026-08-03';
+const BUILD_VERSION = "2026-08-05";
 const CACHE_NAME = `oims-owncrave-${BUILD_VERSION}`;
 const STATIC_CACHE = `oims-static-${BUILD_VERSION}`;
 

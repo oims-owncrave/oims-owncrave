@@ -144,11 +144,15 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 - `numeric` untuk semua angka duit dan kuantitas — garmen pakai desimal (0.5 meter).
 - `mutasi_stok` = append-only ledger. Gak ada UPDATE/DELETE — invariant paling kritis di sistem.
 - Nomor dokumen format: `[TIPE]-YYYYMM-NNNN` (BM-202608-0001, BK-202608-0001, PS-202608-0001).
-- PWA icon placeholder di `public/icons/` — ganti dengan ikon OIMS nyata sebelum serah terima klien.
+- PWA icon nyata (logogram OW) sudah terpasang di `public/icons/` (192/512/apple-touch).
 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — PWA install via halaman pengaturan (oims-rup). Hapus auto-popup install prompt. Tambah halaman sistem/pengaturan dengan install button. State deferredPrompt di-share via Zustand store (pwa-store). iOS: instruksi Share → Add to Home Screen.
+
+- **2026-08-05** — Mobile bottom nav (oims-2xn) + PWA icon (oims-yxe) selesai. Bottom nav 5-slot hybrid: Dashboard/Inventory/Laporan/Sistem(owner)/Menu — muncul di <850px, sembunyi di desktop. Menu buka bottom-sheet 18 item grouped per section. Hamburger header dihide di mobile (digantikan slot Menu). PWA icon real (logogram OW) dari assets/pwa/ ke public/icons/ (192/512/apple-touch). BUILD_VERSION bumped ke 2026-08-05.
 
 - **2026-08-05** — Audit log viewer (jpn.14) selesai + reviewed. Server-side pagination (50/page). Filter: pelaku, tabel, aksi, date range. Diff modal (before/after JSON). requireRole owner-only. Fix: hapus double pagination (TablePagination + server controls conflict). Tahap 1 FEATURE COMPLETE.
 

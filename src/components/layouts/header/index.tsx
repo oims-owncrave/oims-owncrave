@@ -17,7 +17,7 @@ export function Header({ userInfo }: HeaderProps) {
       {/* Mobile toggle — hidden at ≥850px */}
       <button
         onClick={toggleSidebar}
-        className="rounded-lg border border-gray-400 px-1.5 py-1 mr-3 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A] min-[850px]:hidden"
+        className="hidden"
         aria-label="Toggle Sidebar"
       >
         <MenuIcon className="text-dark dark:text-white" />

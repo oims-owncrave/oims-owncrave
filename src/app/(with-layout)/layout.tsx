@@ -16,7 +16,7 @@ export default async function WithLayoutLayout({
     <SidebarProvider>
       <div className="flex min-h-screen">
         <Sidebar userRole={userRole} />
-        <MainContent userInfo={<UserInfo />}>{children}</MainContent>
+        <MainContent userInfo={<UserInfo />} userRole={userRole}>{children}</MainContent>
       </div>
     </SidebarProvider>
   );

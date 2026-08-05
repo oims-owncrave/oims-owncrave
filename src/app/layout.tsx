@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "OIMS",
   },
+  icons: {
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
