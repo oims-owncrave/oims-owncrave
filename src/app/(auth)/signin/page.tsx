@@ -53,7 +53,7 @@ export default function SigninPage() {
           <PasswordInput
             id="password"
             label="Password"
-            placeholder="••••••••"
+            placeholder="password"
             error={errors.password?.message}
             required
             {...register("password")}
