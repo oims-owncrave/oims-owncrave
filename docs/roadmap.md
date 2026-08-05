@@ -89,7 +89,7 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 - [x] `oims-g05.2` — Bottom nav parent buka sheet + Menu accordion (P2) ✅ **DONE**
 - [x] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ✅ **DONE**
 - [ ] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ← independen
-- [ ] `oims-g05.5` — Card view tabel mobile + filter rapi (P2) ← independen
+- [x] `oims-g05.5` — Card view tabel mobile + filter rapi + toggle/sort (P2) ✅ **DONE**
 - [x] `oims-g05.6` — PageHeader mobile page title (P3, tambahan owner) ✅ **DONE**
 
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
@@ -123,6 +123,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — oims-g05.5 + g05.6 selesai. Card view mobile terpusat di DataTable (heuristik + mobileRole), toggle Card/Table, sort dropdown (ComboSelect), ColumnToggle kondisional, filter toolbar stack mobile. PageHeader (title+breadcrumb) apply ~20 halaman + dokumentasi docs/claude/ui-components.md. GELOMBANG A (mobile polish) SELESAI.
 
 - **2026-08-05** — oims-g05.2 + g05.3 selesai + reviewed. Bottom nav slot parent (Master/Inventory/Laporan) buka bottom-sheet child, slot Menu = accordion collapse per parent (scalable Tahap 2-5). Header mobile app-like: greeting card gradient di /dashboard, judul dinamis + back-arrow di halaman lain, desktop header tak berubah. Deviasi: slot Sistem->Master (Sistem ke Menu), Pengaturan dapat section Tema+Logout (kompensasi kontrol yang hilang dari header mobile). Juga: dashboard query timeout fix (oims-yja, commit e8ca4da).
 
