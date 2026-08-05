@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-05 · Status: **Tahap 1 FEATURE COMPLETE — semua fitur inventory + dashboard + laporan + audit log selesai. Berikutnya: serah terima + training.**
+> Diperbarui: 2026-08-05 · Status: **Tahap 1 selesai + serah terima beres. Sekarang: mobile app-like polish (oims-g05) → lalu feedback owner (harga/warna/dashboard).**
 
 ---
 
@@ -27,7 +27,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | ✅ | ~~Dashboard inventory (ringkasan + panel peringatan)~~ | Owner perlu visibilitas tanpa buka tabel | ✅ jpn.10 **DONE** |
 | ✅ | ~~Laporan Tahap 1 (barang masuk/keluar/stok/mutasi/nilai persediaan)~~ | Klien butuh laporan PDF/export | ✅ jpn.13 **DONE** |
 | ✅ | ~~Audit log (semua aksi penting tercatat)~~ | PRD wajib, fondasi compliance | ✅ jpn.14 **DONE** |
-| 10 | Serah terima + training 1 sesi | Milestone selesai Tahap 1 | ⏳ |
+| ✅ | ~~Serah terima + training 1 sesi~~ | Milestone selesai Tahap 1 | ✅ **DONE** |
 
 ### Post-MVP — NANTI (per tahap penawaran)
 
@@ -76,67 +76,40 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 
 ---
 
-## 🚧 Next Up — Urutan Eksekusi (dependency-ordered)
+## 🚧 Next Up — Urutan Eksekusi (pasca-Tahap-1)
 
-Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekusi per urutan (blocker naik dari atas).
+> Tahap 1 (jpn.1-14) SEMUA selesai — riwayatnya di Changelog. Sekarang fokus polish + feedback owner sebelum Tahap 2.
+> Plan + prompt siap di `docs/plans/` + `docs/prompts/`. Kerjakan berurutan.
 
-### 🔴 GELOMBANG 1 — Fondasi (kerjakan dulu, bisa paralel)
-- [x] `oims-jpn.3` — User management + roles (P1) ✅ **DONE**
-- [x] `oims-jpn.2` — Master kategori (P2) ✅ **DONE**
-- [x] `oims-jpn.1` — Master satuan (P2) ✅ **DONE**
-- [x] `oims-jpn.6` — Master supplier (P2) ✅ **DONE**
+### 🔴 GELOMBANG A — Mobile App-Like Polish (`oims-g05`) — KERJAKAN DULU
 
-### ⚡ GELOMBANG 2 — Bahan + Transaksi
-- [x] `oims-jpn.7` — Master bahan ✅ **DONE**
-- [x] `oims-jpn.5` — Barang masuk ✅ **DONE** — weighted avg + mutasi + nomor BM
-- [x] `oims-jpn.8` — Barang keluar ✅ **DONE** — guard stok + snapshot harga + nomor BK
+Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di gudang/produksi. Semua sudah di-plan.
 
-### 🟢 GELOMBANG 3 — View + Approval
-- [x] `oims-jpn.9` — Stok bahan ✅ **DONE** — view + summary cards + alert kritis
-- [x] `oims-jpn.11` — Mutasi stok ✅ **DONE** — ledger server-side + filter bahan/tipe/tanggal
-- [x] `oims-jpn.12` — Penyesuaian stok ✅ **DONE** — approval flow owner approve/reject + mutasi atomik
+- [ ] `oims-g05.1` — **Fix flash sidebar + buang drawer mobile** (P1 bug) ← **PERTAMA** (blocks g05.2, g05.3)
+- [ ] `oims-g05.2` — Bottom nav parent buka sheet + Menu accordion (P2) ← depends g05.1
+- [ ] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ← depends g05.1
+- [ ] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ← independen
+- [ ] `oims-g05.5` — Card view tabel mobile + filter rapi (P2) ← independen
 
-### 🔵 GELOMBANG 4 — Dashboard + Laporan + Audit
-- [x] `oims-jpn.10` — Dashboard inventory ✅ **DONE** — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending)
-- [x] `oims-jpn.13` — Laporan Tahap 1 ✅ **DONE** — 5 laporan + filter periode + export CSV (zero-dep)
-- [x] `oims-jpn.14` — Audit log viewer ✅ **DONE** — server paginate + filter tabel/aksi/user/tanggal + diff modal
+> Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
+> Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.
+
+### 🟢 GELOMBANG B — Feedback Owner Tahap 1 (setelah polish)
+
+Dari demo klien (sudah dikonfirmasi oke). Detail + rencana: `docs/feedback-owner.md`.
+
+- [ ] **Dashboard enhancement** — perbandingan periode (bulan ini vs lalu) + total transaksi + top 10 bahan keluar. Paling siap (data sudah ada). Belum ada beads — buat saat mulai.
+- [ ] **Master warna** — CRUD master warna (cakupan: daftar sendiri vs atribut bahan — cek feedback-owner.md).
+- [ ] **Harga bahan — riwayat harga** — tampilkan riwayat harga pembelian di form barang masuk (hint acuan). METODE HITUNG TETAP rata-rata bergerak (lihat `docs/insight-bisnis/metode-harga-bahan-hpp.md`). JANGAN bahan jadi 2 entri per harga.
 
 ### 🧹 Nice-to-have (kapan saja)
-- [ ] Ikon PWA nyata (ganti placeholder)
 - [ ] Vitest untuk document-number generator + weighted average
 
----
+## 📋 Prompt Antigravity
 
-## 📋 Urutan Eksekusi Prompt (Antigravity)
+Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai — prompt-nya arsip. Prompt aktif sekarang: `docs/prompts/2026-08-05-oims-g05.*.md`.
 
-Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum lanjut. **Jangan lompat gelombang.**
-
-| # | Issue | Prompt file |
-|---|---|---|
-| **G1 — Fondasi** | | |
-| 1 | `jpn.3` user management ← **WAJIB PERTAMA** (bikin `requireRole`). Task 1 (seed superadmin via MCP) ✅ Claude, Antigravity mulai Task 2 | `docs/prompts/2026-08-03-oims-jpn.3-user-management.md` |
-| 2 | `jpn.2` master kategori | `docs/prompts/2026-08-03-oims-jpn.2-master-kategori.md` |
-| 3 | `jpn.1` master satuan | `docs/prompts/2026-08-03-oims-jpn.1-master-satuan.md` |
-| 4 | `jpn.6` master supplier | `docs/prompts/2026-08-03-oims-jpn.6-master-supplier.md` |
-| **G2 — Bahan + Transaksi** | | |
-| 5 | `jpn.7` master bahan ← butuh 1,2,3,6 | `docs/prompts/2026-08-03-oims-jpn.7-master-bahan.md` |
-| 6 | `jpn.5` barang masuk ← butuh bahan | `docs/prompts/2026-08-03-oims-jpn.5-barang-masuk.md` |
-| 7 | `jpn.8` barang keluar ← butuh barang masuk | `docs/prompts/2026-08-03-oims-jpn.8-barang-keluar.md` |
-| **G3 — View + Approval** | | |
-| 8 | `jpn.9` stok bahan | `docs/prompts/2026-08-03-oims-jpn.9-stok-bahan.md` |
-| 9 | `jpn.11` mutasi stok | `docs/prompts/2026-08-03-oims-jpn.11-mutasi-stok.md` |
-| 10 | `jpn.12` penyesuaian stok | `docs/prompts/2026-08-03-oims-jpn.12-penyesuaian-stok.md` |
-| **G4 — Dashboard + Laporan + Audit** | | |
-| 11 | `jpn.10` dashboard | `docs/prompts/2026-08-03-oims-jpn.10-dashboard-inventory.md` |
-| 12 | `jpn.13` laporan | `docs/prompts/2026-08-03-oims-jpn.13-laporan-tahap1.md` |
-| 13 | `jpn.14` audit log | `docs/prompts/2026-08-03-oims-jpn.14-audit-log.md` |
-
-**Aturan:**
-- **Jangan lompat gelombang** — G2 butuh G1 selesai (import `requireRole`, FK master).
-- Dalam 1 gelombang urutan bebas, **kecuali jpn.3 wajib pertama** (bikin `src/lib/auth.ts`).
-- Per issue: paste prompt → Antigravity eksekusi → **sesi Claude baru (Opus) review** → commit kalau lolos → `bd close`.
-
----
+**Aturan per issue:** paste prompt → Antigravity eksekusi → sesi Claude baru (Opus) review → commit kalau lolos → `bd close`.
 
 ## 📌 Catatan
 
@@ -149,6 +122,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — Roadmap direstруktur pasca-Tahap-1. Tahap 1 + serah terima beres. Next Up diganti: Gelombang A = mobile app-like polish (oims-g05, 5 sub-issue, sudah di-plan) → Gelombang B = feedback owner (dashboard enhancement + master warna + riwayat harga bahan). Keputusan: metode harga tetap rata-rata bergerak (insight-bisnis/metode-harga-bahan-hpp.md), nav scalable ke Tahap 2-5 via Menu accordion.
 
 - **2026-08-05** — PWA install via halaman pengaturan (oims-rup). Hapus auto-popup install prompt. Tambah halaman sistem/pengaturan dengan install button. State deferredPrompt di-share via Zustand store (pwa-store). iOS: instruksi Share → Add to Home Screen.
 
