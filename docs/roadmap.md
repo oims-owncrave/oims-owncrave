@@ -85,7 +85,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 
 Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di gudang/produksi. Semua sudah di-plan.
 
-- [ ] `oims-g05.1` — **Fix flash sidebar + buang drawer mobile** (P1 bug) ← **PERTAMA** (blocks g05.2, g05.3)
+- [x] `oims-g05.1` — **Fix flash sidebar + buang drawer mobile** (P1 bug) ✅ **DONE** (unblocks g05.2, g05.3)
 - [ ] `oims-g05.2` — Bottom nav parent buka sheet + Menu accordion (P2) ← depends g05.1
 - [ ] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ← depends g05.1
 - [ ] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ← independen
@@ -122,6 +122,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — oims-g05.1 selesai + reviewed. Sidebar desktop-only (mobile pakai bottom nav), branch drawer mobile dibuang → fix bug flash cold-load (root cause: isMobile telat sync di context). Header dead hamburger dihapus. Fix sampingan: next.config images.qualities [75,100] (warning logo quality). g05.2 + g05.3 unblocked.
 
 - **2026-08-05** — Roadmap direstруktur pasca-Tahap-1. Tahap 1 + serah terima beres. Next Up diganti: Gelombang A = mobile app-like polish (oims-g05, 5 sub-issue, sudah di-plan) → Gelombang B = feedback owner (dashboard enhancement + master warna + riwayat harga bahan). Keputusan: metode harga tetap rata-rata bergerak (insight-bisnis/metode-harga-bahan-hpp.md), nav scalable ke Tahap 2-5 via Menu accordion.
 

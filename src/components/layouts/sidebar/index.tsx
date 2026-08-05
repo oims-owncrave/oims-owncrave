@@ -5,16 +5,16 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowLeftIcon, ChevronUp, MenuIcon } from "./icons";
+import { ChevronUp, MenuIcon } from "./icons";
 import { NAV_DATA } from "./data";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
 
 export function Sidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
-  const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
+  const { setIsOpen, isOpen, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const collapsed = !isOpen && !isMobile;
+  const collapsed = !isOpen;
 
   // Filter sections based on role — ownerOnly sections hidden for non-owners
   const visibleSections = NAV_DATA.filter(
@@ -42,64 +42,37 @@ export function Sidebar({ userRole }: { userRole: string }) {
   }, [pathname]);
 
   return (
-    <>
-      {/* Mobile Overlay */}
-      {isMobile && isOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 transition-opacity duration-300"
-          onClick={() => setIsOpen(false)}
-          aria-hidden="true"
-        />
+    <aside
+      className={cn(
+        "sticky top-0 z-30 h-screen shrink-0 border-r border-gray-200 bg-white transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-dark hidden min-[850px]:block",
+        isOpen ? "w-72.5" : "w-[100.5px]",
       )}
+      aria-label="Main navigation"
+    >
+      <div className="flex h-full flex-col pt-5 pb-10 pl-6.25 pr-1.75">
+        <div className="flex items-center gap-3 py-2.5 min-[850px]:py-0 pr-2">
+          <button
+            onClick={toggleSidebar}
+            className="rounded-lg border border-gray-400 ml-1 px-1.5 py-1 translate-y-3 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A]"
+            aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            <MenuIcon className="size-6 text-dark dark:text-white" />
+            <span className="sr-only">Toggle Sidebar</span>
+          </button>
 
-      <aside
-        className={cn(
-          "top-0 h-screen border-r border-gray-200 bg-white transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-dark",
-          isMobile
-            ? cn(
-                "fixed inset-y-0 left-0 z-50",
-                isOpen ? "w-72.5" : "w-0 border-r-0 overflow-hidden",
-              )
-            : cn("sticky z-30 shrink-0", isOpen ? "w-72.5" : "w-[100.5px]"),
-        )}
-        aria-label="Main navigation"
-        aria-hidden={isMobile && !isOpen}
-      >
-        <div className="flex h-full flex-col pt-5 pb-10 pl-6.25 pr-1.75">
-          <div className="flex items-center gap-3 py-2.5 min-[850px]:py-0 pr-2">
-            {isMobile && isOpen ? (
-              <button
-                onClick={toggleSidebar}
-                className="absolute left-3/4 right-4.5 translate-y-3 text-right"
-              >
-                <span className="sr-only">Close Menu</span>
-                <ArrowLeftIcon className="ml-auto size-7" />
-              </button>
-            ) : (
-              <button
-                onClick={toggleSidebar}
-                className="rounded-lg border border-gray-400 ml-1 px-1.5 py-1 translate-y-3 dark:border-stroke-dark dark:bg-[#020D1A] hover:dark:bg-[#FFFFFF1A]"
-                aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
-              >
-                <MenuIcon className="size-6 text-dark dark:text-white" />
-                <span className="sr-only">Toggle Sidebar</span>
-              </button>
+          <Link
+            href="/dashboard"
+            className={cn(
+              "px-0 py-2.5 min-[850px]:py-0 block transition-all duration-300 ease-in-out origin-left",
+              collapsed
+                ? "opacity-0 scale-x-0 pointer-events-none w-0"
+                : "opacity-100 scale-x-100",
             )}
-
-            <Link
-              href="/dashboard"
-              onClick={() => isMobile && toggleSidebar()}
-              className={cn(
-                "px-0 py-2.5 min-[850px]:py-0 block transition-all duration-300 ease-in-out origin-left",
-                collapsed
-                  ? "opacity-0 scale-x-0 pointer-events-none w-0"
-                  : "opacity-100 scale-x-100",
-              )}
-              tabIndex={collapsed ? -1 : 0}
-            >
-              <Logo />
-            </Link>
-          </div>
+            tabIndex={collapsed ? -1 : 0}
+          >
+            <Logo />
+          </Link>
+        </div>
 
           {/* Navigation */}
           <div
@@ -225,6 +198,5 @@ export function Sidebar({ userRole }: { userRole: string }) {
           </div>
         </div>
       </aside>
-    </>
-  );
-}
+    );
+  }

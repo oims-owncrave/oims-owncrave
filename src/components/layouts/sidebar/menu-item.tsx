@@ -46,14 +46,13 @@ export function MenuItem(
     tooltip?: string;
   } & ({ as?: "button"; onClick: () => void } | { as: "link"; href: string }),
 ) {
-  const { toggleSidebar, isMobile, isOpen } = useSidebarContext();
-  const collapsed = !isOpen && !isMobile;
+  const { isOpen } = useSidebarContext();
+  const collapsed = !isOpen;
 
   if (props.as === "link") {
     return (
       <Link
         href={props.href}
-        onClick={() => isMobile && toggleSidebar()}
         title={collapsed && props.tooltip ? props.tooltip : undefined}
         className={cn(
           menuItemBaseStyles({

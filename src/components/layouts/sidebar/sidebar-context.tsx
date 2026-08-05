@@ -1,6 +1,5 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type SidebarState = "expanded" | "collapsed";
@@ -9,7 +8,6 @@ type SidebarContextType = {
   state: SidebarState;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  isMobile: boolean;
   toggleSidebar: () => void;
 };
 
@@ -33,24 +31,16 @@ export function SidebarProvider({
   defaultOpen?: boolean;
 }) {
   const [isOpen, setIsOpenState] = useState(defaultOpen);
-  const isMobile = useIsMobile();
 
-  // Restore the persisted desktop collapse state after mount (mobile is always
-  // a drawer and is never persisted).
+  // Restore the persisted desktop collapse state after mount.
   useEffect(() => {
-    if (isMobile) {
-      setIsOpenState(false);
-    } else {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      setIsOpenState(stored === null ? defaultOpen : stored === "true");
-    }
-  }, [isMobile, defaultOpen]);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    setIsOpenState(stored === null ? defaultOpen : stored === "true");
+  }, [defaultOpen]);
 
   function setIsOpen(open: boolean) {
     setIsOpenState(open);
-    if (!isMobile) {
-      localStorage.setItem(STORAGE_KEY, String(open));
-    }
+    localStorage.setItem(STORAGE_KEY, String(open));
   }
 
   function toggleSidebar() {
@@ -63,7 +53,6 @@ export function SidebarProvider({
         state: isOpen ? "expanded" : "collapsed",
         isOpen,
         setIsOpen,
-        isMobile,
         toggleSidebar,
       }}
     >
@@ -71,3 +60,4 @@ export function SidebarProvider({
     </SidebarContext.Provider>
   );
 }
+

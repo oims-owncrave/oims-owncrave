@@ -1,8 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useSidebarContext } from "../sidebar/sidebar-context";
-import { MenuIcon } from "./icons";
 import { ThemeToggleSwitch } from "./theme-toggle";
 
 type HeaderProps = {
@@ -10,19 +8,8 @@ type HeaderProps = {
 };
 
 export function Header({ userInfo }: HeaderProps) {
-  const { toggleSidebar } = useSidebarContext();
-
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between border-b border-stroke bg-white px-4 py-4 shadow-1 dark:border-stroke-dark dark:bg-gray-dark md:px-5 2xl:px-10">
-      {/* Mobile toggle — hidden at ≥850px */}
-      <button
-        onClick={toggleSidebar}
-        className="hidden"
-        aria-label="Toggle Sidebar"
-      >
-        <MenuIcon className="text-dark dark:text-white" />
-        <span className="sr-only">Toggle Sidebar</span>
-      </button>
 
       {/* App title — hidden on small screens */}
       <div className="max-xl:hidden">
