@@ -19,7 +19,7 @@ const VARIANTS: Record<NonNullable<ButtonProps["variant"]>, string> = {
 
 const SIZES: Record<NonNullable<ButtonProps["size"]>, string> = {
   sm: "px-3 py-2 text-sm gap-1.5",
-  md: "py-3 px-6 text-sm gap-2",
+  md: "py-2.5 px-6 text-sm gap-2",
   lg: "px-8 py-3 text-base gap-2.5",
 };
 

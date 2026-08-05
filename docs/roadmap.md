@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — SEMUA master data + transaksi inventory (barang masuk/keluar) selesai. Berikutnya: view stok (jpn.9), mutasi (jpn.11), penyesuaian (jpn.12).**
+> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — master data + transaksi + view (stok/mutasi) selesai. Berikutnya: penyesuaian stok (jpn.12) + dashboard (jpn.10).**
 
 ---
 
@@ -22,7 +22,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | ✅ | ~~Master data (kategori, satuan, supplier, bahan)~~ | CRUD master = prerequisite semua transaksi | ✅ semua master (jpn.1,2,6,7) **DONE** |
 | ✅ | ~~Barang masuk + detail~~ | Pencatatan bahan dari supplier | ✅ jpn.5 **DONE** |
 | ✅ | ~~Barang keluar + detail~~ | Pengeluaran bahan ke produksi | ✅ jpn.8 **DONE** |
-| 5 | Stok + mutasi stok (immutable ledger) | Core inventory — append-only, no manual edit | ⏳ |
+| ✅ | ~~Stok + mutasi stok (immutable ledger)~~ | Core inventory — append-only, no manual edit | ✅ jpn.9+11 **DONE** |
 | 6 | Penyesuaian stok (dengan approval flow) | PRD mensyaratkan approval owner | ⏳ |
 | 7 | Dashboard inventory (ringkasan + panel peringatan) | Owner perlu visibilitas tanpa buka tabel | ⏳ |
 | 8 | Laporan Tahap 1 (barang masuk/keluar/stok/mutasi/nilai persediaan) | Klien butuh laporan PDF/export | ⏳ |
@@ -66,11 +66,13 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Loading UX (nav + button spinner) | ✅ | global | oims-99y — Spinner, Button loading, useLinkStatus nav, auth spinner |
 | Barang masuk | ✅ | `/inventory/barang-masuk` | jpn.5 done — header+detail, weighted avg, mutasi, nomor BM |
 | Barang keluar | ✅ | `/inventory/barang-keluar` | jpn.8 done — guard stok, snapshot harga, mutasi negatif, nomor BK |
-| Stok/mutasi/penyesuaian | ⏳ | `/inventory/*` | jpn.9,11,12 belum |
+| Stok bahan | ✅ | `/inventory/stok` | jpn.9 done — view + summary cards + alert kritis + filter ComboSelect |
+| Mutasi stok | ✅ | `/inventory/mutasi` | jpn.11 done — ledger server-side paginate + filter bahan/tipe/tanggal |
+| Penyesuaian stok | ⏳ | `/inventory/penyesuaian` | jpn.12 belum |
 | Dashboard | ⏳ | `/dashboard` | Saat ini placeholder |
 | Laporan | ⏳ | `/laporan/*` | — |
 
-**Ringkasan:** Fondasi + SEMUA master data selesai + SEMUA transaksi inventory (barang masuk jpn.5 + barang keluar jpn.8) selesai. Loading UX + pola CRUD distandarisasi. Berikutnya: view pages (stok jpn.9, mutasi jpn.11) + approval (penyesuaian jpn.12).
+**Ringkasan:** Fondasi + master data + transaksi (barang masuk/keluar) + view (stok/mutasi) selesai. Berikutnya: penyesuaian stok (jpn.12) + dashboard (jpn.10).
 
 ---
 
@@ -90,8 +92,8 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 - [x] `oims-jpn.8` — Barang keluar ✅ **DONE** — guard stok + snapshot harga + nomor BK
 
 ### 🟢 GELOMBANG 3 — View + Approval
-- [ ] `oims-jpn.9` — Stok bahan (view)
-- [ ] `oims-jpn.11` — Mutasi stok (view ledger)
+- [x] `oims-jpn.9` — Stok bahan ✅ **DONE** — view + summary cards + alert kritis
+- [x] `oims-jpn.11` — Mutasi stok ✅ **DONE** — ledger server-side + filter bahan/tipe/tanggal
 - [ ] `oims-jpn.12` — Penyesuaian stok (approval flow)
 
 ### 🔵 GELOMBANG 4 — Dashboard + Laporan + Audit
@@ -147,6 +149,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — Stok bahan (jpn.9) + Mutasi stok (jpn.11) selesai + reviewed. Fix: hapus duplicate h2 di PageClient, ganti `<select>` native → ComboSelect (filter kategori stok, bahan mutasi, tipe mutasi), checkbox native → Checkbox kit. Berikutnya: penyesuaian stok (jpn.12).
 
 - **2026-08-05** — Barang masuk (jpn.5) + Barang keluar (jpn.8) selesai + reviewed. Guard stok (FOR UPDATE + duplicate bahanId aggregation), snapshot harga rata2, mutasi negatif, retry nomor dokumen. Loading button nav (useTransition) diterapkan konsisten. Berikutnya: view stok (jpn.9).
 

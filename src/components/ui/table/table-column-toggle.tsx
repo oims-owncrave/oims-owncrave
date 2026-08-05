@@ -21,7 +21,7 @@ export function ColumnToggle<TData>({ table, className, showPin = false }: { tab
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
       <DropdownTrigger
         className={cn(
-          "flex items-center gap-2 rounded-lg border border-primary hover:bg-primary/10 text-primary px-4 py-3 text-sm font-medium transition",
+          "flex items-center gap-2 rounded-lg border border-primary hover:bg-primary/10 text-primary px-4 py-2.5 text-sm font-medium transition",
           className
         )}
       >

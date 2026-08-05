@@ -183,7 +183,7 @@ export function ComboSelect({
   const triggerClass = cn(
     "flex items-center justify-between gap-2 rounded-lg border outline-none transition disabled:cursor-not-allowed disabled:opacity-60 text-left text-sm w-full",
     isFilter
-      ? "bg-transparent px-3 py-2 border-blue-600 text-blue-600"
+      ? "bg-transparent px-3 py-2.5 border-blue-600 text-blue-600"
       : "bg-white px-4 py-2.5 border-gray-300 text-gray-900 disabled:bg-gray-100",
     error && !isFilter && "border-red-500",
     isOpen && !error && "border-blue-600",
