@@ -120,7 +120,8 @@ export function BottomNav({ userRole }: BottomNavProps) {
                   "flex flex-col items-center justify-center gap-0.5 transition-colors",
                   isActive
                     ? "text-primary"
-                    : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white"
+                    : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white",
+                  isPending && "opacity-50"
                 )}
                 aria-label={slot.label}
                 aria-current={isActive ? "page" : undefined}

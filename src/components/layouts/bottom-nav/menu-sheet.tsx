@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { NAV_DATA } from "@/components/layouts/sidebar/data";
 import { cn } from "@/lib/utils";
@@ -14,12 +14,17 @@ type MenuSheetProps = {
 export function MenuSheet({ open, onClose, userRole }: MenuSheetProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
+  const isMounted = useRef(false);
 
-  // Close on route change
+  // Close on route change — skip initial mount
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
     onClose();
-  }, [pathname, onClose]);
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Trap scroll when open
   useEffect(() => {
@@ -89,9 +94,11 @@ export function MenuSheet({ open, onClose, userRole }: MenuSheetProps) {
                   {item.url ? (
                     <button
                       onClick={() => navigate(item.url!)}
+                      disabled={isPending}
                       className={cn(
                         "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
-                        pathname === item.url && "bg-primary/10 text-primary dark:text-primary font-medium"
+                        pathname === item.url && "bg-primary/10 text-primary dark:text-primary font-medium",
+                        isPending && "opacity-60"
                       )}
                     >
                       <item.icon className="size-5 shrink-0" aria-hidden="true" />
@@ -108,9 +115,11 @@ export function MenuSheet({ open, onClose, userRole }: MenuSheetProps) {
                           <button
                             key={sub.url}
                             onClick={() => navigate(sub.url)}
+                            disabled={isPending}
                             className={cn(
                               "flex w-full items-center rounded-lg px-3 py-2 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
-                              pathname === sub.url && "bg-primary/10 text-primary dark:text-primary font-medium"
+                              pathname === sub.url && "bg-primary/10 text-primary dark:text-primary font-medium",
+                              isPending && "opacity-60"
                             )}
                           >
                             {sub.title}
