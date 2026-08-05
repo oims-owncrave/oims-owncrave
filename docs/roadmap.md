@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — master data + transaksi + view + penyesuaian stok + dashboard + laporan selesai. Berikutnya: audit log (jpn.14).**
+> Diperbarui: 2026-08-05 · Status: **Tahap 1 FEATURE COMPLETE — semua fitur inventory + dashboard + laporan + audit log selesai. Berikutnya: serah terima + training.**
 
 ---
 
@@ -26,7 +26,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | ✅ | ~~Penyesuaian stok (dengan approval flow)~~ | PRD mensyaratkan approval owner | ✅ jpn.12 **DONE** |
 | ✅ | ~~Dashboard inventory (ringkasan + panel peringatan)~~ | Owner perlu visibilitas tanpa buka tabel | ✅ jpn.10 **DONE** |
 | ✅ | ~~Laporan Tahap 1 (barang masuk/keluar/stok/mutasi/nilai persediaan)~~ | Klien butuh laporan PDF/export | ✅ jpn.13 **DONE** |
-| 9 | Audit log (semua aksi penting tercatat) | PRD wajib, fondasi compliance | ⏳ |
+| ✅ | ~~Audit log (semua aksi penting tercatat)~~ | PRD wajib, fondasi compliance | ✅ jpn.14 **DONE** |
 | 10 | Serah terima + training 1 sesi | Milestone selesai Tahap 1 | ⏳ |
 
 ### Post-MVP — NANTI (per tahap penawaran)
@@ -72,7 +72,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Fondasi + master data + transaksi + view (stok/mutasi) + penyesuaian stok + dashboard + laporan selesai. Berikutnya: audit log (jpn.14).
+**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. Berikutnya: serah terima + training (jpn serah terima).
 
 ---
 
@@ -99,7 +99,7 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 ### 🔵 GELOMBANG 4 — Dashboard + Laporan + Audit
 - [x] `oims-jpn.10` — Dashboard inventory ✅ **DONE** — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending)
 - [x] `oims-jpn.13` — Laporan Tahap 1 ✅ **DONE** — 5 laporan + filter periode + export CSV (zero-dep)
-- [ ] `oims-jpn.14` — Audit log viewer (P3)
+- [x] `oims-jpn.14` — Audit log viewer ✅ **DONE** — server paginate + filter tabel/aksi/user/tanggal + diff modal
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Ikon PWA nyata (ganti placeholder)
@@ -149,6 +149,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — Audit log viewer (jpn.14) selesai + reviewed. Server-side pagination (50/page). Filter: pelaku, tabel, aksi, date range. Diff modal (before/after JSON). requireRole owner-only. Fix: hapus double pagination (TablePagination + server controls conflict). Tahap 1 FEATURE COMPLETE.
 
 - **2026-08-05** — Laporan Tahap 1 (jpn.13) selesai + reviewed. 5 laporan: barang masuk/keluar/stok/mutasi/nilai persediaan. Filter periode (date range). Export CSV zero-dep dengan BOM UTF-8 untuk Excel. Nilai persediaan grouped by kategori. Berikutnya: audit log (jpn.14).
 
