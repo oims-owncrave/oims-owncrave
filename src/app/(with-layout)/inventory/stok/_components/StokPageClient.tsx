@@ -41,7 +41,7 @@ function SummaryCard({
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-dark-5 dark:text-dark-6">{label}</p>
-          <p className="mt-1 text-xl font-bold text-dark dark:text-white">{value}</p>
+          <p className="mt-1 text-lg font-bold text-dark dark:text-white sm:text-xl">{value}</p>
         </div>
         <div className={`rounded-full p-3 ${colors[variant]}`}>
           <Icon size={20} />
@@ -67,7 +67,7 @@ export function StokPageClient({ initialRows, initialSummary, kategoriOptions }:
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <SummaryCard
           label="Total Jenis Bahan"
           value={summary.totalJenis.toString()}

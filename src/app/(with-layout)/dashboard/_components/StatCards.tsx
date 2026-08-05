@@ -80,7 +80,7 @@ export function StatCards({ stats }: Props) {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
@@ -93,7 +93,7 @@ export function StatCards({ stats }: Props) {
                 <p className="text-sm text-dark-5 dark:text-dark-6">
                   {card.label}
                 </p>
-                <p className="mt-1 text-xl font-bold text-dark dark:text-white">
+                <p className="mt-1 text-lg font-bold text-dark dark:text-white lg:text-xl">
                   {card.value}
                 </p>
               </div>
