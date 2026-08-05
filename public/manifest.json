@@ -1,12 +1,12 @@
 {
-  "name": "OIMS Owncrave",
+  "name": "OIMS",
   "short_name": "OIMS",
   "description": "Owncrave Integrated Management System — ERP produksi garmen",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#f8fafc",
-  "theme_color": "#2563eb",
-  "orientation": "any",
+  "theme_color": "#ffffff",
+  "orientation": "portrait-primary",
   "categories": [
     "business",
     "productivity"
