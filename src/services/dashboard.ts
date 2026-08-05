@@ -1,17 +1,8 @@
 "use server";
 
-import { and, count, eq, gte, isNull, lt, lte, sql } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
-import {
-  bahan,
-  supplier,
-  stok,
-  barangMasuk,
-  barangKeluar,
-  penyesuaianStok,
-  kategori,
-  satuan,
-} from "@/db/schema";
+import { bahan, stok, kategori, satuan } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 
 export type DashboardStats = {
@@ -44,105 +35,42 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     "viewer",
   ]);
 
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const endOfToday = new Date(startOfToday.getTime() + 86400000);
+  const rows = await db.execute<{
+    total_bahan_aktif: number;
+    total_supplier_aktif: number;
+    total_nilai_stok: string;
+    barang_masuk_bulan_ini: number;
+    barang_keluar_bulan_ini: number;
+    bahan_kritis: number;
+    transaksi_hari_ini: number;
+    penyesuaian_pending: number;
+  }>(sql`
+    SELECT
+      (SELECT count(*) FROM bahan WHERE deleted_at IS NULL AND is_active = true) AS total_bahan_aktif,
+      (SELECT count(*) FROM supplier WHERE deleted_at IS NULL AND is_active = true) AS total_supplier_aktif,
+      (SELECT COALESCE(SUM(s.kuantitas::numeric * b.harga_rata_rata::numeric), 0)
+         FROM stok s JOIN bahan b ON s.bahan_id = b.id
+        WHERE b.deleted_at IS NULL) AS total_nilai_stok,
+      (SELECT count(*) FROM barang_masuk WHERE tanggal >= date_trunc('month', now())) AS barang_masuk_bulan_ini,
+      (SELECT count(*) FROM barang_keluar WHERE tanggal >= date_trunc('month', now())) AS barang_keluar_bulan_ini,
+      (SELECT count(*) FROM stok s JOIN bahan b ON s.bahan_id = b.id
+        WHERE b.deleted_at IS NULL AND s.kuantitas::numeric <= b.stok_minimum::numeric) AS bahan_kritis,
+      (SELECT count(*) FROM barang_masuk WHERE tanggal >= date_trunc('day', now()) AND tanggal < date_trunc('day', now()) + interval '1 day')
+        + (SELECT count(*) FROM barang_keluar WHERE tanggal >= date_trunc('day', now()) AND tanggal < date_trunc('day', now()) + interval '1 day') AS transaksi_hari_ini,
+      (SELECT count(*) FROM penyesuaian_stok WHERE status = 'pending') AS penyesuaian_pending
+  `);
 
-  const [
-    [{ totalBahanAktif }],
-    [{ totalSupplierAktif }],
-    nilaiRows,
-    [{ barangMasukBulanIni }],
-    [{ barangKeluarBulanIni }],
-    [{ bahanKritis }],
-    masukHariIni,
-    keluarHariIni,
-    [{ penyesuaianPending }],
-  ] = await Promise.all([
-    // Total bahan aktif
-    db
-      .select({ totalBahanAktif: count() })
-      .from(bahan)
-      .where(and(isNull(bahan.deletedAt), eq(bahan.isActive, true))),
-
-    // Total supplier aktif
-    db
-      .select({ totalSupplierAktif: count() })
-      .from(supplier)
-      .where(and(isNull(supplier.deletedAt), eq(supplier.isActive, true))),
-
-    // Total nilai stok: SUM(kuantitas × hargaRataRata)
-    db
-      .select({
-        nilai: sql<string>`SUM(${stok.kuantitas}::numeric * ${bahan.hargaRataRata}::numeric)`,
-      })
-      .from(stok)
-      .innerJoin(bahan, eq(stok.bahanId, bahan.id))
-      .where(isNull(bahan.deletedAt)),
-
-    // Barang masuk bulan ini
-    db
-      .select({ barangMasukBulanIni: count() })
-      .from(barangMasuk)
-      .where(gte(barangMasuk.tanggal, startOfMonth)),
-
-    // Barang keluar bulan ini
-    db
-      .select({ barangKeluarBulanIni: count() })
-      .from(barangKeluar)
-      .where(gte(barangKeluar.tanggal, startOfMonth)),
-
-    // Bahan kritis (stok ≤ stokMinimum)
-    db
-      .select({ bahanKritis: count() })
-      .from(stok)
-      .innerJoin(bahan, eq(stok.bahanId, bahan.id))
-      .where(
-        and(
-          isNull(bahan.deletedAt),
-          sql`${stok.kuantitas}::numeric <= ${bahan.stokMinimum}::numeric`,
-        ),
-      ),
-
-    // Masuk hari ini
-    db
-      .select({ count: count() })
-      .from(barangMasuk)
-      .where(
-        and(
-          gte(barangMasuk.tanggal, startOfToday),
-          lt(barangMasuk.tanggal, endOfToday),
-        ),
-      ),
-
-    // Keluar hari ini
-    db
-      .select({ count: count() })
-      .from(barangKeluar)
-      .where(
-        and(
-          gte(barangKeluar.tanggal, startOfToday),
-          lt(barangKeluar.tanggal, endOfToday),
-        ),
-      ),
-
-    // Penyesuaian pending
-    db
-      .select({ penyesuaianPending: count() })
-      .from(penyesuaianStok)
-      .where(eq(penyesuaianStok.status, "pending")),
-  ]);
+  const r = rows[0];
 
   return {
-    totalBahanAktif,
-    totalSupplierAktif,
-    totalNilaiStok: Number(nilaiRows[0]?.nilai ?? 0),
-    barangMasukBulanIni,
-    barangKeluarBulanIni,
-    bahanKritis,
-    transaksiHariIni: (masukHariIni[0]?.count ?? 0) + (keluarHariIni[0]?.count ?? 0),
-    penyesuaianPending,
+    totalBahanAktif: Number(r?.total_bahan_aktif ?? 0),
+    totalSupplierAktif: Number(r?.total_supplier_aktif ?? 0),
+    totalNilaiStok: Number(r?.total_nilai_stok ?? 0),
+    barangMasukBulanIni: Number(r?.barang_masuk_bulan_ini ?? 0),
+    barangKeluarBulanIni: Number(r?.barang_keluar_bulan_ini ?? 0),
+    bahanKritis: Number(r?.bahan_kritis ?? 0),
+    transaksiHariIni: Number(r?.transaksi_hari_ini ?? 0),
+    penyesuaianPending: Number(r?.penyesuaian_pending ?? 0),
   };
 }
 

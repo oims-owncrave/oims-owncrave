@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
@@ -5,7 +6,7 @@ import { eq } from "drizzle-orm";
 
 export type CurrentUser = typeof users.$inferSelect;
 
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,7 +20,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     .limit(1);
 
   return profile ?? null;
-}
+});
 
 export async function requireRole(
   allowedRoles: Array<(typeof users.$inferSelect)["role"]>,

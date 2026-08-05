@@ -14,11 +14,8 @@ export function DashboardPageClient({
   initialStats,
   initialKritisList,
 }: Props) {
-  const { data: statsData } = useDashboardStats();
-  const { data: kritisData } = useBahanKritisList();
-
-  const stats = statsData ?? initialStats;
-  const kritisList = kritisData ?? initialKritisList;
+  const { data: stats = initialStats } = useDashboardStats(initialStats);
+  const { data: kritisList = initialKritisList } = useBahanKritisList(initialKritisList);
 
   return (
     <div className="space-y-6">
