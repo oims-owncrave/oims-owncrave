@@ -1,7 +1,5 @@
 "use client";
-import React from "react";
-
-import { useState, useTransition } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { MenuSheet } from "./menu-sheet";
@@ -9,6 +7,15 @@ import { MenuSheet } from "./menu-sheet";
 type BottomNavProps = {
   userRole: string;
 };
+
+function SpinnerIcon({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn("animate-spin rounded-full border-2 border-gray-300 border-t-primary", className)}
+      aria-hidden="true"
+    />
+  );
+}
 
 function HomeIcon({ className }: { className?: string }) {
   return (
@@ -78,16 +85,22 @@ const NAV_SLOTS: NavSlot[] = [
 export function BottomNav({ userRole }: BottomNavProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [loadingUrl, setLoadingUrl] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Clear loading when navigation completes
+  useEffect(() => {
+    setLoadingUrl(null);
+  }, [pathname]);
+
+  const navigate = useCallback((url: string) => {
+    if (url === pathname) return;
+    setLoadingUrl(url);
+    router.push(url);
+  }, [pathname, router]);
+
   const visibleSlots = NAV_SLOTS.filter((s) => !s.ownerOnly || userRole === "owner");
-
-  function navigate(url: string) {
-    startTransition(() => { router.push(url); });
-  }
-
-  const totalCols = visibleSlots.length + 1; // +1 for Menu
+  const totalCols = visibleSlots.length + 1;
 
   return (
     <>
@@ -111,23 +124,28 @@ export function BottomNav({ userRole }: BottomNavProps) {
         >
           {visibleSlots.map((slot) => {
             const isActive = pathname.startsWith(slot.baseRoute);
+            const isLoading = loadingUrl === slot.url;
             return (
               <button
                 key={slot.baseRoute}
                 onClick={() => navigate(slot.url)}
-                disabled={isPending}
+                disabled={loadingUrl !== null}
                 className={cn(
                   "flex flex-col items-center justify-center gap-0.5 transition-colors",
-                  isActive
-                    ? "text-primary"
-                    : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white",
-                  isPending && "opacity-50"
+                  isActive ? "text-primary" : "text-dark-5 dark:text-dark-6 hover:text-dark dark:hover:text-white",
+                  isLoading && "opacity-70"
                 )}
                 aria-label={slot.label}
                 aria-current={isActive ? "page" : undefined}
               >
-                <slot.icon className="size-5.5" />
-                <span className="text-[10px] font-medium">{slot.label}</span>
+                {isLoading ? (
+                  <SpinnerIcon className="size-5.5" />
+                ) : (
+                  <slot.icon className="size-5.5" />
+                )}
+                <span className="text-[10px] font-medium">
+                  {isLoading ? "Loading..." : slot.label}
+                </span>
               </button>
             );
           })}
