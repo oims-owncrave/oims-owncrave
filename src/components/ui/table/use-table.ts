@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react"
 
 export interface ColumnDef<TData> {
-  key: keyof TData & string
+  key: (keyof TData & string) | (string & {})
   label: React.ReactNode
   sortable?: boolean          // default: true
   searchable?: boolean        // default: true

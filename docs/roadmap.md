@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — master data + transaksi + view + penyesuaian stok + dashboard selesai. Berikutnya: laporan (jpn.13) + audit log (jpn.14).**
+> Diperbarui: 2026-08-05 · Status: **Tahap 1 in progress — master data + transaksi + view + penyesuaian stok + dashboard + laporan selesai. Berikutnya: audit log (jpn.14).**
 
 ---
 
@@ -25,7 +25,7 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 | ✅ | ~~Stok + mutasi stok (immutable ledger)~~ | Core inventory — append-only, no manual edit | ✅ jpn.9+11 **DONE** |
 | ✅ | ~~Penyesuaian stok (dengan approval flow)~~ | PRD mensyaratkan approval owner | ✅ jpn.12 **DONE** |
 | ✅ | ~~Dashboard inventory (ringkasan + panel peringatan)~~ | Owner perlu visibilitas tanpa buka tabel | ✅ jpn.10 **DONE** |
-| 8 | Laporan Tahap 1 (barang masuk/keluar/stok/mutasi/nilai persediaan) | Klien butuh laporan PDF/export | ⏳ |
+| ✅ | ~~Laporan Tahap 1 (barang masuk/keluar/stok/mutasi/nilai persediaan)~~ | Klien butuh laporan PDF/export | ✅ jpn.13 **DONE** |
 | 9 | Audit log (semua aksi penting tercatat) | PRD wajib, fondasi compliance | ⏳ |
 | 10 | Serah terima + training 1 sesi | Milestone selesai Tahap 1 | ⏳ |
 
@@ -70,9 +70,9 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Mutasi stok | ✅ | `/inventory/mutasi` | jpn.11 done — ledger server-side paginate + filter bahan/tipe/tanggal |
 | Penyesuaian stok | ✅ | `/inventory/penyesuaian` | jpn.12 done — approval flow (owner approve/reject), mutasi atomik, audit log |
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
-| Laporan | ⏳ | `/laporan/*` | — |
+| Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Fondasi + master data + transaksi + view (stok/mutasi) + penyesuaian stok + dashboard selesai. Berikutnya: laporan (jpn.13) + audit log (jpn.14).
+**Ringkasan:** Fondasi + master data + transaksi + view (stok/mutasi) + penyesuaian stok + dashboard + laporan selesai. Berikutnya: audit log (jpn.14).
 
 ---
 
@@ -98,7 +98,7 @@ Semua plan + prompt Antigravity siap di `docs/plans/` + `docs/prompts/`. Eksekus
 
 ### 🔵 GELOMBANG 4 — Dashboard + Laporan + Audit
 - [x] `oims-jpn.10` — Dashboard inventory ✅ **DONE** — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending)
-- [ ] `oims-jpn.13` — Laporan Tahap 1 (P3)
+- [x] `oims-jpn.13` — Laporan Tahap 1 ✅ **DONE** — 5 laporan + filter periode + export CSV (zero-dep)
 - [ ] `oims-jpn.14` — Audit log viewer (P3)
 
 ### 🧹 Nice-to-have (kapan saja)
@@ -149,6 +149,8 @@ Copy-paste prompt ke Antigravity satu per satu. Tunggu selesai + review sebelum 
 ---
 
 ## 📜 Changelog
+
+- **2026-08-05** — Laporan Tahap 1 (jpn.13) selesai + reviewed. 5 laporan: barang masuk/keluar/stok/mutasi/nilai persediaan. Filter periode (date range). Export CSV zero-dep dengan BOM UTF-8 untuk Excel. Nilai persediaan grouped by kategori. Berikutnya: audit log (jpn.14).
 
 - **2026-08-05** — Dashboard inventory (jpn.10) selesai + reviewed. StatCards 8 KPI (bahan aktif, supplier, nilai persediaan, transaksi bulan ini/hari ini, kritis, penyesuaian pending). PerluPerhatian: panel stok kritis + penyesuaian pending dengan loading nav. Queries parallel, staleTime 30s. Fix: read-only display div h-11 → h-10 (align dengan Input py-2.5) di barang-masuk/keluar/penyesuaian form. Berikutnya: laporan (jpn.13).
 
