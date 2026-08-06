@@ -95,13 +95,13 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
 > Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.
 
-### 🟢 GELOMBANG B — Feedback Owner Tahap 1 (setelah polish)
+### 🟢 GELOMBANG B — Feedback Owner Tahap 1 (`oims-lkw`, plan+prompt SIAP)
 
-Dari demo klien (sudah dikonfirmasi oke). Detail + rencana: `docs/feedback-owner.md`.
+Dari demo klien (terkonfirmasi). Plan+prompt di docs/plans + docs/prompts. Urut: dashboard → warna → harga.
 
-- [ ] **Dashboard enhancement** — perbandingan periode (bulan ini vs lalu) + total transaksi + top 10 bahan keluar. Paling siap (data sudah ada). Belum ada beads — buat saat mulai.
-- [ ] **Master warna** — CRUD master warna (cakupan: daftar sendiri vs atribut bahan — cek feedback-owner.md).
-- [ ] **Harga bahan — riwayat harga** — tampilkan riwayat harga pembelian di form barang masuk (hint acuan). METODE HITUNG TETAP rata-rata bergerak (lihat `docs/insight-bisnis/metode-harga-bahan-hpp.md`). JANGAN bahan jadi 2 entri per harga.
+- [ ] `oims-lkw.1` — **Dashboard**: perbandingan bulan ini vs lalu + top 10 bahan keluar (by kuantitas). Paling siap, no schema change.
+- [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna, stok tak berubah). 2 migration.
+- [ ] `oims-lkw.3` — **Riwayat harga** di form barang masuk (hint acuan, metode rata-rata TETAP — docs/insight-bisnis/metode-harga-bahan-hpp.md).
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
