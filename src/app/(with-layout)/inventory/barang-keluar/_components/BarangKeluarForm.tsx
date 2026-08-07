@@ -139,68 +139,90 @@ export function BarangKeluarForm({ bahanOptions }: Props) {
             return (
               <div
                 key={field.id}
-                className="grid grid-cols-1 gap-3 border-b border-stroke pb-3 last:border-none dark:border-dark-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_2.5rem]"
+                className="rounded-lg border border-stroke p-4 dark:border-dark-3 md:border-none md:p-0 md:border-b md:pb-3 md:last:border-none"
               >
-                <div>
-                  <ComboSelect
-                    label={i === 0 ? "Bahan" : undefined}
-                    placeholder="Pilih bahan"
-                    options={activeBahan.map((b) => ({
-                      label: `${b.kode} — ${b.nama} (Stok: ${Number(b.kuantitasStok)} ${b.satuanSingkatan || ""})`,
-                      value: b.id,
-                    }))}
-                    value={row?.bahanId || null}
-                    onChange={(v) =>
-                      setValue(`detail.${i}.bahanId`, (v as string) ?? "", {
-                        shouldValidate: true,
-                      })
+                {/* Header Item khusus Mobile */}
+                <div className="mb-3 flex items-center justify-between md:hidden">
+                  <span className="text-xs font-semibold text-dark-5 dark:text-dark-6">
+                    Item #{i + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => fields.length > 1 && remove(i)}
+                    disabled={fields.length === 1}
+                    className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30 disabled:opacity-30 transition-colors"
+                    title="Hapus item ini"
+                  >
+                    <Trash2 size={14} />
+                    <span>Hapus</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_2.5rem]">
+                  <div>
+                    <ComboSelect
+                      label={i === 0 ? "Bahan" : undefined}
+                      placeholder="Pilih bahan"
+                      options={activeBahan.map((b) => ({
+                        label: `${b.kode} — ${b.nama} (Stok: ${Number(b.kuantitasStok)} ${b.satuanSingkatan || ""})`,
+                        value: b.id,
+                      }))}
+                      value={row?.bahanId || null}
+                      onChange={(v) =>
+                        setValue(`detail.${i}.bahanId`, (v as string) ?? "", {
+                          shouldValidate: true,
+                        })
+                      }
+                      error={errors.detail?.[i]?.bahanId}
+                    />
+                  </div>
+                  <Input
+                    type="number"
+                    step="0.001"
+                    label={
+                      i === 0 ? `Kuantitas${satuan ? ` (${satuan})` : ""}` : undefined
                     }
-                    error={errors.detail?.[i]?.bahanId}
+                    {...register(`detail.${i}.kuantitas`, { valueAsNumber: true })}
+                    error={errors.detail?.[i]?.kuantitas?.message}
                   />
-                </div>
-                <Input
-                  type="number"
-                  step="0.001"
-                  label={
-                    i === 0 ? `Kuantitas${satuan ? ` (${satuan})` : ""}` : undefined
-                  }
-                  {...register(`detail.${i}.kuantitas`, { valueAsNumber: true })}
-                  error={errors.detail?.[i]?.kuantitas?.message}
-                />
-                
-                {/* Harga Rata2 (Info) — label placeholder agar selalu sejajar */}
-                <div>
-                  <label className={`mb-2 block text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
-                    Harga Rata²
-                  </label>
-                  <div className="flex h-10 items-center px-4 rounded-lg border border-stroke bg-gray-100 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
-                    {bahanInfo ? rupiah(harga) : "-"}
-                  </div>
-                </div>
 
-                {/* Subtotal — label placeholder agar selalu sejajar */}
-                <div>
-                  <label className={`mb-2 block text-right text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "invisible"}`}>
-                    Subtotal
-                  </label>
-                  <div className="flex h-10 items-center justify-end px-4 text-sm font-medium text-dark dark:text-white">
-                    {rupiah(subtotal)}
+                  {/* Harga Rata2 (Info) */}
+                  <div>
+                    <label className={`mb-2 block text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "md:invisible"}`}>
+                      Harga Rata²
+                    </label>
+                    <div className="flex h-10 items-center px-4 rounded-lg border border-stroke bg-gray-100 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
+                      {bahanInfo ? rupiah(harga) : "-"}
+                    </div>
                   </div>
-                </div>
 
-                {/* Delete — label placeholder agar tombol sejajar dengan input */}
-                <div>
-                  <div className={`mb-2 h-5 ${i === 0 ? "block" : "invisible"}`} aria-hidden />
-                  <div className="flex h-10 items-center justify-center">
-                    <button
-                      type="button"
-                      onClick={() => fields.length > 1 && remove(i)}
-                      disabled={fields.length === 1}
-                      className="rounded p-2 text-dark-5 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-30 disabled:hover:bg-transparent dark:text-dark-6 dark:hover:bg-red-500/10"
-                      title="Hapus baris"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                  {/* Subtotal */}
+                  <div className="flex items-center justify-between border-t border-stroke/40 pt-2 dark:border-dark-3/40 md:block md:border-t-0 md:pt-0">
+                    <span className="text-xs text-dark-5 dark:text-dark-6 md:hidden">
+                      Subtotal:
+                    </span>
+                    <label className={`mb-2 hidden text-right text-sm font-medium text-dark dark:text-white md:block ${i === 0 ? "" : "invisible"}`}>
+                      Subtotal
+                    </label>
+                    <div className="flex h-10 items-center justify-end px-0 text-sm font-semibold text-dark dark:text-white md:px-4 md:font-medium">
+                      {rupiah(subtotal)}
+                    </div>
+                  </div>
+
+                  {/* Desktop Delete button */}
+                  <div className="hidden md:block">
+                    <div className={`mb-2 h-5 ${i === 0 ? "block" : "invisible"}`} aria-hidden />
+                    <div className="flex h-10 items-center justify-center">
+                      <button
+                        type="button"
+                        onClick={() => fields.length > 1 && remove(i)}
+                        disabled={fields.length === 1}
+                        className="rounded p-2 text-dark-5 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-30 disabled:hover:bg-transparent dark:text-dark-6 dark:hover:bg-red-500/10"
+                        title="Hapus baris"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

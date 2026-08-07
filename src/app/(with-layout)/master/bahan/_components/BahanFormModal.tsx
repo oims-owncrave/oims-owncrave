@@ -59,6 +59,7 @@ export function BahanFormModal({
       satuanId: "",
       stokMinimum: 0,
       isActive: true,
+      hargaAwal: 0,
     },
   });
 
@@ -81,6 +82,7 @@ export function BahanFormModal({
           satuanId: "",
           stokMinimum: 0,
           isActive: true,
+          hargaAwal: 0,
         });
       }
     }
@@ -181,6 +183,18 @@ export function BahanFormModal({
             disabled={isPending}
           />
 
+
+          {!isEditing && (
+            <Input
+              type="number"
+              step="1"
+              label="Harga Awal (Rp)"
+              placeholder="0"
+              error={errors.hargaAwal?.message}
+              {...register("hargaAwal", { valueAsNumber: true })}
+              disabled={isPending}
+            />
+          )}
           <div className="flex items-center gap-3 py-2">
             <Checkbox
               checked={isActive}

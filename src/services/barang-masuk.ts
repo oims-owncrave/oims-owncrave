@@ -195,3 +195,35 @@ export async function getBarangMasukDetail(id: string) {
 
   return { data: { header, detail } };
 }
+
+/** Riwayat 5 harga pembelian terakhir untuk suatu bahan. */
+export type RiwayatHargaBahanItem = {
+  tanggal: Date;
+  hargaSatuan: string;
+};
+
+export async function getRiwayatHargaBahan(
+  bahanId: string,
+): Promise<RiwayatHargaBahanItem[]> {
+  await requireRole([
+    "owner",
+    "admin_gudang",
+    "admin_produksi",
+    "keuangan",
+    "viewer",
+  ]);
+
+  if (!bahanId) return [];
+
+  return db
+    .select({
+      tanggal: barangMasuk.tanggal,
+      hargaSatuan: barangMasukDetail.hargaSatuan,
+    })
+    .from(barangMasukDetail)
+    .innerJoin(barangMasuk, eq(barangMasukDetail.barangMasukId, barangMasuk.id))
+    .where(eq(barangMasukDetail.bahanId, bahanId))
+    .orderBy(desc(barangMasuk.tanggal))
+    .limit(5);
+}
+

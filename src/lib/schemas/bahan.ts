@@ -6,6 +6,7 @@ export const bahanSchema = z.object({
   satuanId: z.string().uuid("Satuan wajib dipilih"),
   stokMinimum: z.number().min(0, "Stok minimum tidak boleh negatif"),
   isActive: z.boolean(),
+  hargaAwal: z.number().min(0, "Harga tidak boleh negatif"),
 });
 
 export type BahanInput = z.infer<typeof bahanSchema>;

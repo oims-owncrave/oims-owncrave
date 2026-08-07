@@ -95,7 +95,7 @@ export async function createBahan(input: BahanInput) {
         satuanId: input.satuanId,
         stokMinimum: String(input.stokMinimum),
         isActive: input.isActive,
-        // hargaRataRata default 0 dari schema
+        hargaRataRata: String(input.hargaAwal ?? 0),
       })
       .returning();
 
