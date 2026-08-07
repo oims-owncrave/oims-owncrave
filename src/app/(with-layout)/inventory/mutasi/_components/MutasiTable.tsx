@@ -158,9 +158,9 @@ export function MutasiTable({
       {/* Tabel */}
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <div className="flex flex-col gap-3 w-full sm:w-auto">
+          <div className="flex flex-col gap-3 w-full lg:flex-row lg:flex-wrap lg:items-center lg:w-auto">
             <TableSearch table={table} placeholder="Cari bahan / dokumen..." />
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <ComboSelect
                 variant="filter"
                 placeholder="Semua bahan"
@@ -174,7 +174,7 @@ export function MutasiTable({
                   const opt = bahanOptions.find((b) => b.id === id);
                   onFilterBahanChange(id, opt ? `${opt.kode} — ${opt.nama}` : "");
                 }}
-                className="flex-1"
+                className="flex-1 sm:w-48 sm:flex-none"
               />
               <ComboSelect
                 variant="filter"
@@ -188,15 +188,13 @@ export function MutasiTable({
                 ]}
                 value={filterTipe || null}
                 onChange={(v) => onFilterTipeChange((v as string) ?? "")}
-                className="flex-1"
+                className="flex-1 sm:w-36 sm:flex-none"
               />
-            </div>
-            <div className="flex items-center gap-2">
-              <DateInput value={filterFrom} onChange={onFilterFromChange} placeholder="Dari Tanggal" containerClassName="flex-1" className="w-full" />
-              <DateInput value={filterTo} onChange={onFilterToChange} placeholder="Sampai Tanggal" containerClassName="flex-1" className="w-full" />
+              <DateInput value={filterFrom} onChange={onFilterFromChange} placeholder="Dari Tanggal" containerClassName="flex-1 sm:w-36 sm:flex-none" className="w-full" />
+              <DateInput value={filterTo} onChange={onFilterToChange} placeholder="Sampai Tanggal" containerClassName="flex-1 sm:w-36 sm:flex-none" className="w-full" />
             </div>
           </div>
-          <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
+          <ColumnToggle table={table} className="w-full lg:w-auto justify-center" />
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[25, 50, 100]} />

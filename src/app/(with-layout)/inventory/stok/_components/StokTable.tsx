@@ -104,28 +104,30 @@ export function StokTable({
   return (
     <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
       <TableToolbar>
-        <TableSearch table={table} placeholder="Cari kode / nama bahan..." />
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <ComboSelect
-            variant="filter"
-            placeholder="Semua Kategori"
-            options={kategoriOpts}
-            value={kategoriId || null}
-            onChange={(v) => onKategoriChange((v as string) ?? "")}
-            className="flex-1 sm:flex-none"
-          />
-          <ComboSelect
-            variant="filter"
-            placeholder="Semua Status"
-            options={[
-              { label: "Semua Status", value: "" },
-              { label: "Kritis", value: "kritis" },
-              { label: "Normal", value: "normal" },
-            ]}
-            value={kritisOnly || null}
-            onChange={(v) => onKritisChange((v as string) ?? "")}
-            className="flex-1 sm:flex-none"
-          />
+        <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-center sm:w-auto">
+          <TableSearch table={table} placeholder="Cari kode / nama bahan..." />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <ComboSelect
+              variant="filter"
+              placeholder="Semua Kategori"
+              options={kategoriOpts}
+              value={kategoriId || null}
+              onChange={(v) => onKategoriChange((v as string) ?? "")}
+              className="flex-1 sm:w-44 sm:flex-none"
+            />
+            <ComboSelect
+              variant="filter"
+              placeholder="Semua Status"
+              options={[
+                { label: "Semua Status", value: "" },
+                { label: "Kritis", value: "kritis" },
+                { label: "Normal", value: "normal" },
+              ]}
+              value={kritisOnly || null}
+              onChange={(v) => onKritisChange((v as string) ?? "")}
+              className="flex-1 sm:w-36 sm:flex-none"
+            />
+          </div>
         </div>
         <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
       </TableToolbar>
