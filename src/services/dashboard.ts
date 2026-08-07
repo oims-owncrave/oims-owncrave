@@ -90,14 +90,36 @@ export async function getBahanKritisList(): Promise<BahanKritisItem[]> {
     .limit(10);
 }
 
-// ─── Aktivitas Transaksi (Masuk + Keluar by date range) ────────────────────────────
+// ─── Aktivitas Transaksi (Masuk + Keluar by date range + prev comparison) ───────
 
 export type AktivitasTransaksiData = {
   masukCount: number;
   masukNilai: number;
+  masukCountPrev: number;
   keluarCount: number;
   keluarNilai: number;
+  keluarCountPrev: number;
 };
+
+function getPreviousDateRange(fromStr: string, toStr: string) {
+  const fromDate = new Date(fromStr + "T00:00:00");
+  const toDate = new Date(toStr + "T00:00:00");
+
+  const diffTime = toDate.getTime() - fromDate.getTime();
+  const diffDays = Math.max(1, Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1);
+
+  const prevToDate = new Date(fromDate.getTime() - 24 * 60 * 60 * 1000);
+  const prevFromDate = new Date(prevToDate.getTime() - (diffDays - 1) * 24 * 60 * 60 * 1000);
+
+  const fmt = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
+
+  return { prevFrom: fmt(prevFromDate), prevTo: fmt(prevToDate) };
+}
 
 /** `from` dan `to` dalam format YYYY-MM-DD (inclusive). */
 export async function getAktivitasTransaksi(
@@ -112,11 +134,15 @@ export async function getAktivitasTransaksi(
     "viewer",
   ]);
 
+  const { prevFrom, prevTo } = getPreviousDateRange(from, to);
+
   const rows = await db.execute<{
     masuk_count: string;
     masuk_nilai: string;
+    masuk_count_prev: string;
     keluar_count: string;
     keluar_nilai: string;
+    keluar_count_prev: string;
   }>(sql`
     SELECT
       (SELECT count(*)
@@ -129,6 +155,10 @@ export async function getAktivitasTransaksi(
         WHERE bm.tanggal >= ${from}::date
           AND bm.tanggal <  ${to}::date + interval '1 day') AS masuk_nilai,
       (SELECT count(*)
+         FROM barang_masuk
+        WHERE tanggal >= ${prevFrom}::date
+          AND tanggal <  ${prevTo}::date + interval '1 day') AS masuk_count_prev,
+      (SELECT count(*)
          FROM barang_keluar
         WHERE tanggal >= ${from}::date
           AND tanggal <  ${to}::date + interval '1 day') AS keluar_count,
@@ -136,15 +166,21 @@ export async function getAktivitasTransaksi(
          FROM barang_keluar_detail bkd
          JOIN barang_keluar bk ON bkd.barang_keluar_id = bk.id
         WHERE bk.tanggal >= ${from}::date
-          AND bk.tanggal <  ${to}::date + interval '1 day') AS keluar_nilai
+          AND bk.tanggal <  ${to}::date + interval '1 day') AS keluar_nilai,
+      (SELECT count(*)
+         FROM barang_keluar
+        WHERE tanggal >= ${prevFrom}::date
+          AND tanggal <  ${prevTo}::date + interval '1 day') AS keluar_count_prev
   `);
 
   const r = rows[0];
   return {
     masukCount: Number(r?.masuk_count ?? 0),
     masukNilai: Number(r?.masuk_nilai ?? 0),
+    masukCountPrev: Number(r?.masuk_count_prev ?? 0),
     keluarCount: Number(r?.keluar_count ?? 0),
     keluarNilai: Number(r?.keluar_nilai ?? 0),
+    keluarCountPrev: Number(r?.keluar_count_prev ?? 0),
   };
 }
 

@@ -97,7 +97,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. GELOMBANG A (mobile polish) SELESAI. Berikutnya: Gelombang B (lkw.2 master warna).
+**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. GELOMBANG A SELESAI. lkw.1+4 dashboard done. Berikutnya: lkw.2 (master warna) + lkw.3 (riwayat harga).
 
 ---
 
@@ -129,7 +129,7 @@ Dari demo klien (terkonfirmasi). Plan+prompt di docs/plans + docs/prompts. Urut:
 - [x] `oims-lkw.1` — **Dashboard**: aktivitas transaksi (filter periode) + top 10 bahan keluar by kuantitas ✅ **DONE** (deviasi: filter interaktif ganti perbandingan → lkw.4)
 - [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna). 2 migration. Plan+prompt SIAP. · **sesi:** review SENDIRI (besar + migration) → `oims-lkw review-master-warna`
 - [ ] `oims-lkw.3` — **Riwayat harga** di form barang masuk (metode rata-rata TETAP). Plan+prompt SIAP. · **sesi:** review (bisa batch dgn lkw kecil)
-- [ ] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (P3). Plan+prompt SIAP. · **sesi:** review (batch dgn g05.7/8)
+- [x] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (P3) ✅ **DONE**
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
@@ -151,6 +151,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-07** — oims-lkw.4 selesai. DeltaBadge (TrendingUp/Down/Minus + % vs periode lalu) di kartu Masuk/Keluar AktivitasTransaksi. getPreviousDateRange JS-side (durasi sama digeser mundur), subquery prev ikut 1 round-trip. Guard prev=0. Berikutnya: lkw.2 (master warna).
 
 - **2026-08-07** — oims-g05.8 selesai. CardKebabDropdown di table.tsx: MoreVertical trigger pojok kanan card, TableActionsVariantContext.Provider inject variant=menu, DropdownClose bungkus item aksi. Desktop table tak berubah. GELOMBANG A (mobile app-like polish) SELESAI.
 
