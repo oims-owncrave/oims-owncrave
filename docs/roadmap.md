@@ -88,9 +88,11 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 - [x] `oims-g05.1` — **Fix flash sidebar + buang drawer mobile** (P1 bug) ✅ **DONE** (unblocks g05.2, g05.3)
 - [x] `oims-g05.2` — Bottom nav parent buka sheet + Menu accordion (P2) ✅ **DONE**
 - [x] `oims-g05.3` — Header mobile app-like (greeting + judul/back) (P2) ✅ **DONE**
-- [ ] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ← independen
+- [x] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ✅ **DONE**
 - [x] `oims-g05.5` — Card view tabel mobile + filter rapi + toggle/sort (P2) ✅ **DONE**
 - [x] `oims-g05.6` — PageHeader mobile page title (P3, tambahan owner) ✅ **DONE**
+- [ ] `oims-g05.7` — Wave shape header home mobile (P3, tambahan owner). Plan+prompt SIAP.
+- [ ] `oims-g05.8` — Card action kebab menu mobile (P3, tambahan owner). Plan+prompt SIAP.
 
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
 > Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.
@@ -99,9 +101,10 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 
 Dari demo klien (terkonfirmasi). Plan+prompt di docs/plans + docs/prompts. Urut: dashboard → warna → harga.
 
-- [ ] `oims-lkw.1` — **Dashboard**: perbandingan bulan ini vs lalu + top 10 bahan keluar (by kuantitas). Paling siap, no schema change.
-- [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna, stok tak berubah). 2 migration.
-- [ ] `oims-lkw.3` — **Riwayat harga** di form barang masuk (hint acuan, metode rata-rata TETAP — docs/insight-bisnis/metode-harga-bahan-hpp.md).
+- [x] `oims-lkw.1` — **Dashboard**: aktivitas transaksi (filter periode) + top 10 bahan keluar by kuantitas ✅ **DONE** (deviasi: filter interaktif ganti perbandingan → lkw.4)
+- [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna, stok tak berubah). 2 migration. Plan+prompt SIAP.
+- [ ] `oims-lkw.3` — **Riwayat harga** di form barang masuk (hint acuan, metode rata-rata TETAP — docs/insight-bisnis/metode-harga-bahan-hpp.md). Plan+prompt SIAP.
+- [ ] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (lanjutan lkw.1, klien minta eksplisit). P3. Plan+prompt SIAP.
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
