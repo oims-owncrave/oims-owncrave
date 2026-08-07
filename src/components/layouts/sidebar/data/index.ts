@@ -46,9 +46,9 @@ export const NAV_DATA: NavSection[] = [
         items: [
           { title: "Kategori", url: "/master/kategori" },
           { title: "Satuan", url: "/master/satuan" },
-          { title: "Supplier", url: "/master/supplier" },
-          { title: "Bahan", url: "/master/bahan" },
           { title: "Warna", url: "/master/warna" },
+          { title: "Bahan", url: "/master/bahan" },
+          { title: "Supplier", url: "/master/supplier" },
         ],
       },
       {
