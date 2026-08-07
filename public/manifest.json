@@ -4,7 +4,7 @@
   "description": "Owncrave Integrated Management System — ERP produksi garmen",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "orientation": "portrait-primary",
   "categories": [

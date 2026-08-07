@@ -1,14 +1,13 @@
 "use client";
 
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   Package,
-  Truck,
   DollarSign,
-  ArrowDownLeft,
-  ArrowUpRight,
   AlertTriangle,
-  Activity,
   ClipboardList,
+  Loader2,
 } from "lucide-react";
 import type { DashboardStats } from "@/services/dashboard";
 
@@ -24,36 +23,31 @@ interface Props {
 }
 
 export function StatCards({ stats }: Props) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [activeHref, setActiveHref] = useState<string | null>(null);
+
+  const handleNavigate = (href: string) => {
+    setActiveHref(href);
+    startTransition(() => {
+      router.push(href);
+    });
+  };
+
   const cards = [
     {
       label: "Total Jenis Bahan",
       value: stats.totalBahanAktif.toString(),
       icon: Package,
       color: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300",
-    },
-    {
-      label: "Supplier Aktif",
-      value: stats.totalSupplierAktif.toString(),
-      icon: Truck,
-      color: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-300",
+      href: "/master/bahan",
     },
     {
       label: "Total Nilai Persediaan",
       value: rupiah(stats.totalNilaiStok),
       icon: DollarSign,
       color: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-300",
-    },
-    {
-      label: "Barang Masuk (Bulan Ini)",
-      value: `${stats.barangMasukBulanIni} transaksi`,
-      icon: ArrowDownLeft,
-      color: "bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-300",
-    },
-    {
-      label: "Barang Keluar (Bulan Ini)",
-      value: `${stats.barangKeluarBulanIni} transaksi`,
-      icon: ArrowUpRight,
-      color: "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-300",
+      href: "/laporan/nilai-persediaan",
     },
     {
       label: "Stok Kritis",
@@ -62,12 +56,7 @@ export function StatCards({ stats }: Props) {
       color: stats.bahanKritis > 0
         ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-300"
         : "bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-    },
-    {
-      label: "Transaksi Hari Ini",
-      value: `${stats.transaksiHariIni} transaksi`,
-      icon: Activity,
-      color: "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-300",
+      href: "/inventory/stok",
     },
     {
       label: "Penyesuaian Pending",
@@ -76,6 +65,7 @@ export function StatCards({ stats }: Props) {
       color: stats.penyesuaianPending > 0
         ? "bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-300"
         : "bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+      href: "/inventory/penyesuaian",
     },
   ];
 
@@ -83,25 +73,34 @@ export function StatCards({ stats }: Props) {
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {cards.map((card, idx) => {
         const Icon = card.icon;
+        const isLoadingThis = isPending && activeHref === card.href;
+
         return (
-          <div
+          <button
             key={idx}
-            className="rounded-[10px] border border-stroke bg-white p-5 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card"
+            type="button"
+            onClick={() => handleNavigate(card.href)}
+            disabled={isPending}
+            className="group block text-left rounded-[10px] border border-stroke bg-white p-5 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-dark-5 dark:text-dark-6">
+                <p className="text-sm text-dark-5 dark:text-dark-6 group-hover:text-primary transition-colors">
                   {card.label}
                 </p>
                 <p className="mt-1 text-lg font-bold text-dark dark:text-white lg:text-xl">
                   {card.value}
                 </p>
               </div>
-              <div className={`rounded-full p-3 ${card.color}`}>
-                <Icon size={20} />
+              <div className={`rounded-full p-3 transition-transform group-hover:scale-110 ${card.color}`}>
+                {isLoadingThis ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Icon size={20} />
+                )}
               </div>
             </div>
-          </div>
+          </button>
         );
       })}
     </div>

@@ -1,9 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, ClipboardList, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { AlertTriangle, ClipboardList, ArrowRight, Loader2 } from "lucide-react";
 import type { BahanKritisItem } from "@/services/dashboard";
 
 interface Props {
@@ -13,32 +12,52 @@ interface Props {
 
 export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
   const router = useRouter();
-  const [isNavigatingStok, startNavStok] = useTransition();
-  const [isNavigatingPenyesuaian, startNavPenyesuaian] = useTransition();
+  const [isNavigating, startNavigating] = useTransition();
+  const [activeHref, setActiveHref] = useState<string | null>(null);
+
+  const handleNavigate = (href: string) => {
+    setActiveHref(href);
+    startNavigating(() => {
+      router.push(href);
+    });
+  };
+
+  const isLoadingStok = isNavigating && activeHref === "/inventory/stok";
+  const isLoadingPenyesuaian = isNavigating && activeHref === "/inventory/penyesuaian";
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Panel 1: Stok Kritis */}
-      <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
+      <button
+        type="button"
+        onClick={() => handleNavigate("/inventory/stok")}
+        disabled={isNavigating}
+        className="group text-left block rounded-[10px] border border-stroke bg-white p-6 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
+      >
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="rounded-full bg-red-50 p-2 text-red-600 dark:bg-red-900/20 dark:text-red-300">
-              <AlertTriangle size={18} />
+            <div className="rounded-full bg-red-50 p-2 text-red-600 transition-transform group-hover:scale-110 dark:bg-red-900/20 dark:text-red-300">
+              {isLoadingStok ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <AlertTriangle size={18} />
+              )}
             </div>
-            <h3 className="font-bold text-dark dark:text-white">
+            <h3 className="font-bold text-dark transition-colors group-hover:text-primary dark:text-white dark:group-hover:text-primary">
               Bahan Stok Kritis ({kritisList.length})
             </h3>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            loading={isNavigatingStok}
-            onClick={() =>
-              startNavStok(() => router.push("/inventory/stok"))
-            }
-          >
-            Lihat Stok <ArrowRight size={14} className="ml-1" />
-          </Button>
+          <span className="flex items-center gap-1 text-xs font-medium text-primary">
+            {isLoadingStok ? (
+              <span className="flex items-center gap-1">
+                Memuat... <Loader2 size={14} className="animate-spin" />
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                Lihat Stok <ArrowRight size={14} />
+              </span>
+            )}
+          </span>
         </div>
 
         {kritisList.length === 0 ? (
@@ -81,20 +100,40 @@ export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
             })}
           </div>
         )}
-      </div>
+      </button>
 
       {/* Panel 2: Penyesuaian Pending */}
-      <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card flex flex-col justify-between">
+      <button
+        type="button"
+        onClick={() => handleNavigate("/inventory/penyesuaian")}
+        disabled={isNavigating}
+        className="group text-left flex flex-col justify-between rounded-[10px] border border-stroke bg-white p-6 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
+      >
         <div>
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="rounded-full bg-amber-50 p-2 text-amber-600 dark:bg-amber-900/20 dark:text-amber-300">
-                <ClipboardList size={18} />
+              <div className="rounded-full bg-amber-50 p-2 text-amber-600 transition-transform group-hover:scale-110 dark:bg-amber-900/20 dark:text-amber-300">
+                {isLoadingPenyesuaian ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <ClipboardList size={18} />
+                )}
               </div>
-              <h3 className="font-bold text-dark dark:text-white">
+              <h3 className="font-bold text-dark transition-colors group-hover:text-primary dark:text-white dark:group-hover:text-primary">
                 Persetujuan Penyesuaian
               </h3>
             </div>
+            <span className="flex items-center gap-1 text-xs font-medium text-primary">
+              {isLoadingPenyesuaian ? (
+                <span className="flex items-center gap-1">
+                  Memuat... <Loader2 size={14} className="animate-spin" />
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                  Buka Penyesuaian <ArrowRight size={14} />
+                </span>
+              )}
+            </span>
           </div>
 
           <div className="my-4 rounded-lg bg-gray-50 p-5 dark:bg-dark-2">
@@ -110,19 +149,20 @@ export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
           </div>
         </div>
 
-        <div className="mt-4 flex justify-end">
-          <Button
-            loading={isNavigatingPenyesuaian}
-            onClick={() =>
-              startNavPenyesuaian(() =>
-                router.push("/inventory/penyesuaian")
-              )
-            }
-          >
-            Buka Halaman Penyesuaian <ArrowRight size={16} className="ml-1" />
-          </Button>
+        <div className="mt-4 flex items-center justify-end gap-1 text-sm font-semibold text-primary">
+          {isLoadingPenyesuaian ? (
+            <>
+              <span>Memuat...</span>
+              <Loader2 size={16} className="animate-spin" />
+            </>
+          ) : (
+            <>
+              <span>Buka Halaman Penyesuaian</span>
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </>
+          )}
         </div>
-      </div>
+      </button>
     </div>
   );
 }
