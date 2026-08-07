@@ -93,7 +93,7 @@ function CardKebabDropdown<TData>({
         </DropdownTrigger>
         <DropdownContent
           align="end"
-          className="bg-white dark:bg-dark-2 border border-stroke dark:border-dark-3 rounded-xl shadow-2 p-1 min-w-[140px]"
+          className="bg-white dark:bg-dark-2 border border-stroke dark:border-dark-3 rounded-xl shadow-2 p-1 min-w-35"
         >
           <DropdownClose>
             <TableActionsVariantContext.Provider value="menu">

@@ -32,7 +32,7 @@ export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
         type="button"
         onClick={() => handleNavigate("/inventory/stok")}
         disabled={isNavigating}
-        className="group text-left block rounded-[10px] border border-stroke bg-white p-6 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
+        className="group text-left block rounded-[10px] border border-stroke bg-white p-6 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 cursor-pointer dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
       >
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
         type="button"
         onClick={() => handleNavigate("/inventory/penyesuaian")}
         disabled={isNavigating}
-        className="group text-left flex flex-col justify-between rounded-[10px] border border-stroke bg-white p-6 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
+        className="group text-left flex flex-col justify-between rounded-[10px] border border-stroke bg-white p-6 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 cursor-pointer dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
       >
         <div>
           <div className="mb-4 flex items-center justify-between">
@@ -123,17 +123,6 @@ export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
                 Persetujuan Penyesuaian
               </h3>
             </div>
-            <span className="flex items-center gap-1 text-xs font-medium text-primary">
-              {isLoadingPenyesuaian ? (
-                <span className="flex items-center gap-1">
-                  Memuat... <Loader2 size={14} className="animate-spin" />
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                  Buka Penyesuaian <ArrowRight size={14} />
-                </span>
-              )}
-            </span>
           </div>
 
           <div className="my-4 rounded-lg bg-gray-50 p-5 dark:bg-dark-2">
@@ -156,10 +145,10 @@ export function PerluPerhatian({ kritisList, penyesuaianPending }: Props) {
               <Loader2 size={16} className="animate-spin" />
             </>
           ) : (
-            <>
+            <span className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
               <span>Buka Halaman Penyesuaian</span>
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </>
+            </span>
           )}
         </div>
       </button>

@@ -77,7 +77,7 @@ export function Sidebar({ userRole }: { userRole: string }) {
           {/* Navigation */}
           <div
             className={cn(
-              "custom-scrollbar mt-15 flex-1 overflow-y-auto overflow-x-hidden whitespace-nowrap transition-all duration-300 ease-in-out min-[850px]:mt-15",
+              "custom-scrollbar mt-10 flex-1 overflow-y-auto overflow-x-hidden whitespace-nowrap transition-all duration-300 ease-in-out min-[850px]:mt-10",
               collapsed ? "pr-0" : "pr-3",
             )}
           >

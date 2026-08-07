@@ -32,10 +32,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      {/* <PageHeader
         title="Dashboard Inventory"
         breadcrumb={[{ label: "Dashboard" }]}
-      />
+      /> */}
       <DashboardPageClient
         initialStats={stats}
         initialKritisList={kritisList}

@@ -178,7 +178,7 @@ export function AktivitasTransaksi({ initialData }: Props) {
           type="button"
           onClick={() => handleNavigate("/inventory/barang-masuk")}
           disabled={isNavigating}
-          className="group text-left block rounded-lg bg-teal-50 p-4 transition-all hover:bg-teal-100/70 dark:bg-teal-900/20 dark:hover:bg-teal-900/35 disabled:opacity-80"
+          className="group text-left block rounded-lg bg-teal-50 p-4 transition-all hover:bg-teal-100/70 cursor-pointer dark:bg-teal-900/20 dark:hover:bg-teal-900/35 disabled:opacity-80"
         >
           {/* Header title + icon */}
           <div className="mb-2 flex items-center gap-2">
@@ -219,7 +219,7 @@ export function AktivitasTransaksi({ initialData }: Props) {
           type="button"
           onClick={() => handleNavigate("/inventory/barang-keluar")}
           disabled={isNavigating}
-          className="group text-left block rounded-lg bg-purple-50 p-4 transition-all hover:bg-purple-100/70 dark:bg-purple-900/20 dark:hover:bg-purple-900/35 disabled:opacity-80"
+          className="group text-left block rounded-lg bg-purple-50 p-4 transition-all hover:bg-purple-100/70 cursor-pointer dark:bg-purple-900/20 dark:hover:bg-purple-900/35 disabled:opacity-80"
         >
           {/* Header title + icon */}
           <div className="mb-2 flex items-center gap-2">

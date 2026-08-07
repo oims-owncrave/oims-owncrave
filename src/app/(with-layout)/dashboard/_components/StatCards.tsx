@@ -81,7 +81,7 @@ export function StatCards({ stats }: Props) {
             type="button"
             onClick={() => handleNavigate(card.href)}
             disabled={isPending}
-            className="group block text-left rounded-[10px] border border-stroke bg-white p-5 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
+            className="group block text-left rounded-[10px] border border-stroke bg-white p-5 shadow-1 transition-all hover:border-primary/50 hover:shadow-2 cursor-pointer dark:border-dark-3 dark:bg-gray-dark dark:shadow-card dark:hover:border-primary/50 disabled:opacity-80"
           >
             <div className="flex items-center justify-between">
               <div>
