@@ -13,6 +13,18 @@ type MenuSheetProps = {
   scopedItem?: NavItem;
 };
 
+function SpinnerIcon({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "animate-spin rounded-full border-2 border-gray-300 border-t-primary shrink-0",
+        className
+      )}
+      aria-hidden="true"
+    />
+  );
+}
+
 function ChevronDownIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -36,6 +48,7 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
+  const [navigatingUrl, setNavigatingUrl] = useState<string | null>(null);
   const isMounted = useRef(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
@@ -63,8 +76,16 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
       isMounted.current = true;
       return;
     }
+    setNavigatingUrl(null);
     onClose();
   }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset navigating URL when sheet is closed
+  useEffect(() => {
+    if (!open) {
+      setNavigatingUrl(null);
+    }
+  }, [open]);
 
   // Trap scroll when open
   useEffect(() => {
@@ -75,7 +96,11 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
   }, [open]);
 
   function navigate(url: string) {
-    onClose();
+    if (url === pathname) {
+      onClose();
+      return;
+    }
+    setNavigatingUrl(url);
     startTransition(() => {
       router.push(url);
     });
@@ -147,18 +172,21 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
             <div className="space-y-1">
               {scopedItem.items.map((sub: NavSubItem) => {
                 const isActive = pathname === sub.url;
+                const isNavigatingThis = isPending && navigatingUrl === sub.url;
+
                 return (
                   <button
                     key={sub.url}
                     onClick={() => navigate(sub.url)}
                     disabled={isPending}
                     className={cn(
-                      "flex w-full items-center rounded-lg px-4 py-3 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
+                      "flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
                       isActive && "bg-primary/10 text-primary dark:text-primary font-semibold",
-                      isPending && "opacity-60"
+                      isNavigatingThis && "bg-primary/5 text-primary"
                     )}
                   >
-                    {sub.title}
+                    <span>{sub.title}</span>
+                    {isNavigatingThis && <SpinnerIcon className="size-4" />}
                   </button>
                 );
               })}
@@ -178,19 +206,24 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
                   if (!hasSubItems && item.url) {
                     /* Leaf Item (e.g. Dashboard) */
                     const isActive = pathname === item.url;
+                    const isNavigatingThis = isPending && navigatingUrl === item.url;
+
                     return (
                       <div key={item.title} className="mb-1">
                         <button
                           onClick={() => navigate(item.url!)}
                           disabled={isPending}
                           className={cn(
-                            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
+                            "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
                             isActive && "bg-primary/10 text-primary dark:text-primary font-semibold",
-                            isPending && "opacity-60"
+                            isNavigatingThis && "bg-primary/5 text-primary"
                           )}
                         >
-                          <item.icon className="size-5 shrink-0" aria-hidden="true" />
-                          <span>{item.title}</span>
+                          <div className="flex items-center gap-3">
+                            <item.icon className="size-5 shrink-0" aria-hidden="true" />
+                            <span>{item.title}</span>
+                          </div>
+                          {isNavigatingThis && <SpinnerIcon className="size-4" />}
                         </button>
                       </div>
                     );
@@ -230,18 +263,21 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
                       >
                         {item.items.map((sub: NavSubItem) => {
                           const isActive = pathname === sub.url;
+                          const isNavigatingThis = isPending && navigatingUrl === sub.url;
+
                           return (
                             <button
                               key={sub.url}
                               onClick={() => navigate(sub.url)}
                               disabled={isPending}
                               className={cn(
-                                "flex w-full items-center rounded-lg px-3 py-2 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
+                                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
                                 isActive && "bg-primary/10 text-primary dark:text-primary font-semibold",
-                                isPending && "opacity-60"
+                                isNavigatingThis && "bg-primary/5 text-primary"
                               )}
                             >
-                              {sub.title}
+                              <span>{sub.title}</span>
+                              {isNavigatingThis && <SpinnerIcon className="size-4" />}
                             </button>
                           );
                         })}
