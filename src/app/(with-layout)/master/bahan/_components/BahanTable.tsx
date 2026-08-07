@@ -38,6 +38,13 @@ interface Props {
   onAdd: () => void;
 }
 
+const rupiah = (n: number) =>
+  new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(n);
+
 export function BahanTable({ data, onEdit, onAdd }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { remove } = useBahanMutation();
@@ -71,9 +78,17 @@ export function BahanTable({ data, onEdit, onAdd }: Props) {
       renderCell: (item) => item.satuanNama || "-",
     },
     {
+      key: "hargaRataRata",
+      label: "Harga Rata²",
+      align: "right",
+      mobileRole: "detail",
+      renderCell: (item) => rupiah(Number(item.hargaRataRata ?? 0)),
+    },
+    {
       key: "stokMinimum",
       label: "Stok Min",
       align: "right",
+      mobileRole: "detail",
       renderCell: (item) => `${Number(item.stokMinimum)} ${item.satuanSingkatan || ""}`,
     },
     {
