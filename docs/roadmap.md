@@ -97,7 +97,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. Polish: g05.7 (wave header) ✅. Berikutnya: g05.8 (card kebab).
+**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. GELOMBANG A (mobile polish) SELESAI. Berikutnya: Gelombang B (lkw.2 master warna).
 
 ---
 
@@ -106,7 +106,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 > Tahap 1 (jpn.1-14) SEMUA selesai — riwayatnya di Changelog. Sekarang fokus polish + feedback owner sebelum Tahap 2.
 > Plan + prompt siap di `docs/plans/` + `docs/prompts/`. Kerjakan berurutan.
 
-### 🟡 GELOMBANG A — Mobile App-Like Polish (`oims-g05`) — HAMPIR SELESAI
+### ✅ GELOMBANG A — Mobile App-Like Polish (`oims-g05`) — SELESAI
 
 Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di gudang/produksi. Semua sudah di-plan.
 
@@ -117,7 +117,7 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 - [x] `oims-g05.5` — Card view tabel mobile + filter rapi + toggle/sort (P2) ✅ **DONE**
 - [x] `oims-g05.6` — PageHeader mobile page title (P3, tambahan owner) ✅ **DONE**
 - [x] `oims-g05.7` — Wave shape header home mobile (P3) ✅ **DONE**
-- [ ] `oims-g05.8` — Card action kebab menu mobile (P3). Plan+prompt SIAP. · **sesi:** review (batch)
+- [x] `oims-g05.8` — Card action kebab menu mobile (P3) ✅ **DONE**
 
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
 > Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.
@@ -151,6 +151,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-07** — oims-g05.8 selesai. CardKebabDropdown di table.tsx: MoreVertical trigger pojok kanan card, TableActionsVariantContext.Provider inject variant=menu, DropdownClose bungkus item aksi. Desktop table tak berubah. GELOMBANG A (mobile app-like polish) SELESAI.
 
 - **2026-08-07** — oims-g05.7 selesai. Wave SVG di MobileHomeHeader — lengkung di bawah gradient, fill match bg konten (gray-2 / dark #020d1a), konten z-10, overflow-hidden. Berikutnya: g05.8 (card action kebab menu mobile).
 

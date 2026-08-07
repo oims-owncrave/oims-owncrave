@@ -16,7 +16,9 @@ import {
 import { SortIndicator } from "./table-sorting"
 import { TableSkeleton } from "./table-skeleton"
 import { Tooltip } from "@/components/ui/Tooltip"
-import { HelpCircle, LayoutList, Table2 } from "lucide-react"
+import { HelpCircle, LayoutList, Table2, MoreVertical } from "lucide-react"
+import { Dropdown, DropdownTrigger, DropdownContent, DropdownClose } from "@/components/ui/Dropdown"
+import { TableActionsVariantContext } from "./table-actions"
 
 // Context
 const TableContext = createContext<TableState<unknown> | null>(null)
@@ -63,6 +65,49 @@ function renderVal<TData>(col: ColumnDef<TData>, item: TData, rowIndex: number, 
     return col.renderCell(item, { rowIndex, isExpanded, isSelected })
   }
   return String((item as Record<string, unknown>)[col.key] ?? "")
+}
+
+function CardKebabDropdown<TData>({
+  actions,
+  item,
+  rowIndex,
+  isExpanded,
+  isSelected,
+}: {
+  actions: { col: ColumnDef<TData> }[]
+  item: TData
+  rowIndex: number
+  isExpanded: boolean
+  isSelected: boolean
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div onClick={(e) => e.stopPropagation()}>
+      <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
+        <DropdownTrigger
+          className="flex size-7 items-center justify-center rounded-lg text-dark-5 hover:bg-gray-1 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-3 dark:hover:text-white transition-colors"
+          aria-label="Aksi"
+        >
+          <MoreVertical size={16} />
+        </DropdownTrigger>
+        <DropdownContent
+          align="end"
+          className="bg-white dark:bg-dark-2 border border-stroke dark:border-dark-3 rounded-xl shadow-2 p-1 min-w-[140px]"
+        >
+          <DropdownClose>
+            <TableActionsVariantContext.Provider value="menu">
+              {actions.map((a) => (
+                <div key={a.col.key}>
+                  {renderVal(a.col, item, rowIndex, isExpanded, isSelected)}
+                </div>
+              ))}
+            </TableActionsVariantContext.Provider>
+          </DropdownClose>
+        </DropdownContent>
+      </Dropdown>
+    </div>
+  )
 }
 
 export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, showRowNumber = false, stickyHeader = false, maxHeight }: DataTableProps<TData>) {
@@ -258,13 +303,22 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         </div>
                       )}
                     </div>
-                    {highlights.length > 0 && (
+                    {(highlights.length > 0 || actions.length > 0) && (
                       <div className="flex shrink-0 items-center gap-2">
                         {highlights.map((h) => (
                           <div key={h.col.key}>
                             {renderVal(h.col, item, rowIndex, isExpanded, isSelected)}
                           </div>
                         ))}
+                        {actions.length > 0 && (
+                          <CardKebabDropdown
+                            actions={actions}
+                            item={item}
+                            rowIndex={rowIndex}
+                            isExpanded={isExpanded}
+                            isSelected={isSelected}
+                          />
+                        )}
                       </div>
                     )}
                   </div>
@@ -280,19 +334,6 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         </div>
                       ))}
                     </dl>
-                  )}
-
-                  {actions.length > 0 && (
-                    <div
-                      className="mt-3 flex items-center justify-end gap-2 border-t border-stroke pt-3 dark:border-dark-3"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {actions.map((a) => (
-                        <div key={a.col.key}>
-                          {renderVal(a.col, item, rowIndex, isExpanded, isSelected)}
-                        </div>
-                      ))}
-                    </div>
                   )}
 
                   {isExpanded && renderExpandedRow && (
