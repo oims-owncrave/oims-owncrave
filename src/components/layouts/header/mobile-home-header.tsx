@@ -17,8 +17,8 @@ export function MobileHomeHeader({ userName, userRole }: MobileHomeHeaderProps) 
     .join("");
 
   return (
-    <div className="min-[850px]:hidden bg-linear-to-r from-primary to-indigo-700 px-5 py-8 text-white shadow-md">
-      <div className="flex items-center justify-between">
+    <div className="relative overflow-hidden min-[850px]:hidden bg-linear-to-r from-primary to-indigo-700 px-5 pt-8 pb-12 text-white">
+      <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/20 text-sm font-bold text-white backdrop-blur-sm">
             {initials || "U"}
@@ -38,6 +38,21 @@ export function MobileHomeHeader({ userName, userRole }: MobileHomeHeaderProps) 
         >
           <Settings className="size-5" />
         </Link>
+      </div>
+
+      {/* Wave shape transition to main content bg */}
+      <div className="absolute bottom-0 left-0 h-6 w-full pointer-events-none">
+        <svg
+          viewBox="0 0 400 32"
+          className="h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M0,32 Q100,20 200,32 T400,20 L400,32 Z"
+            className="fill-gray-2 dark:fill-[#020d1a]"
+          />
+        </svg>
       </div>
     </div>
   );

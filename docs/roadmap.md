@@ -41,6 +41,31 @@ Urut. Tujuan akhir = **Tahap 1 serah terima ke Owncrave + 1 sesi training**.
 
 ---
 
+## 🗂️ Manajemen Sesi (Claude)
+
+Eksekusi kode = Antigravity. Claude = plan + review + diskusi. Sesi dikelompokkan by **tipe kerja** (detail: `~/.claude/CLAUDE.md` → Manajemen Sesi Chat).
+
+| Tipe sesi | Untuk | Naming | Batch |
+|---|---|---|---|
+| **plan** | Diskusi ide + bikin beads + plan + prompt | `oims-<id> plan-<slug>` | ✅ banyak plan/sesi |
+| **review** | Review hasil Antigravity → fix → close → commit | `oims-<id> review-<slug>` | ✅ 2-4 issue kecil |
+| **bugfix** | Debug error/regresi runtime | `oims-<id> bugfix-<slug>` | ❌ fokus 1 |
+| **discuss** | Diskusi global / roadmap / arah projek (tanpa issue) | `oims discuss-<topik>` | — |
+
+**Naming = title deskriptif**, bukan cuma kode (kode saja bikin lupa lagi bahas apa). Rename: `/rename <nama>`.
+**Aturan cepat:** kerjaan sejenis+kecil → batch 1 sesi. Fase ganti / issue besar / context ~70% → sesi baru.
+
+## 📅 Timeline
+
+Catatan kecepatan + histori (buat PM + retrospektif).
+
+| Tanggal | Fase | Catatan |
+|---|---|---|
+| 2026-08-03 (Sen) | Bootstrap + konsep | Scaffold, UI kit, PWA, schema, 13 plan Tahap 1. Banyak konsep UI/struktur (bukan pure fitur) → cepat. |
+| 2026-08-03–05 (Sen–Rab) | Tahap 1 build | jpn.1-14 semua selesai (master, transaksi, stok, dashboard, laporan, audit). ~3 hari dengan AI executor. |
+| 2026-08-05 (Rab) | Serah terima | Tahap 1 FEATURE COMPLETE + serah terima + training. |
+| 2026-08-05 (Jum) | Feedback + polish | Demo → feedback owner. Mobile app-like polish (g05) + Gelombang B plan (lkw). |
+
 ## 🎯 Visi
 
 OIMS adalah satu aplikasi terintegrasi yang menghubungkan seluruh alur produksi garmen Owncrave — dari pembelian bahan sampai laporan keuangan. Dibangun bertahap (5 tahap) agar stabil, bisa langsung dipakai per tahap, dan setiap tahap jadi fondasi tahap berikutnya. Target jangka pendek: Tahap 1 jalan dan menggantikan pencatatan manual stok bahan. Target jangka panjang: semua alur produksi + HPP terotomasi dalam satu sistem.
@@ -72,7 +97,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. Berikutnya: serah terima + training (jpn serah terima).
+**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. Polish: g05.7 (wave header) ✅. Berikutnya: g05.8 (card kebab).
 
 ---
 
@@ -81,7 +106,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 > Tahap 1 (jpn.1-14) SEMUA selesai — riwayatnya di Changelog. Sekarang fokus polish + feedback owner sebelum Tahap 2.
 > Plan + prompt siap di `docs/plans/` + `docs/prompts/`. Kerjakan berurutan.
 
-### 🔴 GELOMBANG A — Mobile App-Like Polish (`oims-g05`) — KERJAKAN DULU
+### 🟡 GELOMBANG A — Mobile App-Like Polish (`oims-g05`) — HAMPIR SELESAI
 
 Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di gudang/produksi. Semua sudah di-plan.
 
@@ -91,8 +116,8 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 - [x] `oims-g05.4` — StatCards 2-kolom di mobile (P3) ✅ **DONE**
 - [x] `oims-g05.5` — Card view tabel mobile + filter rapi + toggle/sort (P2) ✅ **DONE**
 - [x] `oims-g05.6` — PageHeader mobile page title (P3, tambahan owner) ✅ **DONE**
-- [ ] `oims-g05.7` — Wave shape header home mobile (P3, tambahan owner). Plan+prompt SIAP.
-- [ ] `oims-g05.8` — Card action kebab menu mobile (P3, tambahan owner). Plan+prompt SIAP.
+- [x] `oims-g05.7` — Wave shape header home mobile (P3) ✅ **DONE**
+- [ ] `oims-g05.8` — Card action kebab menu mobile (P3). Plan+prompt SIAP. · **sesi:** review (batch)
 
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
 > Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.
@@ -102,9 +127,9 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 Dari demo klien (terkonfirmasi). Plan+prompt di docs/plans + docs/prompts. Urut: dashboard → warna → harga.
 
 - [x] `oims-lkw.1` — **Dashboard**: aktivitas transaksi (filter periode) + top 10 bahan keluar by kuantitas ✅ **DONE** (deviasi: filter interaktif ganti perbandingan → lkw.4)
-- [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna, stok tak berubah). 2 migration. Plan+prompt SIAP.
-- [ ] `oims-lkw.3` — **Riwayat harga** di form barang masuk (hint acuan, metode rata-rata TETAP — docs/insight-bisnis/metode-harga-bahan-hpp.md). Plan+prompt SIAP.
-- [ ] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (lanjutan lkw.1, klien minta eksplisit). P3. Plan+prompt SIAP.
+- [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna). 2 migration. Plan+prompt SIAP. · **sesi:** review SENDIRI (besar + migration) → `oims-lkw review-master-warna`
+- [ ] `oims-lkw.3` — **Riwayat harga** di form barang masuk (metode rata-rata TETAP). Plan+prompt SIAP. · **sesi:** review (bisa batch dgn lkw kecil)
+- [ ] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (P3). Plan+prompt SIAP. · **sesi:** review (batch dgn g05.7/8)
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
@@ -126,6 +151,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-07** — oims-g05.7 selesai. Wave SVG di MobileHomeHeader — lengkung di bawah gradient, fill match bg konten (gray-2 / dark #020d1a), konten z-10, overflow-hidden. Berikutnya: g05.8 (card action kebab menu mobile).
 
 - **2026-08-05** — oims-g05.5 + g05.6 selesai. Card view mobile terpusat di DataTable (heuristik + mobileRole), toggle Card/Table, sort dropdown (ComboSelect), ColumnToggle kondisional, filter toolbar stack mobile. PageHeader (title+breadcrumb) apply ~20 halaman + dokumentasi docs/claude/ui-components.md. GELOMBANG A (mobile polish) SELESAI.
 

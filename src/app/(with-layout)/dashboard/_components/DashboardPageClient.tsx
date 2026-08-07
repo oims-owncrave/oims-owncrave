@@ -34,7 +34,7 @@ export function DashboardPageClient({
   const { data: topBahan = initialTopBahan } = useTopBahanKeluar(initialTopBahan);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-5 sm:mt-0">
       <StatCards stats={stats} />
 
       {/* Aktivitas full-width */}
