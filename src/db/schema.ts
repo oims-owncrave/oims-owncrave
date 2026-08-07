@@ -94,6 +94,20 @@ export const supplier = pgTable(
   (t) => [uniqueIndex("supplier_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
 );
 
+export const warna = pgTable(
+  "warna",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // e.g. "MRH" — unik hanya untuk baris aktif (partial index)
+    nama: text("nama").notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("warna_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))],
+);
+
 export const bahan = pgTable(
   "bahan",
   {
@@ -103,6 +117,7 @@ export const bahan = pgTable(
     nama: text("nama").notNull(),
     kategoriId: uuid("kategori_id").notNull().references(() => kategori.id),
     satuanId: uuid("satuan_id").notNull().references(() => satuan.id),
+    warnaId: uuid("warna_id").references(() => warna.id), // nullable — bahan lama tidak punya warna
     stokMinimum: numeric("stok_minimum", { precision: 15, scale: 3 }).notNull().default("0"),
     // Harga satuan rata-rata bergerak (weighted average) — di-update tiap barang masuk
     hargaRataRata: numeric("harga_rata_rata", { precision: 15, scale: 2 }).notNull().default("0"),
@@ -265,3 +280,4 @@ export type BarangKeluarDetail = typeof barangKeluarDetail.$inferSelect;
 export type PenyesuaianStok = typeof penyesuaianStok.$inferSelect;
 export type MutasiStok = typeof mutasiStok.$inferSelect;
 export type AuditLog = typeof auditLog.$inferSelect;
+export type Warna = typeof warna.$inferSelect;

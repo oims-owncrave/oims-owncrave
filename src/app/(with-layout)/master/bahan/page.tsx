@@ -1,4 +1,5 @@
 import { listBahan } from "@/services/bahan";
+import { listWarna } from "@/services/warna";
 import { listKategori } from "@/services/kategori";
 import { listSatuan } from "@/services/satuan";
 import { BahanPageClient } from "./_components/BahanPageClient";
@@ -18,10 +19,11 @@ export default async function MasterBahanPage() {
     "viewer",
   ]);
 
-  const [data, kategoriOptions, satuanOptions] = await Promise.all([
+  const [data, kategoriOptions, satuanOptions, warnaOptions] = await Promise.all([
     listBahan(),
     listKategori(),
     listSatuan(),
+    listWarna(),
   ]);
 
   return (
@@ -29,6 +31,7 @@ export default async function MasterBahanPage() {
       initialData={data}
       kategoriOptions={kategoriOptions}
       satuanOptions={satuanOptions}
+      warnaOptions={warnaOptions}
     />
   );
 }

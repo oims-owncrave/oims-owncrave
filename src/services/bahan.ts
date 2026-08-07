@@ -6,6 +6,7 @@ import {
   bahan,
   kategori,
   satuan,
+  warna,
   stok,
   barangMasukDetail,
   barangKeluarDetail,
@@ -71,11 +72,14 @@ export async function listBahan() {
       satuanSingkatan: satuan.singkatan,
       stokMinimum: bahan.stokMinimum,
       hargaRataRata: bahan.hargaRataRata,
+      warnaId: bahan.warnaId,
+      warnaNama: warna.nama,
       isActive: bahan.isActive,
     })
     .from(bahan)
     .leftJoin(kategori, eq(bahan.kategoriId, kategori.id))
     .leftJoin(satuan, eq(bahan.satuanId, satuan.id))
+    .leftJoin(warna, eq(bahan.warnaId, warna.id))
     .where(isNull(bahan.deletedAt))
     .orderBy(bahan.kode);
 }
@@ -96,6 +100,7 @@ export async function createBahan(input: BahanInput) {
         stokMinimum: String(input.stokMinimum),
         isActive: input.isActive,
         hargaRataRata: String(input.hargaAwal ?? 0),
+        warnaId: input.warnaId ?? null,
       })
       .returning();
 
@@ -126,6 +131,7 @@ export async function updateBahan(id: string, input: BahanInput) {
       nama: input.nama,
       kategoriId: input.kategoriId,
       satuanId: input.satuanId,
+      warnaId: input.warnaId ?? null,
       stokMinimum: String(input.stokMinimum),
       isActive: input.isActive,
       updatedAt: new Date(),

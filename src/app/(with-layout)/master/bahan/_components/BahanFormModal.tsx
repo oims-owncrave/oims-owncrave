@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { bahanSchema, type BahanInput } from "@/lib/schemas/bahan";
 import { useBahanMutation } from "@/hooks/useBahan";
-import type { Kategori, Satuan } from "@/db/schema";
+import type { Kategori, Satuan, Warna } from "@/db/schema";
 
 type BahanItem = {
   id: string;
@@ -22,6 +22,7 @@ type BahanItem = {
   satuanSingkatan: string | null;
   stokMinimum: string;
   hargaRataRata: string;
+  warnaId: string | null;
   isActive: boolean;
 };
 
@@ -31,6 +32,7 @@ interface Props {
   initialData?: BahanItem | null;
   kategoriOptions: Kategori[];
   satuanOptions: Satuan[];
+  warnaOptions: Warna[];
 }
 
 export function BahanFormModal({
@@ -39,6 +41,7 @@ export function BahanFormModal({
   initialData,
   kategoriOptions,
   satuanOptions,
+  warnaOptions,
 }: Props) {
   const { create, update } = useBahanMutation();
   const isEditing = !!initialData;
@@ -58,6 +61,7 @@ export function BahanFormModal({
       kategoriId: "",
       satuanId: "",
       stokMinimum: 0,
+      warnaId: null,
       isActive: true,
       hargaAwal: 0,
     },
@@ -72,6 +76,7 @@ export function BahanFormModal({
           nama: initialData.nama,
           kategoriId: initialData.kategoriId,
           satuanId: initialData.satuanId,
+          warnaId: initialData.warnaId ?? null,
           stokMinimum: Number(initialData.stokMinimum),
           isActive: initialData.isActive,
         });
@@ -80,6 +85,7 @@ export function BahanFormModal({
           nama: "",
           kategoriId: "",
           satuanId: "",
+          warnaId: null,
           stokMinimum: 0,
           isActive: true,
           hargaAwal: 0,
@@ -173,6 +179,17 @@ export function BahanFormModal({
               disabled={isPending}
             />
           </div>
+
+          <ComboSelect
+            label="Warna (Opsional)"
+            placeholder="Pilih warna"
+            options={warnaOptions
+              .filter((w) => w.isActive || w.id === watch("warnaId"))
+              .map((w) => ({ label: `${w.kode} — ${w.nama}`, value: w.id }))}
+            value={watch("warnaId") || null}
+            onChange={(v) => setValue("warnaId", (v as string) ?? null, { shouldValidate: true })}
+            disabled={isPending}
+          />
 
           <Input
             type="number"

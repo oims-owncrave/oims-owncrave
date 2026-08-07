@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Pencil, Trash2 } from "lucide-react";
-import { useBahanMutation } from "@/hooks/useBahan";
+import { useWarnaMutation } from "@/hooks/useWarna";
+import type { Warna } from "@/db/schema";
 import {
   DataTable,
   useTable,
@@ -18,40 +19,17 @@ import {
   TableAction,
 } from "@/components/ui/table";
 
-type BahanItem = {
-  id: string;
-  kode: string;
-  nama: string;
-  kategoriId: string;
-  kategoriNama: string | null;
-  satuanId: string;
-  satuanNama: string | null;
-  satuanSingkatan: string | null;
-  stokMinimum: string;
-  hargaRataRata: string;
-  warnaId: string | null;
-  warnaNama: string | null;
-  isActive: boolean;
-};
-
 interface Props {
-  data: BahanItem[];
-  onEdit: (item: BahanItem) => void;
+  data: Warna[];
+  onEdit: (item: Warna) => void;
   onAdd: () => void;
 }
 
-const rupiah = (n: number) =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(n);
-
-export function BahanTable({ data, onEdit, onAdd }: Props) {
+export function WarnaTable({ data, onEdit, onAdd }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const { remove } = useBahanMutation();
+  const { remove } = useWarnaMutation();
 
-  const actions: TableAction<BahanItem>[] = [
+  const actions: TableAction<Warna>[] = [
     {
       icon: <Pencil size={16} />,
       title: "Edit",
@@ -66,39 +44,9 @@ export function BahanTable({ data, onEdit, onAdd }: Props) {
     },
   ];
 
-  const columns: ColumnDef<BahanItem>[] = [
+  const columns: ColumnDef<Warna>[] = [
     { key: "kode", label: "Kode" },
-    { key: "nama", label: "Nama Bahan" },
-    {
-      key: "kategoriNama",
-      label: "Kategori",
-      renderCell: (item) => item.kategoriNama || "-",
-    },
-    {
-      key: "satuanNama",
-      label: "Satuan",
-      renderCell: (item) => item.satuanNama || "-",
-    },
-    {
-      key: "warnaNama",
-      label: "Warna",
-      mobileRole: "detail",
-      renderCell: (item) => item.warnaNama || "-",
-    },
-    {
-      key: "hargaRataRata",
-      label: "Harga Rata²",
-      align: "right",
-      mobileRole: "detail",
-      renderCell: (item) => rupiah(Number(item.hargaRataRata ?? 0)),
-    },
-    {
-      key: "stokMinimum",
-      label: "Stok Min",
-      align: "right",
-      mobileRole: "detail",
-      renderCell: (item) => `${Number(item.stokMinimum)} ${item.satuanSingkatan || ""}`,
-    },
+    { key: "nama", label: "Nama Warna" },
     {
       key: "isActive",
       label: "Status",
@@ -136,10 +84,10 @@ export function BahanTable({ data, onEdit, onAdd }: Props) {
     <>
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari bahan..." />
+          <TableSearch table={table} placeholder="Cari warna..." />
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
-            <Button onClick={onAdd} className="flex-1 sm:flex-none">+ Tambah Bahan</Button>
+            <Button onClick={onAdd} className="flex-1 sm:flex-none">+ Tambah Warna</Button>
           </div>
         </TableToolbar>
         <DataTable table={table} showRowNumber />
@@ -148,8 +96,8 @@ export function BahanTable({ data, onEdit, onAdd }: Props) {
 
       <ConfirmDialog
         open={deleteId !== null}
-        title="Hapus Bahan?"
-        message="Bahan yang sudah punya transaksi tidak bisa dihapus — nonaktifkan saja."
+        title="Hapus Warna?"
+        message="Warna yang masih dipakai bahan tidak bisa dihapus — nonaktifkan saja."
         confirmLabel="Hapus"
         onConfirm={() => {
           if (deleteId) remove.mutate(deleteId);

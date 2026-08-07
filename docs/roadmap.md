@@ -97,7 +97,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Tahap 1 FEATURE COMPLETE. Semua fitur: master data + transaksi + stok/mutasi + penyesuaian + dashboard + laporan + audit log. GELOMBANG A SELESAI. lkw.1+3+4 done. Berikutnya: lkw.2 (master warna — migration, sesi sendiri).
+**Ringkasan:** Tahap 1 FEATURE COMPLETE. GELOMBANG A + B (feedback owner) SELESAI. lkw.1+2+3+4 done. Master warna + FK bahan + riwayat harga + dashboard comparison. Fitur aktif, siap serah terima Tahap 1.
 
 ---
 
@@ -122,12 +122,12 @@ Redesign UX mobile jadi app-like (tiru school-management). Staf pakai HP di guda
 > Urutan: g05.1 dulu → g05.2 + g05.3 → g05.4 + g05.5 (paralel, independen).
 > Arsitektur nav dirancang scalable ke Tahap 2-5 (~9 section) — slot Menu accordion. Detail: `docs/plans/2026-08-05-oims-g05.2-*.md`.
 
-### 🟢 GELOMBANG B — Feedback Owner Tahap 1 (`oims-lkw`, plan+prompt SIAP)
+### ✅ GELOMBANG B — Feedback Owner Tahap 1 (`oims-lkw`) — SELESAI
 
 Dari demo klien (terkonfirmasi). Plan+prompt di docs/plans + docs/prompts. Urut: dashboard → warna → harga.
 
 - [x] `oims-lkw.1` — **Dashboard**: aktivitas transaksi (filter periode) + top 10 bahan keluar by kuantitas ✅ **DONE** (deviasi: filter interaktif ganti perbandingan → lkw.4)
-- [ ] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna). 2 migration. Plan+prompt SIAP. · **sesi:** review SENDIRI (besar + migration) → `oims-lkw review-master-warna`
+- [x] `oims-lkw.2` — **Master warna** + FK warnaId di bahan (model 1 bahan=1 warna) ✅ **DONE**
 - [x] `oims-lkw.3` — **Riwayat harga** di form barang masuk (metode rata-rata TETAP) ✅ **DONE**
 - [x] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (P3) ✅ **DONE**
 
@@ -151,6 +151,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-07** — oims-lkw.2 selesai. Master warna CRUD (partial unique index soft-delete safe, audit log, tiru pola kategori). FK warnaId nullable di bahan. ComboSelect warna di form bahan + kolom Warna di tabel. Nav Warna masuk Master Data. Migration applied via Supabase MCP. GELOMBANG B (feedback owner) SELESAI.
 
 - **2026-08-07** — oims-lkw.3 selesai. Riwayat harga di form barang masuk: getRiwayatHargaBahan (5 terakhir), DetailRow per-row komponen untuk hook, hint 2 terakhir di bawah field harga + klik auto-fill. BarangKeluarForm UI polish mobile (card wrapper). Metode weighted-avg tak berubah.
 

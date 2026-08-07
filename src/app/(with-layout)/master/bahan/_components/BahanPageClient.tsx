@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BahanTable } from "./BahanTable";
 import { BahanFormModal } from "./BahanFormModal";
 import { useBahanList } from "@/hooks/useBahan";
-import type { Kategori, Satuan } from "@/db/schema";
+import type { Kategori, Satuan, Warna } from "@/db/schema";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 type BahanItem = {
@@ -18,6 +18,8 @@ type BahanItem = {
   satuanSingkatan: string | null;
   stokMinimum: string;
   hargaRataRata: string;
+  warnaId: string | null;
+  warnaNama: string | null;
   isActive: boolean;
 };
 
@@ -25,12 +27,14 @@ interface Props {
   initialData: BahanItem[];
   kategoriOptions: Kategori[];
   satuanOptions: Satuan[];
+  warnaOptions: Warna[];
 }
 
 export function BahanPageClient({
   initialData,
   kategoriOptions,
   satuanOptions,
+  warnaOptions,
 }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<BahanItem | null>(null);
@@ -63,6 +67,7 @@ export function BahanPageClient({
         initialData={editItem}
         kategoriOptions={kategoriOptions}
         satuanOptions={satuanOptions}
+        warnaOptions={warnaOptions}
       />
     </div>
   );
