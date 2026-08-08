@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload } from "lucide-react";
 import { useBahanMutation } from "@/hooks/useBahan";
 import {
   DataTable,
@@ -38,6 +38,7 @@ interface Props {
   data: BahanItem[];
   onEdit: (item: BahanItem) => void;
   onAdd: () => void;
+  onImport: () => void;
 }
 
 const rupiah = (n: number) =>
@@ -47,7 +48,7 @@ const rupiah = (n: number) =>
     maximumFractionDigits: 0,
   }).format(n);
 
-export function BahanTable({ data, onEdit, onAdd }: Props) {
+export function BahanTable({ data, onEdit, onAdd, onImport }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { remove } = useBahanMutation();
 
@@ -140,7 +141,12 @@ export function BahanTable({ data, onEdit, onAdd }: Props) {
             <TableSearch table={table} placeholder="Cari bahan..." className="flex-1 sm:w-64" />
             <ColumnToggle table={table} className="shrink-0" />
           </div>
-          <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Bahan</Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
+              <Upload size={16} className="mr-2" /> Import
+            </Button>
+            <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Bahan</Button>
+          </div>
         </TableToolbar>
         <DataTable
           table={table}

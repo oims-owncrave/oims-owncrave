@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-08 · Status: **Tahap 1 selesai. Mobile polish batch 2 (6 issue) selesai semua. Berikutnya: fitur import batch Excel.**
+> Diperbarui: 2026-08-08 · Status: **Tahap 1 selesai. Gelombang D (import batch Excel) selesai — jpn.15 + jpn.16 done. Berikutnya: planning Tahap 2.**
 
 ---
 
@@ -148,7 +148,7 @@ Feedback tampilan mobile lanjutan (dari demo). Plan+prompt di docs/plans + docs/
 Insert batch data master via upload Excel (.xlsx) + template kosong (header + 1 baris contoh). Import MURNI insert. Format .xlsx (SheetJS `xlsx`), all-or-nothing (1 error → rollback semua + daftar baris gagal). Plan+prompt siap di `docs/plans/` + `docs/prompts/`.
 
 - [x] `oims-jpn.15` — **Import infra + master flat** (kategori/satuan/supplier): uploader, parser xlsx, template generator, validator, batch action all-or-nothing. ⏳ belum jalan
-- [ ] `oims-jpn.16` — **Import bahan** (FK resolve teks→UUID, auto-kode BH-{KAT}-{NNN}, transaksi + baris stok 0). ⏳ belum jalan — **depends oims-jpn.15**
+- [x] `oims-jpn.16` — **Import bahan** (FK resolve teks→UUID, auto-kode BH-{KAT}-{NNN}, transaksi + baris stok 0). ⏳ belum jalan — **depends oims-jpn.15**
 
 Urutan eksekusi: jpn.15 dulu (fondasi), jpn.16 nebeng infra-nya.
 

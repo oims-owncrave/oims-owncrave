@@ -1,11 +1,12 @@
 "use server";
 
-import { and, isNull, inArray } from "drizzle-orm";
+import { and, eq, isNull, inArray } from "drizzle-orm";
 import { db } from "@/db";
-import { kategori, satuan, supplier, auditLog } from "@/db/schema";
+import { kategori, satuan, supplier, bahan, stok, warna, auditLog } from "@/db/schema";
 import { kategoriSchema } from "@/lib/schemas/kategori";
 import { satuanSchema } from "@/lib/schemas/satuan";
 import { supplierSchema } from "@/lib/schemas/supplier";
+import { bahanSchema } from "@/lib/schemas/bahan";
 import { requireRole } from "@/lib/auth";
 import type { ImportResult, RowError } from "@/lib/import/types";
 
@@ -202,6 +203,162 @@ export async function importSupplierBatch(
         userId: user.id,
         aksi: "CREATE",
         tabel: "supplier",
+        recordId: row.id,
+        dataBefore: null,
+        dataAfter: JSON.stringify(row),
+      });
+    }
+  });
+
+  return { inserted: parsed.length };
+}
+
+export async function importBahanBatch(
+  rows: Record<string, string>[],
+): Promise<ImportResult> {
+  const user = await requireRole(["owner", "admin_gudang"]);
+  if (!rows.length) return { error: "Tidak ada data untuk diimport." };
+
+  const [kats, sats, wrns] = await Promise.all([
+    db.select().from(kategori).where(isNull(kategori.deletedAt)),
+    db.select().from(satuan).where(isNull(satuan.deletedAt)),
+    db.select().from(warna).where(isNull(warna.deletedAt)),
+  ]);
+
+  const katMap = new Map<string, { id: string; kode: string }>();
+  kats.forEach((k) => {
+    katMap.set(k.kode.toLowerCase(), { id: k.id, kode: k.kode });
+    katMap.set(k.nama.toLowerCase(), { id: k.id, kode: k.kode });
+  });
+
+  const satMap = new Map<string, string>();
+  sats.forEach((s) => {
+    satMap.set(s.nama.toLowerCase(), s.id);
+    satMap.set(s.singkatan.toLowerCase(), s.id);
+  });
+
+  const wrnMap = new Map<string, string>();
+  wrns.forEach((w) => wrnMap.set(w.nama.toLowerCase(), w.id));
+
+  const errors: RowError[] = [];
+  type Resolved = {
+    nama: string;
+    kategoriId: string;
+    kategoriKode: string;
+    satuanId: string;
+    warnaId: string | null;
+    stokMinimum: number;
+    hargaAwal: number;
+  };
+  const parsed: Resolved[] = [];
+
+  rows.forEach((raw, i) => {
+    const rowNum = i + 1;
+    const nama = (raw.nama ?? "").trim();
+    const katKey = (raw.kategori ?? "").trim().toLowerCase();
+    const satKey = (raw.satuan ?? "").trim().toLowerCase();
+    const wrnKey = (raw.warna ?? "").trim().toLowerCase();
+
+    if (!nama) {
+      errors.push({ row: rowNum, message: "Nama bahan wajib diisi" });
+      return;
+    }
+
+    const kat = katMap.get(katKey);
+    if (!kat) {
+      errors.push({ row: rowNum, message: `Kategori "${raw.kategori}" tidak ditemukan / tidak aktif` });
+      return;
+    }
+
+    const satId = satMap.get(satKey);
+    if (!satId) {
+      errors.push({ row: rowNum, message: `Satuan "${raw.satuan}" tidak ditemukan / tidak aktif` });
+      return;
+    }
+
+    let warnaId: string | null = null;
+    if (wrnKey) {
+      const w = wrnMap.get(wrnKey);
+      if (!w) {
+        errors.push({ row: rowNum, message: `Warna "${raw.warna}" tidak ditemukan / tidak aktif` });
+        return;
+      }
+      warnaId = w;
+    }
+
+    const stokMinimum = raw.stokMinimum ? Number(raw.stokMinimum) : 0;
+    const hargaAwal = raw.hargaAwal ? Number(raw.hargaAwal) : 0;
+
+    if (Number.isNaN(stokMinimum) || stokMinimum < 0) {
+      errors.push({ row: rowNum, message: `Stok Minimum "${raw.stokMinimum}" tidak valid` });
+      return;
+    }
+    if (Number.isNaN(hargaAwal) || hargaAwal < 0) {
+      errors.push({ row: rowNum, message: `Harga Awal "${raw.hargaAwal}" tidak valid` });
+      return;
+    }
+
+    const res = bahanSchema.safeParse({
+      nama,
+      kategoriId: kat.id,
+      satuanId: satId,
+      warnaId,
+      stokMinimum,
+      isActive: true,
+      hargaAwal,
+    });
+    if (!res.success) {
+      errors.push({ row: rowNum, message: res.error.issues[0]?.message ?? "Data tidak valid" });
+      return;
+    }
+
+    parsed.push({
+      nama,
+      kategoriId: kat.id,
+      kategoriKode: kat.kode,
+      satuanId: satId,
+      warnaId,
+      stokMinimum,
+      hargaAwal,
+    });
+  });
+
+  if (errors.length) return { errors: errors.sort((a, b) => a.row - b.row) };
+
+  await db.transaction(async (tx) => {
+    const counter = new Map<string, number>();
+    for (const p of parsed) {
+      let start = counter.get(p.kategoriId);
+      if (start === undefined) {
+        const existing = await tx
+          .select({ id: bahan.id })
+          .from(bahan)
+          .where(eq(bahan.kategoriId, p.kategoriId));
+        start = existing.length;
+      }
+      const next = start + 1;
+      counter.set(p.kategoriId, next);
+      const kode = `BH-${p.kategoriKode}-${String(next).padStart(3, "0")}`;
+
+      const [row] = await tx
+        .insert(bahan)
+        .values({
+          kode,
+          nama: p.nama,
+          kategoriId: p.kategoriId,
+          satuanId: p.satuanId,
+          warnaId: p.warnaId,
+          stokMinimum: String(p.stokMinimum),
+          hargaRataRata: String(p.hargaAwal),
+          isActive: true,
+        })
+        .returning();
+
+      await tx.insert(stok).values({ bahanId: row.id, kuantitas: "0" });
+      await tx.insert(auditLog).values({
+        userId: user.id,
+        aksi: "CREATE",
+        tabel: "bahan",
         recordId: row.id,
         dataBefore: null,
         dataAfter: JSON.stringify(row),
