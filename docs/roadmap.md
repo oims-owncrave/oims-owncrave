@@ -143,10 +143,14 @@ Feedback tampilan mobile lanjutan (dari demo). Plan+prompt di docs/plans + docs/
 - [x] `oims-59w` — **Bugfix scroll reset** toggle Kartu/Tabel (focus-scroll → scroll-lock 250ms) ✅ **DONE**
 - [x] `oims-y5k` — Card mobile: highlight section background abu-abu (warna table header)
 
-### 🔜 GELOMBANG D — Import Batch Excel (planning berikutnya)
+### 🔜 GELOMBANG D — Import Batch Excel (di-plan, siap eksekusi Antigravity)
 
-Insert batch data via import Excel + template kosong (header + 1-2 contoh baris). Import murni (bukan upsert).
-Kandidat: master data (bahan/supplier/kategori). Detail issue via sesi planning `/oims-plan`.
+Insert batch data master via upload Excel (.xlsx) + template kosong (header + 1 baris contoh). Import MURNI insert. Format .xlsx (SheetJS `xlsx`), all-or-nothing (1 error → rollback semua + daftar baris gagal). Plan+prompt siap di `docs/plans/` + `docs/prompts/`.
+
+- [ ] `oims-jpn.15` — **Import infra + master flat** (kategori/satuan/supplier): uploader, parser xlsx, template generator, validator, batch action all-or-nothing. ⏳ belum jalan
+- [ ] `oims-jpn.16` — **Import bahan** (FK resolve teks→UUID, auto-kode BH-{KAT}-{NNN}, transaksi + baris stok 0). ⏳ belum jalan — **depends oims-jpn.15**
+
+Urutan eksekusi: jpn.15 dulu (fondasi), jpn.16 nebeng infra-nya.
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
@@ -169,6 +173,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-08-08** — Planning Gelombang D (import batch Excel): 2 issue di-plan+beads+prompt (oims-jpn.15 infra+master flat, oims-jpn.16 bahan FK). Format .xlsx SheetJS, all-or-nothing, import murni insert. Siap eksekusi Antigravity (jpn.15 dulu → jpn.16).
 - **2026-08-08** — Gelombang C (mobile polish batch 2) hampir kelar. oims-ghs (splash PWA), oims-6c3 (toggle ke atas), oims-76v + oims-xlp (export CSV layout), oims-8i9 (FAB + search compact) DONE. Bugfix oims-59w: scroll reset toggle Kartu/Tabel — root cause = focus-scroll (kebab card curi fokus → browser auto-scroll), fix scroll-lock 250ms di useLayoutEffect (insight ke memory). oims-y5k (card highlight bg) selesai. Skill baru `oims-plan` (orchestrator sesi planning: new-feature-workflow → roadmap). Berikutnya: Gelombang D import batch Excel.
 
 
