@@ -179,10 +179,6 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
   // Fix: kunci scroll ke 0 pada setiap scroll-event selama window singkat (250ms)
   // setelah toggle — auto-scroll dinetralkan sebelum sempat ter-paint = mulus.
   useLayoutEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
     if (typeof window === "undefined") return;
 
     window.scrollTo(0, 0);
