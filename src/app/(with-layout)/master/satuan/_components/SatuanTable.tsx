@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload } from "lucide-react";
 import type { Satuan } from "@/db/schema";
 import {
   DataTable,
@@ -21,9 +21,10 @@ interface Props {
   onAdd: () => void;
   onEdit: (item: Satuan) => void;
   onDelete: (id: string) => void;
+  onImport: () => void;
 }
 
-export function SatuanTable({ data, onAdd, onEdit, onDelete }: Props) {
+export function SatuanTable({ data, onAdd, onEdit, onDelete, onImport }: Props) {
   const columns: ColumnDef<Satuan>[] = [
     {
       key: "nama",
@@ -90,7 +91,12 @@ export function SatuanTable({ data, onAdd, onEdit, onDelete }: Props) {
           <TableSearch table={table} placeholder="Cari satuan..." className="flex-1 sm:w-64" />
           <ColumnToggle table={table} className="shrink-0" />
         </div>
-        <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Satuan</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
+            <Upload size={16} className="mr-2" /> Import
+          </Button>
+          <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Satuan</Button>
+        </div>
       </TableToolbar>
 
       <DataTable 

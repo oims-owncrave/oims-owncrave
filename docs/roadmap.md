@@ -147,7 +147,7 @@ Feedback tampilan mobile lanjutan (dari demo). Plan+prompt di docs/plans + docs/
 
 Insert batch data master via upload Excel (.xlsx) + template kosong (header + 1 baris contoh). Import MURNI insert. Format .xlsx (SheetJS `xlsx`), all-or-nothing (1 error → rollback semua + daftar baris gagal). Plan+prompt siap di `docs/plans/` + `docs/prompts/`.
 
-- [ ] `oims-jpn.15` — **Import infra + master flat** (kategori/satuan/supplier): uploader, parser xlsx, template generator, validator, batch action all-or-nothing. ⏳ belum jalan
+- [x] `oims-jpn.15` — **Import infra + master flat** (kategori/satuan/supplier): uploader, parser xlsx, template generator, validator, batch action all-or-nothing. ⏳ belum jalan
 - [ ] `oims-jpn.16` — **Import bahan** (FK resolve teks→UUID, auto-kode BH-{KAT}-{NNN}, transaksi + baris stok 0). ⏳ belum jalan — **depends oims-jpn.15**
 
 Urutan eksekusi: jpn.15 dulu (fondasi), jpn.16 nebeng infra-nya.
