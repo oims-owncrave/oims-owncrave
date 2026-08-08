@@ -107,11 +107,14 @@ export async function createBarangMasuk(
             .set({ hargaRataRata: money2(hargaBaru), updatedAt: new Date() })
             .where(eq(bahan.id, d.bahanId));
 
-          // update stok cache (turunan dari mutasi)
+          // upsert stok cache — insert bahan baru, update bahan existing
           await tx
-            .update(stok)
-            .set({ kuantitas: String(totalQty), updatedAt: new Date() })
-            .where(eq(stok.bahanId, d.bahanId));
+            .insert(stok)
+            .values({ bahanId: d.bahanId, kuantitas: String(totalQty) })
+            .onConflictDoUpdate({
+              target: stok.bahanId,
+              set: { kuantitas: String(totalQty), updatedAt: new Date() },
+            });
         }
 
         // audit (1 entry untuk header + detail)
