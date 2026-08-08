@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-05 · Status: **Tahap 1 selesai + serah terima beres. Sekarang: mobile app-like polish (oims-g05) → lalu feedback owner (harga/warna/dashboard).**
+> Diperbarui: 2026-08-08 · Status: **Tahap 1 selesai. Mobile polish batch 2 (6 issue) selesai semua. Berikutnya: fitur import batch Excel.**
 
 ---
 
@@ -131,6 +131,23 @@ Dari demo klien (terkonfirmasi). Plan+prompt di docs/plans + docs/prompts. Urut:
 - [x] `oims-lkw.3` — **Riwayat harga** di form barang masuk (metode rata-rata TETAP) ✅ **DONE**
 - [x] `oims-lkw.4` — **Dashboard indikator perbandingan** naik/turun vs periode lalu (P3) ✅ **DONE**
 
+### 🔄 GELOMBANG C — Mobile Polish Batch 2 + Bugfix — HAMPIR SELESAI
+
+Feedback tampilan mobile lanjutan (dari demo). Plan+prompt di docs/plans + docs/prompts (2026-08-07/08).
+
+- [x] `oims-ghs` — **Splash screen PWA** (logo + nama + 3 titik loading, fade-out) ✅ **DONE**
+- [x] `oims-6c3` — Toggle Kartu/Tabel pindah ke atas search/filter ✅ **DONE**
+- [x] `oims-76v` — Export CSV lebar setengah (laporan barang masuk & keluar) ✅ **DONE**
+- [x] `oims-xlp` — Laporan Mutasi: Export CSV sejajar filter Semua Bahan ✅ **DONE**
+- [x] `oims-8i9` — Mobile table: search compact + FAB button Tambah ✅ **DONE**
+- [x] `oims-59w` — **Bugfix scroll reset** toggle Kartu/Tabel (focus-scroll → scroll-lock 250ms) ✅ **DONE**
+- [x] `oims-y5k` — Card mobile: highlight section background abu-abu (warna table header)
+
+### 🔜 GELOMBANG D — Import Batch Excel (planning berikutnya)
+
+Insert batch data via import Excel + template kosong (header + 1-2 contoh baris). Import murni (bukan upsert).
+Kandidat: master data (bahan/supplier/kategori). Detail issue via sesi planning `/oims-plan`.
+
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
 
@@ -151,6 +168,9 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-08** — Gelombang C (mobile polish batch 2) hampir kelar. oims-ghs (splash PWA), oims-6c3 (toggle ke atas), oims-76v + oims-xlp (export CSV layout), oims-8i9 (FAB + search compact) DONE. Bugfix oims-59w: scroll reset toggle Kartu/Tabel — root cause = focus-scroll (kebab card curi fokus → browser auto-scroll), fix scroll-lock 250ms di useLayoutEffect (insight ke memory). oims-y5k (card highlight bg) selesai. Skill baru `oims-plan` (orchestrator sesi planning: new-feature-workflow → roadmap). Berikutnya: Gelombang D import batch Excel.
+
 
 - **2026-08-08** — Mobile UI polish batch (oims-xlp/6c3/76v/8i9/ghs) selesai. Toggle Kartu/Tabel dipindah ke atas toolbar (6c3). Search compact + FAB button Tambah mobile (8i9). Export CSV sejajar filter 2-kolom di laporan barang masuk/keluar (76v) + mutasi (xlp). Card highlight bg abu (y5k). Splash screen PWA 1.2s + fade (ghs). Pola baru terdokumentasi di docs/claude/ui-components.md.
 

@@ -309,13 +309,14 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                 <div
                   key={rowId}
                   className={cn(
-                    "rounded-xl border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark transition-colors",
+                    "rounded-xl border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark overflow-hidden transition-colors",
                     enableSelection && isSelected && "border-primary/50 bg-primary/5 dark:bg-primary/10",
                     renderExpandedRow && "cursor-pointer"
                   )}
                   onClick={() => renderExpandedRow && table.toggleRowExpansion(rowId)}
                 >
-                  <div className="flex items-start justify-between gap-3">
+                  {/* Card Header: bg-gray-1 dark:bg-dark-2 (sama dengan header tabel) */}
+                  <div className="flex items-center justify-between gap-3 bg-gray-1 px-4 py-3 dark:bg-dark-2 border-b border-stroke dark:border-dark-3">
                     <div className="flex items-center gap-2 min-w-0">
                       {enableSelection && (
                         <div onClick={(e) => e.stopPropagation()}>
@@ -342,7 +343,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         {highlights.map((h) => (
                           <div
                             key={h.col.key}
-                            className="rounded-md bg-gray-1 dark:bg-dark-2 px-2 py-1 text-sm font-medium text-dark dark:text-white"
+                            className="text-sm font-medium text-dark dark:text-white"
                           >
                             {renderVal(h.col, item, rowIndex, isExpanded, isSelected)}
                           </div>
@@ -360,8 +361,9 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                     )}
                   </div>
 
+                  {/* Card Body: Details */}
                   {details.length > 0 && (
-                    <dl className="mt-3 space-y-2 border-t border-stroke/60 pt-3 dark:border-dark-3/60">
+                    <dl className="p-4 space-y-2">
                       {details.map((d) => (
                         <div key={d.col.key} className="flex items-center justify-between gap-2 text-sm">
                           <dt className="text-dark-5 dark:text-dark-6 shrink-0">{d.col.label}</dt>
@@ -374,7 +376,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                   )}
 
                   {isExpanded && renderExpandedRow && (
-                    <div className="mt-3 border-t border-stroke pt-3 dark:border-dark-3">
+                    <div className="p-4 pt-0 border-t border-stroke dark:border-dark-3">
                       {renderExpandedRow(item, rowIndex)}
                     </div>
                   )}
