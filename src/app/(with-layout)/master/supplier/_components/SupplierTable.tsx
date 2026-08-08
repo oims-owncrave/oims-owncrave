@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import { useSupplierMutation } from "@/hooks/useSupplier";
 import type { Supplier } from "@/db/schema";
 import {
@@ -47,8 +47,17 @@ export function SupplierTable({ data, onEdit, onAdd }: Props) {
   const columns: ColumnDef<Supplier>[] = [
     { key: "kode", label: "Kode" },
     { key: "nama", label: "Nama Supplier" },
-    { key: "kontak", label: "Kontak" },
-    { key: "alamat", label: "Alamat", sortable: false },
+    {
+      key: "kontak",
+      label: "Kontak",
+      renderCell: (item) => item.kontak || "-",
+    },
+    {
+      key: "alamat",
+      label: "Alamat",
+      sortable: false,
+      renderCell: (item) => item.alamat || "-",
+    },
     {
       key: "isActive",
       label: "Status",
@@ -86,13 +95,21 @@ export function SupplierTable({ data, onEdit, onAdd }: Props) {
     <>
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari supplier..." />
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
-            <Button onClick={onAdd} className="flex-1 sm:flex-none">+ Tambah Supplier</Button>
+            <TableSearch table={table} placeholder="Cari supplier..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
           </div>
+          <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Supplier</Button>
         </TableToolbar>
-        <DataTable table={table} showRowNumber />
+        <DataTable
+          table={table}
+          showRowNumber
+          mobileFab={
+            <Button onClick={onAdd} className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center">
+              <Plus size={24} />
+            </Button>
+          }
+        />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>
 

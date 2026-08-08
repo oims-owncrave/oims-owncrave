@@ -175,68 +175,79 @@ export function AuditLogTable({
     <>
       <div className="space-y-4">
         {/* Filter bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Filter User */}
-            <ComboSelect
-              variant="filter"
-              placeholder="Semua Pelaku"
-              options={[
-                { label: "Semua Pelaku", value: "" },
-                ...userOptions.map((u) => ({ label: u.displayName, value: u.id })),
-              ]}
-              value={filterUserId || null}
-              onChange={(v) => onFilterUserChange((v as string) ?? "")}
-            />
+        <div className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
+          <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center">
+            {/* Grid 1 mobile: User & Tabel (2 cols) */}
+            <div className="grid grid-cols-2 gap-2 w-full md:flex md:w-auto md:items-center md:gap-3">
+              <ComboSelect
+                variant="filter"
+                placeholder="Semua Pelaku"
+                options={[
+                  { label: "Semua Pelaku", value: "" },
+                  ...userOptions.map((u) => ({ label: u.displayName, value: u.id })),
+                ]}
+                value={filterUserId || null}
+                onChange={(v) => onFilterUserChange((v as string) ?? "")}
+                className="w-full md:w-44"
+              />
 
-            {/* Filter Tabel */}
-            <ComboSelect
-              variant="filter"
-              placeholder="Semua Tabel"
-              options={[
-                { label: "Semua Tabel", value: "" },
-                ...tableOptions.map((t) => ({ label: t, value: t })),
-              ]}
-              value={filterTabel || null}
-              onChange={(v) => onFilterTabelChange((v as string) ?? "")}
-            />
+              <ComboSelect
+                variant="filter"
+                placeholder="Semua Tabel"
+                options={[
+                  { label: "Semua Tabel", value: "" },
+                  ...tableOptions.map((t) => ({ label: t, value: t })),
+                ]}
+                value={filterTabel || null}
+                onChange={(v) => onFilterTabelChange((v as string) ?? "")}
+                className="w-full md:w-40"
+              />
+            </div>
 
-            {/* Filter Aksi */}
-            <ComboSelect
-              variant="filter"
-              placeholder="Semua Aksi"
-              options={[
-                { label: "Semua Aksi", value: "" },
-                { label: "CREATE", value: "CREATE" },
-                { label: "UPDATE", value: "UPDATE" },
-                { label: "DELETE", value: "DELETE" },
-                { label: "APPROVE", value: "APPROVE" },
-                { label: "REJECT", value: "REJECT" },
-              ]}
-              value={filterAksi || null}
-              onChange={(v) => onFilterAksiChange((v as string) ?? "")}
-            />
+            {/* Grid 2 mobile: Aksi (full) & Date Range (2 cols) */}
+            <div className="flex flex-col gap-2 w-full md:flex-row md:w-auto md:items-center md:gap-3">
+              <ComboSelect
+                variant="filter"
+                placeholder="Semua Aksi"
+                options={[
+                  { label: "Semua Aksi", value: "" },
+                  { label: "CREATE", value: "CREATE" },
+                  { label: "UPDATE", value: "UPDATE" },
+                  { label: "DELETE", value: "DELETE" },
+                  { label: "APPROVE", value: "APPROVE" },
+                  { label: "REJECT", value: "REJECT" },
+                ]}
+                value={filterAksi || null}
+                onChange={(v) => onFilterAksiChange((v as string) ?? "")}
+                className="w-full md:w-36"
+              />
 
-            {/* Date Filters without labels */}
-            <DateInput
-              value={filterFrom}
-              onChange={onFilterFromChange}
-              placeholder="Dari Tanggal"
-            />
-            <DateInput
-              value={filterTo}
-              onChange={onFilterToChange}
-              placeholder="Sampai Tanggal"
-            />
+              <div className="grid grid-cols-2 gap-2 w-full md:flex md:w-auto md:items-center md:gap-2">
+                <DateInput
+                  value={filterFrom}
+                  onChange={onFilterFromChange}
+                  placeholder="Dari Tanggal"
+                  containerClassName="w-full md:w-36"
+                  className="w-full"
+                />
+                <DateInput
+                  value={filterTo}
+                  onChange={onFilterToChange}
+                  placeholder="Sampai Tanggal"
+                  containerClassName="w-full md:w-36"
+                  className="w-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Table container matching master pattern */}
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
           <TableToolbar>
-            <TableSearch table={table} placeholder="Cari tabel / ID / pelaku..." />
-            <div className="flex items-center gap-2">
-              <ColumnToggle table={table} />
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <TableSearch table={table} placeholder="Cari tabel / ID / pelaku..." className="flex-1 sm:w-64" />
+              <ColumnToggle table={table} className="shrink-0" />
             </div>
           </TableToolbar>
           <DataTable table={table} showRowNumber />

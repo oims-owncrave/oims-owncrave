@@ -99,16 +99,16 @@ export function LaporanNilaiPersediaanTable({
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="leading-tight">
-            <span className="block text-xs font-medium text-dark-5 dark:text-dark-6">Total Nilai Persediaan Keseluruhan</span>
-            <p className="mt-0.5 text-lg font-bold text-emerald-600 dark:text-emerald-400">
+        <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto sm:items-center sm:gap-4">
+          <div className="leading-tight flex flex-col justify-center">
+            <span className="block text-xs font-medium text-dark-5 dark:text-dark-6">Total Nilai Persediaan</span>
+            <p className="mt-0.5 text-base font-bold text-emerald-600 dark:text-emerald-400">
               {rupiah(totalOverall)}
             </p>
           </div>
           <Button
             variant="outline"
-            className="border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white"
+            className="w-full border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white justify-center"
             onClick={handleExport}
           >
             <Download size={16} className="mr-2" />
@@ -120,8 +120,10 @@ export function LaporanNilaiPersediaanTable({
       {/* Table container matching master pattern */}
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari kategori..." />
-          <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <TableSearch table={table} placeholder="Cari kategori..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
+          </div>
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

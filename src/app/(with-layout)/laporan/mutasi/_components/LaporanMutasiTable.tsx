@@ -158,31 +158,45 @@ export function LaporanMutasiTable({
   return (
     <div className="space-y-4">
       {/* Date & Filter Bar */}
-      <div className="flex flex-col gap-3 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-          <ComboSelect
-            variant="filter"
-            placeholder="Semua Bahan"
-            options={[
-              { label: "Semua Bahan", value: "" },
-              ...bahanOptions.map((b) => ({
-                label: `${b.kode} — ${b.nama}`,
-                value: b.id,
-              })),
-            ]}
-            value={bahanId || null}
-            onChange={(v) => onBahanChange((v as string) ?? "")}
-            className="w-full sm:w-40"
-          />
-          <div className="flex items-center gap-2">
-            <DateInput value={from} onChange={onFromChange} placeholder="Dari Tanggal" containerClassName="flex-1" className="w-full" />
-            <DateInput value={to} onChange={onToChange} placeholder="Sampai Tanggal" containerClassName="flex-1" className="w-full" />
+      <div className="flex flex-col gap-3 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 w-full sm:flex-row sm:items-center">
+          {/* Row 1 mobile: ComboSelect + Export CSV (50/50) */}
+          <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto sm:items-center">
+            <ComboSelect
+              variant="filter"
+              placeholder="Semua Bahan"
+              options={[
+                { label: "Semua Bahan", value: "" },
+                ...bahanOptions.map((b) => ({
+                  label: `${b.kode} — ${b.nama}`,
+                  value: b.id,
+                })),
+              ]}
+              value={bahanId || null}
+              onChange={(v) => onBahanChange((v as string) ?? "")}
+              className="w-full sm:w-44"
+            />
+            <Button
+              variant="outline"
+              className="w-full border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white sm:hidden justify-center"
+              onClick={handleExport}
+            >
+              <Download size={16} className="mr-1.5" />
+              Export CSV
+            </Button>
+          </div>
+
+          {/* Row 2 mobile: Date range (50/50) */}
+          <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto sm:items-center">
+            <DateInput value={from} onChange={onFromChange} placeholder="Dari Tanggal" containerClassName="w-full sm:w-40" className="w-full" />
+            <DateInput value={to} onChange={onToChange} placeholder="Sampai Tanggal" containerClassName="w-full sm:w-40" className="w-full" />
           </div>
         </div>
 
+        {/* Desktop Export CSV button */}
         <Button
           variant="outline"
-          className="border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white w-full sm:w-auto"
+          className="hidden sm:flex shrink-0 border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white"
           onClick={handleExport}
         >
           <Download size={16} className="mr-2" />
@@ -193,8 +207,10 @@ export function LaporanMutasiTable({
       {/* Table container matching master pattern */}
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari bahan / dokumen..." />
-          <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <TableSearch table={table} placeholder="Cari bahan / dokumen..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
+          </div>
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

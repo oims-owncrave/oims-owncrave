@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useDeactivateUser } from "@/hooks/useUser";
 import type { User } from "@/db/schema";
-import { Pencil, Ban } from "lucide-react";
+import { Pencil, Ban, Plus } from "lucide-react";
 import {
   DataTable,
   useTable,
@@ -127,14 +127,25 @@ export function UserTable({ data, currentUserId, onEdit, onAdd }: Props) {
     <>
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari user..." />
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
-            <Button onClick={onAdd} className="flex-1 sm:flex-none">+ Tambah User</Button>
+            <TableSearch table={table} placeholder="Cari user..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
           </div>
+          <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah User</Button>
         </TableToolbar>
 
-        <DataTable table={table} showRowNumber />
+        <DataTable
+          table={table}
+          showRowNumber
+          mobileFab={
+            <Button
+              onClick={onAdd}
+              className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center cursor-pointer"
+            >
+              <Plus size={24} />
+            </Button>
+          }
+        />
 
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, Fragment, useMemo, useRef, useLayoutEffect, useState } from "react"
+import React, { createContext, useContext, Fragment, useMemo, useRef, useLayoutEffect, useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/Checkbox"
 import { ComboSelect } from "@/components/ui/ComboSelect"
@@ -43,6 +43,8 @@ interface DataTableProps<TData> {
   stickyHeader?: boolean
   /** Scroll-container height when `stickyHeader` is on (default `"70vh"`). */
   maxHeight?: string
+  /** FAB (floating action button) untuk mobile mode Tabel. Render fixed bottom-right di atas bottom nav. */
+  mobileFab?: React.ReactNode
 }
 
 function getStickyClasses(isLeft: boolean, isRight: boolean) {
@@ -110,7 +112,7 @@ function CardKebabDropdown<TData>({
   )
 }
 
-export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, showRowNumber = false, stickyHeader = false, maxHeight }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, showRowNumber = false, stickyHeader = false, maxHeight, mobileFab }: DataTableProps<TData>) {
   const visibleColumns = useMemo(
     () => table.orderedColumns.filter((col) => table.columnVisibility[col.key] !== false),
     [table.orderedColumns, table.columnVisibility],
@@ -166,15 +168,49 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
     return base
   }
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
+  // Reset scroll ke atas saat toggle mobileView (Kartu<->Tabel).
+  // Root cause (terbukti via log): saat view berubah, tombol interaktif view baru
+  // (kebab card, dsb) mengambil fokus → browser auto-scroll ke elemen fokus
+  // (mis. scrollY 560). Reset satu kali malah terlihat "glitch" karena scroll
+  // sempat lompat lalu ditarik balik.
+  // Fix: kunci scroll ke 0 pada setiap scroll-event selama window singkat (250ms)
+  // setelah toggle — auto-scroll dinetralkan sebelum sempat ter-paint = mulus.
+  useLayoutEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (typeof window === "undefined") return;
+
+    window.scrollTo(0, 0);
+
+    let locked = true;
+    const keepTop = () => {
+      if (locked && window.scrollY !== 0) window.scrollTo(0, 0);
+    };
+    window.addEventListener("scroll", keepTop, { passive: true });
+
+    const unlock = setTimeout(() => {
+      locked = false;
+      window.removeEventListener("scroll", keepTop);
+    }, 250);
+
+    return () => {
+      locked = false;
+      clearTimeout(unlock);
+      window.removeEventListener("scroll", keepTop);
+    };
+  }, [table.mobileView]);
+
   return (
     <TableContext.Provider value={table as TableState<unknown>}>
-      <div className={cn("rounded-xl border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden", className)}>
-        {children}
-
-      {/* ── Mobile-only UI (sm:hidden) ─────────────────────────────────── */}
+      <div ref={containerRef} className={cn("rounded-xl border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden", className)}>
+        {/* ── Mobile-only UI: Toggle Kartu/Tabel (sm:hidden, di atas search/toolbar) ── */}
         <div className="sm:hidden">
-          {/* View Toggle Pill */}
-          <div className="flex items-center gap-1 p-3 pb-0">
+          <div className="flex items-center gap-1 p-3 pb-3">
             <button
               onClick={() => table.setMobileView("card")}
               className={cn(
@@ -200,6 +236,9 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
               Tabel
             </button>
           </div>
+        </div>
+
+        {children}
 
           {/* Sort Dropdown — hanya saat card view */}
           {/* {table.mobileView === "card" && (() => {
@@ -234,7 +273,6 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
               </div>
             )
           })()} */}
-        </div>
         {/* ── End Mobile-only UI ────────────────────────────────────────── */}
 
         {/* Mobile Card View (< 640px, only when mobileView === "card") */}
@@ -306,7 +344,10 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                     {(highlights.length > 0 || actions.length > 0) && (
                       <div className="flex shrink-0 items-center gap-2">
                         {highlights.map((h) => (
-                          <div key={h.col.key}>
+                          <div
+                            key={h.col.key}
+                            className="rounded-md bg-gray-1 dark:bg-dark-2 px-2 py-1 text-sm font-medium text-dark dark:text-white"
+                          >
                             {renderVal(h.col, item, rowIndex, isExpanded, isSelected)}
                           </div>
                         ))}
@@ -342,11 +383,10 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                     </div>
                   )}
                 </div>
-              )
+              );
             })}
           </div>
-        )
-        )}
+        ))}
 
         {/* Desktop Table View (≥ 640px always, or when mobileView === "table" on mobile) */}
         <div className={cn(table.mobileView === "card" ? "hidden sm:block" : "block overflow-x-auto mt-5 sm:mt-0")}>
@@ -479,6 +519,13 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
             </TableBody>
           </TablePrimitive>
         </div>
+
+        {/* FAB — hanya mobile (tampilan kartu maupun tabel) */}
+        {mobileFab && (
+          <div className="sm:hidden fixed bottom-20 right-4 z-40">
+            {mobileFab}
+          </div>
+        )}
       </div>
     </TableContext.Provider>
   )

@@ -105,7 +105,13 @@ export function StokTable({
     <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
       <TableToolbar>
         <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-center sm:w-auto">
-          <TableSearch table={table} placeholder="Cari kode / nama bahan..." />
+          {/* Row 1 mobile: Search + ColumnToggle */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <TableSearch table={table} placeholder="Cari kode / nama bahan..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
+          </div>
+
+          {/* Row 2 mobile: Kategori & Status filters */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <ComboSelect
               variant="filter"
@@ -129,7 +135,6 @@ export function StokTable({
             />
           </div>
         </div>
-        <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
       </TableToolbar>
       <DataTable table={table} showRowNumber />
       <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

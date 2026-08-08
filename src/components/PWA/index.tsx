@@ -12,8 +12,34 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+function SplashScreen({ fading }: { fading: boolean }) {
+  return (
+    <div
+      className={`fixed inset-0 z-9999 flex flex-col items-center justify-center bg-linear-to-b from-[#1a56db] to-[#1e40af] transition-opacity duration-500 ${
+        fading ? "opacity-0 pointer-events-none" : "opacity-100"
+      }`}
+    >
+      <img
+        src="/icons/icon-192.png"
+        alt="OIMS"
+        className="mb-6 h-24 w-24 rounded-[22px] shadow-lg"
+      />
+      <h1 className="mb-1 text-2xl font-bold text-white">OIMS Owncrave</h1>
+      <p className="mb-10 text-sm text-white/70">Owncrave Integrated Management</p>
+
+      <div className="flex items-center gap-2">
+        <span className="h-3 w-3 rounded-full bg-white animate-bounce [animation-delay:0ms]" />
+        <span className="h-3 w-3 rounded-full bg-white animate-bounce [animation-delay:150ms]" />
+        <span className="h-3 w-3 rounded-full bg-white animate-bounce [animation-delay:300ms]" />
+      </div>
+    </div>
+  );
+}
+
 export default function PWAComponents() {
   const [isOnline, setIsOnline] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+  const [splashFading, setSplashFading] = useState(false);
   const { setDeferredPrompt, setIsInstalled } = usePWAStore();
 
   const checkInstallationStatus = useCallback(() => {
@@ -26,6 +52,12 @@ export default function PWAComponents() {
 
   useEffect(() => {
     setIsInstalled(checkInstallationStatus());
+
+    // Fade out splash screen after 1.2s
+    const splashTimer = setTimeout(() => {
+      setSplashFading(true);
+      setTimeout(() => setShowSplash(false), 500);
+    }, 1200);
 
     if ("serviceWorker" in navigator) {
       let reloadPending = false;
@@ -87,6 +119,7 @@ export default function PWAComponents() {
     window.addEventListener("unhandledrejection", handleRejection);
 
     return () => {
+      clearTimeout(splashTimer);
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
@@ -95,13 +128,14 @@ export default function PWAComponents() {
     };
   }, [checkInstallationStatus, setDeferredPrompt, setIsInstalled]);
 
-  if (!isOnline) {
-    return (
-      <div className="fixed top-0 left-0 right-0 z-50 bg-red-500 py-2 px-4 text-center text-sm text-white">
-        Anda sedang offline
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <>
+      {showSplash && <SplashScreen fading={splashFading} />}
+      {!isOnline && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-red-500 py-2 px-4 text-center text-sm text-white">
+          Anda sedang offline
+        </div>
+      )}
+    </>
+  );
 }

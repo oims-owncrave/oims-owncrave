@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Check, X } from "lucide-react";
+import { Check, X, Plus, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -123,9 +123,6 @@ export function PenyesuaianTable({ data, isOwner, onAdd }: Props) {
     {
       key: "status",
       label: "Status",
-      sortable: false,
-      searchable: false,
-      align: "center",
       renderCell: (item) => {
         const cfg = STATUS_CONFIG[item.status];
         return (
@@ -134,10 +131,6 @@ export function PenyesuaianTable({ data, isOwner, onAdd }: Props) {
           </span>
         );
       },
-    },
-    {
-      key: "requestedByNama",
-      label: "Diajukan",
     },
     ...(isOwner
       ? [
@@ -169,23 +162,43 @@ export function PenyesuaianTable({ data, isOwner, onAdd }: Props) {
     <>
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari nomor / bahan..." />
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
+            <TableSearch table={table} placeholder="Cari nomor / bahan..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
+          </div>
+          <Button
+            loading={isPendingNew}
+            className="hidden sm:inline-flex"
+            onClick={() =>
+              startTransitionNew(() =>
+                router.push("/inventory/penyesuaian/baru"),
+              )
+            }
+          >
+            + Penyesuaian Baru
+          </Button>
+        </TableToolbar>
+        <DataTable
+          table={table}
+          showRowNumber
+          mobileFab={
             <Button
-              loading={isPendingNew}
-              className="flex-1 sm:flex-none"
+              disabled={isPendingNew}
               onClick={() =>
                 startTransitionNew(() =>
                   router.push("/inventory/penyesuaian/baru"),
                 )
               }
+              className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center cursor-pointer"
             >
-              + Penyesuaian Baru
+              {isPendingNew ? (
+                <Loader2 size={24} className="animate-spin" />
+              ) : (
+                <Plus size={24} />
+              )}
             </Button>
-          </div>
-        </TableToolbar>
-        <DataTable table={table} showRowNumber />
+          }
+        />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>
 

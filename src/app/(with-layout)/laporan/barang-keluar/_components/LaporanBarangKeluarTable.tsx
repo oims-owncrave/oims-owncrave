@@ -126,15 +126,15 @@ export function LaporanBarangKeluarTable({
 
   return (
     <div className="space-y-4">
-      {/* Date filter & Summary Bar */}
-      <div className="flex flex-col gap-3 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-        <div className="flex items-center gap-2">
-          <DateInput value={from} onChange={onFromChange} placeholder="Dari Tanggal" containerClassName="flex-1" className="w-full" />
-          <DateInput value={to} onChange={onToChange} placeholder="Sampai Tanggal" containerClassName="flex-1" className="w-full" />
+      {/* Filters card */}
+      <div className="flex flex-col gap-3 rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:flex-row sm:items-center sm:justify-between">
+        <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto sm:items-center">
+          <DateInput value={from} onChange={onFromChange} placeholder="Dari Tanggal" containerClassName="w-full sm:w-40" className="w-full" />
+          <DateInput value={to} onChange={onToChange} placeholder="Sampai Tanggal" containerClassName="w-full sm:w-40" className="w-full" />
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="leading-tight">
+        <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto sm:items-center sm:gap-4">
+          <div className="leading-tight flex flex-col justify-center">
             <span className="block text-xs font-medium text-dark-5 dark:text-dark-6">Total Nilai Keluar</span>
             <p className="mt-0.5 text-base font-bold text-dark dark:text-white">
               {rupiah(totalNilai)}
@@ -142,7 +142,7 @@ export function LaporanBarangKeluarTable({
           </div>
           <Button
             variant="outline"
-            className="border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white"
+            className="w-full border-primary text-primary hover:bg-primary/5 dark:border-primary dark:text-white justify-center"
             onClick={handleExport}
           >
             <Download size={16} className="mr-2" />
@@ -154,8 +154,10 @@ export function LaporanBarangKeluarTable({
       {/* Table container matching master pattern */}
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <TableSearch table={table} placeholder="Cari dokumen / bahan / tujuan..." />
-          <ColumnToggle table={table} className="w-full sm:w-auto justify-center" />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <TableSearch table={table} placeholder="Cari dokumen / bahan / tujuan..." className="flex-1 sm:w-64" />
+            <ColumnToggle table={table} className="shrink-0" />
+          </div>
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />

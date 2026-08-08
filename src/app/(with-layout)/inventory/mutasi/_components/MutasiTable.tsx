@@ -159,7 +159,13 @@ export function MutasiTable({
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <div className="flex flex-col gap-3 w-full lg:flex-row lg:flex-wrap lg:items-center lg:w-auto">
-            <TableSearch table={table} placeholder="Cari bahan / dokumen..." />
+            {/* Row 1 mobile: Search + ColumnToggle */}
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <TableSearch table={table} placeholder="Cari bahan / dokumen..." className="flex-1 sm:w-64" />
+              <ColumnToggle table={table} className="shrink-0 lg:hidden" />
+            </div>
+
+            {/* Row 2 mobile: Filters */}
             <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <ComboSelect
                 variant="filter"
@@ -194,7 +200,7 @@ export function MutasiTable({
               <DateInput value={filterTo} onChange={onFilterToChange} placeholder="Sampai Tanggal" containerClassName="flex-1 sm:w-36 sm:flex-none" className="w-full" />
             </div>
           </div>
-          <ColumnToggle table={table} className="w-full lg:w-auto justify-center" />
+          <ColumnToggle table={table} className="hidden lg:flex shrink-0 justify-center" />
         </TableToolbar>
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[25, 50, 100]} />

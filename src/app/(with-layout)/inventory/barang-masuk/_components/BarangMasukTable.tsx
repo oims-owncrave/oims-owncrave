@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Eye } from "lucide-react";
+import { Eye, Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
   DataTable,
@@ -28,20 +28,20 @@ interface Props {
 }
 
 const fmtDate = (d: Date) =>
-  new Intl.DateTimeFormat("id-ID", {
+  new Date(d).toLocaleDateString("id-ID", {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(new Date(d));
+  });
 
 export function BarangMasukTable({ data }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [pendingId, setPendingId] = useState<string | null>(null);
   const [isPendingNew, startTransitionNew] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const columns: ColumnDef<BarangMasukRow>[] = [
-    { key: "nomorDokumen", label: "Nomor" },
+    { key: "nomorDokumen", label: "No. Dokumen" },
     {
       key: "tanggal",
       label: "Tanggal",
@@ -94,23 +94,43 @@ export function BarangMasukTable({ data }: Props) {
   return (
     <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
       <TableToolbar>
-        <TableSearch table={table} placeholder="Cari nomor / supplier..." />
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <ColumnToggle table={table} className="flex-1 sm:flex-none justify-center" />
+          <TableSearch table={table} placeholder="Cari nomor / supplier..." className="flex-1 sm:w-64" />
+          <ColumnToggle table={table} className="shrink-0" />
+        </div>
+        <Button
+          loading={isPendingNew}
+          className="hidden sm:inline-flex"
+          onClick={() => {
+            startTransitionNew(() =>
+              router.push("/inventory/barang-masuk/baru"),
+            );
+          }}
+        >
+          + Barang Masuk Baru
+        </Button>
+      </TableToolbar>
+      <DataTable
+        table={table}
+        showRowNumber
+        mobileFab={
           <Button
-            loading={isPendingNew}
-            className="flex-1 sm:flex-none"
+            disabled={isPendingNew}
             onClick={() => {
               startTransitionNew(() =>
                 router.push("/inventory/barang-masuk/baru"),
               );
             }}
+            className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center cursor-pointer"
           >
-            + Barang Masuk Baru
+            {isPendingNew ? (
+              <Loader2 size={24} className="animate-spin" />
+            ) : (
+              <Plus size={24} />
+            )}
           </Button>
-        </div>
-      </TableToolbar>
-      <DataTable table={table} showRowNumber />
+        }
+      />
       <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
     </div>
   );

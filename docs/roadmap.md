@@ -97,7 +97,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 
-**Ringkasan:** Tahap 1 FEATURE COMPLETE. GELOMBANG A + B (feedback owner) SELESAI. lkw.1+2+3+4 done. Master warna + FK bahan + riwayat harga + dashboard comparison. Fitur aktif, siap serah terima Tahap 1.
+**Ringkasan:** Tahap 1 FEATURE COMPLETE. GELOMBANG A + B SELESAI. lkw.1+2+3+4 done. Mobile UI polish batch (xlp/6c3/76v/8i9/ghs) done. Fitur aktif, siap serah terima Tahap 1.
 
 ---
 
@@ -151,6 +151,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-08-08** — Mobile UI polish batch (oims-xlp/6c3/76v/8i9/ghs) selesai. Toggle Kartu/Tabel dipindah ke atas toolbar (6c3). Search compact + FAB button Tambah mobile (8i9). Export CSV sejajar filter 2-kolom di laporan barang masuk/keluar (76v) + mutasi (xlp). Card highlight bg abu (y5k). Splash screen PWA 1.2s + fade (ghs). Pola baru terdokumentasi di docs/claude/ui-components.md.
 
 - **2026-08-07** — oims-lkw.2 selesai. Master warna CRUD (partial unique index soft-delete safe, audit log, tiru pola kategori). FK warnaId nullable di bahan. ComboSelect warna di form bahan + kolom Warna di tabel. Nav Warna masuk Master Data. Migration applied via Supabase MCP. GELOMBANG B (feedback owner) SELESAI.
 
