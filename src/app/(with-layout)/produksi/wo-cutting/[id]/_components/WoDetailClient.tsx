@@ -10,6 +10,7 @@ import type { WoDetailData } from "@/services/wo-cutting";
 import { WO_STATUS_BADGE, WO_NEXT_ACTIONS } from "../../_components/wo-status";
 import { PemakaianSection } from "./PemakaianSection";
 import { HasilSection } from "./HasilSection";
+import { SisaLimbahSection } from "./SisaLimbahSection";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 interface Props {
@@ -100,6 +101,8 @@ export function WoDetailClient({ woId, initialData }: Props) {
       <HasilSection woId={woId} woStatus={detail.status} />
 
       <PemakaianSection woId={woId} poId={detail.poId} />
+
+      <SisaLimbahSection woId={woId} poId={detail.poId} />
 
       <ConfirmDialog
         open={confirmStatus !== null}

@@ -81,6 +81,47 @@ export const woStatusEnum = pgEnum("wo_status", [
   "diverifikasi",
 ]);
 
+export const sisaJenisEnum = pgEnum("sisa_jenis", [
+  "kain_utuh",
+  "potongan_besar",
+  "potongan_kecil",
+  "aksesoris_tidak_terpakai",
+  "bahan_berlebih",
+]);
+
+export const sisaStatusEnum = pgEnum("sisa_status", [
+  "disimpan_cutting",
+  "menunggu_gudang",
+  "diterima_gudang",
+  "dialokasikan",
+  "tidak_layak",
+]);
+
+export const limbahJenisEnum = pgEnum("limbah_jenis", [
+  "potongan_kecil",
+  "kain_cacat",
+  "salah_potong",
+  "bahan_rusak",
+  "noda",
+  "sampah_produksi",
+]);
+
+export const limbahPenangananEnum = pgEnum("limbah_penanganan", [
+  "dibuang",
+  "disimpan",
+  "dijual",
+  "sampel",
+  "aksesori",
+  "retur_supplier",
+]);
+
+export const bundelStatusEnum = pgEnum("bundel_status", [
+  "draft",
+  "siap_dikirim",
+  "sudah_dikirim",
+  "dibatalkan",
+]);
+
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
 // Mirror of Supabase auth.users — diupdate via trigger/webhook
@@ -274,6 +315,7 @@ export const mutasiStok = pgTable(
     barangMasukId: uuid("barang_masuk_id").references(() => barangMasuk.id),
     barangKeluarId: uuid("barang_keluar_id").references(() => barangKeluar.id),
     penyesuaianId: uuid("penyesuaian_id").references(() => penyesuaianStok.id),
+    sisaBahanId: uuid("sisa_bahan_id").references(() => sisaBahan.id), // retur sisa cutting (Tahap 2)
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     createdBy: uuid("created_by").notNull().references(() => users.id),
   },
@@ -575,6 +617,64 @@ export const hasilCuttingDetail = pgTable(
   (t) => [index("hasil_detail_hasil_idx").on(t.hasilId)]
 );
 
+export const sisaBahan = pgTable(
+  "sisa_bahan",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    jumlah: numeric("jumlah", { precision: 15, scale: 3 }).notNull(),
+    jenis: sisaJenisEnum("jenis").notNull(),
+    status: sisaStatusEnum("status").notNull().default("disimpan_cutting"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("sisa_wo_idx").on(t.woId)]
+);
+
+export const limbahCutting = pgTable(
+  "limbah_cutting",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    jumlah: numeric("jumlah", { precision: 15, scale: 3 }).notNull(),
+    jenis: limbahJenisEnum("jenis").notNull(),
+    penyebab: text("penyebab"),
+    penanganan: limbahPenangananEnum("penanganan").notNull().default("dibuang"),
+    // snapshot harga saat catat — nilai kerugian derived = jumlah x harga
+    hargaRataRata: numeric("harga_rata_rata", { precision: 15, scale: 2 }).notNull().default("0"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("limbah_wo_idx").on(t.woId)]
+);
+
+export const bundling = pgTable(
+  "bundling",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // BND-YYYYMM-NNNN
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlahPcs: integer("jumlah_pcs").notNull(),
+    tujuanPenjahit: text("tujuan_penjahit"), // text dulu — master vendor di Tahap 3
+    keterangan: text("keterangan"),
+    status: bundelStatusEnum("status").notNull().default("draft"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("bundling_wo_idx").on(t.woId)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -606,3 +706,6 @@ export type WorkOrderCuttingDetail = typeof workOrderCuttingDetail.$inferSelect;
 export type PemakaianBahan = typeof pemakaianBahan.$inferSelect;
 export type HasilCutting = typeof hasilCutting.$inferSelect;
 export type HasilCuttingDetail = typeof hasilCuttingDetail.$inferSelect;
+export type SisaBahan = typeof sisaBahan.$inferSelect;
+export type LimbahCutting = typeof limbahCutting.$inferSelect;
+export type Bundling = typeof bundling.$inferSelect;
