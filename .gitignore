@@ -60,3 +60,6 @@ next-env.d.ts
 
 # Beads / Dolt files (added by bd init)
 .beads/proxieddb/
+
+# dashboard HTML output (generated)
+tools/dashboard/out/

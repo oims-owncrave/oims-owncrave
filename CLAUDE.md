@@ -9,9 +9,10 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 ## Protokol Mulai Kerja
 
 1. **Cek skill dulu** — `new-feature-workflow` wajib sebelum coding fitur baru. Lihat `docs/plans/` untuk plan aktif.
-2. **Baca file sebelum edit** — selalu Read file dulu.
-3. **Baca `docs/konsep-produksi.md`** sebelum coding fitur domain (stok, mutasi, HPP, dll).
-4. **Baca `docs/reference-projects.md`** sebelum buat komponen UI baru — ada yang sudah tersedia.
+2. **Dashboard eksekusi**: [`docs/dashboard.md`](docs/dashboard.md) — status + urutan rencana bergelombang. Versi HTML: `python3 tools/dashboard/generate.py`. Aturan sesi gelombang: `docs/claude/orchestrator-workflow.md` (1 sesi = 1 gelombang).
+3. **Baca file sebelum edit** — selalu Read file dulu.
+4. **Baca `docs/konsep-produksi.md`** sebelum coding fitur domain (stok, mutasi, HPP, dll).
+5. **Baca `docs/reference-projects.md`** sebelum buat komponen UI baru — ada yang sudah tersedia.
 
 ## Aturan Coding (tanpa pengecualian)
 
