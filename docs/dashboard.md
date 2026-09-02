@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 2 wave 2A+2B+2C selesai (fondasi → PO/bahan → cutting). Sisa: 2D bundling+WIP (oims-5yr.11-13, sesi baru).**
+> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **TAHAP 2 SELESAI — 13/13 issue closed, epic oims-5yr ditutup. Berikutnya: sesi planning breakdown Tahap 3 (oims-eba).**
 
 ## 🎯 Visi
 
@@ -19,7 +19,7 @@ di-skip dulu. Referensi alur teruji dari app lama: `docs/referensi-oims-producti
 | Dashboard + Laporan Tahap 1 | ✅ | /dashboard, /laporan | — |
 | Auth, User Mgmt, Audit Log | ✅ | /sistem/* | — |
 | Import Excel master + bahan | ✅ | /master/* | — |
-| Tahap 2 — Produksi, Cutting, Bundling | 🔨 | /produksi/* | `oims-5yr.1-13` (2A siap eksekusi) |
+| Tahap 2 — Produksi, Cutting, Bundling | ✅ | /produksi/* | — (epic closed 2026-09-02) |
 | Tahap 3 — Penjahitan Vendor | ⏳ | — | epic `oims-eba` (belum dipecah) |
 | Tahap 4 — QC & Barang Jadi | ⏳ | — | epic `oims-ckp` (belum dipecah) |
 | Tahap 5 — Keuangan/HPP | ⏸ skip | — | epic `oims-rcr` (deferred) |
@@ -57,21 +57,17 @@ pemakaian aktual (rekonsiliasi + varians vs BOM) → hasil cutting (bertahap + r
 Smoke test: penerimaan dari BK → buat WO (prefill PO) → mulai kerjakan → catat hasil →
 catat pemakaian → cek rekonsiliasi/varians → selesai → verifikasi owner.
 
-### Gelombang 5 — Tahap 2D: Bundling & WIP (sesi baru)
+### ✅ Gelombang 5 — Tahap 2D: Bundling & WIP — SELESAI (Claude, 2026-09-02, GH #16) — TAHAP 2 TUTUP
 
-| # | Issue | Prio | Kenapa di sini |
-|---|---|---|---|
-| 1 | `oims-5yr.11` Sisa Bahan + Limbah | P2 | Sisa → mutasi retur_masuk |
-| 2 | `oims-5yr.12` Bundling + Label QR | P2 | Output akhir Tahap 2 |
-| 3 | `oims-5yr.13` WIP derived + Dashboard T2 | P2 | Penutup tahap |
-| 4 | `oims-5yr` epic Tahap 2 (induk) | P4 | Ditutup setelah 13 anak selesai |
+Sisa bahan (retur gudang via mutasi retur_masuk) + limbah (nilai kerugian) + bundling
+(guard hasil tersedia + label print) + WIP derived + kartu ringkasan.
+Pending kecil: QR di label butuh package `qrcode` (tunggu approve Abu); grafik dashboard
+T2 ditunda sampai ada data historis produksi.
 
 ### Gelombang 6 — Antrean tahap berikutnya (breakdown just-in-time)
 
-Belum ada sesi — masing-masing dapat sesi `/oims-plan` sendiri setelah tahap
-sebelumnya berjalan, supaya plan tidak basi. Trigger: saat issue eksekusi tahap
-berjalan tersisa ≤2, sesi penutup WAJIB menambah baris sesi breakdown berikutnya
-di sini (orchestrator-workflow.md langkah 9).
+Sesi berikutnya (Tahap 2 sudah tutup — trigger langkah 9 terpenuhi):
+- `oims-eba plan-breakdown-tahap3` | oims-eba | /oims-plan: pecah epic Tahap 3 jadi issue anak (PRD Tahap 3 §4–28 + referensi §2–7, §10 — penjahit/vendor, tarif, penugasan, surat jalan, WIP jahit, penerimaan hasil, dekorasi sablon/bordir dari app lama)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
@@ -96,6 +92,7 @@ di sini (orchestrator-workflow.md langkah 9).
 
 ## 📜 Changelog
 
+- 2026-09-02 (sesi 2e): eksekusi 2D oleh Claude — TAHAP 2 SELESAI: oims-5yr.11 sisa+limbah (retur gudang = mutasi retur_masuk + FK sisa_bahan_id), oims-5yr.12 bundling (guard hasil tersedia, label thermal, QR pending package), oims-5yr.13 WIP derived + ringkasan. Epic oims-5yr closed. GH #16. Antrean: breakdown Tahap 3 (sesi baru).
 - 2026-09-02 (sesi 2d): eksekusi 2C oleh Claude: oims-5yr.7 penerimaan cutting, oims-5yr.8 WO cutting (transisi status tervalidasi + verifikasi owner), oims-5yr.9 pemakaian aktual (rekonsiliasi + snapshot harga + varians), oims-5yr.10 hasil cutting (bertahap + rekap). GH #15. Route /produksi/{penerimaan-cutting,wo-cutting}.
 - 2026-09-02 (sesi 2c): eksekusi 2B oleh Claude: oims-5yr.4 PO produksi (PO-YYYY-NNNN, approval owner + snapshot BOM), oims-5yr.5 estimasi kebutuhan (pcs efektif × BOM × toleransi vs stok), oims-5yr.6 permintaan bahan (PB + integrasi barang keluar, dikeluarkan derived). Bonus oims-cd5: mobile default view tabel + tab Tabel kiri. 2A di-approve Abu & closed. GH #14.
 - 2026-09-02 (sesi 2b): eksekusi wave 2A langsung oleh Claude (permintaan Abu, deviasi dari Antigravity): oims-5yr.1 master produk + nav PRODUKSI, oims-5yr.2 varian matrix+SKU, oims-5yr.3 BOM full lifecycle. 6 route /produksi/* baru, tsc + build clean, 3 commit. Beads masih in_progress — menunggu approve Abu.
