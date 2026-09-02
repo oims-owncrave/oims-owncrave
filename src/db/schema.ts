@@ -172,6 +172,30 @@ export const tarifDasarEnum = pgEnum("tarif_dasar", [
 
 export const tarifStatusEnum = pgEnum("tarif_status", ["draft", "aktif", "nonaktif"]);
 
+export const penugasanStatusEnum = pgEnum("penugasan_status", [
+  "draft",
+  "aktif",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const pengirimanStatusEnum = pgEnum("pengiriman_status", [
+  "dikirim",
+  "diterima",
+  "dibatalkan",
+]);
+
+export const kondisiBundelTerimaEnum = pgEnum("kondisi_bundel_terima", [
+  "lengkap",
+  "bungkus_rusak",
+  "panel_kurang",
+  "aksesoris_kurang",
+  "salah_produk",
+  "salah_warna",
+  "salah_ukuran",
+  "ditolak",
+]);
+
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
 // Mirror of Supabase auth.users — diupdate via trigger/webhook
@@ -860,6 +884,150 @@ export const tarifJasaJahit = pgTable(
   ]
 );
 
+// ─── Tahap 3B — Penugasan, Pengiriman, Serah Terima, Surat Jalan ──────────────
+
+export const penugasanJahit = pgTable(
+  "penugasan_jahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // ASG-JHT-YYYYMM-NNNN
+    poId: uuid("po_id").notNull().references(() => poProduksi.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    // DB CHECK penugasan_pihak_tunggal: tepat satu dari vendorId/penjahitId
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    penjahitId: uuid("penjahit_id").references(() => penjahit.id),
+    lokasiTujuanId: uuid("lokasi_tujuan_id").references(() => lokasiProduksi.id),
+    jenisPekerjaan: vendorJenisPekerjaanEnum("jenis_pekerjaan").notNull(),
+    rencanaKirim: timestamp("rencana_kirim", { withTimezone: true }),
+    targetSelesai: timestamp("target_selesai", { withTimezone: true }).notNull(),
+    prioritas: text("prioritas").notNull().default("normal"),
+    status: penugasanStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("penugasan_po_idx").on(t.poId),
+    index("penugasan_vendor_idx").on(t.vendorId),
+    index("penugasan_penjahit_idx").on(t.penjahitId),
+  ]
+);
+
+// detail = bundel yang ditugaskan; tarif SNAPSHOT (bukan FK ke tarif aktif)
+export const penugasanJahitDetail = pgTable(
+  "penugasan_jahit_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    penugasanId: uuid("penugasan_id").notNull().references(() => penugasanJahit.id),
+    bundlingId: uuid("bundling_id").notNull().references(() => bundling.id),
+    jumlahPcs: integer("jumlah_pcs").notNull(), // snapshot bundling.jumlahPcs
+    tarifSnapshot: numeric("tarif_snapshot", { precision: 15, scale: 2 }).notNull(),
+    dasarTarif: tarifDasarEnum("dasar_tarif").notNull().default("per_pcs"),
+    // total = jumlahPcs x tarifSnapshot — derived
+  },
+  (t) => [
+    index("penugasan_detail_penugasan_idx").on(t.penugasanId),
+    index("penugasan_detail_bundling_idx").on(t.bundlingId),
+  ]
+);
+
+/** Pengiriman = perpindahan fisik, tanpa draft. Bundel yang ikut → status sudah_dikirim. */
+export const pengirimanJahit = pgTable(
+  "pengiriman_jahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // SHP-JHT-YYYYMM-NNNN
+    penugasanId: uuid("penugasan_id").notNull().references(() => penugasanJahit.id),
+    tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
+    lokasiAsalId: uuid("lokasi_asal_id").references(() => lokasiProduksi.id),
+    lokasiTujuanId: uuid("lokasi_tujuan_id").references(() => lokasiProduksi.id),
+    pengirim: text("pengirim"),
+    penerima: text("penerima"),
+    kendaraan: text("kendaraan"),
+    kurir: text("kurir"),
+    buktiFotoUrl: text("bukti_foto_url"),
+    status: pengirimanStatusEnum("status").notNull().default("dikirim"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    cancelledBy: uuid("cancelled_by").references(() => users.id),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+    alasanBatal: text("alasan_batal"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("pengiriman_penugasan_idx").on(t.penugasanId)]
+);
+
+export const pengirimanJahitDetail = pgTable(
+  "pengiriman_jahit_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    pengirimanId: uuid("pengiriman_id").notNull().references(() => pengirimanJahit.id),
+    penugasanDetailId: uuid("penugasan_detail_id")
+      .notNull()
+      .references(() => penugasanJahitDetail.id),
+    kelengkapanPanel: boolean("kelengkapan_panel").notNull().default(true),
+    aksesoris: text("aksesoris"),
+    catatan: text("catatan"),
+  },
+  (t) => [
+    index("pengiriman_detail_pengiriman_idx").on(t.pengirimanId),
+    index("pengiriman_detail_penugasan_detail_idx").on(t.penugasanDetailId),
+  ]
+);
+
+/** Surat jalan 1:1 pengiriman, dibuat dalam transaksi yang sama. jumlahCetak>0 = cetak ulang. */
+export const suratJalanJahit = pgTable("surat_jalan_jahit", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nomorDokumen: text("nomor_dokumen").notNull().unique(), // SJ-JHT-YYYYMM-NNNN
+  pengirimanId: uuid("pengiriman_id").notNull().unique().references(() => pengirimanJahit.id),
+  jumlahCetak: integer("jumlah_cetak").notNull().default(0),
+  dicetakTerakhirAt: timestamp("dicetak_terakhir_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Serah terima bundel di vendor (PRD §12) — satu pengiriman satu serah terima. */
+export const penerimaanBundelVendor = pgTable(
+  "penerimaan_bundel_vendor",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // STB-JHT-YYYYMM-NNNN
+    pengirimanId: uuid("pengiriman_id").notNull().references(() => pengirimanJahit.id),
+    tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
+    penerima: text("penerima").notNull(),
+    lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
+    fotoUrl: text("foto_url"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("penerimaan_bundel_pengiriman_unique")
+      .on(t.pengirimanId)
+      .where(isNull(t.deletedAt)),
+  ]
+);
+
+export const penerimaanBundelVendorDetail = pgTable(
+  "penerimaan_bundel_vendor_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    penerimaanId: uuid("penerimaan_id").notNull().references(() => penerimaanBundelVendor.id),
+    pengirimanDetailId: uuid("pengiriman_detail_id")
+      .notNull()
+      .references(() => pengirimanJahitDetail.id),
+    jumlahDiterima: integer("jumlah_diterima").notNull(),
+    kondisi: kondisiBundelTerimaEnum("kondisi").notNull().default("lengkap"),
+    catatan: text("catatan"),
+  },
+  (t) => [index("penerimaan_bundel_detail_penerimaan_idx").on(t.penerimaanId)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -899,3 +1067,10 @@ export type LokasiProduksi = typeof lokasiProduksi.$inferSelect;
 export type Penjahit = typeof penjahit.$inferSelect;
 export type PenjahitProduk = typeof penjahitProduk.$inferSelect;
 export type TarifJasaJahit = typeof tarifJasaJahit.$inferSelect;
+export type PenugasanJahit = typeof penugasanJahit.$inferSelect;
+export type PenugasanJahitDetail = typeof penugasanJahitDetail.$inferSelect;
+export type PengirimanJahit = typeof pengirimanJahit.$inferSelect;
+export type PengirimanJahitDetail = typeof pengirimanJahitDetail.$inferSelect;
+export type SuratJalanJahit = typeof suratJalanJahit.$inferSelect;
+export type PenerimaanBundelVendor = typeof penerimaanBundelVendor.$inferSelect;
+export type PenerimaanBundelVendorDetail = typeof penerimaanBundelVendorDetail.$inferSelect;

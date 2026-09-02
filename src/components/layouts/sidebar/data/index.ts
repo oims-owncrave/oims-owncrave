@@ -101,9 +101,10 @@ export const NAV_DATA: NavSection[] = [
         title: "Vendor & Gudang",
         icon: VendorIcon,
         items: [
-          { title: "Pengiriman Vendor", url: "/vendor/pengiriman", disabled: true },
+          { title: "Penugasan Jahit", url: "/vendor/penugasan" },
+          { title: "Pengiriman Vendor", url: "/vendor/pengiriman" },
+          { title: "Surat Jalan", url: "/vendor/surat-jalan" },
           { title: "Penerimaan Gudang", url: "/vendor/penerimaan", disabled: true },
-          { title: "Surat Jalan", url: "/vendor/surat-jalan", disabled: true },
         ],
       },
       {
