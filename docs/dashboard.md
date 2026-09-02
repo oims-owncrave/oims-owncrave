@@ -139,7 +139,17 @@ Trigger langkah 9 orchestrator TERPENUHI (issue eksekusi Tahap 3 = 0 tersisa).
 | 2 | `oims-ckp` epic: Tahap 4 — QC, Finishing & Packing | P4 | Konsumsi output Tahap 3 (hasil jahit siap QC) |
 | 3 | ~~`oims-rcr`~~ epic: Tahap 5 — Keuangan, HPP & Laporan | P4 | Deferred — skip dulu, greenfield tanpa referensi (referensi §10) |
 
-### Gelombang 12 — Backlog Tahap 3 (P3, ditunda sadar — bukan lupa)
+### Gelombang 12 — Tahap 2 lanjutan: sisa PRD + import (branch phase-2)
+
+Dikerjakan SETELAH Tahap 3 ditutup — checkout kembali ke branch `phase-2` (arahan Abu 2026-09-03).
+Keduanya dijanjikan ke klien di proposal penawaran v4, jadi bukan opsional.
+
+| # | Issue | Prio | Kenapa di sini |
+|---|---|---|---|
+| 1 | `oims-dr5` Tahap 2 sisa: QR label bundel + grafik dashboard T2 | P2 | Scope PRD §19 + §21 yang ditunda saat 2D; QR butuh `pnpm add qrcode` (sudah di-approve) |
+| 2 | `oims-oiq` Import Excel: warna, produk, varian, BOM | P2 | Bonus di luar PRD; infra import Tahap 1 sudah generic, tinggal tambah entitas |
+
+### Gelombang 13 — Backlog Tahap 3 (P3, ditunda sadar — bukan lupa)
 
 | # | Issue | Prio | Kenapa ditunda |
 |---|---|---|---|
