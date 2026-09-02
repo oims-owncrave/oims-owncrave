@@ -62,6 +62,25 @@ export const poStatusEnum = pgEnum("po_status", [
 
 export const pbStatusEnum = pgEnum("pb_status", ["draft", "diajukan", "disetujui", "ditolak"]);
 
+export const kondisiTerimaEnum = pgEnum("kondisi_terima", [
+  "baik",
+  "kurang",
+  "lebih",
+  "rusak",
+  "warna_tidak_sesuai",
+  "spesifikasi_tidak_sesuai",
+]);
+
+export const woStatusEnum = pgEnum("wo_status", [
+  "draft",
+  "siap_dikerjakan",
+  "sedang_dikerjakan",
+  "ditunda",
+  "selesai_sebagian",
+  "selesai",
+  "diverifikasi",
+]);
+
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
 // Mirror of Supabase auth.users — diupdate via trigger/webhook
@@ -437,6 +456,125 @@ export const permintaanBahanDetail = pgTable(
   (t) => [index("pb_detail_permintaan_idx").on(t.permintaanId)]
 );
 
+export const penerimaanCutting = pgTable(
+  "penerimaan_cutting",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // PC-YYYYMM-NNNN
+    poId: uuid("po_id").notNull().references(() => poProduksi.id),
+    barangKeluarId: uuid("barang_keluar_id").notNull().references(() => barangKeluar.id),
+    tanggalSerah: timestamp("tanggal_serah", { withTimezone: true }),
+    tanggalTerima: timestamp("tanggal_terima", { withTimezone: true }).notNull(),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  // satu barang keluar hanya bisa diterima sekali
+  (t) => [uniqueIndex("penerimaan_bk_unique").on(t.barangKeluarId).where(isNull(t.deletedAt))]
+);
+
+export const penerimaanCuttingDetail = pgTable(
+  "penerimaan_cutting_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    penerimaanId: uuid("penerimaan_id").notNull().references(() => penerimaanCutting.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    jumlahGudang: numeric("jumlah_gudang", { precision: 15, scale: 3 }).notNull(),
+    jumlahDiterima: numeric("jumlah_diterima", { precision: 15, scale: 3 }).notNull(),
+    kondisi: kondisiTerimaEnum("kondisi").notNull().default("baik"),
+    catatan: text("catatan"),
+    // selisih TIDAK disimpan — derived (diterima - gudang)
+  },
+  (t) => [index("pc_detail_penerimaan_idx").on(t.penerimaanId)]
+);
+
+export const workOrderCutting = pgTable("work_order_cutting", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nomorDokumen: text("nomor_dokumen").notNull().unique(), // WO-CUT-YYYYMM-NNNN
+  poId: uuid("po_id").notNull().references(() => poProduksi.id),
+  tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+  pic: uuid("pic").references(() => users.id),
+  mejaCutting: text("meja_cutting"),
+  prioritas: text("prioritas").notNull().default("normal"),
+  status: woStatusEnum("status").notNull().default("draft"),
+  jumlahLayer: integer("jumlah_layer"),
+  panjangMarker: numeric("panjang_marker", { precision: 10, scale: 2 }),
+  lebarKain: numeric("lebar_kain", { precision: 10, scale: 2 }),
+  nomorPola: text("nomor_pola"),
+  catatan: text("catatan"),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  verifiedBy: uuid("verified_by").references(() => users.id),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+});
+
+export const workOrderCuttingDetail = pgTable(
+  "work_order_cutting_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    targetCutting: integer("target_cutting").notNull(),
+  },
+  (t) => [index("wo_detail_wo_idx").on(t.woId)]
+);
+
+export const pemakaianBahan = pgTable(
+  "pemakaian_bahan",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    jumlahDiterima: numeric("jumlah_diterima", { precision: 15, scale: 3 }).notNull().default("0"),
+    jumlahDigunakan: numeric("jumlah_digunakan", { precision: 15, scale: 3 }).notNull().default("0"),
+    jumlahSisa: numeric("jumlah_sisa", { precision: 15, scale: 3 }).notNull().default("0"),
+    jumlahLimbah: numeric("jumlah_limbah", { precision: 15, scale: 3 }).notNull().default("0"),
+    // snapshot harga rata-rata saat pertama catat — tidak berubah saat koreksi
+    hargaRataRata: numeric("harga_rata_rata", { precision: 15, scale: 2 }).notNull().default("0"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("pemakaian_wo_bahan_unique").on(t.woId, t.bahanId).where(isNull(t.deletedAt)),
+    index("pemakaian_wo_idx").on(t.woId),
+  ]
+);
+
+export const hasilCutting = pgTable(
+  "hasil_cutting",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // CUT-YYYYMM-NNNN
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("hasil_wo_idx").on(t.woId)]
+);
+
+export const hasilCuttingDetail = pgTable(
+  "hasil_cutting_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    hasilId: uuid("hasil_id").notNull().references(() => hasilCutting.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlahBaik: integer("jumlah_baik").notNull().default(0),
+    jumlahRusak: integer("jumlah_rusak").notNull().default(0),
+  },
+  (t) => [index("hasil_detail_hasil_idx").on(t.hasilId)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -461,3 +599,10 @@ export type PoProduksi = typeof poProduksi.$inferSelect;
 export type PoProduksiDetail = typeof poProduksiDetail.$inferSelect;
 export type PermintaanBahan = typeof permintaanBahan.$inferSelect;
 export type PermintaanBahanDetail = typeof permintaanBahanDetail.$inferSelect;
+export type PenerimaanCutting = typeof penerimaanCutting.$inferSelect;
+export type PenerimaanCuttingDetail = typeof penerimaanCuttingDetail.$inferSelect;
+export type WorkOrderCutting = typeof workOrderCutting.$inferSelect;
+export type WorkOrderCuttingDetail = typeof workOrderCuttingDetail.$inferSelect;
+export type PemakaianBahan = typeof pemakaianBahan.$inferSelect;
+export type HasilCutting = typeof hasilCutting.$inferSelect;
+export type HasilCuttingDetail = typeof hasilCuttingDetail.$inferSelect;
