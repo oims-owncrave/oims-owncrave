@@ -265,6 +265,27 @@ export const appSettings = pgTable("app_settings", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ─── Tahap 2: Produksi ────────────────────────────────────────────────
+
+export const produk = pgTable(
+  "produk",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // unik hanya baris aktif (partial index)
+    nama: text("nama").notNull(),
+    kategori: text("kategori"),
+    brand: text("brand"),
+    jenis: text("jenis"),
+    deskripsi: text("deskripsi"),
+    fotoUrl: text("foto_url"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("produk_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -281,3 +302,4 @@ export type PenyesuaianStok = typeof penyesuaianStok.$inferSelect;
 export type MutasiStok = typeof mutasiStok.$inferSelect;
 export type AuditLog = typeof auditLog.$inferSelect;
 export type Warna = typeof warna.$inferSelect;
+export type Produk = typeof produk.$inferSelect;
