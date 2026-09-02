@@ -104,7 +104,9 @@ export const NAV_DATA: NavSection[] = [
           { title: "Penugasan Jahit", url: "/vendor/penugasan" },
           { title: "Pengiriman Vendor", url: "/vendor/pengiriman" },
           { title: "Surat Jalan", url: "/vendor/surat-jalan" },
-          { title: "Penerimaan Gudang", url: "/vendor/penerimaan", disabled: true },
+          { title: "Penerimaan Hasil", url: "/vendor/penerimaan" },
+          { title: "Retur & Perbaikan", url: "/vendor/retur" },
+          { title: "Selisih & Kasus", url: "/vendor/selisih" },
         ],
       },
       {

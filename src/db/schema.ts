@@ -185,6 +185,53 @@ export const pengirimanStatusEnum = pgEnum("pengiriman_status", [
   "dibatalkan",
 ]);
 
+export const selisihKlasifikasiEnum = pgEnum("selisih_klasifikasi", [
+  "belum_selesai",
+  "tertinggal",
+  "hilang",
+  "rusak",
+  "salah_produk",
+  "salah_ukuran",
+  "salah_warna",
+  "kelebihan",
+  "salah_hitung",
+  "ditahan_perbaikan",
+]);
+
+export const selisihStatusEnum = pgEnum("selisih_status", ["dibuka", "diselidiki", "selesai"]);
+
+export const selisihKeputusanEnum = pgEnum("selisih_keputusan", [
+  "ditanggung_vendor",
+  "ditanggung_owncrave",
+  "ditemukan",
+  "dihapusbukukan",
+  "diperbaiki",
+]);
+
+export const rusakTingkatEnum = pgEnum("rusak_tingkat", [
+  "ringan",
+  "sedang",
+  "berat",
+  "tidak_dapat_diperbaiki",
+]);
+
+export const rusakPenyebabEnum = pgEnum("rusak_penyebab", [
+  "cacat_bahan",
+  "kesalahan_cutting",
+  "kesalahan_jahit",
+  "kesalahan_aksesori",
+]);
+
+export const returStatusEnum = pgEnum("retur_status", [
+  "draft",
+  "dikirim",
+  "diterima_kembali",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const penanggungBiayaEnum = pgEnum("penanggung_biaya", ["vendor", "owncrave"]);
+
 export const kondisiBundelTerimaEnum = pgEnum("kondisi_bundel_terima", [
   "lengkap",
   "bungkus_rusak",
@@ -1028,6 +1075,136 @@ export const penerimaanBundelVendorDetail = pgTable(
   (t) => [index("penerimaan_bundel_detail_penerimaan_idx").on(t.penerimaanId)]
 );
 
+// ─── Tahap 3C — Penerimaan Hasil, Selisih, Retur ──────────────────────────────
+
+export const returJahit = pgTable(
+  "retur_jahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RTN-JHT-YYYYMM-NNNN
+    penugasanId: uuid("penugasan_id").notNull().references(() => penugasanJahit.id),
+    penerimaanAsalId: uuid("penerimaan_asal_id"), // FK ke penerimaan_hasil_jahit (dideklarasi di DB)
+    tanggalRetur: timestamp("tanggal_retur", { withTimezone: true }).notNull(),
+    targetKembali: timestamp("target_kembali", { withTimezone: true }),
+    alasan: text("alasan").notNull(),
+    status: returStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("retur_penugasan_idx").on(t.penugasanId)]
+);
+
+export const returJahitDetail = pgTable(
+  "retur_jahit_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    returId: uuid("retur_id").notNull().references(() => returJahit.id),
+    penugasanDetailId: uuid("penugasan_detail_id")
+      .notNull()
+      .references(() => penugasanJahitDetail.id),
+    jumlah: integer("jumlah").notNull(),
+    jenisKerusakan: text("jenis_kerusakan"),
+    instruksi: text("instruksi"),
+    tarifPerbaikan: numeric("tarif_perbaikan", { precision: 15, scale: 2 }).notNull().default("0"),
+    penanggungBiaya: penanggungBiayaEnum("penanggung_biaya").notNull().default("vendor"),
+    fotoUrl: text("foto_url"),
+  },
+  (t) => [
+    index("retur_detail_retur_idx").on(t.returId),
+    index("retur_detail_penugasan_detail_idx").on(t.penugasanDetailId),
+  ]
+);
+
+/** Penerimaan hasil jahit BERTAHAP — banyak per penugasan. retur_id terisi = hasil perbaikan. */
+export const penerimaanHasilJahit = pgTable(
+  "penerimaan_hasil_jahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RCV-JHT-YYYYMM-NNNN
+    penugasanId: uuid("penugasan_id").notNull().references(() => penugasanJahit.id),
+    returId: uuid("retur_id").references(() => returJahit.id),
+    tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
+    penerima: text("penerima").notNull(),
+    lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
+    // info pengiriman hasil dari sisi vendor (PRD §17) — kolom, bukan tabel terpisah
+    tanggalKirimVendor: timestamp("tanggal_kirim_vendor", { withTimezone: true }),
+    pengirimVendor: text("pengirim_vendor"),
+    kurirResi: text("kurir_resi"),
+    buktiUrl: text("bukti_url"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("penerimaan_hasil_penugasan_idx").on(t.penugasanId),
+    index("penerimaan_hasil_retur_idx").on(t.returId),
+  ]
+);
+
+// baik = baik VISUAL (bukan lolos QC — QC formal Tahap 4). kembali = baik + rusak.
+// kurang/sisa TIDAK disimpan — derived dari penugasan_detail.jumlah_pcs (lib/jahit/rekap.ts).
+export const penerimaanHasilJahitDetail = pgTable(
+  "penerimaan_hasil_jahit_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    penerimaanId: uuid("penerimaan_id").notNull().references(() => penerimaanHasilJahit.id),
+    penugasanDetailId: uuid("penugasan_detail_id")
+      .notNull()
+      .references(() => penugasanJahitDetail.id),
+    jumlahBaik: integer("jumlah_baik").notNull().default(0),
+    jumlahRusak: integer("jumlah_rusak").notNull().default(0),
+    catatan: text("catatan"),
+  },
+  (t) => [
+    index("penerimaan_hasil_detail_penerimaan_idx").on(t.penerimaanId),
+    index("penerimaan_hasil_detail_penugasan_detail_idx").on(t.penugasanDetailId),
+  ]
+);
+
+/**
+ * Selisih + barang hilang + barang rusak dalam SATU tabel (klasifikasi pembeda).
+ * keputusan = approval owner; hilang/rusak yang PUNYA keputusan final mengurangi sisa WIP
+ * (pola penyesuaian_stok: approved dulu baru berdampak).
+ */
+export const selisihJahit = pgTable(
+  "selisih_jahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorKasus: text("nomor_kasus").notNull().unique(), // SLS-JHT-YYYYMM-NNNN
+    penugasanDetailId: uuid("penugasan_detail_id")
+      .notNull()
+      .references(() => penugasanJahitDetail.id),
+    penerimaanId: uuid("penerimaan_id").references(() => penerimaanHasilJahit.id),
+    klasifikasi: selisihKlasifikasiEnum("klasifikasi").notNull(),
+    jumlah: integer("jumlah").notNull(),
+    nilaiPerPcs: numeric("nilai_per_pcs", { precision: 15, scale: 2 }).notNull().default("0"),
+    kronologi: text("kronologi"),
+    penanggungJawab: text("penanggung_jawab"),
+    buktiUrl: text("bukti_url"),
+    status: selisihStatusEnum("status").notNull().default("dibuka"),
+    keputusan: selisihKeputusanEnum("keputusan"),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    tingkatRusak: rusakTingkatEnum("tingkat_rusak"),
+    penyebabRusak: rusakPenyebabEnum("penyebab_rusak"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("selisih_penugasan_detail_idx").on(t.penugasanDetailId),
+    index("selisih_penerimaan_idx").on(t.penerimaanId),
+    index("selisih_klasifikasi_idx").on(t.klasifikasi),
+  ]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -1074,3 +1251,8 @@ export type PengirimanJahitDetail = typeof pengirimanJahitDetail.$inferSelect;
 export type SuratJalanJahit = typeof suratJalanJahit.$inferSelect;
 export type PenerimaanBundelVendor = typeof penerimaanBundelVendor.$inferSelect;
 export type PenerimaanBundelVendorDetail = typeof penerimaanBundelVendorDetail.$inferSelect;
+export type ReturJahit = typeof returJahit.$inferSelect;
+export type ReturJahitDetail = typeof returJahitDetail.$inferSelect;
+export type PenerimaanHasilJahit = typeof penerimaanHasilJahit.$inferSelect;
+export type PenerimaanHasilJahitDetail = typeof penerimaanHasilJahitDetail.$inferSelect;
+export type SelisihJahit = typeof selisihJahit.$inferSelect;
