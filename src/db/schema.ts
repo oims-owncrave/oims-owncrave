@@ -10,7 +10,7 @@ import {
   index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { isNull } from "drizzle-orm";
+import { isNull, sql } from "drizzle-orm";
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -34,6 +34,8 @@ export const approvalStatusEnum = pgEnum("approval_status", [
   "approved",
   "rejected",
 ]);
+
+export const bomStatusEnum = pgEnum("bom_status", ["draft", "aktif", "nonaktif"]);
 
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
@@ -307,6 +309,44 @@ export const varianProduk = pgTable(
   ]
 );
 
+export const bom = pgTable(
+  "bom",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // BOM-YYYYMM-NNNN
+    produkId: uuid("produk_id").notNull().references(() => produk.id),
+    versi: integer("versi").notNull().default(1),
+    status: bomStatusEnum("status").notNull().default("draft"),
+    tanggalBerlaku: timestamp("tanggal_berlaku", { withTimezone: true }),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    // hanya satu versi aktif per produk
+    uniqueIndex("bom_satu_aktif_per_produk").on(t.produkId).where(sql`status = 'aktif' AND deleted_at IS NULL`),
+    uniqueIndex("bom_produk_versi_unique").on(t.produkId, t.versi).where(isNull(t.deletedAt)),
+  ]
+);
+
+export const bomDetail = pgTable(
+  "bom_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    bomId: uuid("bom_id").notNull().references(() => bom.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    kuantitas: numeric("kuantitas", { precision: 15, scale: 3 }).notNull(),
+    toleransiPersen: numeric("toleransi_persen", { precision: 5, scale: 2 }).notNull().default("0"),
+    berlakuUkuran: text("berlaku_ukuran"), // null = semua ukuran
+    keterangan: text("keterangan"),
+  },
+  (t) => [index("bom_detail_bom_idx").on(t.bomId)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -325,3 +365,5 @@ export type AuditLog = typeof auditLog.$inferSelect;
 export type Warna = typeof warna.$inferSelect;
 export type Produk = typeof produk.$inferSelect;
 export type VarianProduk = typeof varianProduk.$inferSelect;
+export type Bom = typeof bom.$inferSelect;
+export type BomDetail = typeof bomDetail.$inferSelect;
