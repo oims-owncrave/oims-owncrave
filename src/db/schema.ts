@@ -37,6 +37,31 @@ export const approvalStatusEnum = pgEnum("approval_status", [
 
 export const bomStatusEnum = pgEnum("bom_status", ["draft", "aktif", "nonaktif"]);
 
+export const poJenisEnum = pgEnum("po_jenis", [
+  "reguler",
+  "restock",
+  "produk_baru",
+  "sampel",
+  "pre_order",
+  "pesanan_khusus",
+]);
+
+export const poStatusEnum = pgEnum("po_status", [
+  "draft",
+  "menunggu_persetujuan",
+  "disetujui",
+  "menunggu_bahan",
+  "bahan_disiapkan",
+  "sedang_cutting",
+  "cutting_selesai",
+  "bundling_selesai",
+  "siap_jahit",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const pbStatusEnum = pgEnum("pb_status", ["draft", "diajukan", "disetujui", "ditolak"]);
+
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
 // Mirror of Supabase auth.users — diupdate via trigger/webhook
@@ -180,6 +205,7 @@ export const barangKeluar = pgTable("barang_keluar", {
   id: uuid("id").primaryKey().defaultRandom(),
   nomorDokumen: text("nomor_dokumen").notNull().unique(), // BK-YYYYMM-NNNN
   tujuan: text("tujuan"), // e.g. "Cutting PO-001"
+  permintaanBahanId: uuid("permintaan_bahan_id").references(() => permintaanBahan.id), // link ke PB (Tahap 2)
   tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
   catatan: text("catatan"),
   createdBy: uuid("created_by").notNull().references(() => users.id),
@@ -347,6 +373,70 @@ export const bomDetail = pgTable(
   (t) => [index("bom_detail_bom_idx").on(t.bomId)]
 );
 
+export const poProduksi = pgTable("po_produksi", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nomorDokumen: text("nomor_dokumen").notNull().unique(), // PO-YYYY-NNNN (reset per tahun, sesuai PRD)
+  tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+  produkId: uuid("produk_id").notNull().references(() => produk.id),
+  // snapshot BOM aktif saat approve — estimasi stabil walau BOM ganti versi
+  bomId: uuid("bom_id").references(() => bom.id),
+  tanggalMulai: timestamp("tanggal_mulai", { withTimezone: true }),
+  targetSelesai: timestamp("target_selesai", { withTimezone: true }),
+  prioritas: text("prioritas").notNull().default("normal"),
+  jenis: poJenisEnum("jenis").notNull().default("reguler"),
+  status: poStatusEnum("status").notNull().default("draft"),
+  penanggungJawab: uuid("penanggung_jawab").references(() => users.id),
+  catatan: text("catatan"),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  approvedBy: uuid("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+});
+
+export const poProduksiDetail = pgTable(
+  "po_produksi_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    poId: uuid("po_id").notNull().references(() => poProduksi.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlahTarget: integer("jumlah_target").notNull(), // pcs produk utuh
+    toleransiPersen: numeric("toleransi_persen", { precision: 5, scale: 2 }).notNull().default("0"),
+  },
+  (t) => [index("po_detail_po_idx").on(t.poId)]
+);
+
+export const permintaanBahan = pgTable("permintaan_bahan", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nomorDokumen: text("nomor_dokumen").notNull().unique(), // PB-YYYYMM-NNNN
+  poId: uuid("po_id").notNull().references(() => poProduksi.id),
+  tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+  tanggalDibutuhkan: timestamp("tanggal_dibutuhkan", { withTimezone: true }),
+  status: pbStatusEnum("status").notNull().default("draft"),
+  catatan: text("catatan"),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  approvedBy: uuid("approved_by").references(() => users.id),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+});
+
+export const permintaanBahanDetail = pgTable(
+  "permintaan_bahan_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    permintaanId: uuid("permintaan_id").notNull().references(() => permintaanBahan.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    kebutuhan: numeric("kebutuhan", { precision: 15, scale: 3 }).notNull(), // snapshot estimasi
+    jumlahDiminta: numeric("jumlah_diminta", { precision: 15, scale: 3 }).notNull(),
+    jumlahDisetujui: numeric("jumlah_disetujui", { precision: 15, scale: 3 }),
+    // jumlah dikeluarkan TIDAK disimpan — derived dari barang_keluar_detail via barang_keluar.permintaan_bahan_id
+  },
+  (t) => [index("pb_detail_permintaan_idx").on(t.permintaanId)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -367,3 +457,7 @@ export type Produk = typeof produk.$inferSelect;
 export type VarianProduk = typeof varianProduk.$inferSelect;
 export type Bom = typeof bom.$inferSelect;
 export type BomDetail = typeof bomDetail.$inferSelect;
+export type PoProduksi = typeof poProduksi.$inferSelect;
+export type PoProduksiDetail = typeof poProduksiDetail.$inferSelect;
+export type PermintaanBahan = typeof permintaanBahan.$inferSelect;
+export type PermintaanBahanDetail = typeof permintaanBahanDetail.$inferSelect;

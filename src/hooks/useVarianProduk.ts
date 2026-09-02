@@ -20,6 +20,7 @@ export function useProdukDetail(produkId: string) {
   return useQuery({
     queryKey: detailKey(produkId),
     queryFn: () => getProdukDetail(produkId),
+    enabled: produkId.length > 0,
   });
 }
 
