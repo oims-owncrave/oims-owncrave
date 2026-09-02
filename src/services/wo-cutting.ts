@@ -10,6 +10,7 @@ import {
   hasilCuttingDetail,
   penerimaanCutting,
   penerimaanCuttingDetail,
+  bundling,
   poProduksi,
   produk,
   varianProduk,
@@ -566,7 +567,46 @@ export async function softDeleteHasil(
     .where(and(eq(hasilCutting.id, id), isNull(hasilCutting.deletedAt)))
     .limit(1);
   if (!before) return { error: "Dokumen hasil tidak ditemukan" };
-  // guard "sudah jadi sumber bundel" ditambah di oims-5yr.12
+
+  // Guard bundel (oims-5yr.12): sisa baik setelah hapus tidak boleh < total sudah dibundel
+  const isiDoc = await db
+    .select({
+      varianId: hasilCuttingDetail.varianId,
+      baik: sql<number>`COALESCE(SUM(${hasilCuttingDetail.jumlahBaik}), 0)::int`,
+    })
+    .from(hasilCuttingDetail)
+    .where(eq(hasilCuttingDetail.hasilId, id))
+    .groupBy(hasilCuttingDetail.varianId);
+
+  for (const row of isiDoc) {
+    const [{ totalBaik }] = await db
+      .select({ totalBaik: sql<number>`COALESCE(SUM(${hasilCuttingDetail.jumlahBaik}), 0)::int` })
+      .from(hasilCuttingDetail)
+      .innerJoin(hasilCutting, eq(hasilCuttingDetail.hasilId, hasilCutting.id))
+      .where(
+        and(
+          eq(hasilCutting.woId, before.woId),
+          eq(hasilCuttingDetail.varianId, row.varianId),
+          isNull(hasilCutting.deletedAt),
+        ),
+      );
+    const [{ dibundel }] = await db
+      .select({ dibundel: sql<number>`COALESCE(SUM(${bundling.jumlahPcs}), 0)::int` })
+      .from(bundling)
+      .where(
+        and(
+          eq(bundling.woId, before.woId),
+          eq(bundling.varianId, row.varianId),
+          sql`${bundling.status} <> 'dibatalkan'`,
+          isNull(bundling.deletedAt),
+        ),
+      );
+    if (totalBaik - row.baik < dibundel) {
+      return {
+        error: "Dokumen ini tidak bisa dihapus — hasilnya sudah dipakai bundel. Batalkan bundel dulu.",
+      };
+    }
+  }
 
   const [row] = await db
     .update(hasilCutting)
