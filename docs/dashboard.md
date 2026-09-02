@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 2 wave 2A (produk/varian/BOM) SELESAI dieksekusi Claude — menunggu review/approve Abu, lalu bd close + lanjut 2B.**
+> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 2 wave 2A + 2B selesai & closed (produk/varian/BOM/PO/estimasi/permintaan bahan). Berikutnya: 2C cutting (oims-5yr.7-10, perlu sesi plan).**
 
 ## 🎯 Visi
 
@@ -39,27 +39,16 @@ Dependency: tidak ada blocker antar issue saat ini (semua epic).
 
 Sesi: `oims-5yr plan-breakdown-tahap2` — 13 issue anak dibuat + deps; wave 2A di-plan penuh.
 
-### Gelombang 2 — Eksekusi Tahap 2A: Fondasi (produk → varian → BOM) — ✅ DIEKSEKUSI (Claude, 2026-09-02)
+### ✅ Gelombang 2 — Eksekusi Tahap 2A: Fondasi — SELESAI (Claude, 2026-09-02, approved + closed)
 
-Deviasi rencana: dieksekusi langsung Claude di sesi planning (permintaan Abu), bukan Antigravity.
-tsc + next build clean, commit per issue. Status: **menunggu review + approve Abu → bd close**.
-Smoke test yang disarankan: CRUD produk, generate matrix varian, siklus BOM draft→aktif→versi baru.
+Master produk + varian + BOM. Riwayat lengkap di Changelog; plan di docs/plans/2026-09-02-oims-5yr.{1,2,3}-*.md.
 
-| # | Issue | Prio | Prompt | Kenapa di sini |
-|---|---|---|---|---|
-| 1 | `oims-5yr.1` Master Produk + nav PRODUKSI | P1 | docs/prompts/2026-09-02-oims-5yr.1-master-produk.md | Fondasi semua Tahap 2 |
-| 2 | `oims-5yr.2` Varian Produk (matrix + SKU) | P1 | docs/prompts/2026-09-02-oims-5yr.2-varian-produk.md | Dibutuhkan PO detail per SKU |
-| 3 | `oims-5yr.3` BOM (versi, satu aktif) | P1 | docs/prompts/2026-09-02-oims-5yr.3-bom.md | Gap terbesar (tak ada referensi app lama) — dasar estimasi bahan |
+### ✅ Gelombang 3 — Tahap 2B: PO & Bahan — SELESAI (Claude, 2026-09-02, GH #14)
 
-### Gelombang 3 — Planning + Eksekusi Tahap 2B: PO & Bahan
-
-Sesi planning: `oims-5yr.4-6 plan-tahap2b-po-bahan` (/oims-plan, just-in-time setelah 2A closed).
-
-| # | Issue | Prio | Kenapa di sini |
-|---|---|---|---|
-| 1 | `oims-5yr.4` PO Produksi (status, approval) | P2 | Induk semua transaksi cutting |
-| 2 | `oims-5yr.5` Estimasi Kebutuhan Bahan | P2 | BOM × target + cek stok |
-| 3 | `oims-5yr.6` Permintaan Bahan | P2 | Integrasi barang keluar Tahap 1 ke PO |
+PO produksi (snapshot BOM saat approve) + estimasi kebutuhan on-the-fly + permintaan bahan
+(dikeluarkan derived dari barang keluar via FK `barang_keluar.permintaan_bahan_id`).
+Smoke test disarankan: PO draft→setujui → estimasi muncul → buat PB prefill kekurangan →
+approve PB → barang keluar pilih PB → cek progres dikeluarkan di detail PB.
 
 ### Gelombang 4+ — Cutting lalu Bundling & WIP (plan just-in-time per gelombang)
 
@@ -106,6 +95,7 @@ di sini (orchestrator-workflow.md langkah 9).
 
 ## 📜 Changelog
 
+- 2026-09-02 (sesi 2c): eksekusi 2B oleh Claude: oims-5yr.4 PO produksi (PO-YYYY-NNNN, approval owner + snapshot BOM), oims-5yr.5 estimasi kebutuhan (pcs efektif × BOM × toleransi vs stok), oims-5yr.6 permintaan bahan (PB + integrasi barang keluar, dikeluarkan derived). Bonus oims-cd5: mobile default view tabel + tab Tabel kiri. 2A di-approve Abu & closed. GH #14.
 - 2026-09-02 (sesi 2b): eksekusi wave 2A langsung oleh Claude (permintaan Abu, deviasi dari Antigravity): oims-5yr.1 master produk + nav PRODUKSI, oims-5yr.2 varian matrix+SKU, oims-5yr.3 BOM full lifecycle. 6 route /produksi/* baru, tsc + build clean, 3 commit. Beads masih in_progress — menunggu approve Abu.
 - 2026-09-02 (sesi 2): breakdown Tahap 2 — 13 issue anak (oims-5yr.1-13) + deps rantai PRD §4. Wave 2A (produk/varian/BOM) plan+prompt+GH #11-13, migration produk/varian_produk/bom/bom_detail applied via MCP, schema.ts ter-update, checklist review Tahap 2 masuk skill oims-review. 3 commit (1 per issue).
 - 2026-09-02: dashboard pertama — adopsi sistem eksekusi issue (applications.md Jalur 2); Tahap 1 epic ditutup, Tahap 5 di-defer.
