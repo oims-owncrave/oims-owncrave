@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **TAHAP 3 SUDAH DIPECAH — epic oims-eba jadi 15 issue anak (13 inti + 2 backlog), rantai dependensi terpasang. Berikutnya: eksekusi gelombang 3A (master vendor/penjahit/lokasi).**
+> Diperbarui: 2026-09-03 · Versi: v0.1.0 · Status: **TAHAP 3 KODE SELESAI — 13/13 issue inti dieksekusi Claude (3A-3D), 13 commit, build clean. Menunggu smoke test Abu sebelum bd close + tutup epic.**
 
 ## 🎯 Visi
 
@@ -20,7 +20,7 @@ di-skip dulu. Referensi alur teruji dari app lama: `docs/referensi-oims-producti
 | Auth, User Mgmt, Audit Log | ✅ | /sistem/* | — |
 | Import Excel master + bahan | ✅ | /master/* | — |
 | Tahap 2 — Produksi, Cutting, Bundling | ✅ | /produksi/* | — (epic closed 2026-09-02) |
-| Tahap 3 — Penjahitan Vendor | ⏳ | — | epic `oims-eba` — 15 issue anak siap (3A ready) |
+| Tahap 3 — Penjahitan Vendor | 🔵 | /vendor/* | 13 inti selesai (perlu smoke test) · 2 backlog P3 |
 | Tahap 4 — QC & Barang Jadi | ⏳ | — | epic `oims-ckp` (belum dipecah) |
 | Tahap 5 — Keuangan/HPP | ⏸ skip | — | epic `oims-rcr` (deferred) |
 
@@ -74,44 +74,63 @@ derived dari setoran (bukan input manual vendor), standar durasi + kinerja vendo
 Dekorasi sablon/bordir **masuk Tahap 3** (bukan ditunda) supaya reuse master vendor + tarif +
 surat jalan, bukan refactor belakangan.
 
-### Gelombang 7 — Eksekusi Tahap 3A: Master & Tarif ⏳ BERIKUTNYA
+### ✅ Gelombang 7 — Tahap 3A: Master & Tarif — SELESAI (Claude, 2026-09-03)
 
 | # | Issue | Prio | Status |
 |---|---|---|---|
-| 1 | `oims-eba.1` Master Vendor Jahit (kapabilitas, rekening, termin) | P1 | ready |
-| 2 | `oims-eba.3` Master Lokasi Produksi | P2 | ready |
-| 3 | `oims-eba.2` Master Penjahit (internal/eksternal) | P1 | blocked by .1, .3 |
-| 4 | `oims-eba.4` Tarif Jasa Jahit berversi + snapshot | P1 | blocked by .1, .2 |
+| 1 | ~~`oims-eba.1` Master Vendor Jahit (kapabilitas, rekening, termin)~~ | P1 | ready |
+| 2 | ~~`oims-eba.3` Master Lokasi Produksi~~ | P2 | ready |
+| 3 | ~~`oims-eba.2` Master Penjahit (internal/eksternal)~~ | P1 | blocked by .1, .3 |
+| 4 | ~~`oims-eba.4` Tarif Jasa Jahit berversi + snapshot~~ | P1 | blocked by .1, .2 |
 
 Butuh plan file + migration (Claude via MCP) sebelum Antigravity mulai.
 
-### Gelombang 8 — Eksekusi Tahap 3B: Penugasan & Kirim
+### ✅ Gelombang 8 — Tahap 3B: Penugasan & Kirim — SELESAI (Claude, 2026-09-03)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-eba.5` Penugasan Jahit (ASG-JHT, guard bundel) | P1 | Konsumsi bundel Tahap 2; butuh tarif (.4) |
-| 2 | `oims-eba.6` Pengiriman Jahit + Serah Terima Bundel | P2 | Kirim fisik dari penugasan; butuh lokasi (.3) |
-| 3 | `oims-eba.7` Surat Jalan Jahit PDF (SJ-JHT + QR) | P2 | Cetak dari pengiriman; dipakai ulang dekorasi (.13) |
+| 1 | ~~`oims-eba.5` Penugasan Jahit (ASG-JHT, guard bundel)~~ | P1 | Konsumsi bundel Tahap 2; butuh tarif (.4) |
+| 2 | ~~`oims-eba.6` Pengiriman Jahit + Serah Terima Bundel~~ | P2 | Kirim fisik dari penugasan; butuh lokasi (.3) |
+| 3 | ~~`oims-eba.7` Surat Jalan Jahit PDF (SJ-JHT + QR)~~ | P2 | Cetak dari pengiriman; dipakai ulang dekorasi (.13) |
 
-### Gelombang 9 — Eksekusi Tahap 3C: Terima Hasil & Selisih
-
-| # | Issue | Prio | Kenapa di sini |
-|---|---|---|---|
-| 1 | `oims-eba.8` Penerimaan Hasil Jahit bertahap (RCV-JHT) | P2 | Inti WIP — sisa di vendor derived dari sini |
-| 2 | `oims-eba.9` Selisih: kurang/lebih, hilang, rusak | P2 | Turunan detail penerimaan; hilang butuh approval |
-| 3 | `oims-eba.10` Retur & Perbaikan Jahit (RTN-JHT) | P2 | Loop perbaikan sebelum QC Tahap 4 |
-
-### Gelombang 10 — Eksekusi Tahap 3D: Biaya, WIP & Dekorasi — TUTUP TAHAP 3
+### ✅ Gelombang 9 — Tahap 3C: Terima Hasil & Selisih — SELESAI (Claude, 2026-09-03)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-eba.11` Biaya Jasa Jahit (tagihan bersih) | P2 | Jumlah diakui butuh penerimaan (.8) + retur (.10) |
-| 2 | `oims-eba.12` WIP Jahit derived + Dashboard T3 | P2 | Rangkum seluruh rantai; penutup monitoring |
-| 3 | `oims-eba.13` Dekorasi Sablon/Bordir | P2 | Reuse vendor (.1) + surat jalan (.7); paralel bundling |
+| 1 | ~~`oims-eba.8` Penerimaan Hasil Jahit bertahap (RCV-JHT)~~ | P2 | Inti WIP — sisa di vendor derived dari sini |
+| 2 | ~~`oims-eba.9` Selisih: kurang/lebih, hilang, rusak~~ | P2 | Turunan detail penerimaan; hilang butuh approval |
+| 3 | ~~`oims-eba.10` Retur & Perbaikan Jahit (RTN-JHT)~~ | P2 | Loop perbaikan sebelum QC Tahap 4 |
+
+### ✅ Gelombang 10 — Tahap 3D: Biaya, WIP & Dekorasi — SELESAI (Claude, 2026-09-03)
+
+| # | Issue | Prio | Kenapa di sini |
+|---|---|---|---|
+| 1 | ~~`oims-eba.11` Biaya Jasa Jahit (tagihan bersih)~~ | P2 | Jumlah diakui butuh penerimaan (.8) + retur (.10) |
+| 2 | ~~`oims-eba.12` WIP Jahit derived + Dashboard T3~~ | P2 | Rangkum seluruh rantai; penutup monitoring |
+| 3 | ~~`oims-eba.13` Dekorasi Sablon/Bordir~~ | P2 | Reuse vendor (.1) + surat jalan (.7); paralel bundling |
+
+### 🔎 Smoke Test Tahap 3 (perlu Abu, sebelum bd close)
+
+Urutan uji end-to-end — tiap langkah bergantung yang sebelumnya:
+
+1. **Master**: buat vendor (kapabilitas jahit+sablon), lokasi, penjahit internal, tarif → aktifkan tarif
+2. **Tarif berversi**: ubah nominal lewat "Buat Versi Baru" → aktifkan → cek versi lama jadi nonaktif, riwayat tetap ada
+3. **Penugasan**: dari PO yang punya bundel siap kirim → tarif ter-prefill dari master → simpan draft → cek bundel yang sama TIDAK muncul di penugasan lain
+4. **Kirim**: buat pengiriman → cek bundel jadi "sudah dikirim", penugasan draft→aktif, surat jalan tergenerate
+5. **Surat jalan**: cetak → cetak lagi → cek watermark CETAK ULANG muncul
+6. **Serah terima**: catat kondisi per bundel → pengiriman jadi "diterima"
+7. **Terima hasil bertahap**: terima sebagian (ada yang rusak) → cek sisa WIP berkurang, kasus selisih rusak terbuka otomatis
+8. **Retur**: dari baris rusak → kirim → terima hasil perbaikan → cek retur jadi "diterima kembali"
+9. **Selisih**: putuskan kasus hilang ditanggung vendor → cek sisa WIP berkurang, penugasan bisa jadi selesai
+10. **Biaya**: cek jumlah diakui = Σ baik, terapkan usulan potongan → verifikasi bertingkat sampai siap dibayar
+11. **WIP + dashboard**: cek angka /vendor/wip konsisten dengan alur produksi di /dashboard
+12. **Dekorasi**: set produk butuh sablon → buat template → buat pekerjaan → kirim → cetak SJ → terima bertahap
+
+**Pertanyaan terbuka ke Abu:** dekorasi wajib selesai sebelum bundling? Sekarang TIDAK di-enforce (ikut app lama).
 
 ### Gelombang 11 — Antrean tahap berikutnya (breakdown just-in-time)
 
-Trigger langkah 9 orchestrator: tambahkan saat issue eksekusi Tahap 3 tersisa ≤2.
+Trigger langkah 9 orchestrator TERPENUHI (issue eksekusi Tahap 3 = 0 tersisa).
 - `oims-ckp plan-breakdown-tahap4` | oims-ckp | /oims-plan: pecah epic Tahap 4 jadi issue anak (PRD Tahap 4 + referensi §2-3, §6, §10 — QC, rework, karantina reject, finishing, packing, stok barang jadi)
 
 | # | Issue | Prio | Kenapa di sini |
@@ -144,6 +163,7 @@ Trigger langkah 9 orchestrator: tambahkan saat issue eksekusi Tahap 3 tersisa �
 
 ## 📜 Changelog
 
+- 2026-09-03 (sesi 3b): TAHAP 3 KODE SELESAI — 13 issue inti dieksekusi langsung oleh Claude dalam satu sesi (permintaan Abu, deviasi dari Antigravity), 13 commit. 3A master vendor/lokasi/penjahit + tarif berversi; 3B penugasan (guard bundel satu penugasan aktif) + pengiriman + surat jalan berwatermark; 3C penerimaan bertahap + selisih dengan keputusan owner + loop retur; 3D biaya jasa (diakui = Σ baik) + WIP 7 label derived + dekorasi sablon/bordir. Rumus WIP tunggal di src/lib/jahit/rekap.ts. Dashboard: kartu per-tahap diganti ALUR PRODUKSI lintas tahap (pola app lama §11) supaya Tahap 4 tinggal isi 2 kolom. 4 migration via MCP, 20 tabel baru, build clean. Beads masih in_progress — menunggu smoke test Abu.
 - 2026-09-02 (sesi 3a): breakdown Tahap 3 — epic oims-eba dipecah jadi 15 issue anak (oims-eba.1-15) + rantai dependensi. Cakupan jalur tengah: struktur relasional penuh PRD, tapi 18 status WIP dipadatkan jadi ~7 derived, progres % derived dari setoran, standar durasi + kinerja vendor → backlog P3. Dekorasi sablon/bordir masuk T3 (reuse master vendor/tarif/SJ). Checklist review Tahap 3 masuk skill oims-review. Pertanyaan terbuka: urutan dekorasi vs bundling (belum di-enforce).
 - 2026-09-02 (sesi 2e): eksekusi 2D oleh Claude — TAHAP 2 SELESAI: oims-5yr.11 sisa+limbah (retur gudang = mutasi retur_masuk + FK sisa_bahan_id), oims-5yr.12 bundling (guard hasil tersedia, label thermal, QR pending package), oims-5yr.13 WIP derived + ringkasan. Epic oims-5yr closed. GH #16. Antrean: breakdown Tahap 3 (sesi baru).
 - 2026-09-02 (sesi 2d): eksekusi 2C oleh Claude: oims-5yr.7 penerimaan cutting, oims-5yr.8 WO cutting (transisi status tervalidasi + verifikasi owner), oims-5yr.9 pemakaian aktual (rekonsiliasi + snapshot harga + varians), oims-5yr.10 hasil cutting (bertahap + rekap). GH #15. Route /produksi/{penerimaan-cutting,wo-cutting}.
