@@ -208,18 +208,6 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
         <div className="sm:hidden">
           <div className="flex items-center gap-1 p-3 pb-3">
             <button
-              onClick={() => table.setMobileView("card")}
-              className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition",
-                table.mobileView === "card"
-                  ? "border border-primary bg-primary/5 text-primary shadow-sm dark:bg-primary/10"
-                  : "border border-dark-7 text-dark-5 dark:text-dark-6 hover:bg-gray-1 dark:hover:bg-dark-3"
-              )}
-            >
-              <LayoutList size={15} />
-              Kartu
-            </button>
-            <button
               onClick={() => table.setMobileView("table")}
               className={cn(
                 "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition",
@@ -230,6 +218,18 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
             >
               <Table2 size={15} />
               Tabel
+            </button>
+            <button
+              onClick={() => table.setMobileView("card")}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition",
+                table.mobileView === "card"
+                  ? "border border-primary bg-primary/5 text-primary shadow-sm dark:bg-primary/10"
+                  : "border border-dark-7 text-dark-5 dark:text-dark-6 hover:bg-gray-1 dark:hover:bg-dark-3"
+              )}
+            >
+              <LayoutList size={15} />
+              Kartu
             </button>
           </div>
         </div>

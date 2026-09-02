@@ -134,7 +134,7 @@ export function useTable<TData>(options: UseTableOptions<TData>): TableState<TDa
   const [pinnedColumns, setPinnedColumns] = useState<Set<string>>(
     new Set(defaultPinned ?? [])
   )
-  const [mobileView, setMobileView] = useState<"card" | "table">("card")
+  const [mobileView, setMobileView] = useState<"card" | "table">("table")
 
   const getRowId = useCallback(
     (item: TData, index: number): string | number =>
