@@ -232,6 +232,33 @@ export const returStatusEnum = pgEnum("retur_status", [
 
 export const penanggungBiayaEnum = pgEnum("penanggung_biaya", ["vendor", "owncrave"]);
 
+export const biayaStatusEnum = pgEnum("biaya_status", [
+  "estimasi",
+  "menunggu_qc",
+  "menunggu_verifikasi",
+  "diverifikasi_produksi",
+  "diverifikasi_keuangan",
+  "siap_dibayar",
+  "dibayar",
+  "ditahan",
+  "disengketakan",
+]);
+
+export const dekorasiProsesEnum = pgEnum("dekorasi_proses", ["none", "sablon", "bordir", "keduanya"]);
+export const dekorasiJenisEnum = pgEnum("dekorasi_jenis", ["sablon", "bordir"]);
+export const dekorasiPosisiEnum = pgEnum("dekorasi_posisi", [
+  "dada_kiri",
+  "dada_kanan",
+  "badan_depan",
+  "badan_belakang",
+  "lengan_kiri",
+  "lengan_kanan",
+  "punggung",
+  "kerah",
+  "lainnya",
+]);
+export const dekorasiStatusEnum = pgEnum("dekorasi_status", ["draft", "dikirim", "selesai", "dibatalkan"]);
+
 export const kondisiBundelTerimaEnum = pgEnum("kondisi_bundel_terima", [
   "lengkap",
   "bungkus_rusak",
@@ -488,6 +515,8 @@ export const produk = pgTable(
     jenis: text("jenis"),
     deskripsi: text("deskripsi"),
     fotoUrl: text("foto_url"),
+    // butuh dekorasi apa (oims-eba.13) — none = tanpa sablon/bordir
+    dekorasiProses: dekorasiProsesEnum("dekorasi_proses").notNull().default("none"),
     isActive: boolean("is_active").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -1030,7 +1059,9 @@ export const pengirimanJahitDetail = pgTable(
 export const suratJalanJahit = pgTable("surat_jalan_jahit", {
   id: uuid("id").primaryKey().defaultRandom(),
   nomorDokumen: text("nomor_dokumen").notNull().unique(), // SJ-JHT-YYYYMM-NNNN
-  pengirimanId: uuid("pengiriman_id").notNull().unique().references(() => pengirimanJahit.id),
+  // DB CHECK surat_jalan_sumber_tunggal: tepat satu dari pengirimanId / pekerjaanDekorasiId
+  pengirimanId: uuid("pengiriman_id").unique().references(() => pengirimanJahit.id),
+  pekerjaanDekorasiId: uuid("pekerjaan_dekorasi_id").unique(),
   jumlahCetak: integer("jumlah_cetak").notNull().default(0),
   dicetakTerakhirAt: timestamp("dicetak_terakhir_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -1205,6 +1236,90 @@ export const selisihJahit = pgTable(
   ]
 );
 
+// ─── Tahap 3D — Biaya Jasa, Dekorasi ──────────────────────────────────────────
+
+/** Satu baris per penugasan, dibuat saat pertama disentuh. jumlah_diakui & biaya_dasar DERIVED. */
+export const biayaJasaJahit = pgTable("biaya_jasa_jahit", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  penugasanId: uuid("penugasan_id").notNull().unique().references(() => penugasanJahit.id),
+  bonus: numeric("bonus", { precision: 15, scale: 2 }).notNull().default("0"),
+  biayaTambahan: numeric("biaya_tambahan", { precision: 15, scale: 2 }).notNull().default("0"),
+  potongan: numeric("potongan", { precision: 15, scale: 2 }).notNull().default("0"),
+  uangMuka: numeric("uang_muka", { precision: 15, scale: 2 }).notNull().default("0"),
+  status: biayaStatusEnum("status").notNull().default("estimasi"),
+  catatan: text("catatan"),
+  verifiedProduksiBy: uuid("verified_produksi_by").references(() => users.id),
+  verifiedProduksiAt: timestamp("verified_produksi_at", { withTimezone: true }),
+  verifiedKeuanganBy: uuid("verified_keuangan_by").references(() => users.id),
+  verifiedKeuanganAt: timestamp("verified_keuangan_at", { withTimezone: true }),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const dekorasiTemplate = pgTable(
+  "dekorasi_template",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    produkId: uuid("produk_id").notNull().references(() => produk.id),
+    jenis: dekorasiJenisEnum("jenis").notNull(),
+    posisi: dekorasiPosisiEnum("posisi").notNull(),
+    deskripsi: text("deskripsi"),
+    tarifDefault: numeric("tarif_default", { precision: 15, scale: 2 }).notNull().default("0"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("dekorasi_template_produk_idx").on(t.produkId)]
+);
+
+/** Pekerjaan per template per WO cutting — PARALEL dengan bundling, urutan tidak di-enforce. */
+export const pekerjaanDekorasi = pgTable(
+  "pekerjaan_dekorasi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // DEK-YYYYMM-NNNN
+    woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
+    templateId: uuid("template_id").notNull().references(() => dekorasiTemplate.id),
+    vendorId: uuid("vendor_id").notNull().references(() => vendor.id), // kapabilitas sablon/bordir
+    lokasiTujuanId: uuid("lokasi_tujuan_id").references(() => lokasiProduksi.id),
+    jumlah: integer("jumlah").notNull(),
+    tarifSnapshot: numeric("tarif_snapshot", { precision: 15, scale: 2 }).notNull(),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    tanggalKirim: timestamp("tanggal_kirim", { withTimezone: true }),
+    targetSelesai: timestamp("target_selesai", { withTimezone: true }),
+    pengirim: text("pengirim"),
+    kurir: text("kurir"),
+    status: dekorasiStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("pekerjaan_dekorasi_wo_idx").on(t.woId), index("pekerjaan_dekorasi_vendor_idx").on(t.vendorId)]
+);
+
+// bertahap; selesai sebagian DERIVED = Σ jumlahSelesai vs pekerjaan.jumlah
+export const penerimaanDekorasi = pgTable(
+  "penerimaan_dekorasi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RCD-DEK-YYYYMM-NNNN
+    pekerjaanId: uuid("pekerjaan_id").notNull().references(() => pekerjaanDekorasi.id),
+    tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
+    penerima: text("penerima").notNull(),
+    jumlahSelesai: integer("jumlah_selesai").notNull().default(0),
+    jumlahRusak: integer("jumlah_rusak").notNull().default(0),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("penerimaan_dekorasi_pekerjaan_idx").on(t.pekerjaanId)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -1256,3 +1371,7 @@ export type ReturJahitDetail = typeof returJahitDetail.$inferSelect;
 export type PenerimaanHasilJahit = typeof penerimaanHasilJahit.$inferSelect;
 export type PenerimaanHasilJahitDetail = typeof penerimaanHasilJahitDetail.$inferSelect;
 export type SelisihJahit = typeof selisihJahit.$inferSelect;
+export type BiayaJasaJahit = typeof biayaJasaJahit.$inferSelect;
+export type DekorasiTemplate = typeof dekorasiTemplate.$inferSelect;
+export type PekerjaanDekorasi = typeof pekerjaanDekorasi.$inferSelect;
+export type PenerimaanDekorasi = typeof penerimaanDekorasi.$inferSelect;
