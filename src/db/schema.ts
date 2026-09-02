@@ -122,6 +122,56 @@ export const bundelStatusEnum = pgEnum("bundel_status", [
   "dibatalkan",
 ]);
 
+// ─── Tahap 3 — Penjahitan & Vendor ────────────────────────────────────────────
+
+export const vendorJenisPekerjaanEnum = pgEnum("vendor_jenis_pekerjaan", [
+  "jahit_penuh",
+  "jahit_sebagian",
+  "obras",
+  "pasang_resleting",
+  "finishing",
+  "packing",
+  "jahit_qc",
+  "jahit_sampai_jadi",
+]);
+
+export const vendorKapabilitasEnum = pgEnum("vendor_kapabilitas", [
+  "jahit",
+  "sablon",
+  "bordir",
+]);
+
+export const qcModeEnum = pgEnum("qc_mode", ["internal", "vendor"]);
+
+export const penjahitJenisEnum = pgEnum("penjahit_jenis", [
+  "internal",
+  "eksternal_individu",
+  "anggota_vendor",
+  "freelance",
+  "sampel",
+  "spesialis_perbaikan",
+]);
+
+export const lokasiJenisEnum = pgEnum("lokasi_jenis", [
+  "workshop_internal",
+  "rumah_penjahit",
+  "vendor_eksternal",
+  "gudang_transit",
+  "qc_vendor",
+  "finishing_vendor",
+]);
+
+export const tarifDasarEnum = pgEnum("tarif_dasar", [
+  "per_pcs",
+  "per_bundel",
+  "per_lusin",
+  "per_tahap",
+  "borongan",
+  "per_jam",
+]);
+
+export const tarifStatusEnum = pgEnum("tarif_status", ["draft", "aktif", "nonaktif"]);
+
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
 // Mirror of Supabase auth.users — diupdate via trigger/webhook
@@ -675,6 +725,141 @@ export const bundling = pgTable(
   (t) => [index("bundling_wo_idx").on(t.woId)]
 );
 
+// ─── Tahap 3 — Master Vendor, Lokasi, Penjahit, Tarif ─────────────────────────
+
+export const vendor = pgTable(
+  "vendor",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // VDR-NNNN — unik hanya baris aktif
+    nama: text("nama").notNull(),
+    pemilik: text("pemilik"),
+    kontak: text("kontak"),
+    telepon: text("telepon"),
+    email: text("email"),
+    alamat: text("alamat"),
+    kota: text("kota"),
+    kapasitasHarian: integer("kapasitas_harian"),
+    jenisPekerjaan: vendorJenisPekerjaanEnum("jenis_pekerjaan").array().notNull().default([]),
+    // jahit/sablon/bordir — dipakai filter vendor dekorasi (oims-eba.13)
+    kapabilitas: vendorKapabilitasEnum("kapabilitas").array().notNull().default([]),
+    bankNama: text("bank_nama"),
+    bankNomorRekening: text("bank_nomor_rekening"),
+    bankAtasNama: text("bank_atas_nama"),
+    terminHari: integer("termin_hari"),
+    leadTimeHari: integer("lead_time_hari"),
+    // "vendor" = QC dilakukan di tempat vendor — dipakai Tahap 4 untuk skip stage kirim QC
+    qcMode: qcModeEnum("qc_mode").notNull().default("internal"),
+    qcOfficer: text("qc_officer"),
+    catatan: text("catatan"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("vendor_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
+);
+
+export const lokasiProduksi = pgTable(
+  "lokasi_produksi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // LOK-NNNN
+    nama: text("nama").notNull(),
+    jenis: lokasiJenisEnum("jenis").notNull(),
+    alamat: text("alamat"),
+    kota: text("kota"),
+    pic: text("pic"),
+    telepon: text("telepon"),
+    vendorId: uuid("vendor_id").references(() => vendor.id), // nullable — lokasi milik vendor
+    catatan: text("catatan"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("lokasi_kode_active_unique").on(t.kode).where(isNull(t.deletedAt)),
+    index("lokasi_vendor_idx").on(t.vendorId),
+  ]
+);
+
+export const penjahit = pgTable(
+  "penjahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(), // JHT-INT-NNNN / JHT-EXT-NNNN — prefix ikut jenis
+    nama: text("nama").notNull(),
+    jenis: penjahitJenisEnum("jenis").notNull(),
+    // DB CHECK: wajib terisi saat jenis="anggota_vendor", wajib kosong untuk jenis lain
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
+    telepon: text("telepon"),
+    alamat: text("alamat"),
+    kapasitasHarian: integer("kapasitas_harian"),
+    keahlian: text("keahlian").array().notNull().default([]),
+    catatan: text("catatan"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("penjahit_kode_active_unique").on(t.kode).where(isNull(t.deletedAt)),
+    index("penjahit_vendor_idx").on(t.vendorId),
+  ]
+);
+
+// produk yang biasa dikerjakan penjahit (M2M)
+export const penjahitProduk = pgTable(
+  "penjahit_produk",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    penjahitId: uuid("penjahit_id").notNull().references(() => penjahit.id),
+    produkId: uuid("produk_id").notNull().references(() => produk.id),
+  },
+  (t) => [
+    uniqueIndex("penjahit_produk_unique").on(t.penjahitId, t.produkId),
+    index("penjahit_produk_penjahit_idx").on(t.penjahitId),
+  ]
+);
+
+/**
+ * Tarif jasa jahit BERVERSI — tarif lama tidak pernah ditimpa (PRD T3 §7).
+ * Ubah nominal = baris versi baru (versi = MAX+1, pola BOM). Hanya SATU versi
+ * aktif per kombinasi (partial unique index di DB, COALESCE untuk kolom nullable).
+ * Transaksi simpan SNAPSHOT nominal, bukan FK ke baris tarif.
+ */
+export const tarifJasaJahit = pgTable(
+  "tarif_jasa_jahit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    produkId: uuid("produk_id").notNull().references(() => produk.id),
+    varianId: uuid("varian_id").references(() => varianProduk.id), // null = berlaku semua varian
+    jenisPekerjaan: vendorJenisPekerjaanEnum("jenis_pekerjaan").notNull(),
+    // DB CHECK: tepat satu dari vendorId/penjahitId terisi
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    penjahitId: uuid("penjahit_id").references(() => penjahit.id),
+    dasarTarif: tarifDasarEnum("dasar_tarif").notNull().default("per_pcs"),
+    nominal: numeric("nominal", { precision: 15, scale: 2 }).notNull(),
+    tanggalBerlaku: timestamp("tanggal_berlaku", { withTimezone: true }).notNull(),
+    versi: integer("versi").notNull().default(1),
+    status: tarifStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("tarif_produk_idx").on(t.produkId),
+    index("tarif_vendor_idx").on(t.vendorId),
+    index("tarif_penjahit_idx").on(t.penjahitId),
+  ]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -709,3 +894,8 @@ export type HasilCuttingDetail = typeof hasilCuttingDetail.$inferSelect;
 export type SisaBahan = typeof sisaBahan.$inferSelect;
 export type LimbahCutting = typeof limbahCutting.$inferSelect;
 export type Bundling = typeof bundling.$inferSelect;
+export type Vendor = typeof vendor.$inferSelect;
+export type LokasiProduksi = typeof lokasiProduksi.$inferSelect;
+export type Penjahit = typeof penjahit.$inferSelect;
+export type PenjahitProduk = typeof penjahitProduk.$inferSelect;
+export type TarifJasaJahit = typeof tarifJasaJahit.$inferSelect;
