@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 1 selesai; Tahap 2 dipecah 13 issue (oims-5yr.1-13) — wave 2A (produk/varian/BOM) siap eksekusi Antigravity.**
+> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 2 wave 2A (produk/varian/BOM) SELESAI dieksekusi Claude — menunggu review/approve Abu, lalu bd close + lanjut 2B.**
 
 ## 🎯 Visi
 
@@ -39,11 +39,11 @@ Dependency: tidak ada blocker antar issue saat ini (semua epic).
 
 Sesi: `oims-5yr plan-breakdown-tahap2` — 13 issue anak dibuat + deps; wave 2A di-plan penuh.
 
-### Gelombang 2 — Eksekusi Tahap 2A: Fondasi (produk → varian → BOM)
+### Gelombang 2 — Eksekusi Tahap 2A: Fondasi (produk → varian → BOM) — ✅ DIEKSEKUSI (Claude, 2026-09-02)
 
-Sesi eksekusi: user jalankan prompt di Antigravity berurutan → sesi review
-`oims-5yr.1-3 review-tahap2a-fondasi` (/oims-review, batch 3 issue sejenis).
-Migration DB + schema.ts SUDAH applied saat planning — Antigravity mulai dari service/UI.
+Deviasi rencana: dieksekusi langsung Claude di sesi planning (permintaan Abu), bukan Antigravity.
+tsc + next build clean, commit per issue. Status: **menunggu review + approve Abu → bd close**.
+Smoke test yang disarankan: CRUD produk, generate matrix varian, siklus BOM draft→aktif→versi baru.
 
 | # | Issue | Prio | Prompt | Kenapa di sini |
 |---|---|---|---|---|
@@ -106,5 +106,6 @@ di sini (orchestrator-workflow.md langkah 9).
 
 ## 📜 Changelog
 
+- 2026-09-02 (sesi 2b): eksekusi wave 2A langsung oleh Claude (permintaan Abu, deviasi dari Antigravity): oims-5yr.1 master produk + nav PRODUKSI, oims-5yr.2 varian matrix+SKU, oims-5yr.3 BOM full lifecycle. 6 route /produksi/* baru, tsc + build clean, 3 commit. Beads masih in_progress — menunggu approve Abu.
 - 2026-09-02 (sesi 2): breakdown Tahap 2 — 13 issue anak (oims-5yr.1-13) + deps rantai PRD §4. Wave 2A (produk/varian/BOM) plan+prompt+GH #11-13, migration produk/varian_produk/bom/bom_detail applied via MCP, schema.ts ter-update, checklist review Tahap 2 masuk skill oims-review. 3 commit (1 per issue).
 - 2026-09-02: dashboard pertama — adopsi sistem eksekusi issue (applications.md Jalur 2); Tahap 1 epic ditutup, Tahap 5 di-defer.
