@@ -73,6 +73,7 @@ export const NAV_DATA: NavSection[] = [
         icon: ProduksiIcon,
         items: [
           { title: "Produk", url: "/produksi/produk" },
+          { title: "BOM", url: "/produksi/bom" },
         ],
       },
     ],
