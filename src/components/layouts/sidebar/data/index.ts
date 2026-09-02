@@ -107,6 +107,15 @@ export const NAV_DATA: NavSection[] = [
           { title: "Penerimaan Hasil", url: "/vendor/penerimaan" },
           { title: "Retur & Perbaikan", url: "/vendor/retur" },
           { title: "Selisih & Kasus", url: "/vendor/selisih" },
+          { title: "Biaya Jasa Jahit", url: "/vendor/biaya" },
+        ],
+      },
+      {
+        title: "Sablon & Bordir",
+        icon: VendorIcon,
+        items: [
+          { title: "Pekerjaan Dekorasi", url: "/vendor/dekorasi" },
+          { title: "Template Dekorasi", url: "/vendor/dekorasi/template" },
         ],
       },
       {
@@ -129,7 +138,7 @@ export const NAV_DATA: NavSection[] = [
         icon: MonitoringIcon,
         items: [
           { title: "WIP Produksi", url: "/produksi/wip" },
-          { title: "WIP Jahit", url: "/vendor/wip", disabled: true },
+          { title: "WIP Jahit", url: "/vendor/wip" },
         ],
       },
       {

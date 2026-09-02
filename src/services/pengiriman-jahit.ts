@@ -470,13 +470,23 @@ export async function listSuratJalan() {
 
 export type SuratJalanListRow = Awaited<ReturnType<typeof listSuratJalan>>[number];
 
-/** Catat cetak: jumlahCetak naik. Return count SEBELUM naik → 0 = cetak pertama, >0 = cetak ulang. */
-export async function markSuratJalanDicetak(pengirimanId: string): Promise<{ sebelumnya: number }> {
+/**
+ * Catat cetak: jumlahCetak naik. Return count SEBELUM naik → 0 = cetak pertama, >0 = cetak ulang.
+ * Satu surat jalan bisa milik pengiriman jahit ATAU pekerjaan dekorasi (oims-eba.13).
+ */
+export async function markSuratJalanDicetak(
+  sumberId: string,
+  sumber: "pengiriman" | "dekorasi" = "pengiriman",
+): Promise<{ sebelumnya: number }> {
   await requireRole([...READ_ROLES]);
   const [row] = await db
     .update(suratJalanJahit)
     .set({ jumlahCetak: sql`${suratJalanJahit.jumlahCetak} + 1`, dicetakTerakhirAt: new Date() })
-    .where(eq(suratJalanJahit.pengirimanId, pengirimanId))
+    .where(
+      sumber === "dekorasi"
+        ? eq(suratJalanJahit.pekerjaanDekorasiId, sumberId)
+        : eq(suratJalanJahit.pengirimanId, sumberId),
+    )
     .returning({ jumlahCetak: suratJalanJahit.jumlahCetak });
   return { sebelumnya: (row?.jumlahCetak ?? 1) - 1 };
 }

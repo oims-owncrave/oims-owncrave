@@ -10,7 +10,15 @@ export const produkSchema = z.object({
   brand: z.string().max(100).optional(),
   jenis: z.string().max(100).optional(),
   deskripsi: z.string().max(1000).optional(),
+  dekorasiProses: z.enum(["none", "sablon", "bordir", "keduanya"]),
   isActive: z.boolean(),
 });
 
 export type ProdukInput = z.infer<typeof produkSchema>;
+
+export const DEKORASI_PROSES_LABEL: Record<"none" | "sablon" | "bordir" | "keduanya", string> = {
+  none: "Tanpa Dekorasi",
+  sablon: "Sablon",
+  bordir: "Bordir",
+  keduanya: "Sablon + Bordir",
+};

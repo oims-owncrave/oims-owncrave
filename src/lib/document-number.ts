@@ -17,7 +17,9 @@ type DocTable =
   | "penerimaan_bundel_vendor"
   | "penerimaan_hasil_jahit"
   | "retur_jahit"
-  | "selisih_jahit";
+  | "selisih_jahit"
+  | "pekerjaan_dekorasi"
+  | "penerimaan_dekorasi";
 
 /**
  * Generate nomor dokumen: [TIPE]-YYYYMM-NNNN (counter reset per bulan).
@@ -32,7 +34,7 @@ export async function generateDocNumber(
   prefix:
     | "BM" | "BK" | "PS" | "BOM" | "PB" | "PC" | "WO-CUT" | "CUT" | "BND"
     | "ASG-JHT" | "SHP-JHT" | "SJ-JHT" | "STB-JHT"
-    | "RCV-JHT" | "RTN-JHT" | "SLS-JHT",
+    | "RCV-JHT" | "RTN-JHT" | "SLS-JHT" | "DEK" | "RCD-DEK",
   tableName: DocTable,
   column: "nomor_dokumen" | "nomor_kasus" = "nomor_dokumen",
 ): Promise<string> {
