@@ -58,7 +58,7 @@ export function PoDetailClient({ poId, initialData }: Props) {
         title={detail.nomorDokumen}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "PO Produksi", href: "/produksi/po" },
+          { label: "Order Produksi", href: "/produksi/po" },
           { label: detail.nomorDokumen },
         ]}
       />

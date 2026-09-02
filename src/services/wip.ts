@@ -16,6 +16,7 @@ import {
   limbahCutting,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
+import { WIP_LABEL, type WipStatus } from "@/lib/wip-status";
 
 const READ_ROLES = [
   "owner",
@@ -35,24 +36,6 @@ const PIPELINE_STATUS = [
   "siap_jahit",
 ] as const;
 
-export type WipStatus =
-  | "menunggu_bahan"
-  | "menunggu_diterima"
-  | "menunggu_wo"
-  | "sedang_cutting"
-  | "cutting_selesai"
-  | "sedang_bundling"
-  | "siap_dikirim";
-
-export const WIP_LABEL: Record<WipStatus, string> = {
-  menunggu_bahan: "Menunggu Bahan",
-  menunggu_diterima: "Bahan Keluar — Menunggu Diterima",
-  menunggu_wo: "Bahan Diterima — Menunggu WO",
-  sedang_cutting: "Sedang Cutting",
-  cutting_selesai: "Cutting Selesai — Menunggu Bundling",
-  sedang_bundling: "Sedang Bundling",
-  siap_dikirim: "Siap Dikirim ke Penjahit",
-};
 
 /**
  * WIP cutting per PO aktif. Status DERIVED murni dari record turunan

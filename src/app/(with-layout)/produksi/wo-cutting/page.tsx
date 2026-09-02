@@ -1,7 +1,6 @@
-import { listWo } from "@/services/wo-cutting";
-import { WoPageClient } from "./_components/WoPageClient";
+import { redirect } from "next/navigation";
 
-export default async function WoCuttingPage() {
-  const data = await listWo();
-  return <WoPageClient initialData={data} />;
+/** List WO digabung ke /produksi/cutting (tab Work Order). Detail/baru/edit tetap di sini. */
+export default function WoCuttingListPage() {
+  redirect("/produksi/cutting");
 }

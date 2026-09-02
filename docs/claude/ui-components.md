@@ -47,9 +47,31 @@ Grid card (StatCards, SummaryCard) pakai **2 kolom dari mobile**, bukan 1:
 
 Value angka: `text-lg ... lg:text-xl` (mobile lebih kecil biar angka panjang/Rp tak overflow di card sempit).
 
+## Struktur navigasi — per AREA KERJA (bukan per dokumen)
+
+`src/components/layouts/sidebar/data/index.ts` = satu-satunya sumber menu (sidebar + bottom nav + `getPageTitle`).
+
+Dikelompokkan mengikuti app lama (`docs/referensi-oims-production.md` §11), BUKAN per dokumen PRD:
+
+| Section | Isi |
+|---|---|
+| MENU UTAMA | Dashboard |
+| DATA INDUK | Master Data (kategori, satuan, warna, bahan, supplier, produk, BOM, + penjahit/vendor & standar QC nanti) |
+| OPERASIONAL | Persediaan · Produksi · Vendor & Gudang · Quality Control |
+| ANALITIK | Monitoring (WIP) · Laporan |
+| SISTEM | Pengguna, log, pengaturan (owner) |
+
+**Alasan** (jangan balik ke per-dokumen): peran = area (admin gudang tak perlu lihat menu QC), dan tiap tahap baru menambah ~6 entri — per-dokumen bikin satu accordion 20 item.
+
+**Istilah = bahasa operator**, bukan istilah PRD: "Order Produksi" (bukan PO Produksi), "Cutting" (gabungan penerimaan bahan + work order), "Bundle" (bukan Bundling), "Persediaan" (bukan Inventory).
+
+**Menu tahap berikutnya**: tulis dengan `disabled: true` di `NAV_DATA` — tampil abu-abu + badge "Segera", tidak bisa diklik. Hapus flag-nya saat halaman jadi.
+
+**Satu area = satu menu**: kalau satu area kerja punya >1 dokumen (mis. Cutting = penerimaan + WO), buat satu halaman dengan tab, bukan 2 entri sidebar. Route dokumen lama tetap ada untuk detail/baru/edit; halaman list-nya `redirect()` ke halaman gabungan.
+
 ## Bottom nav & Menu (mobile, otomatis)
 
-`src/components/layouts/bottom-nav/` — 5 slot (< 850px). Slot **parent** (Master/Inventory/Laporan) buka bottom-sheet child; slot **leaf** (Dashboard) navigate langsung; slot **Menu** = accordion semua section (collapse per parent, reuse pola sidebar). Isi dari `NAV_DATA` — nambah section baru otomatis muncul. Jangan hardcode menu di bottom-nav.
+`src/components/layouts/bottom-nav/` — slot (< 850px). Slot **parent** (Master/Persediaan/Produksi/Laporan) buka bottom-sheet child; slot **leaf** (Dashboard) navigate langsung; slot **Menu** = accordion semua section (collapse per parent, reuse pola sidebar). Isi dari `NAV_DATA` — nambah section baru otomatis muncul. Jangan hardcode menu di bottom-nav. `navItemTitle` di `NAV_SLOTS` harus sama persis dengan `title` NavItem di `NAV_DATA` — kalau rename menu, update dua-duanya.
 
 ## Tabel
 

@@ -4,6 +4,9 @@ import {
   MasterIcon,
   InventoryIcon,
   ProduksiIcon,
+  VendorIcon,
+  QcIcon,
+  MonitoringIcon,
   LaporanIcon,
   SistemIcon,
 } from "../icons";
@@ -11,6 +14,8 @@ import {
 export type NavSubItem = {
   title: string;
   url: string;
+  /** Belum tersedia (tahap berikutnya) — tampil abu-abu, tidak bisa diklik. */
+  disabled?: boolean;
 };
 
 export type NavItem = {
@@ -18,6 +23,7 @@ export type NavItem = {
   url?: string;
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" }>;
   items: NavSubItem[];
+  disabled?: boolean;
 };
 
 export type NavSection = {
@@ -26,6 +32,12 @@ export type NavSection = {
   items: NavItem[];
 };
 
+/**
+ * Struktur nav per AREA KERJA (bukan per dokumen) — ikut app lama
+ * (docs/referensi-oims-production.md §11). Alasan: peran = area (gudang tak perlu
+ * lihat menu QC), dan tiap tahap baru menambah ~6 entri — pengelompokan per area
+ * yang menahan pertumbuhan. Menu Tahap 3-4 sudah disiapkan sebagai disabled.
+ */
 export const NAV_DATA: NavSection[] = [
   {
     label: "MENU UTAMA",
@@ -39,7 +51,7 @@ export const NAV_DATA: NavSection[] = [
     ],
   },
   {
-    label: "MANAJEMEN",
+    label: "DATA INDUK",
     items: [
       {
         title: "Master Data",
@@ -50,36 +62,55 @@ export const NAV_DATA: NavSection[] = [
           { title: "Warna", url: "/master/warna" },
           { title: "Bahan", url: "/master/bahan" },
           { title: "Supplier", url: "/master/supplier" },
-        ],
-      },
-      {
-        title: "Inventory",
-        icon: InventoryIcon,
-        items: [
-          { title: "Barang Masuk", url: "/inventory/barang-masuk" },
-          { title: "Barang Keluar", url: "/inventory/barang-keluar" },
-          { title: "Stok", url: "/inventory/stok" },
-          { title: "Mutasi", url: "/inventory/mutasi" },
-          { title: "Penyesuaian", url: "/inventory/penyesuaian" },
+          { title: "Produk", url: "/produksi/produk" },
+          { title: "BOM", url: "/produksi/bom" },
+          { title: "Penjahit & Vendor", url: "/vendor/master", disabled: true },
+          { title: "Standar QC", url: "/qc/standar", disabled: true },
         ],
       },
     ],
   },
   {
-    label: "PRODUKSI",
+    label: "OPERASIONAL",
     items: [
+      {
+        title: "Persediaan",
+        icon: InventoryIcon,
+        items: [
+          { title: "Barang Masuk", url: "/inventory/barang-masuk" },
+          { title: "Barang Keluar", url: "/inventory/barang-keluar" },
+          { title: "Stok Bahan", url: "/inventory/stok" },
+          { title: "Mutasi Stok", url: "/inventory/mutasi" },
+          { title: "Penyesuaian Stok", url: "/inventory/penyesuaian" },
+        ],
+      },
       {
         title: "Produksi",
         icon: ProduksiIcon,
         items: [
-          { title: "Produk", url: "/produksi/produk" },
-          { title: "BOM", url: "/produksi/bom" },
-          { title: "PO Produksi", url: "/produksi/po" },
+          { title: "Order Produksi", url: "/produksi/po" },
           { title: "Permintaan Bahan", url: "/produksi/permintaan-bahan" },
-          { title: "Penerimaan Cutting", url: "/produksi/penerimaan-cutting" },
-          { title: "WO Cutting", url: "/produksi/wo-cutting" },
-          { title: "Bundling", url: "/produksi/bundling" },
-          { title: "WIP Produksi", url: "/produksi/wip" },
+          { title: "Cutting", url: "/produksi/cutting" },
+          { title: "Bundle", url: "/produksi/bundling" },
+        ],
+      },
+      {
+        title: "Vendor & Gudang",
+        icon: VendorIcon,
+        items: [
+          { title: "Pengiriman Vendor", url: "/vendor/pengiriman", disabled: true },
+          { title: "Penerimaan Gudang", url: "/vendor/penerimaan", disabled: true },
+          { title: "Surat Jalan", url: "/vendor/surat-jalan", disabled: true },
+        ],
+      },
+      {
+        title: "Quality Control",
+        icon: QcIcon,
+        items: [
+          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", disabled: true },
+          { title: "Rework", url: "/qc/rework", disabled: true },
+          { title: "Karantina Reject", url: "/qc/reject", disabled: true },
+          { title: "Stok Barang Jadi", url: "/qc/stok-jadi", disabled: true },
         ],
       },
     ],
@@ -87,6 +118,14 @@ export const NAV_DATA: NavSection[] = [
   {
     label: "ANALITIK",
     items: [
+      {
+        title: "Monitoring",
+        icon: MonitoringIcon,
+        items: [
+          { title: "WIP Produksi", url: "/produksi/wip" },
+          { title: "WIP Jahit", url: "/vendor/wip", disabled: true },
+        ],
+      },
       {
         title: "Laporan",
         icon: LaporanIcon,

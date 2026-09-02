@@ -19,7 +19,7 @@ export default async function PenerimaanBaruPage() {
         title="Catat Penerimaan Cutting"
         breadcrumb={[
           { label: "Produksi" },
-          { label: "Penerimaan Cutting", href: "/produksi/penerimaan-cutting" },
+          { label: "Cutting", href: "/produksi/cutting" },
           { label: "Baru" },
         ]}
       />

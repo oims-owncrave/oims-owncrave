@@ -20,10 +20,10 @@ export default async function WoBaruPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Buat WO Cutting"
+        title="Buat Work Order Cutting"
         breadcrumb={[
           { label: "Produksi" },
-          { label: "WO Cutting", href: "/produksi/wo-cutting" },
+          { label: "Cutting", href: "/produksi/cutting" },
           { label: "Baru" },
         ]}
       />

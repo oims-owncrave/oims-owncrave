@@ -33,7 +33,7 @@ export default async function WoEditPage({
         title={`Edit ${detail.nomorDokumen}`}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "WO Cutting", href: "/produksi/wo-cutting" },
+          { label: "Cutting", href: "/produksi/cutting" },
           { label: detail.nomorDokumen, href: `/produksi/wo-cutting/${id}` },
           { label: "Edit" },
         ]}

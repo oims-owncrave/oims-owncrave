@@ -9,7 +9,6 @@ import { Eye, Pencil, Trash2, Plus } from "lucide-react";
 import { useWoList, useWoMutation } from "@/hooks/useWoCutting";
 import type { WoListRow } from "@/services/wo-cutting";
 import { WO_STATUS_BADGE } from "./wo-status";
-import { PageHeader } from "@/components/ui/PageHeader";
 import {
   DataTable,
   useTable,
@@ -26,7 +25,7 @@ interface Props {
   initialData: WoListRow[];
 }
 
-export function WoPageClient({ initialData }: Props) {
+export function WoTable({ initialData }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -112,11 +111,6 @@ export function WoPageClient({ initialData }: Props) {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Work Order Cutting"
-        breadcrumb={[{ label: "Produksi" }, { label: "WO Cutting" }]}
-      />
-
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <div className="flex items-center gap-2 w-full sm:w-auto">

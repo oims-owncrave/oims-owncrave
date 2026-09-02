@@ -45,7 +45,7 @@ export function WoDetailClient({ woId, initialData }: Props) {
         title={detail.nomorDokumen}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "WO Cutting", href: "/produksi/wo-cutting" },
+          { label: "Cutting", href: "/produksi/cutting" },
           { label: detail.nomorDokumen },
         ]}
       />

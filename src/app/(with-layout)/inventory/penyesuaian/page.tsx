@@ -20,7 +20,7 @@ export default async function PenyesuaianPage() {
     <div className="space-y-6">
       <PageHeader
         title="Penyesuaian Stok"
-        breadcrumb={[{ label: "Inventory" }, { label: "Penyesuaian Stok" }]}
+        breadcrumb={[{ label: "Persediaan" }, { label: "Penyesuaian Stok" }]}
       />
       <PenyesuaianPageClient initialData={data} isOwner={isOwner} />
     </div>

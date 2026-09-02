@@ -16,8 +16,8 @@ export function PoPageClient({ initialData }: Props) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="PO Produksi"
-        breadcrumb={[{ label: "Produksi" }, { label: "PO Produksi" }]}
+        title="Order Produksi"
+        breadcrumb={[{ label: "Produksi" }, { label: "Order Produksi" }]}
       />
       <PoTable data={items} />
     </div>

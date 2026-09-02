@@ -13,7 +13,7 @@ export default async function BarangKeluarPage() {
     <div className="space-y-6">
       <PageHeader
         title="Barang Keluar"
-        breadcrumb={[{ label: "Inventory" }, { label: "Barang Keluar" }]}
+        breadcrumb={[{ label: "Persediaan" }, { label: "Barang Keluar" }]}
       />
       <BarangKeluarTable data={data} />
     </div>

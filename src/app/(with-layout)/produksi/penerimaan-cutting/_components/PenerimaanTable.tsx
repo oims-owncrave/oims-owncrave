@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/Button";
 import { Eye, Plus } from "lucide-react";
 import type { PenerimaanListRow } from "@/services/penerimaan-cutting";
 import { usePenerimaanList } from "@/hooks/usePenerimaanCutting";
-import { PageHeader } from "@/components/ui/PageHeader";
 import {
   DataTable,
   useTable,
@@ -24,7 +23,7 @@ interface Props {
   initialData: PenerimaanListRow[];
 }
 
-export function PenerimaanPageClient({ initialData }: Props) {
+export function PenerimaanTable({ initialData }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
   const { data } = usePenerimaanList();
@@ -92,11 +91,6 @@ export function PenerimaanPageClient({ initialData }: Props) {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Penerimaan Cutting"
-        breadcrumb={[{ label: "Produksi" }, { label: "Penerimaan Cutting" }]}
-      />
-
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <div className="flex items-center gap-2 w-full sm:w-auto">

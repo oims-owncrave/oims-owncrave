@@ -22,7 +22,7 @@ export default async function BarangMasukBaruPage() {
       <PageHeader
         title="Barang Masuk Baru"
         breadcrumb={[
-          { label: "Inventory", href: "/inventory/barang-masuk" },
+          { label: "Persediaan", href: "/inventory/barang-masuk" },
           { label: "Barang Masuk", href: "/inventory/barang-masuk" },
           { label: "Baru" },
         ]}

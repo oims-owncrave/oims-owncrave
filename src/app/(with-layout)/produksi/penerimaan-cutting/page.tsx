@@ -1,7 +1,6 @@
-import { listPenerimaan } from "@/services/penerimaan-cutting";
-import { PenerimaanPageClient } from "./_components/PenerimaanPageClient";
+import { redirect } from "next/navigation";
 
-export default async function PenerimaanCuttingPage() {
-  const data = await listPenerimaan();
-  return <PenerimaanPageClient initialData={data} />;
+/** List penerimaan digabung ke /produksi/cutting (tab Penerimaan Bahan). Detail/baru tetap di sini. */
+export default function PenerimaanCuttingListPage() {
+  redirect("/produksi/cutting");
 }

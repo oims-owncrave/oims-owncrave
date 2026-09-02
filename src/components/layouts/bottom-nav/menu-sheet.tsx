@@ -174,6 +174,21 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
                 const isActive = pathname === sub.url;
                 const isNavigatingThis = isPending && navigatingUrl === sub.url;
 
+                if (sub.disabled) {
+                  return (
+                    <div
+                      key={sub.url}
+                      className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-sm text-dark-5/60 dark:text-dark-6/60"
+                      aria-disabled="true"
+                    >
+                      <span>{sub.title}</span>
+                      <span className="rounded-full bg-gray-2 px-1.5 py-0.5 text-[10px] font-medium dark:bg-dark-3">
+                        Segera
+                      </span>
+                    </div>
+                  );
+                }
+
                 return (
                   <button
                     key={sub.url}
@@ -266,19 +281,33 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
                           const isNavigatingThis = isPending && navigatingUrl === sub.url;
 
                           return (
-                            <button
-                              key={sub.url}
-                              onClick={() => navigate(sub.url)}
-                              disabled={isPending}
-                              className={cn(
-                                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
-                                isActive && "bg-primary/10 text-primary dark:text-primary font-semibold",
-                                isNavigatingThis && "bg-primary/5 text-primary"
+                            <div key={sub.url}>
+                              {sub.disabled ? (
+                                <div
+                                  key={sub.url}
+                                  className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-dark-5/60 dark:text-dark-6/60"
+                                  aria-disabled="true"
+                                >
+                                  <span>{sub.title}</span>
+                                  <span className="rounded-full bg-gray-2 px-1.5 py-0.5 text-[10px] font-medium dark:bg-dark-3">
+                                    Segera
+                                  </span>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => navigate(sub.url)}
+                                  disabled={isPending}
+                                  className={cn(
+                                    "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-dark dark:text-white hover:bg-gray-2 dark:hover:bg-dark-2 transition-colors",
+                                    isActive && "bg-primary/10 text-primary dark:text-primary font-semibold",
+                                    isNavigatingThis && "bg-primary/5 text-primary"
+                                  )}
+                                >
+                                  <span>{sub.title}</span>
+                                  {isNavigatingThis && <SpinnerIcon className="size-4" />}
+                                </button>
                               )}
-                            >
-                              <span>{sub.title}</span>
-                              {isNavigatingThis && <SpinnerIcon className="size-4" />}
-                            </button>
+                            </div>
                           );
                         })}
                       </div>

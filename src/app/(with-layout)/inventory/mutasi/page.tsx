@@ -17,7 +17,7 @@ export default async function MutasiStokPage() {
     <div className="space-y-6">
       <PageHeader
         title="Mutasi Stok"
-        breadcrumb={[{ label: "Inventory" }, { label: "Mutasi Stok" }]}
+        breadcrumb={[{ label: "Persediaan" }, { label: "Mutasi Stok" }]}
       />
       <MutasiPageClient
         initialRows={rows}

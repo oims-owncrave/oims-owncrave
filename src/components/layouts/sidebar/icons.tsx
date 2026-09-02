@@ -9,6 +9,9 @@ import {
   FileText,
   Settings,
   Scissors,
+  Truck,
+  BadgeCheck,
+  Activity,
   Users,
   ActivitySquare,
   SlidersHorizontal,
@@ -27,6 +30,9 @@ export const BarangKeluarIcon = ArrowUpFromLine;
 export const LaporanIcon = BarChart3;
 export const SistemIcon = Settings;
 export const ProduksiIcon = Scissors;
+export const VendorIcon = Truck;
+export const QcIcon = BadgeCheck;
+export const MonitoringIcon = Activity;
 export const PenggunaIcon = Users;
 export const LogIcon = ActivitySquare;
 export const PengaturanIcon = SlidersHorizontal;

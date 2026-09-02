@@ -169,8 +169,8 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Bundling"
-        breadcrumb={[{ label: "Produksi" }, { label: "Bundling" }]}
+        title="Bundle"
+        breadcrumb={[{ label: "Produksi" }, { label: "Bundle" }]}
       />
 
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">

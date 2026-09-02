@@ -39,7 +39,7 @@ export default async function PenerimaanDetailPage({
         title={detail.nomorDokumen}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "Penerimaan Cutting", href: "/produksi/penerimaan-cutting" },
+          { label: "Cutting", href: "/produksi/cutting" },
           { label: detail.nomorDokumen },
         ]}
       />

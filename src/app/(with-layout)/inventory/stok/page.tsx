@@ -17,7 +17,7 @@ export default async function StokPage() {
     <div className="space-y-6">
       <PageHeader
         title="Stok Bahan"
-        breadcrumb={[{ label: "Inventory" }, { label: "Stok Bahan" }]}
+        breadcrumb={[{ label: "Persediaan" }, { label: "Stok Bahan" }]}
       />
       <StokPageClient
         initialRows={rows}

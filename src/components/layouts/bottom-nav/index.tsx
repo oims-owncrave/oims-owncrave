@@ -39,6 +39,18 @@ function BoxIcon({ className }: { className?: string }) {
   );
 }
 
+function ScissorsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <line x1="20" y1="4" x2="8.12" y2="15.88" />
+      <line x1="14.47" y1="14.48" x2="20" y2="20" />
+      <line x1="8.12" y1="8.12" x2="12" y2="12" />
+    </svg>
+  );
+}
+
 function ChartIcon({ className }: { className?: string }) {
   return (
     <svg className={className} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -104,7 +116,8 @@ type NavSlot =
 const NAV_SLOTS: NavSlot[] = [
   { label: "Dashboard", baseRoute: "/dashboard", icon: HomeIcon, type: "leaf", url: "/dashboard" },
   { label: "Master", baseRoute: "/master", icon: MasterIcon, type: "parent", navItemTitle: "Master Data" },
-  { label: "Inventory", baseRoute: "/inventory", icon: BoxIcon, type: "parent", navItemTitle: "Inventory" },
+  { label: "Persediaan", baseRoute: "/inventory", icon: BoxIcon, type: "parent", navItemTitle: "Persediaan" },
+  { label: "Produksi", baseRoute: "/produksi", icon: ScissorsIcon, type: "parent", navItemTitle: "Produksi" },
   { label: "Laporan", baseRoute: "/laporan", icon: ChartIcon, type: "parent", navItemTitle: "Laporan" },
 ];
 

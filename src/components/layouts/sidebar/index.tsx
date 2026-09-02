@@ -161,17 +161,33 @@ export function Sidebar({ userRole }: { userRole: string }) {
                               )}
                               role="menu"
                             >
-                              {item.items.map((subItem) => (
-                                <li key={subItem.title} role="none">
-                                  <MenuItem
-                                    as="link"
-                                    href={subItem.url}
-                                    isActive={pathname === subItem.url}
-                                  >
-                                    <span>{subItem.title}</span>
-                                  </MenuItem>
-                                </li>
-                              ))}
+                              {item.items.map((subItem) =>
+                                subItem.disabled ? (
+                                  /* Menu tahap berikutnya — tampil abu-abu, tidak bisa diklik */
+                                  <li key={subItem.title} role="none">
+                                    <div
+                                      className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-dark-5/60 dark:text-dark-6/60"
+                                      title="Segera hadir"
+                                      aria-disabled="true"
+                                    >
+                                      <span>{subItem.title}</span>
+                                      <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium dark:bg-dark-3">
+                                        Segera
+                                      </span>
+                                    </div>
+                                  </li>
+                                ) : (
+                                  <li key={subItem.title} role="none">
+                                    <MenuItem
+                                      as="link"
+                                      href={subItem.url}
+                                      isActive={pathname === subItem.url}
+                                    >
+                                      <span>{subItem.title}</span>
+                                    </MenuItem>
+                                  </li>
+                                ),
+                              )}
                             </ul>
                           </div>
                         ) : (

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useWipCutting, useRingkasanProduksi } from "@/hooks/useWip";
-import type { WipRow, RingkasanProduksi, WipStatus } from "@/services/wip";
+import type { WipRow, RingkasanProduksi } from "@/services/wip";
+import type { WipStatus } from "@/lib/wip-status";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
   DataTable,

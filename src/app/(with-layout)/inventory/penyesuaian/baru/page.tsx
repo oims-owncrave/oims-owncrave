@@ -17,7 +17,7 @@ export default async function PenyesuaianBaruPage() {
       <PageHeader
         title="Ajukan Penyesuaian Stok"
         breadcrumb={[
-          { label: "Inventory", href: "/inventory/penyesuaian" },
+          { label: "Persediaan", href: "/inventory/penyesuaian" },
           { label: "Penyesuaian Stok", href: "/inventory/penyesuaian" },
           { label: "Baru" },
         ]}
