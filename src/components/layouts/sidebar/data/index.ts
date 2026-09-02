@@ -79,6 +79,7 @@ export const NAV_DATA: NavSection[] = [
           { title: "Penerimaan Cutting", url: "/produksi/penerimaan-cutting" },
           { title: "WO Cutting", url: "/produksi/wo-cutting" },
           { title: "Bundling", url: "/produksi/bundling" },
+          { title: "WIP Produksi", url: "/produksi/wip" },
         ],
       },
     ],
