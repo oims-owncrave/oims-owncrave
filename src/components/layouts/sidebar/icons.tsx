@@ -8,6 +8,7 @@ import {
   BarChart3,
   FileText,
   Settings,
+  Scissors,
   Users,
   ActivitySquare,
   SlidersHorizontal,
@@ -25,6 +26,7 @@ export const BarangMasukIcon = ArrowDownToLine;
 export const BarangKeluarIcon = ArrowUpFromLine;
 export const LaporanIcon = BarChart3;
 export const SistemIcon = Settings;
+export const ProduksiIcon = Scissors;
 export const PenggunaIcon = Users;
 export const LogIcon = ActivitySquare;
 export const PengaturanIcon = SlidersHorizontal;

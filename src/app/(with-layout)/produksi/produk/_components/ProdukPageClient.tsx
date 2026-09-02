@@ -1,0 +1,41 @@
+"use client";
+
+import { useState } from "react";
+import { ProdukTable } from "./ProdukTable";
+import { ProdukFormModal } from "./ProdukFormModal";
+import type { Produk } from "@/db/schema";
+import { useProdukList } from "@/hooks/useProduk";
+import { PageHeader } from "@/components/ui/PageHeader";
+
+interface Props {
+  initialData: Produk[];
+}
+
+export function ProdukPageClient({ initialData }: Props) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editItem, setEditItem] = useState<Produk | null>(null);
+  const { data } = useProdukList();
+
+  const items = data ?? initialData;
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Master Produk"
+        breadcrumb={[{ label: "Produksi" }, { label: "Produk" }]}
+      />
+
+      <ProdukTable
+        data={items}
+        onAdd={() => { setEditItem(null); setModalOpen(true); }}
+        onEdit={(item) => { setEditItem(item); setModalOpen(true); }}
+      />
+
+      <ProdukFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        initialData={editItem}
+      />
+    </div>
+  );
+}

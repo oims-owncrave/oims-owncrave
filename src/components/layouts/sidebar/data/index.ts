@@ -3,6 +3,7 @@ import {
   DashboardIcon,
   MasterIcon,
   InventoryIcon,
+  ProduksiIcon,
   LaporanIcon,
   SistemIcon,
 } from "../icons";
@@ -60,6 +61,18 @@ export const NAV_DATA: NavSection[] = [
           { title: "Stok", url: "/inventory/stok" },
           { title: "Mutasi", url: "/inventory/mutasi" },
           { title: "Penyesuaian", url: "/inventory/penyesuaian" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "PRODUKSI",
+    items: [
+      {
+        title: "Produksi",
+        icon: ProduksiIcon,
+        items: [
+          { title: "Produk", url: "/produksi/produk" },
         ],
       },
     ],
