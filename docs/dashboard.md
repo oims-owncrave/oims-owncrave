@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 1 selesai (44 issue closed); Tahap 2–4 belum dipecah jadi issue — langkah berikutnya sesi planning breakdown Tahap 2.**
+> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 1 selesai; Tahap 2 dipecah 13 issue (oims-5yr.1-13) — wave 2A (produk/varian/BOM) siap eksekusi Antigravity.**
 
 ## 🎯 Visi
 
@@ -19,7 +19,7 @@ di-skip dulu. Referensi alur teruji dari app lama: `docs/referensi-oims-producti
 | Dashboard + Laporan Tahap 1 | ✅ | /dashboard, /laporan | — |
 | Auth, User Mgmt, Audit Log | ✅ | /sistem/* | — |
 | Import Excel master + bahan | ✅ | /master/* | — |
-| Tahap 2 — Produksi, Cutting, Bundling | ⏳ | — | epic `oims-5yr` (belum dipecah) |
+| Tahap 2 — Produksi, Cutting, Bundling | 🔨 | /produksi/* | `oims-5yr.1-13` (2A siap eksekusi) |
 | Tahap 3 — Penjahitan Vendor | ⏳ | — | epic `oims-eba` (belum dipecah) |
 | Tahap 4 — QC & Barang Jadi | ⏳ | — | epic `oims-ckp` (belum dipecah) |
 | Tahap 5 — Keuangan/HPP | ⏸ skip | — | epic `oims-rcr` (deferred) |
@@ -35,21 +35,48 @@ setelah Tahap 2 jalan, supaya plan tidak basi. Bekal breakdown: PRD
 (`docs/OIMS_PRD_Tahap_1_sampai_5.md`) + `docs/referensi-oims-production.md`.
 Dependency: tidak ada blocker antar issue saat ini (semua epic).
 
-### Gelombang 1 — Planning: Breakdown Tahap 2
+### ✅ Gelombang 1 — Planning: Breakdown Tahap 2 — SELESAI (2026-09-02)
 
-Sesi:
-- `oims-5yr plan-breakdown-tahap2` | oims-5yr | /oims-plan: pecah epic jadi issue anak + plan + prompt (PRD Tahap 2 §5–24 + referensi §2–5, §10)
+Sesi: `oims-5yr plan-breakdown-tahap2` — 13 issue anak dibuat + deps; wave 2A di-plan penuh.
+
+### Gelombang 2 — Eksekusi Tahap 2A: Fondasi (produk → varian → BOM)
+
+Sesi eksekusi: user jalankan prompt di Antigravity berurutan → sesi review
+`oims-5yr.1-3 review-tahap2a-fondasi` (/oims-review, batch 3 issue sejenis).
+Migration DB + schema.ts SUDAH applied saat planning — Antigravity mulai dari service/UI.
+
+| # | Issue | Prio | Prompt | Kenapa di sini |
+|---|---|---|---|---|
+| 1 | `oims-5yr.1` Master Produk + nav PRODUKSI | P1 | docs/prompts/2026-09-02-oims-5yr.1-master-produk.md | Fondasi semua Tahap 2 |
+| 2 | `oims-5yr.2` Varian Produk (matrix + SKU) | P1 | docs/prompts/2026-09-02-oims-5yr.2-varian-produk.md | Dibutuhkan PO detail per SKU |
+| 3 | `oims-5yr.3` BOM (versi, satu aktif) | P1 | docs/prompts/2026-09-02-oims-5yr.3-bom.md | Gap terbesar (tak ada referensi app lama) — dasar estimasi bahan |
+
+### Gelombang 3 — Planning + Eksekusi Tahap 2B: PO & Bahan
+
+Sesi planning: `oims-5yr.4-6 plan-tahap2b-po-bahan` (/oims-plan, just-in-time setelah 2A closed).
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-5yr` epic: Tahap 2 — Produksi, Cutting & Bundling | P1 | Induk semua eksekusi berikutnya; tanpa breakdown tidak ada issue yang bisa dieksekusi |
+| 1 | `oims-5yr.4` PO Produksi (status, approval) | P2 | Induk semua transaksi cutting |
+| 2 | `oims-5yr.5` Estimasi Kebutuhan Bahan | P2 | BOM × target + cek stok |
+| 3 | `oims-5yr.6` Permintaan Bahan | P2 | Integrasi barang keluar Tahap 1 ke PO |
 
-Setelah breakdown, gelombang eksekusi Tahap 2 diisi di sini. Urutan kasar yang
-diharapkan: schema/master (produk, varian, BOM) → PO produksi → cutting → bundling →
-dashboard WIP. Gap paling berisiko (belum pernah teruji di app lama): BOM +
-keterhubungan ke inventory bahan, pemakaian aktual/sisa/limbah.
+### Gelombang 4+ — Cutting lalu Bundling & WIP (plan just-in-time per gelombang)
 
-### Gelombang 2 — Antrean tahap berikutnya (breakdown just-in-time)
+Gap berisiko: pemakaian aktual/sisa/limbah (rekonsiliasi §14) — belum pernah teruji di app lama.
+
+| # | Issue | Prio | Kenapa di sini |
+|---|---|---|---|
+| 1 | `oims-5yr.7` Penerimaan Bahan oleh Cutting | P2 | Serah terima + kondisi |
+| 2 | `oims-5yr.8` Work Order Cutting | P2 | WO-CUT + status |
+| 3 | `oims-5yr.9` Pemakaian Bahan Aktual | P2 | Rekonsiliasi + varians vs BOM |
+| 4 | `oims-5yr.10` Hasil Cutting | P2 | Per SKU baik/rusak/kurang/lebih |
+| 5 | `oims-5yr.11` Sisa Bahan + Limbah | P2 | Sisa → mutasi retur_masuk |
+| 6 | `oims-5yr.12` Bundling + Label QR | P2 | Output akhir Tahap 2 |
+| 7 | `oims-5yr.13` WIP derived + Dashboard T2 | P2 | Penutup tahap |
+| 8 | `oims-5yr` epic Tahap 2 (induk) | P4 | Ditutup setelah 13 anak selesai |
+
+### Gelombang 5 — Antrean tahap berikutnya (breakdown just-in-time)
 
 Belum ada sesi — masing-masing dapat sesi `/oims-plan` sendiri setelah tahap
 sebelumnya berjalan, supaya plan tidak basi. Trigger: saat issue eksekusi tahap
@@ -79,4 +106,5 @@ di sini (orchestrator-workflow.md langkah 9).
 
 ## 📜 Changelog
 
+- 2026-09-02 (sesi 2): breakdown Tahap 2 — 13 issue anak (oims-5yr.1-13) + deps rantai PRD §4. Wave 2A (produk/varian/BOM) plan+prompt+GH #11-13, migration produk/varian_produk/bom/bom_detail applied via MCP, schema.ts ter-update, checklist review Tahap 2 masuk skill oims-review. 3 commit (1 per issue).
 - 2026-09-02: dashboard pertama — adopsi sistem eksekusi issue (applications.md Jalur 2); Tahap 1 epic ditutup, Tahap 5 di-defer.

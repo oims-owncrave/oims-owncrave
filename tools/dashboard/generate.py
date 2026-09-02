@@ -21,7 +21,7 @@ DASHBOARD_MD = os.path.join(ROOT, "docs/dashboard.md")
 
 # GANTI "sm" dengan prefix issue project ini (bd list menampilkannya).
 ISSUE_PREFIX = "oims"
-ID_RE = re.compile(rf"\b({ISSUE_PREFIX}-[a-z0-9]+)\b")
+ID_RE = re.compile(rf"\b({ISSUE_PREFIX}-[a-z0-9]+(?:\.[0-9]+)?)\b")
 
 
 def run(cmd):
@@ -60,9 +60,9 @@ def load_md():
 
     # Gelombang: header "### Gelombang N — judul" + baris tabel "| # | `sm-x` judul | Prio | catatan |"
     waves = []
-    for wm in re.finditer(r"^### Gelombang (\d+) — (.+?)$([\s\S]*?)(?=^###|^---)", text, re.M):
+    for wm in re.finditer(r"^### \S*\s*Gelombang (\d+)\+? — (.+?)$([\s\S]*?)(?=^###|^---)", text, re.M):
         items = []
-        for row in re.finditer(rf"^\|\s*(\d+)\s*\|\s*(~{{0,2}})`({ISSUE_PREFIX}-[a-z0-9]+)`\s*([^|]*)\|\s*(P\d)\s*\|\s*([^|]*)\|", wm.group(3), re.M):
+        for row in re.finditer(rf"^\|\s*(\d+)\s*\|\s*(~{{0,2}})`({ISSUE_PREFIX}-[a-z0-9]+(?:\.[0-9]+)?)`\s*([^|]*)\|\s*(P\d)\s*\|\s*([^|]*)\|", wm.group(3), re.M):
             note = row.group(6).strip()
             # "plan:" di awal catatan = issue ini perlu plan file dulu sebelum dikerjakan
             needs_plan = note.lower().startswith("plan:")

@@ -152,6 +152,19 @@ Insert batch data master via upload Excel (.xlsx) + template kosong (header + 1 
 
 Urutan eksekusi: jpn.15 dulu (fondasi), jpn.16 nebeng infra-nya.
 
+### 🔜 GELOMBANG E — Tahap 2: Produksi, Cutting & Bundling (`oims-5yr.1-13`)
+
+Epic `oims-5yr` dipecah 13 issue anak (2026-09-02), rantai dependensi ikuti alur PRD §4.
+Wave 2A (fondasi) sudah di-plan + prompt + migration DB applied — siap eksekusi Antigravity.
+Wave berikutnya di-plan just-in-time setelah 2A jalan (plan tidak basi). Kontrol eksekusi: `docs/dashboard.md`.
+
+- [ ] `oims-5yr.1` — **Master Produk** + nav section PRODUKSI (P1) — plan+prompt siap, GH #11
+- [ ] `oims-5yr.2` — **Varian Produk** matrix warna×ukuran + SKU auto (P1) — plan+prompt siap, GH #12, depends 5yr.1
+- [ ] `oims-5yr.3` — **BOM** versi + satu aktif per produk (P1) — plan+prompt siap, GH #13, depends 5yr.2
+- [ ] `oims-5yr.4-6` — PO Produksi, estimasi kebutuhan, permintaan bahan (P2) — plan menyusul
+- [ ] `oims-5yr.7-10` — penerimaan cutting, WO cutting, pemakaian aktual, hasil cutting (P2) — plan menyusul
+- [ ] `oims-5yr.11-13` — sisa+limbah, bundling+QR, WIP+dashboard (P2) — plan menyusul
+
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
 
@@ -172,6 +185,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 ---
 
 ## 📜 Changelog
+
+- **2026-09-02** — Planning breakdown Tahap 2: epic `oims-5yr` dipecah 13 issue anak (`oims-5yr.1-13`) + rantai dependensi. Wave 2A (master produk, varian, BOM) di-plan+prompt (GH #11-13) + migration DB applied via MCP (`produk`, `varian_produk`, `bom`, `bom_detail`) + schema.ts. Checklist review Tahap 2 ditambah ke skill oims-review. Siap eksekusi Antigravity.
 
 - **2026-08-08** — Planning Gelombang D (import batch Excel): 2 issue di-plan+beads+prompt (oims-jpn.15 infra+master flat, oims-jpn.16 bahan FK). Format .xlsx SheetJS, all-or-nothing, import murni insert. Siap eksekusi Antigravity (jpn.15 dulu → jpn.16).
 - **2026-08-08** — Gelombang C (mobile polish batch 2) hampir kelar. oims-ghs (splash PWA), oims-6c3 (toggle ke atas), oims-76v + oims-xlp (export CSV layout), oims-8i9 (FAB + search compact) DONE. Bugfix oims-59w: scroll reset toggle Kartu/Tabel — root cause = focus-scroll (kebab card curi fokus → browser auto-scroll), fix scroll-lock 250ms di useLayoutEffect (insight ke memory). oims-y5k (card highlight bg) selesai. Skill baru `oims-plan` (orchestrator sesi planning: new-feature-workflow → roadmap). Berikutnya: Gelombang D import batch Excel.
