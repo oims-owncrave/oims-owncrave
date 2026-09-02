@@ -5,6 +5,7 @@ import {
   getAktivitasTransaksi,
   getTop10BahanKeluar,
 } from "@/services/dashboard";
+import { getAlurProduksi } from "@/services/alur-produksi";
 import { DashboardPageClient } from "./_components/DashboardPageClient";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -23,11 +24,12 @@ function todayStr() {
 }
 
 export default async function DashboardPage() {
-  const [stats, kritisList, aktivitasInit, topBahan] = await Promise.all([
+  const [stats, kritisList, aktivitasInit, topBahan, alur] = await Promise.all([
     getDashboardStats(),
     getBahanKritisList(),
     getAktivitasTransaksi(monthStart(), todayStr()),
     getTop10BahanKeluar(),
+    getAlurProduksi(),
   ]);
 
   return (
@@ -41,6 +43,7 @@ export default async function DashboardPage() {
         initialKritisList={kritisList}
         initialAktivitas={aktivitasInit}
         initialTopBahan={topBahan}
+        initialAlur={alur}
       />
     </div>
   );
