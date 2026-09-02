@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 2 wave 2A + 2B selesai & closed (produk/varian/BOM/PO/estimasi/permintaan bahan). Berikutnya: 2C cutting (oims-5yr.7-10, perlu sesi plan).**
+> Diperbarui: 2026-09-02 · Versi: v0.1.0 · Status: **Tahap 2 wave 2A+2B+2C selesai (fondasi → PO/bahan → cutting). Sisa: 2D bundling+WIP (oims-5yr.11-13, sesi baru).**
 
 ## 🎯 Visi
 
@@ -50,22 +50,23 @@ PO produksi (snapshot BOM saat approve) + estimasi kebutuhan on-the-fly + permin
 Smoke test disarankan: PO draft→setujui → estimasi muncul → buat PB prefill kekurangan →
 approve PB → barang keluar pilih PB → cek progres dikeluarkan di detail PB.
 
-### Gelombang 4+ — Cutting lalu Bundling & WIP (plan just-in-time per gelombang)
+### ✅ Gelombang 4 — Tahap 2C: Cutting — SELESAI (Claude, 2026-09-02, GH #15)
 
-Gap berisiko: pemakaian aktual/sisa/limbah (rekonsiliasi §14) — belum pernah teruji di app lama.
+Penerimaan cutting (BK ber-PB, kondisi+selisih) → WO cutting (7 status, hub detail) →
+pemakaian aktual (rekonsiliasi + varians vs BOM) → hasil cutting (bertahap + rekap vs target).
+Smoke test: penerimaan dari BK → buat WO (prefill PO) → mulai kerjakan → catat hasil →
+catat pemakaian → cek rekonsiliasi/varians → selesai → verifikasi owner.
+
+### Gelombang 5 — Tahap 2D: Bundling & WIP (sesi baru)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-5yr.7` Penerimaan Bahan oleh Cutting | P2 | Serah terima + kondisi |
-| 2 | `oims-5yr.8` Work Order Cutting | P2 | WO-CUT + status |
-| 3 | `oims-5yr.9` Pemakaian Bahan Aktual | P2 | Rekonsiliasi + varians vs BOM |
-| 4 | `oims-5yr.10` Hasil Cutting | P2 | Per SKU baik/rusak/kurang/lebih |
-| 5 | `oims-5yr.11` Sisa Bahan + Limbah | P2 | Sisa → mutasi retur_masuk |
-| 6 | `oims-5yr.12` Bundling + Label QR | P2 | Output akhir Tahap 2 |
-| 7 | `oims-5yr.13` WIP derived + Dashboard T2 | P2 | Penutup tahap |
-| 8 | `oims-5yr` epic Tahap 2 (induk) | P4 | Ditutup setelah 13 anak selesai |
+| 1 | `oims-5yr.11` Sisa Bahan + Limbah | P2 | Sisa → mutasi retur_masuk |
+| 2 | `oims-5yr.12` Bundling + Label QR | P2 | Output akhir Tahap 2 |
+| 3 | `oims-5yr.13` WIP derived + Dashboard T2 | P2 | Penutup tahap |
+| 4 | `oims-5yr` epic Tahap 2 (induk) | P4 | Ditutup setelah 13 anak selesai |
 
-### Gelombang 5 — Antrean tahap berikutnya (breakdown just-in-time)
+### Gelombang 6 — Antrean tahap berikutnya (breakdown just-in-time)
 
 Belum ada sesi — masing-masing dapat sesi `/oims-plan` sendiri setelah tahap
 sebelumnya berjalan, supaya plan tidak basi. Trigger: saat issue eksekusi tahap
@@ -95,6 +96,7 @@ di sini (orchestrator-workflow.md langkah 9).
 
 ## 📜 Changelog
 
+- 2026-09-02 (sesi 2d): eksekusi 2C oleh Claude: oims-5yr.7 penerimaan cutting, oims-5yr.8 WO cutting (transisi status tervalidasi + verifikasi owner), oims-5yr.9 pemakaian aktual (rekonsiliasi + snapshot harga + varians), oims-5yr.10 hasil cutting (bertahap + rekap). GH #15. Route /produksi/{penerimaan-cutting,wo-cutting}.
 - 2026-09-02 (sesi 2c): eksekusi 2B oleh Claude: oims-5yr.4 PO produksi (PO-YYYY-NNNN, approval owner + snapshot BOM), oims-5yr.5 estimasi kebutuhan (pcs efektif × BOM × toleransi vs stok), oims-5yr.6 permintaan bahan (PB + integrasi barang keluar, dikeluarkan derived). Bonus oims-cd5: mobile default view tabel + tab Tabel kiri. 2A di-approve Abu & closed. GH #14.
 - 2026-09-02 (sesi 2b): eksekusi wave 2A langsung oleh Claude (permintaan Abu, deviasi dari Antigravity): oims-5yr.1 master produk + nav PRODUKSI, oims-5yr.2 varian matrix+SKU, oims-5yr.3 BOM full lifecycle. 6 route /produksi/* baru, tsc + build clean, 3 commit. Beads masih in_progress — menunggu approve Abu.
 - 2026-09-02 (sesi 2): breakdown Tahap 2 — 13 issue anak (oims-5yr.1-13) + deps rantai PRD §4. Wave 2A (produk/varian/BOM) plan+prompt+GH #11-13, migration produk/varian_produk/bom/bom_detail applied via MCP, schema.ts ter-update, checklist review Tahap 2 masuk skill oims-review. 3 commit (1 per issue).

@@ -162,7 +162,7 @@ Wave berikutnya di-plan just-in-time setelah 2A jalan (plan tidak basi). Kontrol
 - [x] `oims-5yr.2` — **Varian Produk** matrix warna×ukuran + SKU auto ✅ **DONE** (GH #12)
 - [x] `oims-5yr.3` — **BOM** versi + satu aktif per produk ✅ **DONE** (GH #13)
 - [x] `oims-5yr.4-6` — PO Produksi, estimasi kebutuhan, permintaan bahan ✅ **DONE** (GH #14)
-- [ ] `oims-5yr.7-10` — penerimaan cutting, WO cutting, pemakaian aktual, hasil cutting (P2) — plan menyusul
+- [x] `oims-5yr.7-10` — penerimaan cutting, WO cutting, pemakaian aktual, hasil cutting ✅ **DONE** (GH #15)
 - [ ] `oims-5yr.11-13` — sisa+limbah, bundling+QR, WIP+dashboard (P2) — plan menyusul
 
 ### 🧹 Nice-to-have (kapan saja)
@@ -186,6 +186,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-02 (3)** — Eksekusi Tahap 2C (Claude): penerimaan cutting, WO cutting 7 status, pemakaian bahan aktual (rekonsiliasi PRD §14 — gap terbesar app lama), hasil cutting bertahap + rekap. oims-5yr.7-10 (GH #15). Sisa Tahap 2: bundling + WIP (5yr.11-13).
 - **2026-09-02 (2)** — Eksekusi Tahap 2A+2B langsung oleh Claude (deviasi Antigravity, permintaan Abu): master produk, varian+SKU, BOM berversi, PO produksi + approval + snapshot BOM, estimasi kebutuhan bahan, permintaan bahan + integrasi barang keluar. 6 issue closed (oims-5yr.1-6), GH #11-14. Bonus: mobile default view tabel (oims-cd5). Route baru: /produksi/{produk,bom,po,permintaan-bahan}.
 
 - **2026-09-02** — Planning breakdown Tahap 2: epic `oims-5yr` dipecah 13 issue anak (`oims-5yr.1-13`) + rantai dependensi. Wave 2A (master produk, varian, BOM) di-plan+prompt (GH #11-13) + migration DB applied via MCP (`produk`, `varian_produk`, `bom`, `bom_detail`) + schema.ts. Checklist review Tahap 2 ditambah ke skill oims-review. Siap eksekusi Antigravity.
