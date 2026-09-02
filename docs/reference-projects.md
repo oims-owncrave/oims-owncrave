@@ -123,3 +123,13 @@ Primitives: Button (+FAB), Input, Dropdown, Modal, ConfirmModal, Spinner, Skelet
 | `px-4.5` / `py-5.5` | `px-4` / `py-5` (round ke terdekat) |
 | `size-4` | `size-4` (v4 support ✅) |
 | semua `dark:*` | **hapus** — OIMS belum dark mode |
+
+---
+
+## oims-production — alur status produksi teruji (app lama)
+
+**Path:** `~/Documents/Programs/Offline/oims/oims-production`
+**Isi:** Implementasi berjalan PRD Tahap 2–4 versi sederhana (PO → Cutting → Sablon/Bordir → Bundle → Vendor Jahit → Gudang → QC → Rework/Reject → Stok Jadi), dibangun via ChatGPT/Codex, dipakai owner Jul–Aug 2026.
+**Referensi untuk:** alur bisnis, label status per stage, pola status derived, sub-flow dekorasi, mode QC vendor, pembayaran mingguan, penomoran dokumen, surat jalan.
+**BUKAN referensi arsitektur** (1 file page.tsx 485KB, state = 1 JSONB).
+**Ekstrak lengkap:** `docs/referensi-oims-production.md` — baca itu, JANGAN explore ulang repo lama.
