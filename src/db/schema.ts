@@ -286,6 +286,27 @@ export const produk = pgTable(
   (t) => [uniqueIndex("produk_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
 );
 
+export const varianProduk = pgTable(
+  "varian_produk",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    produkId: uuid("produk_id").notNull().references(() => produk.id),
+    warnaId: uuid("warna_id").notNull().references(() => warna.id),
+    ukuran: text("ukuran").notNull(),
+    jenisKelamin: text("jenis_kelamin"),
+    sku: text("sku").notNull(), // auto [KODE_PRODUK]-[KODE_WARNA]-[UKURAN], unik partial
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("varian_sku_active_unique").on(t.sku).where(isNull(t.deletedAt)),
+    uniqueIndex("varian_kombinasi_active_unique").on(t.produkId, t.warnaId, t.ukuran).where(isNull(t.deletedAt)),
+    index("varian_produk_idx").on(t.produkId),
+  ]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -303,3 +324,4 @@ export type MutasiStok = typeof mutasiStok.$inferSelect;
 export type AuditLog = typeof auditLog.$inferSelect;
 export type Warna = typeof warna.$inferSelect;
 export type Produk = typeof produk.$inferSelect;
+export type VarianProduk = typeof varianProduk.$inferSelect;
