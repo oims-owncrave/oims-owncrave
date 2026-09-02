@@ -56,6 +56,11 @@ usulkan tutup sesi sendiri tanpa diminta.
 8. **Tutup sesi:** update `docs/dashboard.md` (coret yang closed, isi Changelog),
    regenerate `python3 tools/dashboard/generate.py`, update roadmap kalau milestone,
    laporkan pending + handoff.
+9. **Trigger breakdown tahap berikutnya (WAJIB cek tiap tutup sesi):** kalau issue
+   eksekusi tahap berjalan tersisa ≤2 (atau semua closed), tambahkan baris sesi
+   `<epic-id> plan-breakdown-tahap<N+1>` ke gelombang antrean di dashboard.md —
+   prompt sesi planning tahap berikutnya jadi tersedia tepat waktu, tidak lebih awal
+   (basi) dan tidak kelupaan. Urutan epic: oims-eba (Tahap 3) → oims-ckp (Tahap 4).
 
 ## Aturan paralelisme (kalau pakai subagent)
 

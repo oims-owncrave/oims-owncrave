@@ -52,7 +52,9 @@ keterhubungan ke inventory bahan, pemakaian aktual/sisa/limbah.
 ### Gelombang 2 — Antrean tahap berikutnya (breakdown just-in-time)
 
 Belum ada sesi — masing-masing dapat sesi `/oims-plan` sendiri setelah tahap
-sebelumnya berjalan, supaya plan tidak basi.
+sebelumnya berjalan, supaya plan tidak basi. Trigger: saat issue eksekusi tahap
+berjalan tersisa ≤2, sesi penutup WAJIB menambah baris sesi breakdown berikutnya
+di sini (orchestrator-workflow.md langkah 9).
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
