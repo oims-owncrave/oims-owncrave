@@ -25,8 +25,11 @@ type BahanOption = {
   isActive: boolean;
 };
 
+type PbOption = { id: string; nomorDokumen: string; poNomor: string };
+
 interface Props {
   bahanOptions: BahanOption[];
+  pbOptions: PbOption[];
 }
 
 const rupiah = (n: number) =>
@@ -40,7 +43,7 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function BarangKeluarForm({ bahanOptions }: Props) {
+export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
   const router = useRouter();
   const { create } = useBarangKeluarMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -56,6 +59,7 @@ export function BarangKeluarForm({ bahanOptions }: Props) {
     resolver: zodResolver(barangKeluarSchema),
     defaultValues: {
       tujuan: "",
+      permintaanBahanId: "",
       tanggal: todayISO(),
       catatan: "",
       detail: [{ bahanId: "", kuantitas: 0 }],
@@ -83,6 +87,23 @@ export function BarangKeluarForm({ bahanOptions }: Props) {
       {/* Header card */}
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <ComboSelect
+            label="Permintaan Bahan (opsional)"
+            placeholder="Tanpa permintaan"
+            options={pbOptions.map((pb) => ({
+              label: `${pb.nomorDokumen} / ${pb.poNomor}`,
+              value: pb.id,
+            }))}
+            value={watch("permintaanBahanId") || null}
+            onChange={(v) => {
+              const id = (v as string) ?? "";
+              setValue("permintaanBahanId", id);
+              const pb = pbOptions.find((o) => o.id === id);
+              if (pb && !watch("tujuan")) {
+                setValue("tujuan", `${pb.nomorDokumen} / ${pb.poNomor}`);
+              }
+            }}
+          />
           <Input
             label="Tujuan"
             placeholder="Misal: Produksi PO-001"

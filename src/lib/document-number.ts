@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 
-type DocTable = "barang_masuk" | "barang_keluar" | "penyesuaian_stok" | "bom";
+type DocTable = "barang_masuk" | "barang_keluar" | "penyesuaian_stok" | "bom" | "permintaan_bahan";
 
 /**
  * Generate nomor dokumen: [TIPE]-YYYYMM-NNNN (counter reset per bulan).
@@ -13,7 +13,7 @@ type DocTable = "barang_masuk" | "barang_keluar" | "penyesuaian_stok" | "bom";
  * ponytail: naive count + retry; upgrade ke DB sequence kalau collision muncul di log.
  */
 export async function generateDocNumber(
-  prefix: "BM" | "BK" | "PS" | "BOM",
+  prefix: "BM" | "BK" | "PS" | "BOM" | "PB",
   tableName: DocTable,
 ): Promise<string> {
   const now = new Date();

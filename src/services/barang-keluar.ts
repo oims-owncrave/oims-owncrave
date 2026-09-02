@@ -76,6 +76,7 @@ export async function createBarangKeluar(
           .values({
             nomorDokumen,
             tujuan: input.tujuan || null,
+            permintaanBahanId: input.permintaanBahanId || null,
             tanggal: new Date(input.tanggal),
             catatan: input.catatan || null,
             createdBy: user.id,
