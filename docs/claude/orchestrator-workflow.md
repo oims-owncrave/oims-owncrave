@@ -51,6 +51,17 @@ usulkan tutup sesi sendiri tanpa diminta.
    **staged changes** (tidak commit).
 5. **Review = `/oims-review`:** baca issue → `git diff --staged` → fix (muncul sebagai
    unstaged = batas kontribusi terlihat) → verifikasi type-check/build.
+   **Build clean BUKAN verifikasi** — itu cek kompilasi, bukan kebenaran. Pilih alat:
+
+   | Situasi | Alat |
+   |---|---|
+   | Perhitungan uang/stok/status, guard, snapshot harga | **Query DB via MCP** (~200 token) — wajib, jangan cuma lihat layar |
+   | Fitur baru pertama kali dijalankan | **Claude browser** sekali (60-100k token) + verifikasi SQL |
+   | Alur kritis yang akan sering dipakai | Playwright, tulis **setelah** browser membuktikan alurnya benar |
+
+   Prasyarat data dari tahap sebelumnya: **seed lewat SQL**, jangan klik form (beri seri
+   nomor khusus mis. `9001` supaya gampang dihapus). Konsep lengkap + biaya:
+   `~/Documents/second-brain/1.Projects/system/applications/existing/verifikasi_hasil_kerja.md`
 6. **Commit PER ISSUE** (setelah approve/grant), bukan per batch.
 7. `bd close <id>`.
 8. **Tutup sesi:** update `docs/dashboard.md` (coret yang closed, isi Changelog),
