@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2, Plus, Layers } from "lucide-react";
+import { Pencil, Trash2, Plus, Layers, Upload } from "lucide-react";
 import { useProdukMutation } from "@/hooks/useProduk";
 import type { Produk } from "@/db/schema";
 import {
@@ -24,9 +24,10 @@ interface Props {
   data: Produk[];
   onEdit: (item: Produk) => void;
   onAdd: () => void;
+  onImport: () => void;
 }
 
-export function ProdukTable({ data, onEdit, onAdd }: Props) {
+export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { remove } = useProdukMutation();
   const router = useRouter();
@@ -113,6 +114,9 @@ export function ProdukTable({ data, onEdit, onAdd }: Props) {
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
+              <Upload size={16} className="mr-2" /> Import
+            </Button>
             <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Produk</Button>
           </div>
         </TableToolbar>

@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { VarianTable } from "./VarianTable";
 import { VarianGenerateModal } from "./VarianGenerateModal";
 import { VarianEditModal } from "./VarianEditModal";
 import { useProdukDetail } from "@/hooks/useVarianProduk";
 import type { ProdukDetail, VarianRow } from "@/services/varian-produk";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { ImportExcelModal } from "@/components/ui/import/ImportExcelModal";
+import { importVarianBatch } from "@/services/import";
 
 interface Props {
   produkId: string;
@@ -25,6 +28,8 @@ function InfoItem({ label, value }: { label: string; value: string | null }) {
 export function ProdukDetailClient({ produkId, initialData }: Props) {
   const [generateOpen, setGenerateOpen] = useState(false);
   const [editItem, setEditItem] = useState<VarianRow | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const qc = useQueryClient();
   const { data } = useProdukDetail(produkId);
 
   const detail = data ?? initialData;
@@ -60,6 +65,7 @@ export function ProdukDetailClient({ produkId, initialData }: Props) {
         produkId={produkId}
         onAdd={() => setGenerateOpen(true)}
         onEdit={(item) => setEditItem(item)}
+        onImport={() => setImportOpen(true)}
       />
 
       <VarianGenerateModal
@@ -73,6 +79,26 @@ export function ProdukDetailClient({ produkId, initialData }: Props) {
         onClose={() => setEditItem(null)}
         produkId={produkId}
         initialData={editItem}
+      />
+
+      <ImportExcelModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        config={{
+          title: "Import Varian Produk",
+          templateFilename: "template-varian",
+          columns: [
+            { key: "produk", header: "Produk (kode/nama)", example: "NJK", required: true },
+            { key: "warna", header: "Warna (kode/nama)", example: "Hitam", required: true },
+            { key: "ukuran", header: "Ukuran", example: "M", required: true },
+            { key: "jenisKelamin", header: "Jenis Kelamin", example: "Unisex", required: false },
+          ],
+          action: importVarianBatch,
+          onSuccess: () => {
+            qc.invalidateQueries({ queryKey: ["produk", produkId] });
+            setImportOpen(false);
+          },
+        }}
       />
     </div>
   );

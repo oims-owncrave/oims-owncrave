@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload } from "lucide-react";
 import { useVarianMutation } from "@/hooks/useVarianProduk";
 import type { VarianRow } from "@/services/varian-produk";
 import {
@@ -24,9 +24,10 @@ interface Props {
   produkId: string;
   onEdit: (item: VarianRow) => void;
   onAdd: () => void;
+  onImport: () => void;
 }
 
-export function VarianTable({ data, produkId, onEdit, onAdd }: Props) {
+export function VarianTable({ data, produkId, onEdit, onAdd, onImport }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { remove } = useVarianMutation(produkId);
 
@@ -96,6 +97,9 @@ export function VarianTable({ data, produkId, onEdit, onAdd }: Props) {
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
+              <Upload size={16} className="mr-2" /> Import
+            </Button>
             <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Varian</Button>
           </div>
         </TableToolbar>
