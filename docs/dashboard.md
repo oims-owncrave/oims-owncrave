@@ -151,8 +151,8 @@ Keduanya dijanjikan ke klien di proposal penawaran v4, jadi bukan opsional.
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-dr5` Tahap 2 sisa: QR label bundel + grafik dashboard T2 | P2 | Scope PRD §19 + §21 yang ditunda saat 2D; QR butuh `pnpm add qrcode` (sudah di-approve) |
-| 2 | `oims-oiq` Import Excel: warna, produk, varian, BOM | P2 | Bonus di luar PRD; infra import Tahap 1 sudah generic, tinggal tambah entitas |
+| 1 | ~~`oims-dr5` Tahap 2 sisa: QR label bundel + grafik dashboard T2~~ | P2 | Scope PRD §19 + §21 yang ditunda saat 2D; QR butuh `pnpm add qrcode` (sudah di-approve) |
+| 2 | ~~`oims-oiq` Import Excel: warna, produk, varian, BOM~~ | P2 | Bonus di luar PRD; infra import Tahap 1 sudah generic, tinggal tambah entitas |
 
 ### Gelombang 13 — Backlog Tahap 3 (P3, ditunda sadar — bukan lupa)
 
