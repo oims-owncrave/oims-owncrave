@@ -120,7 +120,7 @@ export async function getRingkasanJahit() {
   const [diterimaBulanIni] = await db
     .select({ n: sql<number>`COALESCE(SUM(hd.jumlah_baik), 0)::int` })
     .from(sql`penerimaan_hasil_jahit h JOIN penerimaan_hasil_jahit_detail hd ON hd.penerimaan_id = h.id`)
-    .where(sql`h.deleted_at IS NULL AND h.tanggal_jam >= ${bulanIni}`);
+    .where(sql`h.deleted_at IS NULL AND h.tanggal_jam >= ${bulanIni.toISOString()}::timestamptz`);
 
   const [bundelSiap] = await db
     .select({ n: sql<number>`COUNT(*)::int` })
