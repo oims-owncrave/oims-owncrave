@@ -14,6 +14,10 @@ import {
   hasilCuttingDetail,
   bundling,
   limbahCutting,
+  pemakaianBahan,
+  bomDetail,
+  bahan,
+  satuan,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 import { WIP_LABEL, type WipStatus } from "@/lib/wip-status";
@@ -197,3 +201,168 @@ export async function getRingkasanProduksi() {
 }
 
 export type RingkasanProduksi = Awaited<ReturnType<typeof getRingkasanProduksi>>;
+
+// ─── Grafik Dashboard Tahap 2 (PRD §21) ──────────────────────────────────────
+
+export type GrafikTargetHasil = {
+  poId: string;
+  nomorDokumen: string;
+  produkNama: string;
+  target: number;
+  baik: number;
+  rusak: number;
+  /** Efisiensi = hasil baik / target rencana cutting (%) */
+  efisiensi: number;
+};
+
+export type GrafikHasilHarian = { tanggal: string; baik: number; rusak: number };
+export type GrafikLimbah = { jenis: string; jumlah: number; nilai: number };
+export type GrafikPemakaian = {
+  bahanId: string;
+  bahanKode: string;
+  bahanNama: string;
+  satuanSingkatan: string;
+  standar: number;
+  aktual: number;
+  /** Varians = aktual − standar; positif berarti boros */
+  varians: number;
+};
+
+/**
+ * Data grafik dashboard Tahap 2 (PRD §21).
+ * Semua agregat dihitung dari record turunan — tidak ada kolom ringkasan yang disimpan.
+ */
+export async function getGrafikProduksi() {
+  await requireRole([...READ_ROLES]);
+
+  // 1. Target vs hasil + efisiensi per PO (PO aktif & selesai, 20 terbaru)
+  const targetHasil = await db
+    .select({
+      poId: poProduksi.id,
+      nomorDokumen: poProduksi.nomorDokumen,
+      produkNama: produk.nama,
+      target: sql<number>`(SELECT COALESCE(SUM(target_cutting), 0)::int
+        FROM work_order_cutting_detail d
+        JOIN work_order_cutting w ON w.id = d.wo_id
+        WHERE w.po_id = ${poProduksi.id} AND w.deleted_at IS NULL)`,
+      baik: sql<number>`(SELECT COALESCE(SUM(hd.jumlah_baik), 0)::int
+        FROM hasil_cutting_detail hd
+        JOIN hasil_cutting h ON h.id = hd.hasil_id
+        JOIN work_order_cutting w ON w.id = h.wo_id
+        WHERE w.po_id = ${poProduksi.id} AND h.deleted_at IS NULL)`,
+      rusak: sql<number>`(SELECT COALESCE(SUM(hd.jumlah_rusak), 0)::int
+        FROM hasil_cutting_detail hd
+        JOIN hasil_cutting h ON h.id = hd.hasil_id
+        JOIN work_order_cutting w ON w.id = h.wo_id
+        WHERE w.po_id = ${poProduksi.id} AND h.deleted_at IS NULL)`,
+    })
+    .from(poProduksi)
+    .innerJoin(produk, eq(poProduksi.produkId, produk.id))
+    .where(isNull(poProduksi.deletedAt))
+    .orderBy(sql`${poProduksi.createdAt} DESC`)
+    .limit(20);
+
+  const rowsTargetHasil: GrafikTargetHasil[] = targetHasil
+    .filter((r) => r.target > 0)
+    .map((r) => ({
+      ...r,
+      efisiensi: r.target > 0 ? Math.round((r.baik / r.target) * 1000) / 10 : 0,
+    }));
+
+  // 2. Hasil per hari (30 hari terakhir)
+  const sejak = new Date();
+  sejak.setDate(sejak.getDate() - 30);
+  sejak.setHours(0, 0, 0, 0);
+
+  const harianRows = await db
+    .select({
+      tanggal: sql<string>`to_char(${hasilCutting.tanggal}, 'YYYY-MM-DD')`,
+      baik: sql<number>`COALESCE(SUM(${hasilCuttingDetail.jumlahBaik}), 0)::int`,
+      rusak: sql<number>`COALESCE(SUM(${hasilCuttingDetail.jumlahRusak}), 0)::int`,
+    })
+    .from(hasilCuttingDetail)
+    .innerJoin(hasilCutting, eq(hasilCuttingDetail.hasilId, hasilCutting.id))
+    .where(and(gte(hasilCutting.tanggal, sejak), isNull(hasilCutting.deletedAt)))
+    .groupBy(sql`to_char(${hasilCutting.tanggal}, 'YYYY-MM-DD')`)
+    .orderBy(sql`to_char(${hasilCutting.tanggal}, 'YYYY-MM-DD')`);
+
+  // 3. Limbah per jenis (bulan berjalan)
+  const awalBulan = new Date();
+  awalBulan.setDate(1);
+  awalBulan.setHours(0, 0, 0, 0);
+
+  const limbahRows = await db
+    .select({
+      jenis: limbahCutting.jenis,
+      jumlah: sql<string>`COALESCE(SUM(${limbahCutting.jumlah}), 0)`,
+      nilai: sql<string>`COALESCE(SUM(${limbahCutting.jumlah} * ${limbahCutting.hargaRataRata}), 0)`,
+    })
+    .from(limbahCutting)
+    .where(and(gte(limbahCutting.createdAt, awalBulan), isNull(limbahCutting.deletedAt)))
+    .groupBy(limbahCutting.jenis);
+
+  // 4. Pemakaian standar vs aktual per bahan (agregat semua WO)
+  const pemakaianRows = await db
+    .select({
+      bahanId: pemakaianBahan.bahanId,
+      bahanKode: bahan.kode,
+      bahanNama: bahan.nama,
+      satuanSingkatan: satuan.singkatan,
+      aktual: sql<string>`COALESCE(SUM(${pemakaianBahan.jumlahDigunakan}), 0)`,
+    })
+    .from(pemakaianBahan)
+    .innerJoin(bahan, eq(pemakaianBahan.bahanId, bahan.id))
+    .innerJoin(satuan, eq(bahan.satuanId, satuan.id))
+    .where(isNull(pemakaianBahan.deletedAt))
+    .groupBy(pemakaianBahan.bahanId, bahan.kode, bahan.nama, satuan.singkatan);
+
+  // Standar = Σ (target cutting × kuantitas BOM) per bahan, dari BOM yang terkunci di PO
+  const standarRows = await db
+    .select({
+      bahanId: bomDetail.bahanId,
+      standar: sql<string>`COALESCE(SUM(
+        ${bomDetail.kuantitas} * (
+          SELECT COALESCE(SUM(d.target_cutting), 0)
+          FROM work_order_cutting_detail d
+          JOIN work_order_cutting w ON w.id = d.wo_id
+          WHERE w.po_id = ${poProduksi.id} AND w.deleted_at IS NULL
+        )
+      ), 0)`,
+    })
+    .from(poProduksi)
+    .innerJoin(bomDetail, eq(bomDetail.bomId, poProduksi.bomId))
+    .where(isNull(poProduksi.deletedAt))
+    .groupBy(bomDetail.bahanId);
+  const standarMap = new Map(standarRows.map((r) => [r.bahanId, Number(r.standar)]));
+
+  const rowsPemakaian: GrafikPemakaian[] = pemakaianRows.map((r) => {
+    const aktual = Number(r.aktual);
+    const standar = standarMap.get(r.bahanId) ?? 0;
+    return {
+      bahanId: r.bahanId,
+      bahanKode: r.bahanKode,
+      bahanNama: r.bahanNama,
+      satuanSingkatan: r.satuanSingkatan,
+      standar,
+      aktual,
+      varians: aktual - standar,
+    };
+  });
+
+  return {
+    targetHasil: rowsTargetHasil,
+    hasilHarian: harianRows.map((r) => ({
+      tanggal: r.tanggal,
+      baik: r.baik,
+      rusak: r.rusak,
+    })) as GrafikHasilHarian[],
+    limbahPerJenis: limbahRows.map((r) => ({
+      jenis: r.jenis,
+      jumlah: Number(r.jumlah),
+      nilai: Number(r.nilai),
+    })) as GrafikLimbah[],
+    pemakaian: rowsPemakaian,
+  };
+}
+
+export type GrafikProduksi = Awaited<ReturnType<typeof getGrafikProduksi>>;

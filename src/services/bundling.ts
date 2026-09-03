@@ -15,6 +15,7 @@ import {
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 import { generateDocNumber } from "@/lib/document-number";
+import QRCode from "qrcode";
 import type { BundelInput } from "@/lib/schemas/bundling";
 
 const READ_ROLES = [
@@ -281,7 +282,18 @@ export async function getBundelLabel(id: string) {
     .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
     .where(and(eq(bundling.id, id), isNull(bundling.deletedAt)))
     .limit(1);
-  return row ?? null;
+  if (!row) return null;
+
+  // QR di-generate server-side supaya hasil print konsisten (tanpa flicker render client).
+  // Isi QR = nomor bundel — scanner gudang cukup baca nomor, bukan URL panjang.
+  const qrDataUrl = await QRCode.toDataURL(row.nomorDokumen, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 220,
+    color: { dark: "#000000", light: "#ffffff" },
+  });
+
+  return { ...row, qrDataUrl };
 }
 
 export type BundelLabelData = NonNullable<Awaited<ReturnType<typeof getBundelLabel>>>;
