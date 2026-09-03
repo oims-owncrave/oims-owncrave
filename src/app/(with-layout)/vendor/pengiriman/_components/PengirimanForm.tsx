@@ -20,6 +20,9 @@ interface Props {
   initialPenugasanId?: string;
 }
 
+// Referensi stabil untuk dependency effect (alasan: lihat PenerimaanForm).
+const KOSONG: never[] = [];
+
 const nowLocalISO = () => {
   const d = new Date();
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -58,7 +61,7 @@ export function PengirimanForm({ penugasanOptions, lokasiList, initialPenugasanI
   const { append, remove, replace } = useFieldArray({ control, name: "details" });
   const details = watch("details");
   const penugasanId = watch("penugasanId");
-  const { data: kandidat = [] } = useDetailBelumDikirim(penugasanId);
+  const { data: kandidat = KOSONG } = useDetailBelumDikirim(penugasanId);
 
   // default: semua bundel yang belum dikirim ikut (kasus umum kirim sekaligus)
   useEffect(() => {

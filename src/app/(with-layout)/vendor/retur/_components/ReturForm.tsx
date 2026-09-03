@@ -20,6 +20,9 @@ interface Props {
   defaultValues?: ReturInput;
 }
 
+// Referensi stabil untuk dependency effect (alasan: lihat PenerimaanForm).
+const KOSONG: never[] = [];
+
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
 export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId, defaultValues }: Props) {
@@ -53,7 +56,7 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
   const { fields, replace } = useFieldArray({ control, name: "details" });
   const details = watch("details");
   const penerimaanAsalId = watch("penerimaanAsalId");
-  const { data: kandidat = [] } = useRusakBisaDiretur(penerimaanAsalId);
+  const { data: kandidat = KOSONG } = useRusakBisaDiretur(penerimaanAsalId);
 
   // baris = rusak yang belum diretur; saat edit, tambah kembali porsi retur ini
   useEffect(() => {

@@ -29,6 +29,14 @@ const nowLocalISO = () => {
 
 type BarisCap = { penugasanDetailId: string; bundelNomor: string; sku: string; warnaNama: string; ukuran: string; cap: number; info: string };
 
+/**
+ * Referensi stabil untuk default query kosong. `= []` inline membuat array BARU
+ * tiap render, sehingga useMemo `baris` selalu dianggap berubah → useEffect
+ * memanggil replace() → render lagi: loop tak berhenti dan input tak bisa diisi.
+ */
+const KOSONG: never[] = [];
+
+
 export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, initialPenugasanId = "", initialReturId = "" }: Props) {
   const router = useRouter();
   const { create } = usePenerimaanHasilMutation();
@@ -66,8 +74,8 @@ export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, ini
   const returId = watch("returId");
   const modeRetur = !!returId;
 
-  const { data: rekap = [] } = useRekapPenugasan(modeRetur ? "" : penugasanId);
-  const { data: sisaRetur = [] } = useSisaRetur(returId ?? "");
+  const { data: rekap = KOSONG } = useRekapPenugasan(modeRetur ? "" : penugasanId);
+  const { data: sisaRetur = KOSONG } = useSisaRetur(returId ?? "");
 
   // baris + cap per bundel — retur: jumlah retur − sudah kembali; setoran: pcs − (baik+rusak) kembali
   const baris: BarisCap[] = useMemo(
