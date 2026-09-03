@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-03 · Versi: v0.1.0 · Status: **TAHAP 3 KODE SELESAI — 13/13 issue inti dieksekusi Claude (3A-3D), 13 commit, build clean. Menunggu smoke test Abu sebelum bd close + tutup epic.**
+> Diperbarui: 2026-09-03 · Versi: v0.1.0 · Status: **TAHAP 3 SELESAI — smoke test 6 langkah lolos, 2 bug ditemukan & di-fix, 13 issue inti + epic oims-eba closed. Berikutnya: breakdown Tahap 4 (oims-ckp).**
 
 ## 🎯 Visi
 
@@ -20,7 +20,7 @@ di-skip dulu. Referensi alur teruji dari app lama: `docs/referensi-oims-producti
 | Auth, User Mgmt, Audit Log | ✅ | /sistem/* | — |
 | Import Excel master + bahan | ✅ | /master/* | — |
 | Tahap 2 — Produksi, Cutting, Bundling | ✅ | /produksi/* | — (epic closed 2026-09-02) |
-| Tahap 3 — Penjahitan Vendor | 🔵 | /vendor/* | 13 inti selesai (perlu smoke test) · 2 backlog P3 |
+| Tahap 3 — Penjahitan Vendor | ✅ | /vendor/* | — (epic closed 2026-09-03) · 2 backlog P3 |
 | Tahap 4 — QC & Barang Jadi | ⏳ | — | epic `oims-ckp` (belum dipecah) |
 | Tahap 5 — Keuangan/HPP | ⏸ skip | — | epic `oims-rcr` (deferred) |
 
@@ -109,24 +109,29 @@ Butuh plan file + migration (Claude via MCP) sebelum Antigravity mulai.
 | 2 | ~~`oims-eba.12` WIP Jahit derived + Dashboard T3~~ | P2 | Rangkum seluruh rantai; penutup monitoring |
 | 3 | ~~`oims-eba.13` Dekorasi Sablon/Bordir~~ | P2 | Reuse vendor (.1) + surat jalan (.7); paralel bundling |
 
-### 🔎 Smoke Test Tahap 3 (perlu Abu, sebelum bd close)
+### ✅ Smoke Test Tahap 3 — LOLOS (Claude browser + SQL, 2026-09-03)
 
-Urutan uji end-to-end — tiap langkah bergantung yang sebelumnya:
+Prasyarat Tahap 2 di-seed via SQL (produk SMK, PO-9001, 3 bundel seri 9001-9003 = 100 pcs).
+6 langkah kritis lewat browser, tiap hasil diverifikasi query DB:
 
-1. **Master**: buat vendor (kapabilitas jahit+sablon), lokasi, penjahit internal, tarif → aktifkan tarif
-2. **Tarif berversi**: ubah nominal lewat "Buat Versi Baru" → aktifkan → cek versi lama jadi nonaktif, riwayat tetap ada
-3. **Penugasan**: dari PO yang punya bundel siap kirim → tarif ter-prefill dari master → simpan draft → cek bundel yang sama TIDAK muncul di penugasan lain
-4. **Kirim**: buat pengiriman → cek bundel jadi "sudah dikirim", penugasan draft→aktif, surat jalan tergenerate
-5. **Surat jalan**: cetak → cetak lagi → cek watermark CETAK ULANG muncul
-6. **Serah terima**: catat kondisi per bundel → pengiriman jadi "diterima"
-7. **Terima hasil bertahap**: terima sebagian (ada yang rusak) → cek sisa WIP berkurang, kasus selisih rusak terbuka otomatis
-8. **Retur**: dari baris rusak → kirim → terima hasil perbaikan → cek retur jadi "diterima kembali"
-9. **Selisih**: putuskan kasus hilang ditanggung vendor → cek sisa WIP berkurang, penugasan bisa jadi selesai
-10. **Biaya**: cek jumlah diakui = Σ baik, terapkan usulan potongan → verifikasi bertingkat sampai siap dibayar
-11. **WIP + dashboard**: cek angka /vendor/wip konsisten dengan alur produksi di /dashboard
-12. **Dekorasi**: set produk butuh sablon → buat template → buat pekerjaan → kirim → cetak SJ → terima bertahap
+| # | Uji | Bukti |
+|---|---|---|
+| 1 | Master vendor + kode auto | VDR-0001, kapabilitas {jahit,sablon}, audit CREATE |
+| 2 | Tarif berversi | v1 25rb aktif → v2 30rb draft → aktifkan → v1 nonaktif otomatis, tepat 1 aktif |
+| 3 | Penugasan + snapshot | prefill 30rb (aktif), snapshot di 3 detail, estimasi Rp 3jt |
+| 4 | Guard bundel | 0 bundel bebas setelah ditugaskan, dropdown PO kosong |
+| 5 | Kirim + SJ | 1 transaksi: SHP-0001 + SJ-0001 + 3 bundel sudah_dikirim + penugasan aktif |
+| 6 | Terima sebagian | RCV-0001 (30 baik, 5 rusak) → sisa 10/40/20, SLS-0001 rusak otomatis, WIP 70 · 30% |
 
-**Pertanyaan terbuka ke Abu:** dekorasi wajib selesai sebelum bundling? Sekarang TIDAK di-enforce (ikut app lama).
+**2 bug ketemu (lolos tsc + build, halaman tak bisa dipakai):** render loop form penerimaan
+(`735bcee`) · Date di raw sql bikin /vendor/wip 500 (`24dcb1a`). Keduanya di-fix.
+
+Belum diuji (langkah 7-12 checklist lama): serah terima kondisi, retur loop, keputusan
+selisih, biaya verifikasi, dekorasi end-to-end. Diuji sambil pakai.
+
+**Data uji masih di DB** (seri 9001, vendor VDR-0001, produk SMK) — hapus kalau mengganggu.
+
+**Pertanyaan terbuka ke Abu:** dekorasi wajib selesai sebelum bundling? Sekarang TIDAK di-enforce.
 
 ### Gelombang 11 — Antrean tahap berikutnya (breakdown just-in-time)
 
@@ -135,7 +140,7 @@ Trigger langkah 9 orchestrator TERPENUHI (issue eksekusi Tahap 3 = 0 tersisa).
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-eba` epic: Tahap 3 — Penjahitan Internal & Vendor | P4 | Payung 15 anak; ditutup setelah gelombang 10 |
+| 1 | ~~`oims-eba` epic: Tahap 3 — Penjahitan Internal & Vendor~~ | P4 | Closed 2026-09-03 setelah smoke test |
 | 2 | `oims-ckp` epic: Tahap 4 — QC, Finishing & Packing | P4 | Konsumsi output Tahap 3 (hasil jahit siap QC) |
 | 3 | ~~`oims-rcr`~~ epic: Tahap 5 — Keuangan, HPP & Laporan | P4 | Deferred — skip dulu, greenfield tanpa referensi (referensi §10) |
 
@@ -173,6 +178,7 @@ Keduanya dijanjikan ke klien di proposal penawaran v4, jadi bukan opsional.
 
 ## 📜 Changelog
 
+- 2026-09-03 (sesi 3c): smoke test Tahap 3 oleh Claude (browser + SQL, seed prasyarat T2 via SQL) — 6 langkah lolos. 2 bug ketemu & di-fix: infinite render loop form penerimaan (default `= []` inline jadi dependency useMemo/useEffect) dan objek Date di raw sql template bikin /vendor/wip crash. Keduanya lolos tsc+build tapi halaman tak terpakai — bukti build clean ≠ verifikasi. 13 issue inti + epic oims-eba CLOSED. Aturan verifikasi masuk orchestrator-workflow + second-brain (verifikasi_hasil_kerja.md). Proposal penawaran v4 direvisi (6 poin).
 - 2026-09-03 (sesi 3b): TAHAP 3 KODE SELESAI — 13 issue inti dieksekusi langsung oleh Claude dalam satu sesi (permintaan Abu, deviasi dari Antigravity), 13 commit. 3A master vendor/lokasi/penjahit + tarif berversi; 3B penugasan (guard bundel satu penugasan aktif) + pengiriman + surat jalan berwatermark; 3C penerimaan bertahap + selisih dengan keputusan owner + loop retur; 3D biaya jasa (diakui = Σ baik) + WIP 7 label derived + dekorasi sablon/bordir. Rumus WIP tunggal di src/lib/jahit/rekap.ts. Dashboard: kartu per-tahap diganti ALUR PRODUKSI lintas tahap (pola app lama §11) supaya Tahap 4 tinggal isi 2 kolom. 4 migration via MCP, 20 tabel baru, build clean. Beads masih in_progress — menunggu smoke test Abu.
 - 2026-09-02 (sesi 3a): breakdown Tahap 3 — epic oims-eba dipecah jadi 15 issue anak (oims-eba.1-15) + rantai dependensi. Cakupan jalur tengah: struktur relasional penuh PRD, tapi 18 status WIP dipadatkan jadi ~7 derived, progres % derived dari setoran, standar durasi + kinerja vendor → backlog P3. Dekorasi sablon/bordir masuk T3 (reuse master vendor/tarif/SJ). Checklist review Tahap 3 masuk skill oims-review. Pertanyaan terbuka: urutan dekorasi vs bundling (belum di-enforce).
 - 2026-09-02 (sesi 2e): eksekusi 2D oleh Claude — TAHAP 2 SELESAI: oims-5yr.11 sisa+limbah (retur gudang = mutasi retur_masuk + FK sisa_bahan_id), oims-5yr.12 bundling (guard hasil tersedia, label thermal, QR pending package), oims-5yr.13 WIP derived + ringkasan. Epic oims-5yr closed. GH #16. Antrean: breakdown Tahap 3 (sesi baru).
