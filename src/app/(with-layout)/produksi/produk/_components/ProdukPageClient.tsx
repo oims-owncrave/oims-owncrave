@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ProdukTable } from "./ProdukTable";
 import { ProdukFormModal } from "./ProdukFormModal";
 import type { Produk } from "@/db/schema";
 import { useProdukList } from "@/hooks/useProduk";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { ImportExcelModal } from "@/components/ui/import/ImportExcelModal";
+import { importProdukBatch } from "@/services/import";
 
 interface Props {
   initialData: Produk[];
@@ -14,6 +17,8 @@ interface Props {
 export function ProdukPageClient({ initialData }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<Produk | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const qc = useQueryClient();
   const { data } = useProdukList();
 
   const items = data ?? initialData;
@@ -29,12 +34,34 @@ export function ProdukPageClient({ initialData }: Props) {
         data={items}
         onAdd={() => { setEditItem(null); setModalOpen(true); }}
         onEdit={(item) => { setEditItem(item); setModalOpen(true); }}
+        onImport={() => setImportOpen(true)}
       />
 
       <ProdukFormModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         initialData={editItem}
+      />
+
+      <ImportExcelModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        config={{
+          title: "Import Produk",
+          templateFilename: "template-produk",
+          columns: [
+            { key: "kode", header: "Kode", example: "NJK", required: true },
+            { key: "nama", header: "Nama Produk", example: "Nordic Jacket", required: true },
+            { key: "kategori", header: "Kategori", example: "Jaket", required: false },
+            { key: "brand", header: "Brand", example: "Owncrave", required: false },
+            { key: "jenis", header: "Jenis", example: "Outerwear", required: false },
+          ],
+          action: importProdukBatch,
+          onSuccess: () => {
+            qc.invalidateQueries({ queryKey: ["produk"] });
+            setImportOpen(false);
+          },
+        }}
       />
     </div>
   );

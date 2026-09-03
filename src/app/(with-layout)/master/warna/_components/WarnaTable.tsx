@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload } from "lucide-react";
 import { useWarnaMutation } from "@/hooks/useWarna";
 import type { Warna } from "@/db/schema";
 import {
@@ -23,9 +23,10 @@ interface Props {
   data: Warna[];
   onEdit: (item: Warna) => void;
   onAdd: () => void;
+  onImport: () => void;
 }
 
-export function WarnaTable({ data, onEdit, onAdd }: Props) {
+export function WarnaTable({ data, onEdit, onAdd, onImport }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const { remove } = useWarnaMutation();
 
@@ -88,7 +89,10 @@ export function WarnaTable({ data, onEdit, onAdd }: Props) {
             <TableSearch table={table} placeholder="Cari warna..." className="flex-1 sm:w-64" />
             <ColumnToggle table={table} className="shrink-0" />
           </div>
-          <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Warna</Button>
+          <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
+              <Upload size={16} className="mr-2" /> Import
+            </Button>
+            <Button onClick={onAdd} className="hidden sm:inline-flex">+ Tambah Warna</Button>
         </TableToolbar>
         <DataTable
           table={table}

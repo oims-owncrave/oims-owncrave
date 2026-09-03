@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Eye, Pencil, Trash2, Plus, Check, Ban, Copy } from "lucide-react";
+import { Eye, Pencil, Trash2, Plus, Check, Ban, Copy, Upload } from "lucide-react";
 import { useBomMutation } from "@/hooks/useBom";
 import type { BomListRow } from "@/services/bom";
 import {
@@ -35,7 +35,7 @@ const STATUS_BADGE: Record<BomListRow["status"], { label: string; className: str
   },
 };
 
-export function BomTable({ data }: { data: BomListRow[] }) {
+export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () => void }) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -155,6 +155,9 @@ export function BomTable({ data }: { data: BomListRow[] }) {
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
+              <Upload size={16} className="mr-2" /> Import
+            </Button>
             <Button onClick={() => go("/produksi/bom/baru")} className="hidden sm:inline-flex">
               + Buat BOM
             </Button>

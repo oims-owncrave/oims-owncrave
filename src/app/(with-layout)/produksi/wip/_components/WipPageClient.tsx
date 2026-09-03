@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useWipCutting, useRingkasanProduksi } from "@/hooks/useWip";
-import type { WipRow, RingkasanProduksi } from "@/services/wip";
+import type { WipRow, RingkasanProduksi, GrafikProduksi as GrafikData } from "@/services/wip";
+import { GrafikProduksi } from "./GrafikProduksi";
 import type { WipStatus } from "@/lib/wip-status";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
@@ -19,6 +20,7 @@ import {
 interface Props {
   initialRows: WipRow[];
   initialRingkasan: RingkasanProduksi;
+  grafik: GrafikData;
 }
 
 const rupiah = (n: number) =>
@@ -44,7 +46,7 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
   );
 }
 
-export function WipPageClient({ initialRows, initialRingkasan }: Props) {
+export function WipPageClient({ initialRows, initialRingkasan, grafik }: Props) {
   const { data: rows } = useWipCutting();
   const { data: ringkasan } = useRingkasanProduksi();
 
@@ -142,6 +144,8 @@ export function WipPageClient({ initialRows, initialRingkasan }: Props) {
         <DataTable table={table} showRowNumber />
         <TablePagination table={table} pageSizeOptions={[25, 50]} />
       </div>
+
+      <GrafikProduksi data={grafik} />
     </div>
   );
 }

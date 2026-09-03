@@ -68,9 +68,15 @@ export function LabelClient({ data }: Props) {
           <p className="mt-3 border-t border-dashed border-black pt-2 text-xs">{data.keterangan}</p>
         )}
 
-        {/* Area QR — menyusul setelah package qrcode disetujui */}
-        <div className="mt-3 flex h-24 items-center justify-center border-2 border-dashed border-black text-[10px] uppercase tracking-widest text-gray-400">
-          QR menyusul
+        {/* QR berisi nomor bundel — scanner gudang cukup baca nomor, bukan URL */}
+        <div className="mt-3 flex flex-col items-center gap-1 border-t-2 border-black pt-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={data.qrDataUrl}
+            alt={`QR ${data.nomorDokumen}`}
+            className="h-28 w-28"
+          />
+          <span className="text-[10px] font-medium tracking-widest">{data.nomorDokumen}</span>
         </div>
       </div>
     </div>
