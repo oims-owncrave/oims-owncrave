@@ -60,3 +60,7 @@ next-env.d.ts
 
 # Beads / Dolt files (added by bd init)
 .beads/proxieddb/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
