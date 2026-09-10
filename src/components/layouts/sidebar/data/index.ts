@@ -125,6 +125,8 @@ export const NAV_DATA: NavSection[] = [
         title: "Quality Control",
         icon: QcIcon,
         items: [
+          { title: "Penerimaan QC", url: "/qc/penerimaan" },
+          { title: "Antrean QC", url: "/qc/antrean" },
           { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", disabled: true },
           { title: "Rework", url: "/qc/rework", disabled: true },
           { title: "Karantina Reject", url: "/qc/reject", disabled: true },
