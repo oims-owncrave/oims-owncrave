@@ -98,7 +98,7 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
 | Tahap 2 — Produksi, Cutting, Bundling | ✅ | `/produksi/*` | epic oims-5yr closed 2026-09-02 (13/13) |
 | Tahap 3 — Penjahitan Vendor & WIP | ✅ | `/vendor/*` | epic oims-eba closed 2026-09-03, smoke test 6 langkah lolos |
-| Tahap 4 — QC, Finishing & Packing | 🔄 | `/master/*`, `/qc/{penerimaan,antrean}` | 4A closed (3/15) 2026-09-10; 4B-4D belum di-plan |
+| Tahap 4 — QC, Finishing & Packing | ✅ | `/qc/*` (10 route) | epic oims-ckp closed 2026-09-10 (15/15) · belum smoke test |
 
 **Ringkasan:** Tahap 1 FEATURE COMPLETE. GELOMBANG A + B SELESAI. lkw.1+2+3+4 done. Mobile UI polish batch (xlp/6c3/76v/8i9/ghs) done. Fitur aktif, siap serah terima Tahap 1.
 
@@ -174,7 +174,7 @@ Epic `oims-eba` dipecah 15 issue (13 inti + 2 backlog P3) 2026-09-02, dieksekusi
 Smoke test 6 langkah lolos (browser + SQL); 2 bug ketemu & di-fix (render loop form penerimaan,
 Date di raw sql). Epic closed. Backlog P3 tersisa: `oims-eba.14` standar durasi, `oims-eba.15` kinerja vendor.
 
-### 🔜 GELOMBANG G — Tahap 4: QC, Finishing & Packing (`oims-ckp.1-15`)
+### ✅ GELOMBANG G — Tahap 4: QC, Finishing & Packing (`oims-ckp.1-15`) — SELESAI
 
 Epic `oims-ckp` dipecah **17 issue** (15 inti + 2 backlog) 2026-09-10 + rantai dependensi penuh.
 Keputusan cakupan (dijawab Abu): QC **per varian agregat** bukan per pcs · finishing/packing **modul penuh** ·
@@ -183,9 +183,9 @@ Titik sambung T3→T4 = `penerimaan_hasil_jahit_detail.jumlah_baik` (baik visual
 tabel Tahap 3 tidak diubah. Kontrol eksekusi bergelombang: `docs/dashboard.md`.
 
 - [x] **4A fondasi** ✅ **DONE** (Claude 2026-09-10, 3 commit, terverifikasi SQL): `oims-ckp.2` master jenis cacat+kemasan · `oims-ckp.3` master gudang barang jadi · `oims-ckp.4` penerimaan QC + antrean derived
-- [ ] **4B QC inti** (belum di-plan): `.1` standar QC berversi · `.5` WO QC + sampling · `.6` hasil QC + grade · `.7` temuan cacat
-- [ ] **4C rework** (belum di-plan): `.8` perbaikan internal + retur vendor · `.9` Re-QC · `.10` karantina reject
-- [ ] **4D barang jadi** (belum di-plan): `.11` finishing · `.12` packing · `.13` barang jadi + stok + mutasi · `.14` transfer + penyesuaian · `.15` dashboard + yield/COPQ
+- [x] **4B QC inti** ✅ **DONE**: `.1` standar QC berversi · `.5` WO QC + sampling · `.6` hasil QC + grade · `.7` temuan cacat
+- [x] **4C rework** ✅ **DONE**: `.8` perbaikan internal + retur vendor · `.9` Re-QC · `.10` karantina reject
+- [x] **4D barang jadi** ✅ **DONE**: `.11` finishing · `.12` packing · `.13` barang jadi + stok + mutasi · `.14` transfer + penyesuaian · `.15` dashboard + yield/COPQ
 - [ ] Backlog P3: `.16` QC per pcs + barcode · `.17` kinerja vendor dari data QC
 
 ### 🧹 Nice-to-have (kapan saja)
@@ -209,6 +209,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-10 (3)** — **TAHAP 4 KODE SELESAI**: 4B (standar QC berversi + WO QC/sampling + hasil QC per varian + temuan cacat), 4C (rework dua jalur guard bersama + Re-QC + karantina reject ber-approval), 4D (finishing + packing checklist ter-guard + barang jadi stok immutable + transfer 2-fase + penyesuaian + rumus yield/COPQ). 15 issue inti closed, epic `oims-ckp` closed. 3 migration via MCP, 20 tabel baru, 10 route `/qc/*`, tsc + build clean, verifikasi SQL tiap gelombang. Aturan kritis yang dijaga: rumus keseimbangan grade tiga lapis (Zod + Server Action + DB CHECK), guard kapasitas rework satu fungsi untuk dua jalur, approval gate sebelum tindakan reject/penyesuaian berdampak, stok barang jadi immutable (satu-satunya penulis kuantitas di `lib/qc/stok-fg.ts`). COPQ mengembalikan null untuk komponen tanpa sumber (Tahap 5 skip), bukan 0. **Belum smoke test end-to-end** — perlu sesi tersendiri.
 - **2026-09-10 (2)** — Eksekusi Tahap 4A oleh Claude (lanjut di sesi planning, permintaan Abu): `oims-ckp.2` master jenis cacat + kemasan, `oims-ckp.3` master gudang barang jadi (isDefault tepat satu dalam transaksi), `oims-ckp.4` penerimaan QC + antrean DERIVED (guard sisa dihitung ulang di transaksi; vendor ber-qcMode `vendor` dilewati). 3 issue closed, 3 commit, 5 route baru, tsc + build clean. Verifikasi lewat SQL: kirim 25/30 → sisa 5 · qc_mode=vendor → 0 baris antrean · soft delete → sisa balik 30 · hapus+buat ulang kode sama berhasil · duplikat aktif ditolak · 2 gudang default → tetap 1. Berikutnya: 4B (standar QC berversi, WO QC, hasil QC + grade).
 - **2026-09-10** — Planning breakdown Tahap 4: epic `oims-ckp` dipecah **17 issue anak** (15 inti + 2 backlog P3) + rantai dependensi. 3 keputusan cakupan dijawab Abu: QC **per varian agregat** (bukan per pcs PRD §11 — hulu T2-T3 semua agregat, app lama sukses tanpa; per-pcs jadi backlog `.16`), finishing/packing **modul penuh** (gap terbesar PRD, dijanjikan klien), stok barang jadi **tabel + mutasi sendiri** pola immutable stok bahan (kunci komposit SKU+grade+gudang+batch). Gelombang 4A (`.2` master jenis cacat+kemasan, `.3` master gudang, `.4` penerimaan QC + antrean derived) di-plan+prompt; migration `tahap4a_master_qc_gudang_penerimaan_qc` applied via MCP (6 enum + 5 tabel, unique index semua PARTIAL — diverifikasi query), schema.ts + document-number.ts ter-update, tsc clean. Checklist review Tahap 4 (18 poin) masuk skill oims-review. Koreksi: proyek TIDAK punya DB trigger cache stok — di-maintain dalam Server Action transaction + SELECT FOR UPDATE; issue `.13` dikoreksi. Siap eksekusi Antigravity (urutan `.2` → `.3` → `.4`).
 - **2026-09-03** — Tahap 3 SELESAI: 13 issue inti dieksekusi Claude (3A master vendor/lokasi/penjahit + tarif berversi, 3B penugasan + pengiriman + surat jalan, 3C penerimaan bertahap + selisih + retur, 3D biaya jasa + WIP 7 label derived + dekorasi). Smoke test 6 langkah lolos (browser + SQL); 2 bug ketemu & di-fix (render loop form penerimaan `735bcee`, Date di raw sql bikin /vendor/wip 500 `24dcb1a`) — bukti build clean ≠ verifikasi. Epic oims-eba closed. Dashboard: kartu per-tahap diganti ALUR PRODUKSI lintas tahap.

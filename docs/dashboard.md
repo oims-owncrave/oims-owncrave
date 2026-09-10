@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-10 · Versi: v0.1.0 · Status: **TAHAP 4A SELESAI — epic dipecah 17 issue; gelombang 4A (3 issue) dieksekusi Claude & closed, terverifikasi SQL. Berikutnya: 4B (standar QC, WO, hasil QC).**
+> Diperbarui: 2026-09-10 · Versi: v0.1.0 · Status: **TAHAP 4 SELESAI — 15 issue inti closed (4A-4D), epic oims-ckp closed. Belum di-smoke-test end-to-end. Sisa: 4 backlog P3 lintas tahap.**
 
 ## 🎯 Visi
 
@@ -21,7 +21,7 @@ di-skip dulu. Referensi alur teruji dari app lama: `docs/referensi-oims-producti
 | Import Excel master + bahan | ✅ | /master/* | — |
 | Tahap 2 — Produksi, Cutting, Bundling | ✅ | /produksi/* | — (epic closed 2026-09-02) |
 | Tahap 3 — Penjahitan Vendor | ✅ | /vendor/* | — (epic closed 2026-09-03) · 2 backlog P3 |
-| Tahap 4 — QC, Finishing & Packing | 🔄 | /master/*, /qc/{penerimaan,antrean} | 4A closed (3/15); 4B-4D belum di-plan |
+| Tahap 4 — QC, Finishing & Packing | ✅ | /qc/* (10 route), /master/* | epic closed 2026-09-10 (15/15) · 2 backlog P3 |
 | Tahap 5 — Keuangan/HPP | ⏸ skip | — | epic `oims-rcr` (deferred) |
 
 ## 🔵 Urutan Rencana — 3 Epic Aktif
@@ -171,39 +171,39 @@ Data uji sudah dibersihkan; `qc_mode` VDR-0001 dikembalikan ke `internal`.
 Service yang semua cabang suksesnya di dalam transaksi butuh return type union eksplisit,
 kalau tidak `res.error` error tipe di hook.
 
-### 🔵 Gelombang 13 — Tahap 4B: Standar, WO & Hasil QC (BERIKUTNYA — belum di-plan)
+### ✅ Gelombang 13 — Tahap 4B: Standar, WO & Hasil QC — SELESAI (Claude, 2026-09-10)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-ckp.1` Master Standar QC berversi + snapshot | P1 | Butuh jenis cacat (`.2`); pola tarif berversi |
-| 2 | `oims-ckp.5` Work Order QC + metode 100% vs sampling | P1 | Butuh standar (`.1`) + antrean (`.4`) |
-| 3 | `oims-ckp.6` Hasil QC per varian + grade A/B/C/perbaikan/reject | P1 | **Inti Tahap 4** — sumber angka yield/COPQ |
-| 4 | `oims-ckp.7` Temuan Cacat (jenis, keparahan, foto, penyebab) | P2 | Akar masalah di balik defect rate |
+| 1 | ~~`oims-ckp.1` Master Standar QC berversi + snapshot~~ | P1 | Butuh jenis cacat (`.2`); pola tarif berversi |
+| 2 | ~~`oims-ckp.5` Work Order QC + metode 100% vs sampling~~ | P1 | Butuh standar (`.1`) + antrean (`.4`) |
+| 3 | ~~`oims-ckp.6` Hasil QC per varian + grade A/B/C/perbaikan/reject~~ | P1 | **Inti Tahap 4** — sumber angka yield/COPQ |
+| 4 | ~~`oims-ckp.7` Temuan Cacat (jenis, keparahan, foto, penyebab)~~ | P2 | Akar masalah di balik defect rate |
 
-### Gelombang 14 — Tahap 4C: Rework, Re-QC & Reject (belum di-plan)
-
-| # | Issue | Prio | Kenapa di sini |
-|---|---|---|---|
-| 1 | `oims-ckp.8` Perbaikan Internal + Retur Perbaikan Vendor | P2 | Dua jalur rework, guard total bersama |
-| 2 | `oims-ckp.9` Re-QC + grade akhir | P2 | Penutup loop — tanpa ini barang perbaikan menggantung |
-| 3 | `oims-ckp.10` Karantina Reject + tindakan (approval owner) | P2 | Stage sendiri seperti app lama; tindakan = keputusan uang |
-
-### Gelombang 15 — Tahap 4D: Finishing, Packing & Barang Jadi (belum di-plan)
+### ✅ Gelombang 14 — Tahap 4C: Rework, Re-QC & Reject — SELESAI (Claude, 2026-09-10)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
-| 1 | `oims-ckp.11` Finishing + proses + pemakaian label/hangtag | P2 | Gap PRD; pemakaian label kurangi stok bahan via `mutasi_stok` |
-| 2 | `oims-ckp.12` Packing + kemasan + checklist ter-guard | P2 | Batch ditentukan di sini (dimensi stok jadi) |
-| 3 | `oims-ckp.13` Barang Jadi + Stok + Mutasi immutable | P1 | **Penutup rantai** — stok jadi bertambah |
-| 4 | `oims-ckp.14` Transfer antar gudang + Penyesuaian (approval) | P2 | Stok jadi tak statis |
-| 5 | `oims-ckp.15` Dashboard T4 + Yield, Defect Rate, COPQ | P2 | Rangkum semua; isi 2 kolom AlurProduksi yang sudah disiapkan |
+| 1 | ~~`oims-ckp.8` Perbaikan Internal + Retur Perbaikan Vendor~~ | P2 | Dua jalur rework, guard total bersama |
+| 2 | ~~`oims-ckp.9` Re-QC + grade akhir~~ | P2 | Penutup loop — tanpa ini barang perbaikan menggantung |
+| 3 | ~~`oims-ckp.10` Karantina Reject + tindakan (approval owner)~~ | P2 | Stage sendiri seperti app lama; tindakan = keputusan uang |
+
+### ✅ Gelombang 15 — Tahap 4D: Finishing, Packing & Barang Jadi — SELESAI (Claude, 2026-09-10)
+
+| # | Issue | Prio | Kenapa di sini |
+|---|---|---|---|
+| 1 | ~~`oims-ckp.11` Finishing + proses + pemakaian label/hangtag~~ | P2 | Gap PRD; pemakaian label kurangi stok bahan via `mutasi_stok` |
+| 2 | ~~`oims-ckp.12` Packing + kemasan + checklist ter-guard~~ | P2 | Batch ditentukan di sini (dimensi stok jadi) |
+| 3 | ~~`oims-ckp.13` Barang Jadi + Stok + Mutasi immutable~~ | P1 | **Penutup rantai** — stok jadi bertambah |
+| 4 | ~~`oims-ckp.14` Transfer antar gudang + Penyesuaian (approval)~~ | P2 | Stok jadi tak statis |
+| 5 | ~~`oims-ckp.15` Dashboard T4 + Yield, Defect Rate, COPQ~~ | P2 | Rangkum semua; isi 2 kolom AlurProduksi yang sudah disiapkan |
 
 ### Gelombang 16 — Antrean tahap berikutnya
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
 | 1 | ~~`oims-eba` epic: Tahap 3 — Penjahitan Internal & Vendor~~ | P4 | Closed 2026-09-03 setelah smoke test |
-| 2 | `oims-ckp` epic: Tahap 4 — QC, Finishing & Packing | P4 | Dipecah 2026-09-10; tutup setelah 15 issue inti closed |
+| 2 | ~~`oims-ckp` epic: Tahap 4 — QC, Finishing & Packing~~ | P4 | Closed 2026-09-10 (15/15 inti) |
 | 3 | ~~`oims-rcr`~~ epic: Tahap 5 — Keuangan, HPP & Laporan | P4 | Deferred — skip dulu, greenfield tanpa referensi (referensi §10) |
 
 ### Gelombang 17 — Tahap 2 lanjutan: sisa PRD + import (branch phase-2)
@@ -242,6 +242,7 @@ Keduanya dijanjikan ke klien di proposal penawaran v4, jadi bukan opsional.
 
 ## 📜 Changelog
 
+- 2026-09-10 (sesi 4b-4d): **TAHAP 4 KODE SELESAI** — 12 issue lagi dieksekusi Claude dalam sesi yang sama (permintaan Abu, lanjut dari 4A). 4B: standar QC berversi (partial unique index "tepat 1 aktif", lebih kuat dari tarif T3 yang cuma dijaga kode), WO QC + sampling + snapshot standar, hasil QC per varian (rumus keseimbangan di-guard TIGA lapis: Zod, Server Action, DB CHECK), temuan cacat + guard tak melebihi produk bermasalah. 4C: rework dua jalur dengan **guard kapasitas bersama** (satu fungsi dipanggil dua jalur — kalau terpisah bisa saling melampaui), Re-QC dengan DB CHECK sumber wajib + hitungan putaran, karantina reject dengan approval gate. 4D: finishing (pemakaian label kurangi stok bahan via mutasi_stok), packing (checklist 10 titik di-guard keras saat selesai), **barang jadi + stok immutable** (satu-satunya `.set({kuantitas})` di `lib/qc/stok-fg.ts`, sudah diaudit), transfer 2-fase, penyesuaian ber-approval, rumus yield/COPQ di satu modul (COPQ kembalikan null untuk komponen tanpa sumber, bukan 0 palsu). 3 migration via MCP (4B/4C/4D), 20 tabel baru, 10 route /qc/* aktif, tsc+build clean. Verifikasi SQL tiap gelombang. Epic oims-ckp CLOSED. **Belum smoke test end-to-end** — data uji dihapus setiap selesai verifikasi.
 - 2026-09-10 (sesi 4a lanjutan): eksekusi gelombang 4A oleh Claude (permintaan Abu, lanjut di sesi yang sama) — oims-ckp.2 master jenis cacat + kemasan, oims-ckp.3 master gudang barang jadi (isDefault tepat satu via transaksi, pola aktivasi tarif T3), oims-ckp.4 penerimaan QC + antrean DERIVED (guard sisa dihitung ulang di dalam transaksi, skip vendor ber-qcMode vendor). 3 commit, 5 route baru, tsc + build clean. **Verifikasi lewat SQL** (bukan build clean): kirim 25/30 → sisa 5 · qc_mode=vendor → 0 baris antrean · soft delete → sisa balik 30 · hapus+buat ulang kode sama berhasil (partial unique) · duplikat aktif ditolak · 2 gudang default → tetap 1. Data uji dibersihkan. Rantai deps jalan: oims-ckp.1 otomatis ready. Pelajaran tipe: z.coerce.number() butuh z.input/z.output terpisah untuk rhf; service transaksi butuh return type union eksplisit.
 - 2026-09-10 (sesi 4a): breakdown Tahap 4 — epic oims-ckp dipecah jadi **17 issue anak** (15 inti + 2 backlog) + rantai dependensi. 3 keputusan cakupan dijawab Abu: QC **per varian agregat** (bukan per pcs PRD §11 — hulu T2-T3 semua agregat, per-pcs jadi backlog .16), finishing/packing **modul penuh** (gap terbesar PRD, dijanjikan ke klien), stok barang jadi **tabel + mutasi sendiri** dengan pola immutable stok bahan (kunci komposit SKU+grade+gudang+batch). Gelombang 4A (.2 master jenis cacat+kemasan, .3 master gudang, .4 penerimaan QC+antrean derived) sudah plan+prompt lengkap; migration `tahap4a_master_qc_gudang_penerimaan_qc` applied via MCP (6 enum + 5 tabel, semua unique index PARTIAL — diverifikasi), schema.ts + document-number.ts ter-update, tsc clean. Checklist review Tahap 4 (18 poin) masuk skill oims-review. **Koreksi temuan:** proyek TIDAK punya DB trigger untuk cache stok — cache di-maintain dalam Server Action transaction + SELECT FOR UPDATE (barang-masuk.ts); issue .13 dikoreksi supaya executor tak bikin trigger baru. GH issue breakdown belum dibuat (diblok classifier) — body siap di scratchpad.
 - 2026-09-03 (sesi 3c): smoke test Tahap 3 oleh Claude (browser + SQL, seed prasyarat T2 via SQL) — 6 langkah lolos. 2 bug ketemu & di-fix: infinite render loop form penerimaan (default `= []` inline jadi dependency useMemo/useEffect) dan objek Date di raw sql template bikin /vendor/wip crash. Keduanya lolos tsc+build tapi halaman tak terpakai — bukti build clean ≠ verifikasi. 13 issue inti + epic oims-eba CLOSED. Aturan verifikasi masuk orchestrator-workflow + second-brain (verifikasi_hasil_kerja.md). Proposal penawaran v4 direvisi (6 poin).
