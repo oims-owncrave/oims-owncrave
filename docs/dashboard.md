@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-10 · Versi: v0.1.0 · Status: **TAHAP 4 DIPECAH — epic oims-ckp jadi 15 issue inti + 2 backlog, rantai dependensi lengkap. Gelombang 4A (3 issue) sudah plan+prompt+migration, siap eksekusi Antigravity.**
+> Diperbarui: 2026-09-10 · Versi: v0.1.0 · Status: **TAHAP 4A SELESAI — epic dipecah 17 issue; gelombang 4A (3 issue) dieksekusi Claude & closed, terverifikasi SQL. Berikutnya: 4B (standar QC, WO, hasil QC).**
 
 ## 🎯 Visi
 
@@ -21,7 +21,7 @@ di-skip dulu. Referensi alur teruji dari app lama: `docs/referensi-oims-producti
 | Import Excel master + bahan | ✅ | /master/* | — |
 | Tahap 2 — Produksi, Cutting, Bundling | ✅ | /produksi/* | — (epic closed 2026-09-02) |
 | Tahap 3 — Penjahitan Vendor | ✅ | /vendor/* | — (epic closed 2026-09-03) · 2 backlog P3 |
-| Tahap 4 — QC, Finishing & Packing | ⏳ | /qc/* (nav disabled) | epic `oims-ckp` → 15 inti + 2 backlog |
+| Tahap 4 — QC, Finishing & Packing | 🔄 | /master/*, /qc/{penerimaan,antrean} | 4A closed (3/15); 4B-4D belum di-plan |
 | Tahap 5 — Keuangan/HPP | ⏸ skip | — | epic `oims-rcr` (deferred) |
 
 ## 🔵 Urutan Rencana — 3 Epic Aktif
@@ -152,22 +152,26 @@ Vendor `qcMode='vendor'` → lewati antrean QC internal (ref §6).
 cache di-maintain dalam Server Action transaction + `SELECT ... FOR UPDATE` (`barang-masuk.ts:25-120`).
 Issue `.13` sudah dikoreksi supaya executor tidak membuat trigger baru.
 
-### 🔵 Gelombang 12 — Tahap 4A: Fondasi QC (SIAP EKSEKUSI)
+### ✅ Gelombang 12 — Tahap 4A: Fondasi QC — SELESAI (Claude, 2026-09-10)
 
-Plan + prompt + migration **sudah siap**. Migration `tahap4a_master_qc_gudang_penerimaan_qc`
-sudah applied via MCP; `schema.ts` + `document-number.ts` sudah ter-update; `tsc` clean.
-Antigravity mulai dari Task 2 tiap plan.
+Dieksekusi langsung oleh Claude atas permintaan Abu (deviasi dari Antigravity, sama
+seperti Tahap 2-3). 3 commit, tsc + build clean, **diverifikasi lewat SQL bukan cuma layar**.
 
-| # | Issue | Prio | Status | Kenapa di sini |
+| # | Issue | Prio | Commit | Bukti |
 |---|---|---|---|---|
-| 1 | `oims-ckp.2` Master Jenis Cacat + Kemasan | P1 | ready | Fondasi — dipakai `.1`, `.7`, `.12`. CRUD murni, risiko rendah |
-| 2 | `oims-ckp.3` Master Gudang & Lokasi Barang Jadi | P2 | ready | Dimensi kunci stok jadi; harus ada sebelum `.13` |
-| 3 | `oims-ckp.4` Penerimaan ke QC (IN-QC) + Antrean derived | P1 | ready | **Titik sambung T3→T4** — paling berisiko, verifikasi wajib lewat SQL |
+| 1 | ~~`oims-ckp.2` Master Jenis Cacat + Kemasan~~ | P1 | `8958493` | hapus→buat ulang kode sama BERHASIL (partial unique); duplikat aktif ditolak `unique_violation` |
+| 2 | ~~`oims-ckp.3` Master Gudang & Lokasi Barang Jadi~~ | P2 | `48e5990` | 2 gudang di-set default berurutan → tetap tepat 1 default |
+| 3 | ~~`oims-ckp.4` Penerimaan ke QC (IN-QC) + Antrean derived~~ | P1 | `66d8594` | kirim 25/30 → sisa 5; `qc_mode=vendor` → 0 baris di antrean; soft delete → sisa balik 30 |
 
-Urutan eksekusi: `.2` → `.3` → `.4` (dua master dulu, sambungan T3 belakangan supaya
-pola sudah panas saat kena bagian yang berisiko).
+Route baru: `/master/{jenis-cacat,kemasan,gudang-jadi}` + `/qc/{penerimaan,antrean}`.
+Data uji sudah dibersihkan; `qc_mode` VDR-0001 dikembalikan ke `internal`.
 
-### Gelombang 13 — Tahap 4B: Standar, WO & Hasil QC (belum di-plan)
+**Catatan pola** (dipakai lagi di 4B): `z.coerce.number()` bikin tipe input rhf jadi
+`unknown` — pakai `z.input`/`z.output` terpisah (`KemasanFormValues` vs `KemasanInput`).
+Service yang semua cabang suksesnya di dalam transaksi butuh return type union eksplisit,
+kalau tidak `res.error` error tipe di hook.
+
+### 🔵 Gelombang 13 — Tahap 4B: Standar, WO & Hasil QC (BERIKUTNYA — belum di-plan)
 
 | # | Issue | Prio | Kenapa di sini |
 |---|---|---|---|
@@ -238,6 +242,7 @@ Keduanya dijanjikan ke klien di proposal penawaran v4, jadi bukan opsional.
 
 ## 📜 Changelog
 
+- 2026-09-10 (sesi 4a lanjutan): eksekusi gelombang 4A oleh Claude (permintaan Abu, lanjut di sesi yang sama) — oims-ckp.2 master jenis cacat + kemasan, oims-ckp.3 master gudang barang jadi (isDefault tepat satu via transaksi, pola aktivasi tarif T3), oims-ckp.4 penerimaan QC + antrean DERIVED (guard sisa dihitung ulang di dalam transaksi, skip vendor ber-qcMode vendor). 3 commit, 5 route baru, tsc + build clean. **Verifikasi lewat SQL** (bukan build clean): kirim 25/30 → sisa 5 · qc_mode=vendor → 0 baris antrean · soft delete → sisa balik 30 · hapus+buat ulang kode sama berhasil (partial unique) · duplikat aktif ditolak · 2 gudang default → tetap 1. Data uji dibersihkan. Rantai deps jalan: oims-ckp.1 otomatis ready. Pelajaran tipe: z.coerce.number() butuh z.input/z.output terpisah untuk rhf; service transaksi butuh return type union eksplisit.
 - 2026-09-10 (sesi 4a): breakdown Tahap 4 — epic oims-ckp dipecah jadi **17 issue anak** (15 inti + 2 backlog) + rantai dependensi. 3 keputusan cakupan dijawab Abu: QC **per varian agregat** (bukan per pcs PRD §11 — hulu T2-T3 semua agregat, per-pcs jadi backlog .16), finishing/packing **modul penuh** (gap terbesar PRD, dijanjikan ke klien), stok barang jadi **tabel + mutasi sendiri** dengan pola immutable stok bahan (kunci komposit SKU+grade+gudang+batch). Gelombang 4A (.2 master jenis cacat+kemasan, .3 master gudang, .4 penerimaan QC+antrean derived) sudah plan+prompt lengkap; migration `tahap4a_master_qc_gudang_penerimaan_qc` applied via MCP (6 enum + 5 tabel, semua unique index PARTIAL — diverifikasi), schema.ts + document-number.ts ter-update, tsc clean. Checklist review Tahap 4 (18 poin) masuk skill oims-review. **Koreksi temuan:** proyek TIDAK punya DB trigger untuk cache stok — cache di-maintain dalam Server Action transaction + SELECT FOR UPDATE (barang-masuk.ts); issue .13 dikoreksi supaya executor tak bikin trigger baru. GH issue breakdown belum dibuat (diblok classifier) — body siap di scratchpad.
 - 2026-09-03 (sesi 3c): smoke test Tahap 3 oleh Claude (browser + SQL, seed prasyarat T2 via SQL) — 6 langkah lolos. 2 bug ketemu & di-fix: infinite render loop form penerimaan (default `= []` inline jadi dependency useMemo/useEffect) dan objek Date di raw sql template bikin /vendor/wip crash. Keduanya lolos tsc+build tapi halaman tak terpakai — bukti build clean ≠ verifikasi. 13 issue inti + epic oims-eba CLOSED. Aturan verifikasi masuk orchestrator-workflow + second-brain (verifikasi_hasil_kerja.md). Proposal penawaran v4 direvisi (6 poin).
 - 2026-09-03 (sesi 3b): TAHAP 3 KODE SELESAI — 13 issue inti dieksekusi langsung oleh Claude dalam satu sesi (permintaan Abu, deviasi dari Antigravity), 13 commit. 3A master vendor/lokasi/penjahit + tarif berversi; 3B penugasan (guard bundel satu penugasan aktif) + pengiriman + surat jalan berwatermark; 3C penerimaan bertahap + selisih dengan keputusan owner + loop retur; 3D biaya jasa (diakui = Σ baik) + WIP 7 label derived + dekorasi sablon/bordir. Rumus WIP tunggal di src/lib/jahit/rekap.ts. Dashboard: kartu per-tahap diganti ALUR PRODUKSI lintas tahap (pola app lama §11) supaya Tahap 4 tinggal isi 2 kolom. 4 migration via MCP, 20 tabel baru, build clean. Beads masih in_progress — menunggu smoke test Abu.
