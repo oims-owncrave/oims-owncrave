@@ -4,11 +4,13 @@ import { StatCards } from "./StatCards";
 import { PerluPerhatian } from "./PerluPerhatian";
 import { AktivitasTransaksi } from "./AktivitasTransaksi";
 import { TopBahanKeluar } from "./TopBahanKeluar";
+import { AlurProduksi } from "./AlurProduksi";
 import {
   useDashboardStats,
   useBahanKritisList,
   useTopBahanKeluar,
 } from "@/hooks/useDashboard";
+import type { AlurProduksi as AlurProduksiData } from "@/services/alur-produksi";
 import type {
   DashboardStats,
   BahanKritisItem,
@@ -21,6 +23,7 @@ interface Props {
   initialKritisList: BahanKritisItem[];
   initialAktivitas: AktivitasTransaksiData;
   initialTopBahan: Top10BahanKeluarItem[];
+  initialAlur: AlurProduksiData;
 }
 
 export function DashboardPageClient({
@@ -28,6 +31,7 @@ export function DashboardPageClient({
   initialKritisList,
   initialAktivitas,
   initialTopBahan,
+  initialAlur,
 }: Props) {
   const { data: stats = initialStats } = useDashboardStats(initialStats);
   const { data: kritisList = initialKritisList } = useBahanKritisList(initialKritisList);
@@ -36,6 +40,8 @@ export function DashboardPageClient({
   return (
     <div className="space-y-6 mt-5 sm:mt-0">
       <StatCards stats={stats} />
+
+      <AlurProduksi data={initialAlur} />
 
       {/* Aktivitas full-width */}
       <AktivitasTransaksi initialData={initialAktivitas} />

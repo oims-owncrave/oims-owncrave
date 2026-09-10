@@ -64,7 +64,10 @@ export const NAV_DATA: NavSection[] = [
           { title: "Supplier", url: "/master/supplier" },
           { title: "Produk", url: "/produksi/produk" },
           { title: "BOM", url: "/produksi/bom" },
-          { title: "Penjahit & Vendor", url: "/vendor/master", disabled: true },
+          { title: "Vendor", url: "/vendor/daftar" },
+          { title: "Penjahit", url: "/vendor/penjahit" },
+          { title: "Lokasi Produksi", url: "/vendor/lokasi" },
+          { title: "Tarif Jasa Jahit", url: "/vendor/tarif" },
           { title: "Standar QC", url: "/qc/standar", disabled: true },
         ],
       },
@@ -98,9 +101,21 @@ export const NAV_DATA: NavSection[] = [
         title: "Vendor & Gudang",
         icon: VendorIcon,
         items: [
-          { title: "Pengiriman Vendor", url: "/vendor/pengiriman", disabled: true },
-          { title: "Penerimaan Gudang", url: "/vendor/penerimaan", disabled: true },
-          { title: "Surat Jalan", url: "/vendor/surat-jalan", disabled: true },
+          { title: "Penugasan Jahit", url: "/vendor/penugasan" },
+          { title: "Pengiriman Vendor", url: "/vendor/pengiriman" },
+          { title: "Surat Jalan", url: "/vendor/surat-jalan" },
+          { title: "Penerimaan Hasil", url: "/vendor/penerimaan" },
+          { title: "Retur & Perbaikan", url: "/vendor/retur" },
+          { title: "Selisih & Kasus", url: "/vendor/selisih" },
+          { title: "Biaya Jasa Jahit", url: "/vendor/biaya" },
+        ],
+      },
+      {
+        title: "Sablon & Bordir",
+        icon: VendorIcon,
+        items: [
+          { title: "Pekerjaan Dekorasi", url: "/vendor/dekorasi" },
+          { title: "Template Dekorasi", url: "/vendor/dekorasi/template" },
         ],
       },
       {
@@ -123,7 +138,7 @@ export const NAV_DATA: NavSection[] = [
         icon: MonitoringIcon,
         items: [
           { title: "WIP Produksi", url: "/produksi/wip" },
-          { title: "WIP Jahit", url: "/vendor/wip", disabled: true },
+          { title: "WIP Jahit", url: "/vendor/wip" },
         ],
       },
       {

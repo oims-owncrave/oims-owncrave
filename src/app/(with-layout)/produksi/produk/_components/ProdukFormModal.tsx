@@ -6,7 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { produkSchema, type ProdukInput } from "@/lib/schemas/produk";
+import { produkSchema, type ProdukInput, DEKORASI_PROSES_LABEL } from "@/lib/schemas/produk";
+import { Select } from "@/components/ui/Select";
 import type { Produk } from "@/db/schema";
 import { useProdukMutation } from "@/hooks/useProduk";
 
@@ -23,6 +24,7 @@ const EMPTY: ProdukInput = {
   brand: "",
   jenis: "",
   deskripsi: "",
+  dekorasiProses: "none",
   isActive: true,
 };
 
@@ -55,6 +57,7 @@ export function ProdukFormModal({ open, onClose, initialData }: Props) {
           brand: initialData.brand ?? "",
           jenis: initialData.jenis ?? "",
           deskripsi: initialData.deskripsi ?? "",
+          dekorasiProses: initialData.dekorasiProses,
           isActive: initialData.isActive,
         });
       } else {
@@ -141,6 +144,27 @@ export function ProdukFormModal({ open, onClose, initialData }: Props) {
               <p className="text-xs text-red-500">{errors.deskripsi.message}</p>
             )}
           </div>
+
+          <Select
+
+            label="Proses Dekorasi"
+
+            options={(["none", "sablon", "bordir", "keduanya"] as const).map((d) => ({
+
+              value: d,
+
+              label: DEKORASI_PROSES_LABEL[d],
+
+            }))}
+
+            error={errors.dekorasiProses?.message}
+
+            {...register("dekorasiProses")}
+
+            disabled={isPending}
+
+          />
+
 
           <div className="py-2">
             <Checkbox
