@@ -23,7 +23,11 @@ type DocTable =
   | "penerimaan_qc"
   | "standar_qc"
   | "work_order_qc"
-  | "hasil_qc";
+  | "hasil_qc"
+  | "perbaikan_internal"
+  | "retur_qc_vendor"
+  | "re_qc"
+  | "karantina_reject";
 
 /**
  * Generate nomor dokumen: [TIPE]-YYYYMM-NNNN (counter reset per bulan).
@@ -39,7 +43,8 @@ export async function generateDocNumber(
     | "BM" | "BK" | "PS" | "BOM" | "PB" | "PC" | "WO-CUT" | "CUT" | "BND"
     | "ASG-JHT" | "SHP-JHT" | "SJ-JHT" | "STB-JHT"
     | "RCV-JHT" | "RTN-JHT" | "SLS-JHT" | "DEK" | "RCD-DEK"
-    | "IN-QC" | "STD-QC" | "WO-QC" | "QC",
+    | "IN-QC" | "STD-QC" | "WO-QC" | "QC"
+    | "RWK-INT" | "RTN-QC" | "RE-QC" | "RJT",
   tableName: DocTable,
   column: "nomor_dokumen" | "nomor_kasus" = "nomor_dokumen",
 ): Promise<string> {

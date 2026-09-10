@@ -335,6 +335,47 @@ export const hasilQcStatusEnum = pgEnum("hasil_qc_status", ["draft", "selesai", 
 /** Grade produk PRD §6 — dipakai hasil QC, Re-QC, finishing, stok barang jadi. */
 export const qcGradeEnum = pgEnum("qc_grade", ["a", "b", "c", "reject"]);
 
+export const reworkStatusEnum = pgEnum("rework_status", [
+  "draft",
+  "dikerjakan",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const reQcHasilEnum = pgEnum("re_qc_hasil", [
+  "lolos",
+  "perbaikan_ulang",
+  "grade_turun",
+  "reject",
+]);
+
+export const karantinaStatusEnum = pgEnum("karantina_status", [
+  "dikarantina",
+  "ditindaklanjuti",
+  "selesai",
+]);
+
+export const rejectPenyebabEnum = pgEnum("reject_penyebab", [
+  "cacat_bahan_berat",
+  "salah_cutting",
+  "salah_ukuran_berat",
+  "kerusakan_permanen",
+  "noda_permanen",
+  "tidak_sesuai_desain",
+  "rusak_saat_finishing",
+]);
+
+export const rejectTindakanEnum = pgEnum("reject_tindakan", [
+  "perbaiki_jadi_grade_b",
+  "jual_minor_defect",
+  "sampel",
+  "training",
+  "bongkar_aksesori",
+  "musnahkan",
+  "donasi",
+  "keputusan_lain",
+]);
+
 export const qcPrioritasEnum = pgEnum("qc_prioritas", [
   "normal",
   "tinggi",
@@ -1691,6 +1732,211 @@ export const temuanCacat = pgTable(
   ]
 );
 
+// ─── Tahap 4C — Rework, Re-QC, Karantina Reject ───────────────────────────────
+
+/** Sumber: hasil_qc_detail.perbaikan. Σ (internal + retur vendor) tak boleh melebihinya. */
+export const perbaikanInternal = pgTable(
+  "perbaikan_internal",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RWK-INT-YYYYMM-NNNN
+    hasilQcId: uuid("hasil_qc_id").notNull().references(() => hasilQc.id),
+    poId: uuid("po_id").references(() => poProduksi.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    picId: uuid("pic_id").references(() => users.id),
+    targetSelesai: timestamp("target_selesai", { withTimezone: true }),
+    estimasiBiaya: numeric("estimasi_biaya", { precision: 15, scale: 2 }).notNull().default("0"),
+    status: reworkStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("rwk_int_hasil_qc_idx").on(t.hasilQcId)]
+);
+
+export const perbaikanInternalDetail = pgTable(
+  "perbaikan_internal_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    perbaikanInternalId: uuid("perbaikan_internal_id")
+      .notNull()
+      .references(() => perbaikanInternal.id),
+    hasilQcDetailId: uuid("hasil_qc_detail_id").notNull().references(() => hasilQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlah: integer("jumlah").notNull(),
+    jenisCacatId: uuid("jenis_cacat_id").references(() => jenisCacat.id),
+    instruksi: text("instruksi"),
+  },
+  (t) => [
+    index("rwk_int_detail_header_idx").on(t.perbaikanInternalId),
+    index("rwk_int_detail_hasil_idx").on(t.hasilQcDetailId),
+  ]
+);
+
+/** potongan = potongan biaya jasa ke vendor, menyambung ke biaya_jasa_jahit (T3). */
+export const returQcVendor = pgTable(
+  "retur_qc_vendor",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RTN-QC-YYYYMM-NNNN
+    hasilQcId: uuid("hasil_qc_id").notNull().references(() => hasilQc.id),
+    penugasanJahitId: uuid("penugasan_jahit_id").references(() => penugasanJahit.id),
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    tanggalKirim: timestamp("tanggal_kirim", { withTimezone: true }).notNull(),
+    targetKembali: timestamp("target_kembali", { withTimezone: true }),
+    penanggungBiaya: penanggungBiayaEnum("penanggung_biaya").notNull().default("vendor"),
+    status: returStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("rtn_qc_hasil_idx").on(t.hasilQcId), index("rtn_qc_vendor_idx").on(t.vendorId)]
+);
+
+export const returQcVendorDetail = pgTable(
+  "retur_qc_vendor_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    returQcVendorId: uuid("retur_qc_vendor_id").notNull().references(() => returQcVendor.id),
+    hasilQcDetailId: uuid("hasil_qc_detail_id").notNull().references(() => hasilQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlah: integer("jumlah").notNull(),
+    jenisCacatId: uuid("jenis_cacat_id").references(() => jenisCacat.id),
+    instruksi: text("instruksi"),
+    fotoUrl: text("foto_url"),
+    potongan: numeric("potongan", { precision: 15, scale: 2 }).notNull().default("0"),
+  },
+  (t) => [
+    index("rtn_qc_detail_header_idx").on(t.returQcVendorId),
+    index("rtn_qc_detail_hasil_idx").on(t.hasilQcDetailId),
+  ]
+);
+
+/**
+ * Penutup loop rework. Satu tabel melayani dua sumber (internal / vendor) lewat
+ * FK nullable + DB CHECK re_qc_sumber_ada. putaran = penanda barang sudah
+ * diperbaiki berulang (tidak dibatasi keras, hanya sinyal ke operator).
+ */
+export const reQc = pgTable(
+  "re_qc",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RE-QC-YYYYMM-NNNN
+    hasilQcAwalId: uuid("hasil_qc_awal_id").notNull().references(() => hasilQc.id),
+    perbaikanInternalId: uuid("perbaikan_internal_id").references(() => perbaikanInternal.id),
+    returQcVendorId: uuid("retur_qc_vendor_id").references(() => returQcVendor.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    petugasId: uuid("petugas_id").references(() => users.id),
+    putaran: integer("putaran").notNull().default(1),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("re_qc_hasil_awal_idx").on(t.hasilQcAwalId),
+    index("re_qc_rwk_idx").on(t.perbaikanInternalId),
+    index("re_qc_rtn_idx").on(t.returQcVendorId),
+  ]
+);
+
+export const reQcDetail = pgTable(
+  "re_qc_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    reQcId: uuid("re_qc_id").notNull().references(() => reQc.id),
+    hasilQcDetailId: uuid("hasil_qc_detail_id").notNull().references(() => hasilQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlah: integer("jumlah").notNull(),
+    cacatSebelumnyaId: uuid("cacat_sebelumnya_id").references(() => jenisCacat.id),
+    hasilPerbaikan: text("hasil_perbaikan"),
+    hasilReQc: reQcHasilEnum("hasil_re_qc").notNull(),
+    gradeAkhir: qcGradeEnum("grade_akhir"),
+    catatan: text("catatan"),
+  },
+  (t) => [
+    index("re_qc_detail_header_idx").on(t.reQcId),
+    index("re_qc_detail_hasil_idx").on(t.hasilQcDetailId),
+  ]
+);
+
+/** Sumber: hasil_qc_detail.reject + re_qc hasil 'reject'. Barang reject tak boleh menguap. */
+export const karantinaReject = pgTable(
+  "karantina_reject",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // RJT-YYYYMM-NNNN
+    hasilQcId: uuid("hasil_qc_id").references(() => hasilQc.id),
+    reQcId: uuid("re_qc_id").references(() => reQc.id),
+    poId: uuid("po_id").references(() => poProduksi.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    lokasiSimpan: text("lokasi_simpan"),
+    picId: uuid("pic_id").references(() => users.id),
+    status: karantinaStatusEnum("status").notNull().default("dikarantina"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("karantina_hasil_qc_idx").on(t.hasilQcId),
+    index("karantina_re_qc_idx").on(t.reQcId),
+  ]
+);
+
+export const karantinaRejectDetail = pgTable(
+  "karantina_reject_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    karantinaRejectId: uuid("karantina_reject_id").notNull().references(() => karantinaReject.id),
+    hasilQcDetailId: uuid("hasil_qc_detail_id").references(() => hasilQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlah: integer("jumlah").notNull(),
+    penyebab: rejectPenyebabEnum("penyebab").notNull(),
+    jenisCacatId: uuid("jenis_cacat_id").references(() => jenisCacat.id),
+    // snapshot nilai untuk COPQ — Tahap 5 (HPP) di-skip, jadi diisi manual
+    nilaiPerPcs: numeric("nilai_per_pcs", { precision: 15, scale: 2 }).notNull().default("0"),
+    fotoUrl: text("foto_url"),
+  },
+  (t) => [
+    index("karantina_detail_header_idx").on(t.karantinaRejectId),
+    index("karantina_detail_hasil_idx").on(t.hasilQcDetailId),
+  ]
+);
+
+/** Tindakan berdampak HANYA setelah approved (pola penyesuaian_stok Tahap 1). */
+export const tindakanReject = pgTable(
+  "tindakan_reject",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    karantinaRejectDetailId: uuid("karantina_reject_detail_id")
+      .notNull()
+      .references(() => karantinaRejectDetail.id),
+    tindakan: rejectTindakanEnum("tindakan").notNull(),
+    jumlah: integer("jumlah").notNull(),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    status: approvalStatusEnum("status").notNull().default("pending"),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    catatan: text("catatan"),
+    buktiUrl: text("bukti_url"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("tindakan_reject_detail_idx").on(t.karantinaRejectDetailId),
+    index("tindakan_reject_status_idx").on(t.status),
+  ]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -1758,3 +2004,12 @@ export type WorkOrderQcDetail = typeof workOrderQcDetail.$inferSelect;
 export type HasilQc = typeof hasilQc.$inferSelect;
 export type HasilQcDetail = typeof hasilQcDetail.$inferSelect;
 export type TemuanCacat = typeof temuanCacat.$inferSelect;
+export type PerbaikanInternal = typeof perbaikanInternal.$inferSelect;
+export type PerbaikanInternalDetail = typeof perbaikanInternalDetail.$inferSelect;
+export type ReturQcVendor = typeof returQcVendor.$inferSelect;
+export type ReturQcVendorDetail = typeof returQcVendorDetail.$inferSelect;
+export type ReQc = typeof reQc.$inferSelect;
+export type ReQcDetail = typeof reQcDetail.$inferSelect;
+export type KarantinaReject = typeof karantinaReject.$inferSelect;
+export type KarantinaRejectDetail = typeof karantinaRejectDetail.$inferSelect;
+export type TindakanReject = typeof tindakanReject.$inferSelect;

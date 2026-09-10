@@ -47,3 +47,50 @@ export const sudahDiperiksaSql = sql<number>`(
   JOIN hasil_qc h ON h.id = hd.hasil_qc_id
   WHERE hd.work_order_qc_detail_id = work_order_qc_detail.id AND h.deleted_at IS NULL
 )`;
+
+// ─── Rework (oims-ckp.8) ──────────────────────────────────────────────────────
+
+/**
+ * Σ rework (internal + retur vendor) per baris hasil QC.
+ * GUARD BERSAMA: total ini tak boleh melebihi hasil_qc_detail.perbaikan —
+ * dihitung di satu tempat supaya dua jalur tak saling melampaui.
+ */
+export const sudahReworkSql = sql<number>`(
+  (SELECT COALESCE(SUM(pd.jumlah), 0)::int
+   FROM perbaikan_internal_detail pd
+   JOIN perbaikan_internal p ON p.id = pd.perbaikan_internal_id
+   WHERE pd.hasil_qc_detail_id = hasil_qc_detail.id
+     AND p.deleted_at IS NULL AND p.status <> 'dibatalkan')
+  +
+  (SELECT COALESCE(SUM(rd.jumlah), 0)::int
+   FROM retur_qc_vendor_detail rd
+   JOIN retur_qc_vendor r ON r.id = rd.retur_qc_vendor_id
+   WHERE rd.hasil_qc_detail_id = hasil_qc_detail.id
+     AND r.deleted_at IS NULL AND r.status <> 'dibatalkan')
+)`;
+
+// ─── Karantina Reject (oims-ckp.10) ───────────────────────────────────────────
+
+/** Σ reject yang sudah dikarantina per baris hasil QC. */
+export const sudahDikarantinaSql = sql<number>`(
+  SELECT COALESCE(SUM(kd.jumlah), 0)::int
+  FROM karantina_reject_detail kd
+  JOIN karantina_reject k ON k.id = kd.karantina_reject_id
+  WHERE kd.hasil_qc_detail_id = hasil_qc_detail.id AND k.deleted_at IS NULL
+)`;
+
+/** Σ tindakan DISETUJUI per baris karantina — hanya yang approved yang berdampak. */
+export const tindakanDisetujuiSql = sql<number>`(
+  SELECT COALESCE(SUM(t.jumlah), 0)::int
+  FROM tindakan_reject t
+  WHERE t.karantina_reject_detail_id = karantina_reject_detail.id
+    AND t.status = 'approved' AND t.deleted_at IS NULL
+)`;
+
+/** Σ tindakan yang belum ditolak (pending + approved) — batas input tindakan baru. */
+export const tindakanTerpakaiSql = sql<number>`(
+  SELECT COALESCE(SUM(t.jumlah), 0)::int
+  FROM tindakan_reject t
+  WHERE t.karantina_reject_detail_id = karantina_reject_detail.id
+    AND t.status <> 'rejected' AND t.deleted_at IS NULL
+)`;
