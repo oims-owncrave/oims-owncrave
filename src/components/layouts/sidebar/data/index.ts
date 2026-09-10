@@ -128,7 +128,7 @@ export const NAV_DATA: NavSection[] = [
           { title: "Penerimaan QC", url: "/qc/penerimaan" },
           { title: "Antrean QC", url: "/qc/antrean" },
           { title: "Work Order QC", url: "/qc/wo" },
-          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", disabled: true },
+          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan" },
           { title: "Rework", url: "/qc/rework", disabled: true },
           { title: "Karantina Reject", url: "/qc/reject", disabled: true },
           { title: "Stok Barang Jadi", url: "/qc/stok-jadi", disabled: true },
