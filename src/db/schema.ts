@@ -321,6 +321,20 @@ export const gudangJenisEnum = pgEnum("gudang_jenis", [
   "transit",
 ]);
 
+export const qcMetodeEnum = pgEnum("qc_metode", ["seratus_persen", "sampling"]);
+
+export const woQcStatusEnum = pgEnum("wo_qc_status", [
+  "draft",
+  "berjalan",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const hasilQcStatusEnum = pgEnum("hasil_qc_status", ["draft", "selesai", "diverifikasi"]);
+
+/** Grade produk PRD §6 — dipakai hasil QC, Re-QC, finishing, stok barang jadi. */
+export const qcGradeEnum = pgEnum("qc_grade", ["a", "b", "c", "reject"]);
+
 export const qcPrioritasEnum = pgEnum("qc_prioritas", [
   "normal",
   "tinggi",
@@ -1504,6 +1518,179 @@ export const penerimaanQcDetail = pgTable(
   ]
 );
 
+// ─── Tahap 4B — Standar QC, Work Order QC, Hasil QC, Temuan Cacat ─────────────
+
+/**
+ * Standar pemeriksaan BERVERSI (pola tarif_jasa_jahit oims-eba.4).
+ * Tepat satu aktif per (produk, kategori) — dijaga partial unique index DB
+ * standar_qc_aktif_unique, bukan hanya kode.
+ */
+export const standarQc = pgTable(
+  "standar_qc",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // STD-QC-YYYYMM-NNNN
+    nama: text("nama").notNull(),
+    produkId: uuid("produk_id").references(() => produk.id), // null = semua produk kategori
+    kategoriId: uuid("kategori_id").references(() => kategori.id),
+    versi: integer("versi").notNull().default(1),
+    tanggalBerlaku: timestamp("tanggal_berlaku", { withTimezone: true }).notNull(),
+    status: tarifStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("standar_qc_produk_idx").on(t.produkId),
+    index("standar_qc_kategori_idx").on(t.kategoriId),
+  ]
+);
+
+export const standarQcDetail = pgTable(
+  "standar_qc_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    standarQcId: uuid("standar_qc_id").notNull().references(() => standarQc.id),
+    tahap: text("tahap").notNull(),
+    bagianProduk: text("bagian_produk"),
+    kriteria: text("kriteria").notNull(),
+    metode: text("metode"),
+    tingkatKepentingan: qcTingkatEnum("tingkat_kepentingan").notNull().default("minor"),
+    toleransi: text("toleransi"),
+    jenisCacatId: uuid("jenis_cacat_id").references(() => jenisCacat.id),
+    tindakanJikaGagal: text("tindakan_jika_gagal"),
+    wajibFoto: boolean("wajib_foto").notNull().default(false),
+    urutan: integer("urutan").notNull().default(0),
+  },
+  (t) => [index("standar_qc_detail_header_idx").on(t.standarQcId)]
+);
+
+/** standarQcId + standarVersi = SNAPSHOT; hasil QC lama tetap terbaca dengan versi saat itu. */
+export const workOrderQc = pgTable(
+  "work_order_qc",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // WO-QC-YYYYMM-NNNN
+    poId: uuid("po_id").references(() => poProduksi.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    targetSelesai: timestamp("target_selesai", { withTimezone: true }),
+    picId: uuid("pic_id").references(() => users.id),
+    supervisorId: uuid("supervisor_id").references(() => users.id),
+    metode: qcMetodeEnum("metode").notNull().default("seratus_persen"),
+    standarQcId: uuid("standar_qc_id").references(() => standarQc.id),
+    standarVersi: integer("standar_versi"),
+    populasi: integer("populasi"),
+    jumlahSampel: integer("jumlah_sampel"),
+    batasDiterima: integer("batas_diterima"),
+    batasDitolak: integer("batas_ditolak"),
+    alasanSampling: text("alasan_sampling"),
+    status: woQcStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("wo_qc_po_idx").on(t.poId), index("wo_qc_standar_idx").on(t.standarQcId)]
+);
+
+export const workOrderQcDetail = pgTable(
+  "work_order_qc_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    workOrderQcId: uuid("work_order_qc_id").notNull().references(() => workOrderQc.id),
+    penerimaanQcDetailId: uuid("penerimaan_qc_detail_id")
+      .notNull()
+      .references(() => penerimaanQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlahPcs: integer("jumlah_pcs").notNull(),
+  },
+  (t) => [
+    index("wo_qc_detail_header_idx").on(t.workOrderQcId),
+    index("wo_qc_detail_sumber_idx").on(t.penerimaanQcDetailId),
+  ]
+);
+
+export const hasilQc = pgTable(
+  "hasil_qc",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // QC-YYYYMM-NNNN
+    workOrderQcId: uuid("work_order_qc_id").notNull().references(() => workOrderQc.id),
+    poId: uuid("po_id").references(() => poProduksi.id),
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    petugasId: uuid("petugas_id").references(() => users.id),
+    status: hasilQcStatusEnum("status").notNull().default("draft"),
+    verifikatorId: uuid("verifikator_id").references(() => users.id),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("hasil_qc_wo_idx").on(t.workOrderQcId), index("hasil_qc_po_idx").on(t.poId)]
+);
+
+/**
+ * Agregat per varian (keputusan cakupan 2026-09-10), BUKAN per pcs.
+ * DB CHECK hasil_qc_detail_seimbang: diperiksa = A+B+C+perbaikan+reject —
+ * ini sumber angka yield/COPQ, kalau bocor seluruh laporan T4 salah.
+ * defectRate & belum-diperiksa DERIVED di query, bukan kolom.
+ */
+export const hasilQcDetail = pgTable(
+  "hasil_qc_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    hasilQcId: uuid("hasil_qc_id").notNull().references(() => hasilQc.id),
+    workOrderQcDetailId: uuid("work_order_qc_detail_id")
+      .notNull()
+      .references(() => workOrderQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlahDiperiksa: integer("jumlah_diperiksa").notNull(),
+    gradeA: integer("grade_a").notNull().default(0),
+    gradeB: integer("grade_b").notNull().default(0),
+    gradeC: integer("grade_c").notNull().default(0),
+    perbaikan: integer("perbaikan").notNull().default(0),
+    reject: integer("reject").notNull().default(0),
+    catatan: text("catatan"),
+  },
+  (t) => [
+    index("hasil_qc_detail_header_idx").on(t.hasilQcId),
+    index("hasil_qc_detail_wo_detail_idx").on(t.workOrderQcDetailId),
+  ]
+);
+
+/** keparahan di-SNAPSHOT (bukan join live) — master bisa berubah klasifikasi. */
+export const temuanCacat = pgTable(
+  "temuan_cacat",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    hasilQcDetailId: uuid("hasil_qc_detail_id").notNull().references(() => hasilQcDetail.id),
+    jenisCacatId: uuid("jenis_cacat_id").notNull().references(() => jenisCacat.id),
+    bagianProduk: text("bagian_produk"),
+    keparahan: qcTingkatEnum("keparahan").notNull(),
+    sumber: cacatSumberEnum("sumber").notNull().default("tidak_diketahui"),
+    jumlah: integer("jumlah").notNull(),
+    penyebabAwal: text("penyebab_awal"),
+    penanggungJawab: text("penanggung_jawab"),
+    fotoUrl: text("foto_url"),
+    tindakan: text("tindakan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("temuan_cacat_hasil_detail_idx").on(t.hasilQcDetailId),
+    index("temuan_cacat_jenis_idx").on(t.jenisCacatId),
+    index("temuan_cacat_sumber_idx").on(t.sumber),
+  ]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -1564,3 +1751,10 @@ export type Kemasan = typeof kemasan.$inferSelect;
 export type GudangBarangJadi = typeof gudangBarangJadi.$inferSelect;
 export type PenerimaanQc = typeof penerimaanQc.$inferSelect;
 export type PenerimaanQcDetail = typeof penerimaanQcDetail.$inferSelect;
+export type StandarQc = typeof standarQc.$inferSelect;
+export type StandarQcDetail = typeof standarQcDetail.$inferSelect;
+export type WorkOrderQc = typeof workOrderQc.$inferSelect;
+export type WorkOrderQcDetail = typeof workOrderQcDetail.$inferSelect;
+export type HasilQc = typeof hasilQc.$inferSelect;
+export type HasilQcDetail = typeof hasilQcDetail.$inferSelect;
+export type TemuanCacat = typeof temuanCacat.$inferSelect;
