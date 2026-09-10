@@ -96,6 +96,9 @@ Legenda: ✅ jadi · 🔄 sebagian / ada perbaikan terbuka · ⏳ belum jalan
 | Penyesuaian stok | ✅ | `/inventory/penyesuaian` | jpn.12 done — approval flow (owner approve/reject), mutasi atomik, audit log |
 | Dashboard | ✅ | `/dashboard` | jpn.10 done — StatCards 8 KPI + PerluPerhatian (stok kritis + penyesuaian pending) |
 | Laporan | ✅ | `/laporan/*` | jpn.13 done — 5 laporan (barang masuk/keluar/stok/mutasi/nilai persediaan) + filter periode + export CSV |
+| Tahap 2 — Produksi, Cutting, Bundling | ✅ | `/produksi/*` | epic oims-5yr closed 2026-09-02 (13/13) |
+| Tahap 3 — Penjahitan Vendor & WIP | ✅ | `/vendor/*` | epic oims-eba closed 2026-09-03, smoke test 6 langkah lolos |
+| Tahap 4 — QC, Finishing & Packing | ⏳ | `/qc/*` (nav disabled) | epic oims-ckp dipecah 2026-09-10 → 15 inti + 2 backlog; 4A siap eksekusi |
 
 **Ringkasan:** Tahap 1 FEATURE COMPLETE. GELOMBANG A + B SELESAI. lkw.1+2+3+4 done. Mobile UI polish batch (xlp/6c3/76v/8i9/ghs) done. Fitur aktif, siap serah terima Tahap 1.
 
@@ -165,6 +168,26 @@ Wave berikutnya di-plan just-in-time setelah 2A jalan (plan tidak basi). Kontrol
 - [x] `oims-5yr.7-10` — penerimaan cutting, WO cutting, pemakaian aktual, hasil cutting ✅ **DONE** (GH #15)
 - [x] `oims-5yr.11-13` — sisa+limbah, bundling+label, WIP+ringkasan ✅ **DONE** (GH #16) — **TAHAP 2 KOMPLIT, epic closed**
 
+### ✅ GELOMBANG F — Tahap 3: Penjahitan Vendor & WIP (`oims-eba.1-13`) — SELESAI
+
+Epic `oims-eba` dipecah 15 issue (13 inti + 2 backlog P3) 2026-09-02, dieksekusi Claude 2026-09-03.
+Smoke test 6 langkah lolos (browser + SQL); 2 bug ketemu & di-fix (render loop form penerimaan,
+Date di raw sql). Epic closed. Backlog P3 tersisa: `oims-eba.14` standar durasi, `oims-eba.15` kinerja vendor.
+
+### 🔜 GELOMBANG G — Tahap 4: QC, Finishing & Packing (`oims-ckp.1-15`)
+
+Epic `oims-ckp` dipecah **17 issue** (15 inti + 2 backlog) 2026-09-10 + rantai dependensi penuh.
+Keputusan cakupan (dijawab Abu): QC **per varian agregat** bukan per pcs · finishing/packing **modul penuh** ·
+stok barang jadi **tabel + mutasi sendiri** dengan pola immutable stok bahan.
+Titik sambung T3→T4 = `penerimaan_hasil_jahit_detail.jumlah_baik` (baik visual, bukan lolos QC) —
+tabel Tahap 3 tidak diubah. Kontrol eksekusi bergelombang: `docs/dashboard.md`.
+
+- [ ] **4A fondasi** (plan+prompt+migration SIAP): `oims-ckp.2` master jenis cacat+kemasan · `oims-ckp.3` master gudang barang jadi · `oims-ckp.4` penerimaan QC + antrean derived
+- [ ] **4B QC inti** (belum di-plan): `.1` standar QC berversi · `.5` WO QC + sampling · `.6` hasil QC + grade · `.7` temuan cacat
+- [ ] **4C rework** (belum di-plan): `.8` perbaikan internal + retur vendor · `.9` Re-QC · `.10` karantina reject
+- [ ] **4D barang jadi** (belum di-plan): `.11` finishing · `.12` packing · `.13` barang jadi + stok + mutasi · `.14` transfer + penyesuaian · `.15` dashboard + yield/COPQ
+- [ ] Backlog P3: `.16` QC per pcs + barcode · `.17` kinerja vendor dari data QC
+
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
 
@@ -186,6 +209,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-10** — Planning breakdown Tahap 4: epic `oims-ckp` dipecah **17 issue anak** (15 inti + 2 backlog P3) + rantai dependensi. 3 keputusan cakupan dijawab Abu: QC **per varian agregat** (bukan per pcs PRD §11 — hulu T2-T3 semua agregat, app lama sukses tanpa; per-pcs jadi backlog `.16`), finishing/packing **modul penuh** (gap terbesar PRD, dijanjikan klien), stok barang jadi **tabel + mutasi sendiri** pola immutable stok bahan (kunci komposit SKU+grade+gudang+batch). Gelombang 4A (`.2` master jenis cacat+kemasan, `.3` master gudang, `.4` penerimaan QC + antrean derived) di-plan+prompt; migration `tahap4a_master_qc_gudang_penerimaan_qc` applied via MCP (6 enum + 5 tabel, unique index semua PARTIAL — diverifikasi query), schema.ts + document-number.ts ter-update, tsc clean. Checklist review Tahap 4 (18 poin) masuk skill oims-review. Koreksi: proyek TIDAK punya DB trigger cache stok — di-maintain dalam Server Action transaction + SELECT FOR UPDATE; issue `.13` dikoreksi. Siap eksekusi Antigravity (urutan `.2` → `.3` → `.4`).
+- **2026-09-03** — Tahap 3 SELESAI: 13 issue inti dieksekusi Claude (3A master vendor/lokasi/penjahit + tarif berversi, 3B penugasan + pengiriman + surat jalan, 3C penerimaan bertahap + selisih + retur, 3D biaya jasa + WIP 7 label derived + dekorasi). Smoke test 6 langkah lolos (browser + SQL); 2 bug ketemu & di-fix (render loop form penerimaan `735bcee`, Date di raw sql bikin /vendor/wip 500 `24dcb1a`) — bukti build clean ≠ verifikasi. Epic oims-eba closed. Dashboard: kartu per-tahap diganti ALUR PRODUKSI lintas tahap.
 - **2026-09-02 (4)** — Tahap 2 SELESAI (2D, Claude): sisa bahan → mutasi retur_masuk, limbah + nilai kerugian, bundling + guard hasil + label print, WIP derived + ringkasan produksi. Epic oims-5yr closed (13/13). Pending: QR label (package qrcode), grafik T2 (nunggu data). Berikutnya: breakdown Tahap 3 (oims-eba, sesi baru).
 - **2026-09-02 (3)** — Eksekusi Tahap 2C (Claude): penerimaan cutting, WO cutting 7 status, pemakaian bahan aktual (rekonsiliasi PRD §14 — gap terbesar app lama), hasil cutting bertahap + rekap. oims-5yr.7-10 (GH #15). Sisa Tahap 2: bundling + WIP (5yr.11-13).
 - **2026-09-02 (2)** — Eksekusi Tahap 2A+2B langsung oleh Claude (deviasi Antigravity, permintaan Abu): master produk, varian+SKU, BOM berversi, PO produksi + approval + snapshot BOM, estimasi kebutuhan bahan, permintaan bahan + integrasi barang keluar. 6 issue closed (oims-5yr.1-6), GH #11-14. Bonus: mobile default view tabel (oims-cd5). Route baru: /produksi/{produk,bom,po,permintaan-bahan}.
