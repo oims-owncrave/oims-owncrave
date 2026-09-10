@@ -64,5 +64,6 @@ next-env.d.ts
 # dashboard HTML output (generated)
 tools/dashboard/out/
 
-# python bytecode
+# Python bytecode
 __pycache__/
+*.py[cod]
