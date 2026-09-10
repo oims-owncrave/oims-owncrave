@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
   pgEnum,
+  jsonb,
   index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -363,6 +364,41 @@ export const rejectPenyebabEnum = pgEnum("reject_penyebab", [
   "noda_permanen",
   "tidak_sesuai_desain",
   "rusak_saat_finishing",
+]);
+
+export const finishingStatusEnum = pgEnum("finishing_status", [
+  "draft",
+  "berjalan",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const packingStatusEnum = pgEnum("packing_status", [
+  "draft",
+  "berjalan",
+  "selesai",
+  "dibatalkan",
+]);
+
+export const transferFgStatusEnum = pgEnum("transfer_fg_status", [
+  "draft",
+  "dikirim",
+  "diterima",
+  "dibatalkan",
+]);
+
+/** Jenis mutasi barang jadi PRD §26 — ledger append-only. */
+export const mutasiFgJenisEnum = pgEnum("mutasi_fg_jenis", [
+  "hasil_produksi",
+  "transfer",
+  "penyesuaian",
+  "barang_rusak",
+  "sample",
+  "giveaway",
+  "penjualan",
+  "retur_penjualan",
+  "pemusnahan",
+  "perubahan_grade",
 ]);
 
 export const rejectTindakanEnum = pgEnum("reject_tindakan", [
@@ -1937,6 +1973,256 @@ export const tindakanReject = pgTable(
   ]
 );
 
+// ─── Tahap 4D — Finishing, Packing, Barang Jadi, Stok & Mutasi ────────────────
+
+export const finishing = pgTable(
+  "finishing",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // FIN-YYYYMM-NNNN
+    poId: uuid("po_id").references(() => poProduksi.id),
+    tanggalMasuk: timestamp("tanggal_masuk", { withTimezone: true }).notNull(),
+    targetSelesai: timestamp("target_selesai", { withTimezone: true }),
+    picId: uuid("pic_id").references(() => users.id),
+    lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
+    status: finishingStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("finishing_po_idx").on(t.poId)]
+);
+
+/** proses = jsonb checklist 12 titik PRD §20, BUKAN tabel per pcs. */
+export const finishingDetail = pgTable(
+  "finishing_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    finishingId: uuid("finishing_id").notNull().references(() => finishing.id),
+    hasilQcDetailId: uuid("hasil_qc_detail_id").references(() => hasilQcDetail.id),
+    reQcDetailId: uuid("re_qc_detail_id").references(() => reQcDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    grade: qcGradeEnum("grade").notNull().default("a"),
+    jumlah: integer("jumlah").notNull(),
+    proses: jsonb("proses").notNull().default({}),
+    catatan: text("catatan"),
+  },
+  (t) => [
+    index("finishing_detail_header_idx").on(t.finishingId),
+    index("finishing_detail_hasil_idx").on(t.hasilQcDetailId),
+    index("finishing_detail_reqc_idx").on(t.reQcDetailId),
+  ]
+);
+
+/** Label/hangtag yang terdaftar sebagai bahan — pemakaiannya kurangi stok via mutasi_stok. */
+export const finishingPemakaian = pgTable(
+  "finishing_pemakaian",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    finishingId: uuid("finishing_id").notNull().references(() => finishing.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    jumlah: numeric("jumlah", { precision: 15, scale: 3 }).notNull(),
+    hargaSatuan: numeric("harga_satuan", { precision: 15, scale: 2 }).notNull().default("0"),
+    catatan: text("catatan"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("finishing_pemakaian_header_idx").on(t.finishingId),
+    index("finishing_pemakaian_bahan_idx").on(t.bahanId),
+  ]
+);
+
+export const packing = pgTable(
+  "packing",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // PKG-YYYYMM-NNNN
+    poId: uuid("po_id").references(() => poProduksi.id),
+    finishingId: uuid("finishing_id").references(() => finishing.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    picId: uuid("pic_id").references(() => users.id),
+    lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
+    // 10 titik checklist PRD §23 — di-guard saat transisi ke 'selesai'
+    checklist: jsonb("checklist").notNull().default({}),
+    status: packingStatusEnum("status").notNull().default("draft"),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("packing_finishing_idx").on(t.finishingId)]
+);
+
+export const packingDetail = pgTable(
+  "packing_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    packingId: uuid("packing_id").notNull().references(() => packing.id),
+    finishingDetailId: uuid("finishing_detail_id").notNull().references(() => finishingDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    grade: qcGradeEnum("grade").notNull().default("a"),
+    jumlah: integer("jumlah").notNull(),
+    kemasanId: uuid("kemasan_id").references(() => kemasan.id),
+    // batch ditentukan di packing — di sinilah barang jadi unit jual
+    batch: text("batch"),
+    gudangTujuanId: uuid("gudang_tujuan_id").references(() => gudangBarangJadi.id),
+    barcode: text("barcode"),
+  },
+  (t) => [
+    index("packing_detail_header_idx").on(t.packingId),
+    index("packing_detail_finishing_idx").on(t.finishingDetailId),
+  ]
+);
+
+export const barangJadi = pgTable(
+  "barang_jadi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // FG-YYYYMM-NNNN
+    poId: uuid("po_id").references(() => poProduksi.id),
+    packingId: uuid("packing_id").references(() => packing.id),
+    tanggalMasuk: timestamp("tanggal_masuk", { withTimezone: true }).notNull(),
+    gudangTujuanId: uuid("gudang_tujuan_id").notNull().references(() => gudangBarangJadi.id),
+    penyerah: text("penyerah"),
+    penerimaId: uuid("penerima_id").references(() => users.id),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("barang_jadi_packing_idx").on(t.packingId),
+    index("barang_jadi_gudang_idx").on(t.gudangTujuanId),
+  ]
+);
+
+export const barangJadiDetail = pgTable(
+  "barang_jadi_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    barangJadiId: uuid("barang_jadi_id").notNull().references(() => barangJadi.id),
+    packingDetailId: uuid("packing_detail_id").references(() => packingDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    grade: qcGradeEnum("grade").notNull().default("a"),
+    jumlah: integer("jumlah").notNull(),
+    // nullable — Tahap 5 (HPP) di-skip, fitur tak boleh tersandera
+    hppSementara: numeric("hpp_sementara", { precision: 15, scale: 2 }),
+    batch: text("batch"),
+    rak: text("rak"),
+    barcode: text("barcode"),
+  },
+  (t) => [index("barang_jadi_detail_header_idx").on(t.barangJadiId)]
+);
+
+/**
+ * kuantitas = CACHE dari mutasi, di-maintain DALAM Server Action transaction
+ * (proyek ini TIDAK pakai DB trigger — pola src/services/barang-masuk.ts).
+ * stokSiapJual DERIVED = kuantitas − ditahan − rusak − reservasi, bukan kolom.
+ */
+export const stokBarangJadi = pgTable(
+  "stok_barang_jadi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    grade: qcGradeEnum("grade").notNull(),
+    gudangId: uuid("gudang_id").notNull().references(() => gudangBarangJadi.id),
+    batch: text("batch").notNull().default(""),
+    kuantitas: integer("kuantitas").notNull().default(0),
+    stokDitahan: integer("stok_ditahan").notNull().default(0),
+    stokRusak: integer("stok_rusak").notNull().default(0),
+    stokReservasi: integer("stok_reservasi").notNull().default(0),
+    hppRataRata: numeric("hpp_rata_rata", { precision: 15, scale: 2 }).notNull().default("0"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("stok_fg_kunci_unique").on(t.varianId, t.grade, t.gudangId, t.batch),
+    index("stok_fg_gudang_idx").on(t.gudangId),
+  ]
+);
+
+/** APPEND-ONLY. TIDAK ADA UPDATE/DELETE — aturan proyek kelas satu. */
+export const mutasiBarangJadi = pgTable(
+  "mutasi_barang_jadi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    stokBarangJadiId: uuid("stok_barang_jadi_id").notNull().references(() => stokBarangJadi.id),
+    jenis: mutasiFgJenisEnum("jenis").notNull(),
+    jumlah: integer("jumlah").notNull(), // + masuk, − keluar
+    referensiTipe: text("referensi_tipe"),
+    referensiId: uuid("referensi_id"),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull().defaultNow(),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("mutasi_fg_stok_idx").on(t.stokBarangJadiId),
+    index("mutasi_fg_jenis_idx").on(t.jenis),
+    index("mutasi_fg_referensi_idx").on(t.referensiTipe, t.referensiId),
+  ]
+);
+
+/** Transfer 2-fase: dikirim mengurangi asal, diterima menambah tujuan. */
+export const transferBarangJadi = pgTable("transfer_barang_jadi", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  nomorDokumen: text("nomor_dokumen").notNull().unique(), // TRF-FG-YYYYMM-NNNN
+  gudangAsalId: uuid("gudang_asal_id").notNull().references(() => gudangBarangJadi.id),
+  gudangTujuanId: uuid("gudang_tujuan_id").notNull().references(() => gudangBarangJadi.id),
+  tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+  pengirim: text("pengirim"),
+  penerima: text("penerima"),
+  status: transferFgStatusEnum("status").notNull().default("draft"),
+  catatan: text("catatan"),
+  createdBy: uuid("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+});
+
+export const transferBarangJadiDetail = pgTable(
+  "transfer_barang_jadi_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    transferId: uuid("transfer_id").notNull().references(() => transferBarangJadi.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    grade: qcGradeEnum("grade").notNull(),
+    batch: text("batch").notNull().default(""),
+    jumlah: integer("jumlah").notNull(),
+  },
+  (t) => [index("transfer_fg_detail_header_idx").on(t.transferId)]
+);
+
+/** Pola penyesuaian_stok Tahap 1: approved DULU, baru mutasi terbuat. */
+export const penyesuaianStokFg = pgTable(
+  "penyesuaian_stok_fg",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // PS-FG-YYYYMM-NNNN
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    grade: qcGradeEnum("grade").notNull(),
+    gudangId: uuid("gudang_id").notNull().references(() => gudangBarangJadi.id),
+    batch: text("batch").notNull().default(""),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    stokSistem: integer("stok_sistem").notNull(),
+    stokFisik: integer("stok_fisik").notNull(),
+    alasan: text("alasan").notNull(),
+    buktiUrl: text("bukti_url"),
+    status: approvalStatusEnum("status").notNull().default("pending"),
+    approvedBy: uuid("approved_by").references(() => users.id),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [index("ps_fg_status_idx").on(t.status)]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -2013,3 +2299,15 @@ export type ReQcDetail = typeof reQcDetail.$inferSelect;
 export type KarantinaReject = typeof karantinaReject.$inferSelect;
 export type KarantinaRejectDetail = typeof karantinaRejectDetail.$inferSelect;
 export type TindakanReject = typeof tindakanReject.$inferSelect;
+export type Finishing = typeof finishing.$inferSelect;
+export type FinishingDetail = typeof finishingDetail.$inferSelect;
+export type FinishingPemakaian = typeof finishingPemakaian.$inferSelect;
+export type Packing = typeof packing.$inferSelect;
+export type PackingDetail = typeof packingDetail.$inferSelect;
+export type BarangJadi = typeof barangJadi.$inferSelect;
+export type BarangJadiDetail = typeof barangJadiDetail.$inferSelect;
+export type StokBarangJadi = typeof stokBarangJadi.$inferSelect;
+export type MutasiBarangJadi = typeof mutasiBarangJadi.$inferSelect;
+export type TransferBarangJadi = typeof transferBarangJadi.$inferSelect;
+export type TransferBarangJadiDetail = typeof transferBarangJadiDetail.$inferSelect;
+export type PenyesuaianStokFg = typeof penyesuaianStokFg.$inferSelect;
