@@ -270,6 +270,66 @@ export const kondisiBundelTerimaEnum = pgEnum("kondisi_bundel_terima", [
   "ditolak",
 ]);
 
+// ─── Tahap 4 — QC, Finishing, Packing ─────────────────────────────────────────
+
+/** Tingkat kepentingan kriteria QC & keparahan cacat — dipakai standar QC + temuan cacat. */
+export const qcTingkatEnum = pgEnum("qc_tingkat", ["critical", "major", "minor", "cosmetic"]);
+
+export const cacatKategoriEnum = pgEnum("cacat_kategori", [
+  "bahan",
+  "cutting",
+  "jahit",
+  "aksesori",
+  "finishing",
+  "packing",
+  "ukuran",
+  "warna",
+  "label",
+  "kebersihan",
+]);
+
+/** Stage asal cacat — dasar analisa kinerja vendor tanpa tabel tambahan. */
+export const cacatSumberEnum = pgEnum("cacat_sumber", [
+  "supplier",
+  "gudang",
+  "cutting",
+  "bundling",
+  "penjahit_internal",
+  "vendor",
+  "qc",
+  "finishing",
+  "tidak_diketahui",
+]);
+
+export const kemasanJenisEnum = pgEnum("kemasan_jenis", [
+  "polybag",
+  "ziplock",
+  "box",
+  "dust_bag",
+  "kertas",
+  "stiker",
+  "thank_you_card",
+  "silica_gel",
+]);
+
+export const gudangJenisEnum = pgEnum("gudang_jenis", [
+  "gudang_utama",
+  "gudang_online",
+  "toko_offline",
+  "studio",
+  "lokasi_sample",
+  "transit",
+]);
+
+export const qcPrioritasEnum = pgEnum("qc_prioritas", [
+  "normal",
+  "tinggi",
+  "mendesak",
+  "launching",
+  "pesanan_khusus",
+  "produksi_terlambat",
+]);
+
 // ─── Users & Auth ─────────────────────────────────────────────────────────────
 
 // Mirror of Supabase auth.users — diupdate via trigger/webhook
@@ -1320,6 +1380,130 @@ export const penerimaanDekorasi = pgTable(
   (t) => [index("penerimaan_dekorasi_pekerjaan_idx").on(t.pekerjaanId)]
 );
 
+// ─── Tahap 4A — Master QC, Kemasan, Gudang Barang Jadi ────────────────────────
+
+export const jenisCacat = pgTable(
+  "jenis_cacat",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(),
+    nama: text("nama").notNull(),
+    kategori: cacatKategoriEnum("kategori").notNull(),
+    keparahan: qcTingkatEnum("keparahan").notNull(),
+    sumber: cacatSumberEnum("sumber").notNull().default("tidak_diketahui"),
+    dapatDiperbaiki: boolean("dapat_diperbaiki").notNull().default(true),
+    tindakanDefault: text("tindakan_default"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("jenis_cacat_kode_active_unique").on(t.kode).where(isNull(t.deletedAt)),
+    index("jenis_cacat_kategori_idx").on(t.kategori),
+  ]
+);
+
+// bahanKemasan = teks deskriptif (mis. "PE 0.05mm"), BUKAN FK — kemasan bukan bahan produksi.
+export const kemasan = pgTable(
+  "kemasan",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(),
+    nama: text("nama").notNull(),
+    jenis: kemasanJenisEnum("jenis").notNull(),
+    ukuran: text("ukuran"),
+    bahanKemasan: text("bahan_kemasan"),
+    supplierId: uuid("supplier_id").references(() => supplier.id),
+    biaya: numeric("biaya", { precision: 15, scale: 2 }).notNull().default("0"),
+    stokMinimum: numeric("stok_minimum", { precision: 15, scale: 2 }).notNull().default("0"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("kemasan_kode_active_unique").on(t.kode).where(isNull(t.deletedAt)),
+    index("kemasan_supplier_idx").on(t.supplierId),
+  ]
+);
+
+/**
+ * Gudang penyimpanan barang jadi — DIMENSI kunci stok barang jadi
+ * (varian, grade, gudang, batch). Beda dari lokasi_produksi (tempat KERJA vendor).
+ * Rak = kolom teks di barang_jadi_detail, sengaja bukan tabel.
+ */
+export const gudangBarangJadi = pgTable(
+  "gudang_barang_jadi",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(),
+    nama: text("nama").notNull(),
+    jenis: gudangJenisEnum("jenis").notNull().default("gudang_utama"),
+    alamat: text("alamat"),
+    picNama: text("pic_nama"),
+    isDefault: boolean("is_default").notNull().default(false),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("gudang_bj_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
+);
+
+// ─── Tahap 4A — Penerimaan ke QC (titik sambung Tahap 3 → 4) ──────────────────
+
+/**
+ * Hulu = penerimaan_hasil_jahit_detail.jumlah_baik (baik VISUAL, bukan lolos QC).
+ * Antrean QC TIDAK disimpan — derived: jumlah_baik − Σ jumlah_pcs yang sudah ke QC
+ * (pola referensi §4, lihat src/lib/qc/rekap.ts).
+ */
+export const penerimaanQc = pgTable(
+  "penerimaan_qc",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    nomorDokumen: text("nomor_dokumen").notNull().unique(), // IN-QC-YYYYMM-NNNN
+    penerimaanHasilJahitId: uuid("penerimaan_hasil_jahit_id")
+      .notNull()
+      .references(() => penerimaanHasilJahit.id),
+    poId: uuid("po_id").references(() => poProduksi.id),
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
+    lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
+    penerima: text("penerima").notNull(),
+    prioritas: qcPrioritasEnum("prioritas").notNull().default("normal"),
+    targetSelesai: timestamp("target_selesai", { withTimezone: true }),
+    catatan: text("catatan"),
+    createdBy: uuid("created_by").notNull().references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("penerimaan_qc_hasil_jahit_idx").on(t.penerimaanHasilJahitId),
+    index("penerimaan_qc_po_idx").on(t.poId),
+  ]
+);
+
+export const penerimaanQcDetail = pgTable(
+  "penerimaan_qc_detail",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    penerimaanQcId: uuid("penerimaan_qc_id").notNull().references(() => penerimaanQc.id),
+    // jejak balik ke bundel+varian Tahap 3 — kunci aritmetika sisa antrean
+    penerimaanHasilDetailId: uuid("penerimaan_hasil_detail_id")
+      .notNull()
+      .references(() => penerimaanHasilJahitDetail.id),
+    varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
+    jumlahPcs: integer("jumlah_pcs").notNull(),
+    catatan: text("catatan"),
+  },
+  (t) => [
+    index("penerimaan_qc_detail_header_idx").on(t.penerimaanQcId),
+    index("penerimaan_qc_detail_hasil_idx").on(t.penerimaanHasilDetailId),
+  ]
+);
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
@@ -1375,3 +1559,8 @@ export type BiayaJasaJahit = typeof biayaJasaJahit.$inferSelect;
 export type DekorasiTemplate = typeof dekorasiTemplate.$inferSelect;
 export type PekerjaanDekorasi = typeof pekerjaanDekorasi.$inferSelect;
 export type PenerimaanDekorasi = typeof penerimaanDekorasi.$inferSelect;
+export type JenisCacat = typeof jenisCacat.$inferSelect;
+export type Kemasan = typeof kemasan.$inferSelect;
+export type GudangBarangJadi = typeof gudangBarangJadi.$inferSelect;
+export type PenerimaanQc = typeof penerimaanQc.$inferSelect;
+export type PenerimaanQcDetail = typeof penerimaanQcDetail.$inferSelect;
