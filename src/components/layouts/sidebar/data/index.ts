@@ -69,6 +69,8 @@ export const NAV_DATA: NavSection[] = [
           { title: "Lokasi Produksi", url: "/vendor/lokasi" },
           { title: "Tarif Jasa Jahit", url: "/vendor/tarif" },
           { title: "Standar QC", url: "/qc/standar", disabled: true },
+          { title: "Jenis Cacat", url: "/master/jenis-cacat" },
+          { title: "Kemasan", url: "/master/kemasan" },
         ],
       },
     ],
