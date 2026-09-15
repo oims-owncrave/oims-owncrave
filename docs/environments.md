@@ -12,7 +12,7 @@ yang tidak boleh tercampur dengan data produksi.
 
 | | DB klien (produksi) | DB dev/demo |
 |---|---|---|
-| Project Supabase | `aixpakizbxegokrnhhlc` — **yang sekarang** | project **baru** |
+| Project Supabase | `aixpakizbxegokrnhhlc` | `fzkszkhjswtcugrqjzgx` |
 | Env file | `.env.production` | `.env.local` |
 | Isi | data asli Owncrave | dummy, tutorial, percobaan |
 | Dipakai oleh | Vercel (deploy) | `npm run dev` di mesin lokal |
@@ -29,12 +29,32 @@ migration. Menjalankan `npm run db:migrate` di DB baru hanya menghasilkan 15 tab
 Jadi untuk menyiapkan DB baru: **`npm run db:push`** (drizzle membandingkan `schema.ts` dengan
 DB lalu membuat yang kurang). Verifikasi hasilnya harus 87 tabel.
 
-## Langkah membuat DB dev/demo
+## Status: SUDAH DIKERJAKAN (15 Sep 2026)
 
-Dikerjakan Abu — pembuatan project Supabase butuh login dashboard.
+Pemisahan sudah jalan. Bagian di bawah disimpan sebagai rujukan kalau perlu diulang
+(mis. menyiapkan DB dev untuk mesin lain).
+
+| | isi sekarang |
+|---|---|
+| dev `fzkszkhjswtcugrqjzgx` | 87 tabel, master (11 kategori, 7 satuan, 3 warna, 6 supplier, 32 bahan), nol transaksi |
+| klien `aixpakizbxegokrnhhlc` | 87 tabel, data klien utuh — tidak tersentuh |
+
+Login dev: `dev@oims.local` / `oimsdev2026` (peran owner).
+
+**Dev server perlu di-restart** setelah `.env.local` berganti — Next.js membaca env saat start.
+
+## Langkah membuat DB dev/demo
 
 1. **Buat project baru** di https://supabase.com/dashboard → beri nama yang jelas berbeda,
    mis. `oims-dev`. Region sama (Southeast Asia) supaya latensi mirip.
+
+   **DATABASE_URL wajib memakai pooler, bukan `db.<ref>.supabase.co`.** Host `db.<ref>`
+   hanya punya alamat IPv6; tanpa rute IPv6 koneksi gagal `Network is unreachable`.
+   Bentuk yang benar — perhatikan username `postgres.<REF>`:
+   ```
+   postgresql://postgres.<REF>:<PASSWORD>@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
+   ```
+   Karakter khusus di password harus di-encode (`@` jadi `%40`).
 
 2. **Simpan `.env.local` yang sekarang** — isinya kredensial DB klien, masih dibutuhkan:
    ```bash
@@ -68,11 +88,28 @@ Dikerjakan Abu — pembuatan project Supabase butuh login dashboard.
    npm run db:whoami          # harus 87 tabel
    ```
 
-6. **Buat user login** untuk dev/demo. DB baru belum punya siapa-siapa, jadi Supabase Auth
-   perlu user baru — daftarkan lewat dashboard project baru (Authentication → Users), lalu
-   pastikan barisnya ada juga di tabel `users` (aplikasi memakai tabel sendiri untuk peran).
+6. **Salin objek yang tidak ikut `db:push`.** 24 CHECK constraint, 2 FK yang dideklarasi
+   manual, dan 2 partial unique ber-COALESCE tidak ada di `schema.ts`, jadi `db:push`
+   melewatinya. Tanpa langkah ini **DB dev lebih longgar dari DB klien** — aturan seperti
+   `hasil_qc_detail_seimbang` atau `transfer_fg_gudang_beda` tidak berlaku, dan bug yang
+   seharusnya tertangkap di dev justru lolos ke klien.
+   ```bash
+   node scripts/db-sync-manual-constraints.mjs           # lihat yang kurang
+   node scripts/db-sync-manual-constraints.mjs --apply
+   ```
 
-7. **Vercel**: pastikan Environment Variables di project Vercel memakai nilai **DB klien**
+7. **Isi master data** supaya dev bisa langsung dipakai:
+   ```bash
+   node scripts/db-seed-dev-from-client.mjs --apply
+   ```
+   Menyalin kategori, satuan, warna, supplier, bahan. Sengaja **tidak** menyalin stok,
+   mutasi, dan seluruh tabel transaksi — dev mulai bersih.
+
+8. **Buat user login.** `users.id` harus sama dengan `auth.users.id`, jadi buat lewat
+   Admin API lalu sisipkan barisnya di tabel `users` dengan id yang sama. Daftar lewat
+   dashboard juga bisa, asal barisnya ditambahkan manual sesudahnya.
+
+9. **Vercel**: pastikan Environment Variables di project Vercel memakai nilai **DB klien**
    (yang sekarang di `.env.production`), bukan dev. Kalau Vercel selama ini mengambil dari
    `.env.local` yang di-upload manual, perbarui sekarang — kalau tidak, deploy berikutnya
    akan menunjuk DB dev yang kosong.
@@ -86,6 +123,8 @@ Dikerjakan Abu — pembuatan project Supabase butuh login dashboard.
 | `npm run db:push` | sinkronkan skema ke DB dev |
 | `npm run db:push:prod` | sinkronkan skema ke **DB klien** — pikir dua kali |
 | `npm run db:studio` / `:prod` | buka drizzle studio pada DB terkait |
+| `node scripts/db-sync-manual-constraints.mjs` | cek/salin CHECK+FK+unique yang dilewati `db:push` |
+| `node scripts/db-seed-dev-from-client.mjs` | salin master data klien ke dev |
 
 `drizzle.config.ts` membaca `ENV_FILE`; tanpa itu selalu `.env.local`.
 
@@ -115,5 +154,5 @@ Dibuat saat verifikasi 15 Sep, semuanya di produk dummy "Smoke Test Jacket":
 | `PO-202609-9001` | data lama |
 | 32 bahan | sebagian sudah benar, dipakai lagi di no.3 |
 
-Semua ini ikut terhapus saat no.3 membersihkan DB klien untuk data real. Yang masih berguna
-(32 bahan) dipindahkan dulu ke dev/demo, atau cukup dibuat ulang di sana lewat `db:push` + seed.
+Semua ini ikut terhapus saat no.3 membersihkan DB klien untuk data real. 32 bahan yang masih
+berguna **sudah disalin** ke dev lewat `db-seed-dev-from-client.mjs`, jadi aman dihapus di klien.
