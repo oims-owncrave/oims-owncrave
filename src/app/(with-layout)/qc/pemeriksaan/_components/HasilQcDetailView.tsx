@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { cn, formatTanggal } from "@/lib/utils";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -42,8 +43,15 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
 export function HasilQcDetailView({ header, details, cacatOptions }: Props) {
   const [modalFor, setModalFor] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const router = useRouter();
   const { data: temuan } = useTemuanCacatList(header.id);
   const { remove } = useTemuanCacatMutation(header.id);
+
+  // kolom "Cacat Dirinci" dihitung Server Component (props details), bukan query
+  // client — tanpa refresh angkanya tertinggal sampai halaman dimuat ulang manual
+  function segarkan() {
+    router.refresh();
+  }
 
   const terkunci = header.status === "diverifikasi";
   const rows = temuan ?? [];
@@ -258,7 +266,10 @@ export function HasilQcDetailView({ header, details, cacatOptions }: Props) {
 
       <TemuanCacatModal
         open={modalFor !== null}
-        onClose={() => setModalFor(null)}
+        onClose={() => {
+          setModalFor(null);
+          segarkan();
+        }}
         hasilQcId={header.id}
         hasilQcDetailId={modalFor}
         sisa={
@@ -275,7 +286,7 @@ export function HasilQcDetailView({ header, details, cacatOptions }: Props) {
         message="Rincian cacat ini akan dihapus permanen."
         confirmLabel="Hapus"
         onConfirm={() => {
-          if (deleteId) remove.mutate(deleteId);
+          if (deleteId) remove.mutate(deleteId, { onSuccess: segarkan });
           setDeleteId(null);
         }}
         onCancel={() => setDeleteId(null)}
