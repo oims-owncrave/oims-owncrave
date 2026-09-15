@@ -239,3 +239,56 @@ index aktif), tepat satu BOM aktif per produk.
 **Prasyarat**: kerjakan **2b** (pisah DB klien vs dev/demo) lebih dulu. DB yang sekarang
 masih berisi data percobaan — termasuk produk "Smoke Test Jacket", PO-2026-0002 dan
 BOM-202609-0001 yang dibuat saat verifikasi sesi 15 Sep.
+
+
+---
+
+## Hasil input (no.3) — 15 Sep 2026
+
+Dijalankan ke **DB dev** (`fzkszkhjswtcugrqjzgx`) lewat `scripts/seed-data-real.mjs --apply`.
+Skrip idempoten dan menolak jalan kalau `.env.local` menunjuk DB klien.
+
+| | jumlah |
+|---|---|
+| produk | 5 |
+| varian (SKU) | 128 |
+| warna | 13 |
+| bahan | 61 (32 lama + 22 kain per warna + 7 baru lain) |
+| BOM aktif | 5 |
+| baris `bom_detail` | 101 |
+
+Per produk: Supernova 15 varian / 20 bahan, Nordic 40/21, OBYSSE 40/20,
+Hidden Black 15/18, Malabar 18/22.
+
+Invarian diperiksa: tidak ada bahan kembar, tidak ada SKU kembar, tepat satu BOM aktif
+per produk.
+
+### Keputusan yang diambil saat input
+
+**Kain utama per warna** (Abu, 15 Sep). 22 baris bahan kain dibuat: RJN 11 warna,
+Crinkle Dusky 8, RJN Lite 3. Baris BOM menunjuk kain **warna default** produk (varian
+pertama); pemakaian nyata per varian dicatat saat WO cutting.
+
+**Ukuran Supernova & Hidden Black** = M, L, XL, XXL, 3XL. Tidak ada blok "KEBUTUHAN KAIN"
+di dua sheet ini, tapi ukurannya tertulis lewat dua jalur yang saling cocok: `Label Size
+Chart (M,L,XL,XXL,3XL)` dan rentang resleting 28Inch (M) + 30Inch (L,XL) + 32Inch (XXL,3XL).
+
+**Koreksi OBYSSE.** Excel menulis resleting S,M / **XL,XXL** / XXL — huruf L tidak muncul
+dan XXL dobel, padahal label size chart-nya menyebut S,M,L,XL,XXL. Sheet OBYSSE hasil salin
+Nordic (judulnya masih "KEMEJA NORDIC"), jadi baris 32Inch diperlakukan **L,XL** mengikuti
+pola Nordic. Baris itu ditandai di `bom_detail.keterangan` dengan `[koreksi: ...]` supaya
+mudah dilacak. Sudah ditanyakan ke klien 15 Sep; kalau jawabannya lain, ubah baris itu saja.
+
+**Satuan mata itik & ring** diubah dari Kilogram ke Picis. Excel menghitung per pcs
+("Penggunaan 8 mata (Mata itik 16gram, ring 9gram) for 100pcs"), sehingga BOM sempat
+terbaca "8 Kg" di UI.
+
+### Satu baris sengaja dilewati
+
+Velcro di Hidden Black: di Excel nilainya 0 (H=0, M=0, J=0) — memang tidak dipakai di
+produk itu. Jadi 101 dari 102 baris, bukan kegagalan pemetaan.
+
+### Berkas
+
+- `data-real-klien.json` — data terstruktur hasil pembacaan Excel, sumber input
+- `peta-bahan.json` — pemetaan nama bahan Excel → nama di master

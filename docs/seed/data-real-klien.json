@@ -1,0 +1,831 @@
+{
+ "produk": [],
+ "ukuran": {
+  "SUPERNOVA": [
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "HIDDEN BLACK": [
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ],
+  "NORDIC": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "OBYSSE": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "MALABAR": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "3XL"
+  ]
+ },
+ "kain": {
+  "SUPERNOVA": "RJN",
+  "MALABAR": "RJN",
+  "HIDDEN BLACK": "RJN Lite",
+  "NORDIC": "Crinkle Dusky",
+  "OBYSSE": "RJN"
+ },
+ "kode": {
+  "SUPERNOVA": "SPN",
+  "NORDIC": "NRD",
+  "OBYSSE": "OBY",
+  "HIDDEN BLACK": "HBK",
+  "MALABAR": "MLB"
+ },
+ "warna_kode": {
+  "HITAM": "Htm",
+  "OLIVE": "Olv",
+  "MOCCA": "Mcc",
+  "OLIVE ARMY": "OlA",
+  "PETROL": "Ptr",
+  "KHAKI": "Khk",
+  "ABU": "Abu",
+  "MAROON": "Mrn",
+  "SAGE": "Sge",
+  "NAVY": "Nvy",
+  "HIJAU": "Hju"
+ },
+ "varian": {
+  "SUPERNOVA": [
+   "HITAM",
+   "OLIVE",
+   "MOCCA"
+  ],
+  "NORDIC": [
+   "HITAM",
+   "OLIVE ARMY",
+   "PETROL",
+   "KHAKI",
+   "ABU",
+   "MAROON",
+   "SAGE",
+   "NAVY"
+  ],
+  "OBYSSE": [
+   "HITAM",
+   "OLIVE ARMY",
+   "PETROL",
+   "KHAKI",
+   "ABU",
+   "MAROON",
+   "SAGE",
+   "NAVY"
+  ],
+  "HIDDEN BLACK": [
+   "HITAM",
+   "OLIVE",
+   "MOCCA"
+  ],
+  "MALABAR": [
+   "HITAM",
+   "PETROL",
+   "HIJAU"
+  ]
+ },
+ "bom": {
+  "SUPERNOVA": [
+   {
+    "nama": "Parasut RJN (Rinjani)",
+    "q": 1.599999999906215,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1,6 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Bilabong 45 /120Gsm (Tebal)",
+    "q": 1.25,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan puring rata-rata 1,25 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Benang Tambang (Hitam,Olive,Mocca)",
+    "q": 0.4,
+    "satuan": "Pcs",
+    "ket": "Jika 1 Benang untuk 2,5 Jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 28Inch/71cm (M)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "M"
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 30Inch/75cm (L,XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Premium, beli di Phoenix",
+    "berlakuUkuran": "L,XL"
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 32Inch/81cm (XXL, 3XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "XXL,3XL"
+   },
+   {
+    "nama": "Resleting Roll DS Nylon 5 Black 1,2Kg",
+    "q": 0.8000000000351692,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 4 saku memerlukan 0,8 Meter Resleting",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleing YKK Depan cnda 5 Lock",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting utama 1pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleting YKK Cebol cnda 5",
+    "q": 4.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting saku 4pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Velcro Hitam 1 inch /2,5cm",
+    "q": 0.16000000004433457,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan velcro 16cm /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Karet Elastis SR Biru 1 inch /2,5cm",
+    "q": 0.2600000000879231,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan karet elastis 26cm /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Resleting / Puller Rope Hitam",
+    "q": 5.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 5 Tali resleting /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Taliqur/ Karet String 2,5mm Hitam (Premium)",
+    "q": 2.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan taliqur bagian bawah dan Hoodie 2,5 Meter /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stopper Botol Bening",
+    "q": 4.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 4 stopper botol /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kain Keras 25N",
+    "q": 0.09999999999999999,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 1 meter kain keras untuk 10 jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Mata itik / ST 350 N & ST Ring 350 N, Hitam",
+    "q": 8.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 8 mata (Mata itik 16gram, ring 9gram) for 100pcs",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Label Size Chart (M,L,XL,XXL,3XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": "M,L,XL,XXL,3XL"
+   },
+   {
+    "nama": "Stiker Size Chart",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Hantag",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Plastik Bening 35x40 (07)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   }
+  ],
+  "NORDIC": [
+   {
+    "nama": "Parasut Crinkle Dusky",
+    "q": 1.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1,5 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Jala Mesh/Basket",
+    "q": 1.0,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Peles2 (bagian lengan)",
+    "q": 0.5999999999458134,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 0,6 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Benang Tambang",
+    "q": 0.33333333335,
+    "satuan": "Pcs",
+    "ket": "Jika 1 Benang untuk 3 Jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Resleting Vislon GMC No5, Hitam 24Inch/66cm (S,M)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "S,M"
+   },
+   {
+    "nama": "Resleting Vislon GMC No5, Hitam 26Inch/66cm (L,XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "pakai resleting vislon GMC for YKK",
+    "berlakuUkuran": "L,XL"
+   },
+   {
+    "nama": "Resleting Vislon GMC No5, Hitam 28Inch/71cm (XXL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "XXL"
+   },
+   {
+    "nama": "Resleting Roll DS Nylon 5 Black 1,2Kg",
+    "q": 0.4000000001055076,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 2 saku memerlukan 0,4 Meter Resleting",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleing YKK Depan Vislon 5 Lock",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting utama 1pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleting YKK Cebol cnda 5",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting saku 2pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kancing Cetek 15mm Plastik",
+    "q": 7.9999999964,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 8 kancing /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stop Resleting",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Per jaketnya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Resleting / Puller Rope Hitam",
+    "q": 3.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 3 Tali resleting /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Taliqur/ Karet String 2,5mm Hitam (Premium)",
+    "q": 1.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan taliqur bagian bawah 1,5 Meter /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stopper Botol Bening",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 2 stopper botol /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kain Keras 25N",
+    "q": 0.2000000000326571,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 1 meter kain keras untuk 5 jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Mata itik / ST 350 N & ST Ring 350 N, Hitam",
+    "q": 4.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 4 mata (Mata itik 16gram, ring 9gram) for 100pcs",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Label Size Chart (S,M,L,XL,XXL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": "S,M,L,XL,XXL"
+   },
+   {
+    "nama": "Stiker Size Chart",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Hantag",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Plastik Bening 35x40 (07)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   }
+  ],
+  "OBYSSE": [
+   {
+    "nama": "Parasut RJN",
+    "q": 1.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1,5 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring BILABONG 120GSM",
+    "q": 1.0,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Peles2 (bagian lengan)",
+    "q": 0.5999999999458134,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 0,6 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Benang Tambang",
+    "q": 0.33333333335,
+    "satuan": "Pcs",
+    "ket": "Jika 1 Benang untuk 3 Jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Resleting Vislon GMC No5, Hitam 30Inch/66cm (S,M)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "S,M"
+   },
+   {
+    "nama": "Resleting Vislon GMC No5, Hitam 32Inch/66cm (XL,XXL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "pakai resleting vislon GMC for YKK [koreksi: Excel tertulis XL,XXL — L hilang & XXL dobel; disesuaikan pola Nordic]",
+    "berlakuUkuran": "L,XL"
+   },
+   {
+    "nama": "Resleting Vislon GMC No5, Hitam 34Inch/71cm (XXL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "XXL"
+   },
+   {
+    "nama": "Resleting Roll DS Nylon 5 Black 1,2Kg",
+    "q": 0.4000000001055076,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 2 saku memerlukan 0,4 Meter Resleting",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleing YKK Depan Vislon 5 Lock",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting utama 1pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleting YKK Cebol cnda 5",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting saku 2pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kancing Cetek 15mm Plastik",
+    "q": 7.9999999964,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 8 kancing /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stop Resleting",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Per jaketnya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Resleting / Puller Rope Hitam",
+    "q": 3.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 3 Tali resleting /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Taliqur/ Karet String 2,5mm Hitam (Premium)",
+    "q": 1.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan taliqur bagian bawah 1,5 Meter /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stopper Botol Bening",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 2 stopper botol /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Mata itik / ST 350 N & ST Ring 350 N, Hitam",
+    "q": 4.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 4 mata (Mata itik 16gram, ring 9gram) for 100pcs",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Label Size Chart (S,M,L,XL,XXL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": "S,M,L,XL,XXL"
+   },
+   {
+    "nama": "Stiker Size Chart",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Hantag",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Plastik Bening 35x40 (07)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   }
+  ],
+  "HIDDEN BLACK": [
+   {
+    "nama": "Parasut RJN lite (Rinjani)",
+    "q": 1.5999999998984,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1,6 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Bilabong 45 /120Gsm (Tebal)",
+    "q": 1.0,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan puring rata-rata 1,25 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Benang Tambang (Hitam,Olive,Mocca)",
+    "q": 0.4,
+    "satuan": "Pcs",
+    "ket": "Jika 1 Benang untuk 2,5 Jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 28Inch/71cm (M)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "M"
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 30Inch/75cm (L,XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Premium, beli di Phoenix",
+    "berlakuUkuran": "L,XL"
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 32Inch/81cm (XXL, 3XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "XXL,3XL"
+   },
+   {
+    "nama": "Resleting jepang 25cm",
+    "q": 2.000000000685714,
+    "satuan": "Pcs",
+    "ket": "Jika penggunaan 4 saku memerlukan 0,8 Meter Resleting",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleing YKK Depan cnda 5 Lock",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting utama 1pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Velcro Hitam 1 inch /2,5cm",
+    "q": null,
+    "satuan": "Pcs",
+    "ket": "Jika penggunaan velcro 16cm /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Karet Elastis SR Biru 1 inch /2,5cm",
+    "q": 0.5000000000879231,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan karet elastis 50cm /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Resleting / Puller Rope Hitam",
+    "q": 5.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 5 Tali resleting /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Taliqur/ Karet String 2,5mm Hitam (Premium)",
+    "q": 2.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan taliqur bagian bawah dan Hoodie 2,5 Meter /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stopper Botol Bening",
+    "q": 4.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 4 stopper botol /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kain Keras 25N",
+    "q": 0.09999999999999999,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 1 meter kain keras untuk 10 jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Mata itik / ST 350 N & ST Ring 350 N, Hitam",
+    "q": 8.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 8 mata (Mata itik 16gram, ring 9gram) for 100pcs",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Label Size Chart (M,L,XL,XXL,3XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": "M,L,XL,XXL,3XL"
+   },
+   {
+    "nama": "Stiker Size Chart",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Hantag",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Plastik Bening 35x40 (07)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   }
+  ],
+  "MALABAR": [
+   {
+    "nama": "Parasut RJN (Rinjani)",
+    "q": 1.8999999996248613,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 1,9 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Bilabong 45 /120Gsm (Tebal)",
+    "q": 1.25,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan puring rata-rata 1,25 Meter",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Puring Jala Mesh/Basket",
+    "q": 0.049999999986478874,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan bahan rata-rata 0,05 Meter / 5cm",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Benang Tambang (Hitam,Petrol, Hijau Army)",
+    "q": 0.5,
+    "satuan": "Pcs",
+    "ket": "Jika 1 Benang untuk 2 Jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Resleting Coil 15Inch/40cm (Resleting hoodie)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Resleting Hoodie",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 28Inch/71cm (M)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "M"
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 30Inch/75cm (L,XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Premium, beli di Phoenix",
+    "berlakuUkuran": "L,XL"
+   },
+   {
+    "nama": "Resleting Coil DSJK No5, Hitam 32Inch/81cm (XXL, 3XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": null,
+    "berlakuUkuran": "XXL,3XL"
+   },
+   {
+    "nama": "Resleting Roll DS Nylon 5 Black 1,2Kg",
+    "q": 0.6000000000703384,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 3 saku memerlukan 0,6 Meter Resleting",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleing YKK Depan cnda 5 Lock",
+    "q": 2.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting utama 2pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kepala Resleting YKK Cebol cnda 5",
+    "q": 3.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan kepala resleting saku 3pcs /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Velcro Hitam 1 inch /2,5cm",
+    "q": 0.25000000005541817,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan velcro 25cm /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Karet Elastis SR Biru 1 inch /2,5cm",
+    "q": 0.2600000000879231,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan karet elastis 26cm /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Resleting / Puller Rope Hitam",
+    "q": 5.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 5 Tali resleting /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Taliqur/ Karet String 2,5mm Hitam (Premium)",
+    "q": 2.5,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan taliqur bagian bawah dan Hoodie 2,5 Meter /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Stopper Botol Bening",
+    "q": 4.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 4 stopper botol /jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Kain Keras 25N",
+    "q": 0.2000000000326571,
+    "satuan": "Meter",
+    "ket": "Jika penggunaan 1 meter kain keras untuk 5 jaket",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Mata itik / ST 350 N & ST Ring 350 N, Hitam",
+    "q": 8.0,
+    "satuan": "Pcs",
+    "ket": "Penggunaan 8 mata (Mata itik 16gram, ring 9gram) for 100pcs",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Label Size Chart (M,L,XL,XXL,3XL)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": "M,L,XL,XXL,3XL"
+   },
+   {
+    "nama": "Stiker Size Chart",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Tali Hantag",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   },
+   {
+    "nama": "Plastik Bening 35x40 (07)",
+    "q": 1.0,
+    "satuan": "Pcs",
+    "ket": "Per pcs nya",
+    "berlakuUkuran": null
+   }
+  ]
+ }
+}
