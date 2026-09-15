@@ -55,27 +55,22 @@ export async function getRingkasanQc() {
     Number(qc?.gradeB ?? 0) + Number(qc?.gradeC ?? 0) + Number(qc?.perbaikan ?? 0) + Number(qc?.reject ?? 0);
 
   // First Pass Yield = lolos QC PERTAMA (baris tanpa rework sama sekali)
+  /**
+   * First Pass Yield = pcs yang lolos pemeriksaan PERTAMA, yaitu grade A.
+   *
+   * JANGAN menyaring baris yang punya rework: QC dicatat agregat per varian,
+   * jadi satu baris bisa berisi 17 grade A sekaligus 3 perbaikan. Menyaring
+   * baris membuang 17 pcs yang justru lolos sekali jalan — FPY jadi 0% padahal
+   * seharusnya 68%. Grade A menurut definisinya belum pernah di-rework; pcs
+   * yang lolos SETELAH rework tercatat di re_qc, bukan di sini.
+   */
   const [fpy] = await db
     .select({
       lolosTanpaRework: sql<number>`COALESCE(SUM(${hasilQcDetail.gradeA}), 0)::int`,
     })
     .from(hasilQcDetail)
     .innerJoin(hasilQc, eq(hasilQcDetail.hasilQcId, hasilQc.id))
-    .where(
-      and(
-        isNull(hasilQc.deletedAt),
-        sql`NOT EXISTS (
-          SELECT 1 FROM perbaikan_internal_detail pd
-          JOIN perbaikan_internal p ON p.id = pd.perbaikan_internal_id
-          WHERE pd.hasil_qc_detail_id = ${hasilQcDetail.id} AND p.deleted_at IS NULL
-        )`,
-        sql`NOT EXISTS (
-          SELECT 1 FROM retur_qc_vendor_detail rd
-          JOIN retur_qc_vendor r ON r.id = rd.retur_qc_vendor_id
-          WHERE rd.hasil_qc_detail_id = ${hasilQcDetail.id} AND r.deleted_at IS NULL
-        )`,
-      ),
-    );
+    .where(isNull(hasilQc.deletedAt));
 
   const [antrean] = await db
     .select({
