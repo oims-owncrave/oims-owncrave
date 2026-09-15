@@ -197,11 +197,13 @@ export async function createHasilQc(input: HasilQcInput): Promise<Result> {
             id: workOrderQcDetail.id,
             jumlahPcs: workOrderQcDetail.jumlahPcs,
             workOrderQcId: workOrderQcDetail.workOrderQcId,
+            // nama tabel WAJIB eksplisit: ${workOrderQcDetail.id} ter-render jadi "id"
+            // polos dan bentrok dengan hasil_qc_detail.id di subquery (42702 ambiguous)
             sudah: sql<number>`(
               SELECT COALESCE(SUM(hd.jumlah_diperiksa), 0)::int
               FROM hasil_qc_detail hd
               JOIN hasil_qc h ON h.id = hd.hasil_qc_id AND h.deleted_at IS NULL
-              WHERE hd.work_order_qc_detail_id = ${workOrderQcDetail.id}
+              WHERE hd.work_order_qc_detail_id = work_order_qc_detail.id
             )`,
           })
           .from(workOrderQcDetail)

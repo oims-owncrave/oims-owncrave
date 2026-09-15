@@ -177,11 +177,12 @@ export async function getWoQcDetail(id: string) {
       ukuran: varianProduk.ukuran,
       produkNama: produk.nama,
       nomorInQc: penerimaanQc.nomorDokumen,
+      // nama tabel eksplisit — hindari 42702 ambiguous seperti hasil-qc.ts
       sudahDiperiksa: sql<number>`(
         SELECT COALESCE(SUM(hd.jumlah_diperiksa), 0)::int
         FROM hasil_qc_detail hd
         JOIN hasil_qc h ON h.id = hd.hasil_qc_id AND h.deleted_at IS NULL
-        WHERE hd.work_order_qc_detail_id = ${workOrderQcDetail.id}
+        WHERE hd.work_order_qc_detail_id = work_order_qc_detail.id
       )`,
     })
     .from(workOrderQcDetail)
