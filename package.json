@@ -16,6 +16,10 @@
     "db:push": "drizzle-kit push",
     "db:introspect": "drizzle-kit introspect",
     "db:studio": "drizzle-kit studio",
+    "db:whoami": "node scripts/db-whoami.mjs",
+    "db:whoami:prod": "ENV_FILE=.env.production node scripts/db-whoami.mjs",
+    "db:push:prod": "ENV_FILE=.env.production drizzle-kit push",
+    "db:studio:prod": "ENV_FILE=.env.production drizzle-kit studio",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
