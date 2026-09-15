@@ -42,7 +42,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               "w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:bg-gray-100 disabled:cursor-not-allowed",
               icon && iconPosition === "left" && "pl-10",
-              icon && iconPosition === "right" && "pr-10",
+              // Suffix kanan (mis. satuan bahan): sembunyikan spinner number supaya tidak bertumpuk
+              icon &&
+                iconPosition === "right" &&
+                "pr-10 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [appearance:textfield]",
               error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
               className
             )}

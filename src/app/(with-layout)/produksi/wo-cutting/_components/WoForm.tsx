@@ -200,7 +200,7 @@ export function WoForm({ poOptions, picOptions, editId, defaultValues }: Props) 
             return (
               <div
                 key={field.id}
-                className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_2.5rem]"
+                className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_2.5rem] md:items-start"
               >
                 <ComboSelect
                   label={index === 0 ? "Varian (SKU)" : undefined}
@@ -226,7 +226,7 @@ export function WoForm({ poOptions, picOptions, editId, defaultValues }: Props) 
                   error={errors.details?.[index]?.targetCutting?.message}
                 />
                 <div className="hidden md:block">
-                  <div className={`mb-2 h-5 ${index === 0 ? "block" : "invisible"}`} aria-hidden />
+                  {index === 0 && <div className="mb-2 h-5" aria-hidden />}
                   <div className="flex h-10 items-center justify-center">
                     <button
                       type="button"

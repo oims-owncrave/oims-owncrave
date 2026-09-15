@@ -179,7 +179,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_2.5rem]">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_2.5rem] md:items-start">
                   <div>
                     <ComboSelect
                       label={i === 0 ? "Bahan" : undefined}
@@ -200,18 +200,18 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
                   <Input
                     type="number"
                     step="0.001"
-                    label={
-                      i === 0 ? `Kuantitas${satuan ? ` (${satuan})` : ""}` : undefined
-                    }
+                    label={i === 0 ? "Kuantitas" : undefined}
+                    icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
+                    iconPosition="right"
                     {...register(`detail.${i}.kuantitas`, { valueAsNumber: true })}
                     error={errors.detail?.[i]?.kuantitas?.message}
                   />
 
                   {/* Harga Rata2 (Info) */}
                   <div>
-                    <label className={`mb-2 block text-sm font-medium text-dark dark:text-white ${i === 0 ? "" : "md:invisible"}`}>
+                    <div className={`mb-2 text-sm font-medium text-dark dark:text-white ${i === 0 ? "block" : "block md:hidden"}`}>
                       Harga Rata²
-                    </label>
+                    </div>
                     <div className="flex h-10 items-center px-4 rounded-lg border border-stroke bg-gray-100 text-sm text-dark-5 dark:border-dark-3 dark:bg-dark-2 dark:text-dark-6">
                       {bahanInfo ? rupiah(harga) : "-"}
                     </div>
@@ -222,9 +222,11 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
                     <span className="text-xs text-dark-5 dark:text-dark-6 md:hidden">
                       Subtotal:
                     </span>
-                    <label className={`mb-2 hidden text-right text-sm font-medium text-dark dark:text-white md:block ${i === 0 ? "" : "invisible"}`}>
-                      Subtotal
-                    </label>
+                    {i === 0 && (
+                      <div className="mb-2 hidden h-5 text-right text-sm font-medium text-dark dark:text-white md:block">
+                        Subtotal
+                      </div>
+                    )}
                     <div className="flex h-10 items-center justify-end px-0 text-sm font-semibold text-dark dark:text-white md:px-4 md:font-medium">
                       {rupiah(subtotal)}
                     </div>
@@ -232,7 +234,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
 
                   {/* Desktop Delete button */}
                   <div className="hidden md:block">
-                    <div className={`mb-2 h-5 ${i === 0 ? "block" : "invisible"}`} aria-hidden />
+                    {i === 0 && <div className="mb-2 h-5" aria-hidden />}
                     <div className="flex h-10 items-center justify-center">
                       <button
                         type="button"

@@ -96,7 +96,7 @@ function DetailRow({
       </div>
 
       {/* Grid content */}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)_2.5rem]">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1.3fr)_2.5rem] md:items-start">
         <ComboSelect
           label={index === 0 ? "Bahan" : undefined}
           placeholder="Pilih bahan"
@@ -121,7 +121,9 @@ function DetailRow({
         <Input
           type="number"
           step="0.001"
-          label={index === 0 ? `Kuantitas${satuan ? ` (${satuan})` : ""}` : undefined}
+          label={index === 0 ? "Kuantitas" : undefined}
+          icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
+          iconPosition="right"
           {...register(`detail.${index}.kuantitas`, { valueAsNumber: true })}
           error={errors.detail?.[index]?.kuantitas?.message}
         />
@@ -135,9 +137,10 @@ function DetailRow({
             error={errors.detail?.[index]?.hargaSatuan?.message}
           />
 
-          {/* Hint Riwayat Harga Pembelian */}
+          {/* Hint Riwayat Harga Pembelian — ruangnya dipatok supaya baris tanpa hint tetap sejajar */}
+          <div className="mt-1 md:h-4">
           {row?.bahanId && (riwayat.length > 0 || hargaRataRata > 0) && (
-            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-dark-5 dark:text-dark-6">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-dark-5 dark:text-dark-6">
               {hargaRataRata > 0 && (
                 <span className="text-dark-4 dark:text-dark-5">
                   Rata²: <span className="font-medium">{rupiah(hargaRataRata)}</span>
@@ -171,6 +174,7 @@ function DetailRow({
               })()}
             </div>
           )}
+          </div>
         </div>
 
         {/* Subtotal */}
@@ -178,9 +182,11 @@ function DetailRow({
           <span className="text-xs text-dark-5 dark:text-dark-6 md:hidden">
             Subtotal:
           </span>
-          <label className={`mb-2 hidden text-right text-sm font-medium text-dark dark:text-white md:block ${index === 0 ? "" : "invisible"}`}>
-            Subtotal
-          </label>
+          {index === 0 && (
+            <div className="mb-2 hidden h-5 text-right text-sm font-medium text-dark dark:text-white md:block">
+              Subtotal
+            </div>
+          )}
           <div className="flex h-10 items-center justify-end px-0 text-sm font-semibold text-dark dark:text-white md:px-4 md:font-medium">
             {rupiah(subtotal)}
           </div>
@@ -188,7 +194,7 @@ function DetailRow({
 
         {/* Desktop Delete button */}
         <div className="hidden md:block">
-          <div className={`mb-2 h-5 ${index === 0 ? "block" : "invisible"}`} aria-hidden />
+          {index === 0 && <div className="mb-2 h-5" aria-hidden />}
           <div className="flex h-10 items-center justify-center">
             <button
               type="button"
