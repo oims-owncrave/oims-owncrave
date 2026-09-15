@@ -1,9 +1,10 @@
 "use client";
 
 import { useForm, useFieldArray, type UseFormRegister, type UseFormSetValue, type FieldErrors } from "react-hook-form";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -15,6 +16,8 @@ import {
 } from "@/lib/schemas/barang-masuk";
 import { useBarangMasukMutation } from "@/hooks/useBarangMasuk";
 import { useRiwayatHarga } from "@/hooks/useRiwayatHarga";
+import { getBahanBomAktif } from "@/services/bom";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 type BahanOption = {
   id: string;
@@ -25,10 +28,12 @@ type BahanOption = {
   hargaRataRata: string;
 };
 type SupplierOption = { id: string; nama: string; isActive: boolean };
+type ProdukOption = { id: string; kode: string; nama: string; isActive: boolean };
 
 interface Props {
   bahanOptions: BahanOption[];
   supplierOptions: SupplierOption[];
+  produkOptions: ProdukOption[];
 }
 
 const rupiah = (n: number) =>
@@ -212,7 +217,7 @@ function DetailRow({
   );
 }
 
-export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
+export function BarangMasukForm({ bahanOptions, supplierOptions, produkOptions }: Props) {
   const router = useRouter();
   const { create } = useBarangMasukMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -237,6 +242,45 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
 
   const { fields, append, remove } = useFieldArray({ control, name: "detail" });
   const detail = watch("detail");
+
+  // ── Prefill bahan dari BOM aktif sebuah produk ──────────────────────────
+  // Hanya daftar bahannya yang diisi; kuantitas & harga tetap manual sesuai nota
+  // supplier, karena pembelian nyata jarang pas dengan hitungan BOM.
+  const [produkId, setProdukId] = useState<string | null>(null);
+  const [memuatBom, setMemuatBom] = useState(false);
+  const [konfirmasiTimpa, setKonfirmasiTimpa] = useState<string | null>(null);
+
+  const adaIsian = (detail ?? []).some(
+    (d) => d.bahanId || Number(d.kuantitas) > 0 || Number(d.hargaSatuan) > 0,
+  );
+
+  async function isiDariBom(id: string) {
+    setMemuatBom(true);
+    try {
+      const res = await getBahanBomAktif(id);
+      if ("error" in res) return toast.error(res.error);
+      if (!res.data.length) return toast.error("BOM aktif produk ini belum punya bahan");
+      setValue(
+        "detail",
+        res.data.map((b) => ({
+          bahanId: b.bahanId,
+          kuantitas: 0,
+          hargaSatuan: Number(b.hargaRataRata) || 0,
+        })),
+        { shouldValidate: false },
+      );
+      setProdukId(id);
+      toast.success(`${res.data.length} bahan dimuat dari BOM — isi kuantitas yang dibeli`);
+    } finally {
+      setMemuatBom(false);
+    }
+  }
+
+  function pilihProduk(id: string | null) {
+    if (!id) return setProdukId(null);
+    if (adaIsian) return setKonfirmasiTimpa(id); // jangan diam-diam menimpa isian
+    void isiDariBom(id);
+  }
 
   const total = (detail ?? []).reduce(
     (sum, d) => sum + (Number(d.kuantitas) || 0) * (Number(d.hargaSatuan) || 0),
@@ -283,6 +327,25 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
             {...register("catatan")}
             error={errors.catatan?.message}
           />
+        </div>
+
+        {/* Jalan pintas: muat daftar bahan dari BOM aktif sebuah produk */}
+        <div className="mt-4 border-t border-stroke pt-4 dark:border-dark-3">
+          <div className="md:w-1/2">
+            <ComboSelect
+              label="Isi bahan dari produk (opsional)"
+              placeholder={memuatBom ? "Memuat..." : "Pilih produk"}
+              options={produkOptions
+                .filter((p) => p.isActive)
+                .map((p) => ({ label: `${p.kode} — ${p.nama}`, value: p.id }))}
+              value={produkId}
+              onChange={(v) => pilihProduk((v as string) ?? null)}
+              disabled={memuatBom}
+            />
+            <p className="mt-1.5 text-xs text-dark-5 dark:text-dark-6">
+              Memuat semua bahan resep produk. Kuantitas tetap diisi manual sesuai nota supplier.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -335,6 +398,19 @@ export function BarangMasukForm({ bahanOptions, supplierOptions }: Props) {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={konfirmasiTimpa !== null}
+        title="Ganti isian dengan bahan dari produk?"
+        message="Baris bahan yang sudah terisi akan diganti dengan resep produk yang dipilih."
+        confirmLabel="Ganti"
+        onConfirm={() => {
+          const id = konfirmasiTimpa;
+          setKonfirmasiTimpa(null);
+          if (id) void isiDariBom(id);
+        }}
+        onCancel={() => setKonfirmasiTimpa(null)}
+      />
 
       <div className="flex justify-end gap-3">
         <Button

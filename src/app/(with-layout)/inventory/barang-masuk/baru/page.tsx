@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { listBahan } from "@/services/bahan";
 import { listSupplier } from "@/services/supplier";
+import { listProduk } from "@/services/produk";
 import { requireRole } from "@/lib/auth";
 import { BarangMasukForm } from "../_components/BarangMasukForm";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -12,9 +13,10 @@ export const metadata: Metadata = {
 export default async function BarangMasukBaruPage() {
   await requireRole(["owner", "admin_gudang"]);
 
-  const [bahanOptions, supplierOptions] = await Promise.all([
+  const [bahanOptions, supplierOptions, produkOptions] = await Promise.all([
     listBahan(),
     listSupplier(),
+    listProduk(),
   ]);
 
   return (
@@ -30,6 +32,7 @@ export default async function BarangMasukBaruPage() {
       <BarangMasukForm
         bahanOptions={bahanOptions}
         supplierOptions={supplierOptions}
+        produkOptions={produkOptions}
       />
     </div>
   );

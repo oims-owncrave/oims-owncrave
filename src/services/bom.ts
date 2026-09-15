@@ -110,6 +110,41 @@ export async function getBomDetail(id: string) {
 
 export type BomDetailData = NonNullable<Awaited<ReturnType<typeof getBomDetail>>>;
 
+/**
+ * Bahan resep dari BOM AKTIF sebuah produk — untuk prefill form barang masuk.
+ * Kuantitas BOM sengaja tidak dikembalikan: pembelian diisi sesuai nota supplier,
+ * bukan dihitung dari resep (keputusan Abu 14 Sep).
+ */
+export async function getBahanBomAktif(produkId: string) {
+  await requireRole([...READ_ROLES]);
+
+  const [aktif] = await db
+    .select({ id: bom.id })
+    .from(bom)
+    .where(and(eq(bom.produkId, produkId), eq(bom.status, "aktif"), isNull(bom.deletedAt)))
+    .limit(1);
+
+  if (!aktif) return { error: "Produk ini belum punya BOM aktif" as const };
+
+  const rows = await db
+    .select({
+      bahanId: bomDetail.bahanId,
+      kode: bahan.kode,
+      nama: bahan.nama,
+      satuanSingkatan: satuan.singkatan,
+      hargaRataRata: bahan.hargaRataRata,
+    })
+    .from(bomDetail)
+    .innerJoin(bahan, eq(bomDetail.bahanId, bahan.id))
+    .innerJoin(satuan, eq(bahan.satuanId, satuan.id))
+    .where(and(eq(bomDetail.bomId, aktif.id), isNull(bahan.deletedAt)))
+    .orderBy(bahan.nama);
+
+  // satu bahan bisa muncul beberapa kali di BOM (beda berlakuUkuran) — di pembelian cukup sekali
+  const unik = [...new Map(rows.map((r) => [r.bahanId, r])).values()];
+  return { data: unik };
+}
+
 function detailValues(bomId: string, input: BomInput) {
   return input.details.map((d) => ({
     bomId,
