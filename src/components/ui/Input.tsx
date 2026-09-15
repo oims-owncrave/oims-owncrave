@@ -8,11 +8,14 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  /** Saran nilai (datalist bawaan browser) — tetap boleh mengetik di luar daftar. */
+  suggestions?: string[];
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, icon, iconPosition = "left", className, required, id, ...props }, ref) => {
+  ({ label, error, icon, iconPosition = "left", suggestions, className, required, id, ...props }, ref) => {
     const inputId = id;
+    const listId = suggestions?.length ? `${inputId ?? props.name ?? "inp"}-list` : undefined;
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
@@ -49,8 +52,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
               className
             )}
+            list={listId}
             {...props}
           />
+          {listId && (
+            <datalist id={listId}>
+              {suggestions!.map((s) => (
+                <option key={s} value={s} />
+              ))}
+            </datalist>
+          )}
         </div>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>

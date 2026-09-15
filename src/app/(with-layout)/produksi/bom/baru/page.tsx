@@ -9,13 +9,24 @@ export const metadata: Metadata = {
   title: "Buat BOM | OIMS Owncrave",
 };
 
-export default async function BomBaruPage() {
+export default async function BomBaruPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ produk?: string }>;
+}) {
   await requireRole(["owner", "admin_produksi"]);
+
+  // ?produk=<id> — jalan pintas dari halaman Produk, produk langsung terpilih
+  const { produk } = await searchParams;
 
   const [produkOptions, bahanOptions] = await Promise.all([
     listProduk(),
     listBahan(),
   ]);
+
+  const awal = produk && produkOptions.some((p) => p.id === produk)
+    ? { produkId: produk, catatan: "", details: [{ bahanId: "", kuantitas: 0, toleransiPersen: 0 }] }
+    : undefined;
 
   return (
     <div className="space-y-6">
@@ -27,7 +38,7 @@ export default async function BomBaruPage() {
           { label: "Baru" },
         ]}
       />
-      <BomForm produkOptions={produkOptions} bahanOptions={bahanOptions} />
+      <BomForm produkOptions={produkOptions} bahanOptions={bahanOptions} defaultValues={awal} />
     </div>
   );
 }

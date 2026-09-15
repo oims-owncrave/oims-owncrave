@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2, Plus, Layers, Upload } from "lucide-react";
+import { Pencil, Trash2, Plus, Layers, Upload, ClipboardList } from "lucide-react";
 import { useProdukMutation } from "@/hooks/useProduk";
 import type { Produk } from "@/db/schema";
 import {
@@ -20,9 +20,12 @@ import {
   TableAction,
 } from "@/components/ui/table";
 
+/** listProduk() menambah bomAktifId — null berarti produk belum punya resep. */
+type ProdukRow = Produk & { bomAktifId?: string | null };
+
 interface Props {
-  data: Produk[];
-  onEdit: (item: Produk) => void;
+  data: ProdukRow[];
+  onEdit: (item: ProdukRow) => void;
   onAdd: () => void;
   onImport: () => void;
 }
@@ -33,11 +36,26 @@ export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
 
-  const actions: TableAction<Produk>[] = [
+  const actions: TableAction<ProdukRow>[] = [
     {
       icon: <Layers size={16} />,
       title: "Varian",
       onClick: (item) => startNavigate(() => router.push(`/produksi/produk/${item.id}`)),
+      variant: "default",
+    },
+    {
+      // Resep = BOM. Sudah ada -> buka BOM-nya; belum -> form BOM dengan produk terpilih.
+      // Sengaja memakai halaman /produksi/bom yang sudah ada, bukan editor bahan kedua.
+      icon: <ClipboardList size={16} />,
+      title: "Resep bahan (BOM)",
+      onClick: (item) =>
+        startNavigate(() =>
+          router.push(
+            item.bomAktifId
+              ? `/produksi/bom/${item.bomAktifId}`
+              : `/produksi/bom/baru?produk=${item.id}`,
+          ),
+        ),
       variant: "default",
     },
     {

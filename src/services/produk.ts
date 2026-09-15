@@ -1,8 +1,8 @@
 "use server";
 
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql, getTableColumns } from "drizzle-orm";
 import { db } from "@/db";
-import { produk, varianProduk, auditLog } from "@/db/schema";
+import { produk, varianProduk, auditLog, bom } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { ProdukInput } from "@/lib/schemas/produk";
 
@@ -30,8 +30,19 @@ async function writeAudit(
 }
 
 export async function listProduk() {
+  // bomAktifId: null = produk belum punya resep. Kolom tambahan, bentuk lama tetap utuh
+  // supaya pemakai lain (form barang masuk, PO, WO) tidak terpengaruh.
   return db
-    .select()
+    .select({
+      ...getTableColumns(produk),
+      bomAktifId: sql<string | null>`(
+        select b.id from bom b
+        where b.produk_id = "produk"."id"
+          and b.status = 'aktif'
+          and b.deleted_at is null
+        limit 1
+      )`,
+    })
     .from(produk)
     .where(isNull(produk.deletedAt))
     .orderBy(produk.nama);
