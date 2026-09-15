@@ -20,10 +20,15 @@ try {
   const [{ n }] = await sql`
     select count(*)::int n from information_schema.tables
     where table_schema = 'public' and table_type = 'BASE TABLE'`;
+  // hanya baris aktif — tabel master pakai soft delete, kalau ikut dihitung
+  // angkanya menyesatkan (mis. produk uji yang sudah dihapus tetap terhitung)
   const rows = {};
   for (const t of ["bahan", "produk", "bom", "po_produksi", "mutasi_stok"]) {
     try {
-      const [{ c }] = await sql.unsafe(`select count(*)::int c from ${t}`);
+      const [{ c }] = await sql.unsafe(
+        `select count(*)::int c from ${t}` +
+          (t === "mutasi_stok" ? "" : " where deleted_at is null"),
+      );
       rows[t] = c;
     } catch {
       rows[t] = "-";
