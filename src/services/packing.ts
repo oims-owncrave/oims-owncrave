@@ -72,7 +72,7 @@ export async function listBarisSiapPacking() {
         SELECT COALESCE(SUM(pd.jumlah), 0)::int
         FROM packing_detail pd
         JOIN packing p ON p.id = pd.packing_id
-        WHERE pd.finishing_detail_id = ${finishingDetail.id}
+        WHERE pd.finishing_detail_id = finishing_detail.id
           AND p.deleted_at IS NULL AND p.status <> 'dibatalkan'
       )`,
     })
@@ -181,7 +181,7 @@ export async function createPacking(input: PackingInput): Promise<Result> {
                 SELECT COALESCE(SUM(pd.jumlah), 0)::int
                 FROM packing_detail pd
                 JOIN packing p ON p.id = pd.packing_id
-                WHERE pd.finishing_detail_id = ${finishingDetail.id}
+                WHERE pd.finishing_detail_id = finishing_detail.id
                   AND p.deleted_at IS NULL AND p.status <> 'dibatalkan'
               )`,
             })

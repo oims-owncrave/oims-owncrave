@@ -85,7 +85,7 @@ export async function listBarisSiapFinishing() {
         SELECT COALESCE(SUM(fd.jumlah), 0)::int
         FROM finishing_detail fd
         JOIN finishing f ON f.id = fd.finishing_id
-        WHERE fd.hasil_qc_detail_id = ${hasilQcDetail.id}
+        WHERE fd.hasil_qc_detail_id = hasil_qc_detail.id
           AND f.deleted_at IS NULL AND f.status <> 'dibatalkan'
       )`,
     })
@@ -121,7 +121,7 @@ export async function listBarisSiapFinishing() {
         SELECT COALESCE(SUM(fd.jumlah), 0)::int
         FROM finishing_detail fd
         JOIN finishing f ON f.id = fd.finishing_id
-        WHERE fd.re_qc_detail_id = ${reQcDetail.id}
+        WHERE fd.re_qc_detail_id = re_qc_detail.id
           AND f.deleted_at IS NULL AND f.status <> 'dibatalkan'
       )`,
     })
@@ -268,7 +268,7 @@ export async function createFinishing(input: FinishingInput): Promise<Result> {
                   SELECT COALESCE(SUM(fd.jumlah), 0)::int
                   FROM finishing_detail fd
                   JOIN finishing f ON f.id = fd.finishing_id
-                  WHERE fd.hasil_qc_detail_id = ${hasilQcDetail.id}
+                  WHERE fd.hasil_qc_detail_id = hasil_qc_detail.id
                     AND f.deleted_at IS NULL AND f.status <> 'dibatalkan'
                 )`,
               })
@@ -289,7 +289,7 @@ export async function createFinishing(input: FinishingInput): Promise<Result> {
                   SELECT COALESCE(SUM(fd.jumlah), 0)::int
                   FROM finishing_detail fd
                   JOIN finishing f ON f.id = fd.finishing_id
-                  WHERE fd.re_qc_detail_id = ${reQcDetail.id}
+                  WHERE fd.re_qc_detail_id = re_qc_detail.id
                     AND f.deleted_at IS NULL AND f.status <> 'dibatalkan'
                 )`,
               })

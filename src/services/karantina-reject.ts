@@ -74,7 +74,7 @@ export async function listRejectBelumDikarantina() {
         SELECT COALESCE(SUM(kd.jumlah), 0)::int
         FROM karantina_reject_detail kd
         JOIN karantina_reject k ON k.id = kd.karantina_reject_id
-        WHERE kd.hasil_qc_detail_id = ${hasilQcDetail.id} AND k.deleted_at IS NULL
+        WHERE kd.hasil_qc_detail_id = hasil_qc_detail.id AND k.deleted_at IS NULL
       )`,
     })
     .from(hasilQcDetail)
@@ -154,12 +154,12 @@ export async function getKarantinaRejectDetail(id: string) {
       // hanya yang belum ditolak yang memakai kuota
       terpakai: sql<number>`(
         SELECT COALESCE(SUM(t.jumlah), 0)::int FROM tindakan_reject t
-        WHERE t.karantina_reject_detail_id = ${karantinaRejectDetail.id}
+        WHERE t.karantina_reject_detail_id = karantina_reject_detail.id
           AND t.status <> 'rejected' AND t.deleted_at IS NULL
       )`,
       disetujui: sql<number>`(
         SELECT COALESCE(SUM(t.jumlah), 0)::int FROM tindakan_reject t
-        WHERE t.karantina_reject_detail_id = ${karantinaRejectDetail.id}
+        WHERE t.karantina_reject_detail_id = karantina_reject_detail.id
           AND t.status = 'approved' AND t.deleted_at IS NULL
       )`,
     })
@@ -223,7 +223,7 @@ export async function createKarantinaReject(input: KarantinaRejectInput): Promis
                 SELECT COALESCE(SUM(kd.jumlah), 0)::int
                 FROM karantina_reject_detail kd
                 JOIN karantina_reject k ON k.id = kd.karantina_reject_id
-                WHERE kd.hasil_qc_detail_id = ${hasilQcDetail.id} AND k.deleted_at IS NULL
+                WHERE kd.hasil_qc_detail_id = hasil_qc_detail.id AND k.deleted_at IS NULL
               )`,
             })
             .from(hasilQcDetail)
@@ -314,7 +314,7 @@ export async function createTindakanReject(
         jumlah: karantinaRejectDetail.jumlah,
         terpakai: sql<number>`(
           SELECT COALESCE(SUM(t.jumlah), 0)::int FROM tindakan_reject t
-          WHERE t.karantina_reject_detail_id = ${karantinaRejectDetail.id}
+          WHERE t.karantina_reject_detail_id = karantina_reject_detail.id
             AND t.status <> 'rejected' AND t.deleted_at IS NULL
         )`,
       })

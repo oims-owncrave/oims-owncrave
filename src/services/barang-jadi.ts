@@ -216,7 +216,7 @@ export async function terimaBarangJadi(input: BarangJadiInput): Promise<Result> 
               SELECT COALESCE(SUM(bd.jumlah), 0)::int
               FROM barang_jadi_detail bd
               JOIN barang_jadi bj ON bj.id = bd.barang_jadi_id
-              WHERE bd.packing_detail_id = ${packingDetail.id} AND bj.deleted_at IS NULL
+              WHERE bd.packing_detail_id = packing_detail.id AND bj.deleted_at IS NULL
             )`,
           })
           .from(packingDetail)

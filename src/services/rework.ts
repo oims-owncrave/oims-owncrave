@@ -73,13 +73,13 @@ async function cekKapasitasRework(
         (SELECT COALESCE(SUM(pd.jumlah), 0)::int
          FROM perbaikan_internal_detail pd
          JOIN perbaikan_internal p ON p.id = pd.perbaikan_internal_id
-         WHERE pd.hasil_qc_detail_id = ${hasilQcDetail.id}
+         WHERE pd.hasil_qc_detail_id = hasil_qc_detail.id
            AND p.deleted_at IS NULL AND p.status <> 'dibatalkan')
         +
         (SELECT COALESCE(SUM(rd.jumlah), 0)::int
          FROM retur_qc_vendor_detail rd
          JOIN retur_qc_vendor r ON r.id = rd.retur_qc_vendor_id
-         WHERE rd.hasil_qc_detail_id = ${hasilQcDetail.id}
+         WHERE rd.hasil_qc_detail_id = hasil_qc_detail.id
            AND r.deleted_at IS NULL AND r.status <> 'dibatalkan')
       )`,
     })
@@ -130,13 +130,13 @@ export async function listBarisSiapRework() {
         (SELECT COALESCE(SUM(pd.jumlah), 0)::int
          FROM perbaikan_internal_detail pd
          JOIN perbaikan_internal p ON p.id = pd.perbaikan_internal_id
-         WHERE pd.hasil_qc_detail_id = ${hasilQcDetail.id}
+         WHERE pd.hasil_qc_detail_id = hasil_qc_detail.id
            AND p.deleted_at IS NULL AND p.status <> 'dibatalkan')
         +
         (SELECT COALESCE(SUM(rd.jumlah), 0)::int
          FROM retur_qc_vendor_detail rd
          JOIN retur_qc_vendor r ON r.id = rd.retur_qc_vendor_id
-         WHERE rd.hasil_qc_detail_id = ${hasilQcDetail.id}
+         WHERE rd.hasil_qc_detail_id = hasil_qc_detail.id
            AND r.deleted_at IS NULL AND r.status <> 'dibatalkan')
       )`,
     })
