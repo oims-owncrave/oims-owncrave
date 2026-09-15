@@ -39,7 +39,12 @@ Pemisahan sudah jalan. Bagian di bawah disimpan sebagai rujukan kalau perlu diul
 | dev `fzkszkhjswtcugrqjzgx` | 87 tabel, master (11 kategori, 7 satuan, 3 warna, 6 supplier, 32 bahan), nol transaksi |
 | klien `aixpakizbxegokrnhhlc` | 87 tabel, data klien utuh — tidak tersentuh |
 
-Login dev: `dev@oims.local` / `oimsdev2026` (peran owner).
+Login dev: username `owner`, password `owncrave123` (peran owner).
+
+**Catatan login:** form memakai **username**, bukan email. `signInAction`
+(`src/services/auth.ts`) memetakannya ke `<username>@owncrave.local` — domain sintetis.
+Jadi user Supabase harus dibuat dengan email berdomain `owncrave.local`, dan username
+hanya boleh huruf kecil, angka, underscore.
 
 **Dev server perlu di-restart** setelah `.env.local` berganti — Next.js membaca env saat start.
 
@@ -105,9 +110,12 @@ Login dev: `dev@oims.local` / `oimsdev2026` (peran owner).
    Menyalin kategori, satuan, warna, supplier, bahan. Sengaja **tidak** menyalin stok,
    mutasi, dan seluruh tabel transaksi — dev mulai bersih.
 
-8. **Buat user login.** `users.id` harus sama dengan `auth.users.id`, jadi buat lewat
-   Admin API lalu sisipkan barisnya di tabel `users` dengan id yang sama. Daftar lewat
-   dashboard juga bisa, asal barisnya ditambahkan manual sesudahnya.
+8. **Buat user login.** Dua syarat yang mudah terlewat:
+   - Email **harus** `<username>@owncrave.local` — form login memakai username lalu
+     memetakannya ke domain sintetis itu (`src/services/auth.ts`). Email berdomain lain
+     tidak akan pernah bisa dipakai login.
+   - `users.id` harus sama dengan `auth.users.id`, jadi buat lewat Admin API, ambil id
+     yang dikembalikan, lalu sisipkan baris `users` dengan id tersebut beserta perannya.
 
 9. **Vercel**: pastikan Environment Variables di project Vercel memakai nilai **DB klien**
    (yang sekarang di `.env.production`), bukan dev. Kalau Vercel selama ini mengambil dari
