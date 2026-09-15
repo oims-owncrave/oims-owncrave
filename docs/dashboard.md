@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-10 · Versi: v0.1.0 · Status: **TAHAP 4 SELESAI — 15 issue inti closed (4A-4D), epic oims-ckp closed. Belum di-smoke-test end-to-end. Sisa: 4 backlog P3 lintas tahap.**
+> Diperbarui: 2026-09-15 · Versi: v0.1.0 · Status: **TAHAP 4 SELESAI + SMOKE TEST LOLOS — 12 langkah end-to-end lewat browser, 4 bug ditemukan & di-fix. Sisa: 4 backlog P3 + 1 celah fitur (tindakan reject ke stok).**
 
 ## 🎯 Visi
 
@@ -198,6 +198,51 @@ kalau tidak `res.error` error tipe di hook.
 | 4 | ~~`oims-ckp.14` Transfer antar gudang + Penyesuaian (approval)~~ | P2 | Stok jadi tak statis |
 | 5 | ~~`oims-ckp.15` Dashboard T4 + Yield, Defect Rate, COPQ~~ | P2 | Rangkum semua; isi 2 kolom AlurProduksi yang sudah disiapkan |
 
+### ✅ Smoke Test Tahap 4 — LOLOS (Claude browser + SQL, 2026-09-15)
+
+Rantai lengkap dijalankan sekali jalan lewat browser, tiap langkah dibuktikan query DB.
+Prasyarat T2-T3 dipakai apa adanya (30 pcs baik visual); master T4 dibuat lewat UI.
+
+| # | Uji | Bukti |
+|---|---|---|
+| 1 | Master jenis cacat, kemasan, gudang | hapus→buat ulang kode sama BERHASIL · duplikat aktif ditolak toast · `is_default` tepat satu |
+| 2 | Standar QC berversi | aktifkan v2 → v1 otomatis Nonaktif, DB: tepat 1 aktif |
+| 3 | Kirim 25/30 ke QC | `IN-QC-202609-0001`, sisa 5 |
+| 4 | Guard sisa | input 10 saat sisa 5 → di-clamp |
+| 5 | WO QC 100% | standar ter-snapshot v2 · baris hilang dari kandidat (0) |
+| 6 | Hasil QC | 17+3+0+3+2 = 25, defect rate 32%, CHECK terpenuhi |
+| 7 | Temuan cacat | prefill Major/Vendor dari master · **10 pcs saat sisa 3 DITOLAK server** |
+| 8 | Rework dua jalur | internal 2 + vendor 1 = 3 = kolom perbaikan (**guard bersama**) |
+| 9 | Re-QC | `RE-QC-202609-0001` putaran ke-1, 2 lolos grade A |
+| 10 | Karantina + approval | **pending: berdampak 0, stok 0 baris** → approved: berdampak 2, status naik |
+| 11 | Finishing + packing | stok bahan 1000→**978** lewat `mutasi_stok` (Σ mutasi = cache) · packing `selesai` **DITOLAK** saat checklist bocor, lolos setelah 10 item dicentang |
+| 12 | Barang jadi | stok 22 pcs · **cache 22 = Σ mutasi 22, konsisten = true** |
+
+**Rantai utuh, tak ada barang menguap:**
+`30 baik visual → 25 masuk QC → 25 diperiksa → 20 lolos + 2 Re-QC = 22 → finishing 22 → packing 22 → stok jadi 22`
+
+Audit log terisi untuk seluruh tabel T4, termasuk aksi APPROVE (standar_qc 2×, tindakan_reject 1×).
+
+**4 bug ketemu — semuanya lolos tsc + build:**
+
+| Bug | Akar masalah | Commit |
+|---|---|---|
+| Submit 3 form QC mati diam-diam | `reset({details: []})` vs schema `.min(1)` — rhf menolak sebelum `onSubmit` merakit `details` dari state lokal. Tak ada UI yang menampilkan `errors.details`, jadi klik Simpan tak berefek apa pun | `439ac29` |
+| 500 simpan hasil QC | Postgres 42702 — `${workOrderQcDetail.id}` ter-render `"id"` polos, bentrok di subquery | `c8d4638` |
+| Kolom "Cacat Dirinci" tertinggal | angka dari Server Component, hook hanya invalidate query client | `ceb1894` |
+| 500 buat perbaikan internal | pola 42702 yang sama, sistemik di 5 service T4 | `6757dc7` |
+
+Pelajaran: **Tahap 2-3 lolos dari bug pertama** karena memakai `useFieldArray` + `replace()` —
+`details` benar-benar ada di form state. Modal T4 pakai state lokal terpisah, dan tak ada
+yang menangkapnya sampai dijalankan manusia.
+
+**Celah fitur (bukan bug):** `terapkanTindakanRejectKeStok` sudah ada di service tapi belum
+punya pemicu UI, jadi tindakan `perbaiki_jadi_grade_b` yang disetujui belum menambah stok
+grade B. Perlu issue sendiri.
+
+**Data uji sengaja ditinggal** di DB (rantai lengkap PO-202609-9001 → stok 22 pcs) — berguna
+untuk uji lanjutan. Hapus kalau mengganggu.
+
 ### Gelombang 16 — Antrean tahap berikutnya
 
 | # | Issue | Prio | Kenapa di sini |
@@ -242,6 +287,7 @@ Keduanya dijanjikan ke klien di proposal penawaran v4, jadi bukan opsional.
 
 ## 📜 Changelog
 
+- 2026-09-15 (sesi smoke test T4): **SMOKE TEST TAHAP 4 LOLOS** — 12 langkah end-to-end lewat browser, tiap langkah dibuktikan query DB. Rantai utuh 30→25→22 tanpa barang menguap; invarian `cache = Σ mutasi` terpenuhi. **4 bug ketemu & di-fix**, semuanya lolos tsc+build: (1) submit 3 form QC mati diam-diam karena `reset({details: []})` bentrok schema `.min(1)` — rhf menolak sebelum `onSubmit` merakit details dari state lokal, tanpa pesan error sama sekali (`439ac29`); (2) 500 simpan hasil QC, Postgres 42702 kolom `id` ambigu (`c8d4638`); (3) kolom Cacat Dirinci tak ikut refresh (`ceb1894`); (4) 500 perbaikan internal — pola 42702 sistemik di 5 service T4 (`6757dc7`). Guard yang terbukti menahan: batas temuan cacat, kapasitas rework bersama dua jalur, approval gate tindakan reject (pending berdampak 0), checklist packing 10 item, pemakaian label lewat `mutasi_stok` (1000→978). Celah fitur ditemukan: `terapkanTindakanRejectKeStok` belum punya pemicu UI. Data uji ditinggal di DB.
 - 2026-09-10 (sesi 4b-4d): **TAHAP 4 KODE SELESAI** — 12 issue lagi dieksekusi Claude dalam sesi yang sama (permintaan Abu, lanjut dari 4A). 4B: standar QC berversi (partial unique index "tepat 1 aktif", lebih kuat dari tarif T3 yang cuma dijaga kode), WO QC + sampling + snapshot standar, hasil QC per varian (rumus keseimbangan di-guard TIGA lapis: Zod, Server Action, DB CHECK), temuan cacat + guard tak melebihi produk bermasalah. 4C: rework dua jalur dengan **guard kapasitas bersama** (satu fungsi dipanggil dua jalur — kalau terpisah bisa saling melampaui), Re-QC dengan DB CHECK sumber wajib + hitungan putaran, karantina reject dengan approval gate. 4D: finishing (pemakaian label kurangi stok bahan via mutasi_stok), packing (checklist 10 titik di-guard keras saat selesai), **barang jadi + stok immutable** (satu-satunya `.set({kuantitas})` di `lib/qc/stok-fg.ts`, sudah diaudit), transfer 2-fase, penyesuaian ber-approval, rumus yield/COPQ di satu modul (COPQ kembalikan null untuk komponen tanpa sumber, bukan 0 palsu). 3 migration via MCP (4B/4C/4D), 20 tabel baru, 10 route /qc/* aktif, tsc+build clean. Verifikasi SQL tiap gelombang. Epic oims-ckp CLOSED. **Belum smoke test end-to-end** — data uji dihapus setiap selesai verifikasi.
 - 2026-09-10 (sesi 4a lanjutan): eksekusi gelombang 4A oleh Claude (permintaan Abu, lanjut di sesi yang sama) — oims-ckp.2 master jenis cacat + kemasan, oims-ckp.3 master gudang barang jadi (isDefault tepat satu via transaksi, pola aktivasi tarif T3), oims-ckp.4 penerimaan QC + antrean DERIVED (guard sisa dihitung ulang di dalam transaksi, skip vendor ber-qcMode vendor). 3 commit, 5 route baru, tsc + build clean. **Verifikasi lewat SQL** (bukan build clean): kirim 25/30 → sisa 5 · qc_mode=vendor → 0 baris antrean · soft delete → sisa balik 30 · hapus+buat ulang kode sama berhasil (partial unique) · duplikat aktif ditolak · 2 gudang default → tetap 1. Data uji dibersihkan. Rantai deps jalan: oims-ckp.1 otomatis ready. Pelajaran tipe: z.coerce.number() butuh z.input/z.output terpisah untuk rhf; service transaksi butuh return type union eksplisit.
 - 2026-09-10 (sesi 4a): breakdown Tahap 4 — epic oims-ckp dipecah jadi **17 issue anak** (15 inti + 2 backlog) + rantai dependensi. 3 keputusan cakupan dijawab Abu: QC **per varian agregat** (bukan per pcs PRD §11 — hulu T2-T3 semua agregat, per-pcs jadi backlog .16), finishing/packing **modul penuh** (gap terbesar PRD, dijanjikan ke klien), stok barang jadi **tabel + mutasi sendiri** dengan pola immutable stok bahan (kunci komposit SKU+grade+gudang+batch). Gelombang 4A (.2 master jenis cacat+kemasan, .3 master gudang, .4 penerimaan QC+antrean derived) sudah plan+prompt lengkap; migration `tahap4a_master_qc_gudang_penerimaan_qc` applied via MCP (6 enum + 5 tabel, semua unique index PARTIAL — diverifikasi), schema.ts + document-number.ts ter-update, tsc clean. Checklist review Tahap 4 (18 poin) masuk skill oims-review. **Koreksi temuan:** proyek TIDAK punya DB trigger untuk cache stok — cache di-maintain dalam Server Action transaction + SELECT FOR UPDATE (barang-masuk.ts); issue .13 dikoreksi supaya executor tak bikin trigger baru. GH issue breakdown belum dibuat (diblok classifier) — body siap di scratchpad.
