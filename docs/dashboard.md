@@ -1,7 +1,7 @@
 # 🧭 Dashboard: OIMS Owncrave
 
 > Ringkas: file ini kontrol arah. Task detail di beads, plan di docs/plans/.
-> Diperbarui: 2026-09-15 · Versi: v0.1.0 · Status: **TAHAP 4 SELESAI + SMOKE TEST LOLOS — 12 langkah end-to-end lewat browser, 4 bug ditemukan & di-fix. Sisa: 4 backlog P3 + 1 celah fitur (tindakan reject ke stok).**
+> Diperbarui: 2026-09-15 · Versi: v0.1.0 · Status: **TAHAP 4 SELESAI + SMOKE TEST LOLOS — 14 langkah end-to-end, 5 bug ditemukan & di-fix. Sisa: 4 backlog P3 + 1 celah fitur (tindakan reject ke stok).**
 
 ## 🎯 Visi
 
@@ -217,13 +217,15 @@ Prasyarat T2-T3 dipakai apa adanya (30 pcs baik visual); master T4 dibuat lewat 
 | 10 | Karantina + approval | **pending: berdampak 0, stok 0 baris** → approved: berdampak 2, status naik |
 | 11 | Finishing + packing | stok bahan 1000→**978** lewat `mutasi_stok` (Σ mutasi = cache) · packing `selesai` **DITOLAK** saat checklist bocor, lolos setelah 10 item dicentang |
 | 12 | Barang jadi | stok 22 pcs · **cache 22 = Σ mutasi 22, konsisten = true** |
+| 13 | Transfer 2-fase | dikirim → GD-02 turun 22→17, tujuan belum bertambah · diterima → GD-01 5 + GD-02 17 = 22, **kedua baris konsisten** |
+| 14 | Dashboard T4 | defect rate 32% · QC yield 68% · FPY 68% (setelah fix) · COPQ nilai reject Rp 100.000, dua komponen tanpa sumber `null` bukan 0 |
 
 **Rantai utuh, tak ada barang menguap:**
 `30 baik visual → 25 masuk QC → 25 diperiksa → 20 lolos + 2 Re-QC = 22 → finishing 22 → packing 22 → stok jadi 22`
 
 Audit log terisi untuk seluruh tabel T4, termasuk aksi APPROVE (standar_qc 2×, tindakan_reject 1×).
 
-**4 bug ketemu — semuanya lolos tsc + build:**
+**5 bug ketemu — semuanya lolos tsc + build:**
 
 | Bug | Akar masalah | Commit |
 |---|---|---|
@@ -231,6 +233,7 @@ Audit log terisi untuk seluruh tabel T4, termasuk aksi APPROVE (standar_qc 2×, 
 | 500 simpan hasil QC | Postgres 42702 — `${workOrderQcDetail.id}` ter-render `"id"` polos, bentrok di subquery | `c8d4638` |
 | Kolom "Cacat Dirinci" tertinggal | angka dari Server Component, hook hanya invalidate query client | `ceb1894` |
 | 500 buat perbaikan internal | pola 42702 yang sama, sistemik di 5 service T4 | `6757dc7` |
+| First Pass Yield selalu 0% | filter `NOT EXISTS` membuang seluruh baris yang punya rework — padahal QC agregat per varian, satu baris berisi 17 grade A + 3 perbaikan | `0fd6602` |
 
 Pelajaran: **Tahap 2-3 lolos dari bug pertama** karena memakai `useFieldArray` + `replace()` —
 `details` benar-benar ada di form state. Modal T4 pakai state lokal terpisah, dan tak ada
