@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import {
@@ -81,7 +82,7 @@ function DetailRow({
   return (
     <div
       key={fieldId}
-      className="rounded-lg border border-stroke p-4 dark:border-dark-3 md:border-none md:p-0 md:border-b md:pb-3 md:last:border-none"
+      className="rounded-lg border border-stroke p-4 dark:border-dark-3 md:border-none md:p-0 md:border-b md:pb-1.5 md:last:border-none"
     >
       {/* Header Item khusus Mobile */}
       <div className="mb-3 flex items-center justify-between md:hidden">
@@ -123,27 +124,34 @@ function DetailRow({
           error={errors.detail?.[index]?.bahanId}
         />
 
-        <Input
-          type="number"
-          step="0.001"
+        <NumberInput
+          decimals={3}
+          placeholder="0"
           label={index === 0 ? "Kuantitas" : undefined}
           icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
           iconPosition="right"
-          {...register(`detail.${index}.kuantitas`, { valueAsNumber: true })}
+          value={row?.kuantitas}
+          onChange={(v) =>
+            setValue(`detail.${index}.kuantitas`, v as number, { shouldValidate: true })
+          }
           error={errors.detail?.[index]?.kuantitas?.message}
         />
 
         <div>
-          <Input
-            type="number"
-            step="1"
+          <NumberInput
+            placeholder="0"
             label={index === 0 ? "Harga Satuan" : undefined}
-            {...register(`detail.${index}.hargaSatuan`, { valueAsNumber: true })}
+            value={row?.hargaSatuan}
+            onChange={(v) =>
+              setValue(`detail.${index}.hargaSatuan`, v as number, { shouldValidate: true })
+            }
             error={errors.detail?.[index]?.hargaSatuan?.message}
           />
 
-          {/* Hint Riwayat Harga Pembelian — ruangnya dipatok supaya baris tanpa hint tetap sejajar */}
-          <div className="mt-1 md:h-4">
+          {/* Hint Riwayat Harga Pembelian — menggantung di bawah input, tidak memesan ruang
+              tetap supaya baris tanpa riwayat harga tidak menyisakan celah kosong.
+              Subtotal tetap sejajar karena grid memakai md:items-start. */}
+          <div className="mt-1">
           {row?.bahanId && (riwayat.length > 0 || hargaRataRata > 0) && (
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-dark-5 dark:text-dark-6">
               {hargaRataRata > 0 && (
@@ -236,7 +244,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions, produkOptions }
       nomorInvoice: "",
       tanggal: todayISO(),
       catatan: "",
-      detail: [{ bahanId: "", kuantitas: 0, hargaSatuan: 0 }],
+      detail: [{ bahanId: "", kuantitas: undefined, hargaSatuan: undefined }],
     },
   });
 
@@ -264,8 +272,8 @@ export function BarangMasukForm({ bahanOptions, supplierOptions, produkOptions }
         "detail",
         res.data.map((b) => ({
           bahanId: b.bahanId,
-          kuantitas: 0,
-          hargaSatuan: Number(b.hargaRataRata) || 0,
+          kuantitas: undefined,
+          hargaSatuan: Number(b.hargaRataRata) || undefined,
         })),
         { shouldValidate: false },
       );
@@ -360,7 +368,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions, produkOptions }
             variant="outline"
             size="sm"
             onClick={() =>
-              append({ bahanId: "", kuantitas: 0, hargaSatuan: 0 })
+              append({ bahanId: "", kuantitas: undefined, hargaSatuan: undefined })
             }
           >
             <Plus size={16} className="mr-1.5" />
@@ -372,7 +380,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions, produkOptions }
           <p className="mb-3 text-xs text-red-500">{errors.detail.message}</p>
         )}
 
-        <div className="space-y-3">
+        <div className="space-y-3 md:space-y-1">
           {fields.map((field, i) => (
             <DetailRow
               key={field.id}
