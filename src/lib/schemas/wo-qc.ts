@@ -9,7 +9,11 @@ export const woQcDetailSchema = z.object({
   jumlahPcs: z.coerce.number().int().min(1, "Jumlah minimal 1 pcs"),
 });
 
-export const woQcSchema = z
+/**
+ * Schema FORM — tanpa `details`. Baris dipilih lewat state lokal komponen;
+ * kalau `details` ikut divalidasi rhf, submit ditolak diam-diam (array kosong).
+ */
+export const woQcFormSchema = z
   .object({
     tanggal: z.string().min(1, "Tanggal wajib diisi"),
     targetSelesai: z.string().optional().nullable(),
@@ -23,7 +27,6 @@ export const woQcSchema = z
     batasDitolak: z.coerce.number().int().min(0).optional().nullable(),
     alasanSampling: z.string().max(500).optional().nullable(),
     catatan: z.string().max(500).optional().nullable(),
-    details: z.array(woQcDetailSchema).min(1, "Minimal satu baris pemeriksaan"),
   })
   // sampling tanpa angka batas = tak bisa diputuskan terima/tolak
   .refine(
@@ -36,5 +39,13 @@ export const woQcSchema = z
     },
   );
 
+/** Schema PAYLOAD — dipakai Server Action; di sini `details` wajib ada. */
+export const woQcSchema = z.intersection(
+  woQcFormSchema,
+  z.object({
+    details: z.array(woQcDetailSchema).min(1, "Minimal satu baris pemeriksaan"),
+  }),
+);
+
 export type WoQcInput = z.output<typeof woQcSchema>;
-export type WoQcFormValues = z.input<typeof woQcSchema>;
+export type WoQcFormValues = z.input<typeof woQcFormSchema>;

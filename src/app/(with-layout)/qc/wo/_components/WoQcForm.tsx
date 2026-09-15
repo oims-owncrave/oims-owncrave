@@ -9,7 +9,7 @@ import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { woQcSchema, type WoQcInput, type WoQcFormValues } from "@/lib/schemas/wo-qc";
+import { woQcFormSchema, type WoQcInput, type WoQcFormValues } from "@/lib/schemas/wo-qc";
 import { QC_PRIORITAS_LABEL, type QcPrioritas } from "@/lib/qc/prioritas";
 import { cn, formatTanggal } from "@/lib/utils";
 import type { BarisSiapWoRow } from "@/services/wo-qc";
@@ -41,8 +41,8 @@ export function WoQcForm({ baris, standarOptions, userOptions }: Props) {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<WoQcFormValues, unknown, WoQcInput>({
-    resolver: zodResolver(woQcSchema),
+  } = useForm<WoQcFormValues>({
+    resolver: zodResolver(woQcFormSchema),
     defaultValues: {
       tanggal: new Date().toISOString().slice(0, 10),
       targetSelesai: "",
@@ -56,7 +56,6 @@ export function WoQcForm({ baris, standarOptions, userOptions }: Props) {
       batasDitolak: 0,
       alasanSampling: "",
       catatan: "",
-      details: [],
     },
   });
 
@@ -95,7 +94,7 @@ export function WoQcForm({ baris, standarOptions, userOptions }: Props) {
     });
   }
 
-  async function onSubmit(data: WoQcInput) {
+  async function onSubmit(data: WoQcFormValues) {
     const details = barisTerpilih.map((b) => ({
       penerimaanQcDetailId: b.penerimaanQcDetailId,
       varianId: b.varianId,
@@ -104,7 +103,7 @@ export function WoQcForm({ baris, standarOptions, userOptions }: Props) {
 
     if (details.length === 0) return;
 
-    const res = await create.mutateAsync({ ...data, details });
+    const res = await create.mutateAsync({ ...data, details } as WoQcInput);
     if (!res.error) router.push("/qc/wo");
   }
 

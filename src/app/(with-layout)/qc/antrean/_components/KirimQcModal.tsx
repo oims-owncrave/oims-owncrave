@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import {
-  penerimaanQcSchema,
+  penerimaanQcFormSchema,
   type PenerimaanQcInput,
   type PenerimaanQcFormValues,
 } from "@/lib/schemas/penerimaan-qc";
@@ -55,8 +55,8 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<PenerimaanQcFormValues, unknown, PenerimaanQcInput>({
-    resolver: zodResolver(penerimaanQcSchema),
+  } = useForm<PenerimaanQcFormValues>({
+    resolver: zodResolver(penerimaanQcFormSchema),
   });
 
   useEffect(() => {
@@ -69,7 +69,6 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
       prioritas: "normal",
       targetSelesai: "",
       catatan: "",
-      details: [],
     });
     setJumlah(
       Object.fromEntries(baris.map((b) => [b.penerimaanHasilDetailId, b.sisa])),
@@ -84,7 +83,7 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
     0,
   );
 
-  const onSubmit = async (data: PenerimaanQcInput) => {
+  const onSubmit = async (data: PenerimaanQcFormValues) => {
     const details = baris
       .map((b) => ({
         penerimaanHasilDetailId: b.penerimaanHasilDetailId,
@@ -96,7 +95,7 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
 
     if (details.length === 0) return;
 
-    const res = await create.mutateAsync({ ...data, details });
+    const res = await create.mutateAsync({ ...data, details } as PenerimaanQcInput);
     if (!res.error) onClose();
   };
 

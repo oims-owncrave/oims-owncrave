@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Button } from "@/components/ui/Button";
-import { hasilQcSchema, type HasilQcInput, type HasilQcFormValues } from "@/lib/schemas/hasil-qc";
+import { hasilQcFormSchema, type HasilQcInput, type HasilQcFormValues } from "@/lib/schemas/hasil-qc";
 import { cn } from "@/lib/utils";
 import type { getWoQcDetail } from "@/services/wo-qc";
 import { useHasilQcMutation } from "@/hooks/useHasilQc";
@@ -62,14 +62,13 @@ export function HasilQcForm({ wo, baris, userOptions }: Props) {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<HasilQcFormValues, unknown, HasilQcInput>({
-    resolver: zodResolver(hasilQcSchema),
+  } = useForm<HasilQcFormValues>({
+    resolver: zodResolver(hasilQcFormSchema),
     defaultValues: {
       workOrderQcId: wo.id,
       tanggal: new Date().toISOString().slice(0, 10),
       petugasId: null,
       catatan: "",
-      details: [],
     },
   });
 
@@ -106,7 +105,7 @@ export function HasilQcForm({ wo, baris, userOptions }: Props) {
     (b) => (angka[b.id]?.jumlahDiperiksa ?? 0) > b.belumDiperiksa,
   );
 
-  async function onSubmit(data: HasilQcInput) {
+  async function onSubmit(data: HasilQcFormValues) {
     const details = rowsTerisi.map((b) => ({
       workOrderQcDetailId: b.id,
       varianId: b.varianId,
@@ -116,7 +115,7 @@ export function HasilQcForm({ wo, baris, userOptions }: Props) {
 
     if (details.length === 0) return;
 
-    const res = await create.mutateAsync({ ...data, details });
+    const res = await create.mutateAsync({ ...data, details } as HasilQcInput);
     if (!res.error) router.push("/qc/pemeriksaan");
   }
 

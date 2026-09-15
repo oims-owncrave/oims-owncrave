@@ -22,11 +22,16 @@ export const hasilQcDetailSchema = z
     },
   );
 
-export const hasilQcSchema = z.object({
+/** Schema FORM — tanpa `details` (baris ada di state lokal, lihat penerimaan-qc.ts). */
+export const hasilQcFormSchema = z.object({
   workOrderQcId: z.string().uuid({ message: "Work Order QC wajib dipilih" }),
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
   petugasId: z.string().uuid().optional().nullable(),
   catatan: z.string().max(500).optional().nullable(),
+});
+
+/** Schema PAYLOAD — dipakai Server Action. */
+export const hasilQcSchema = hasilQcFormSchema.extend({
   details: z
     .array(hasilQcDetailSchema)
     .min(1, "Minimal satu baris hasil pemeriksaan")
@@ -36,5 +41,5 @@ export const hasilQcSchema = z.object({
 });
 
 export type HasilQcInput = z.output<typeof hasilQcSchema>;
-export type HasilQcFormValues = z.input<typeof hasilQcSchema>;
+export type HasilQcFormValues = z.input<typeof hasilQcFormSchema>;
 export type HasilQcDetailInput = z.output<typeof hasilQcDetailSchema>;

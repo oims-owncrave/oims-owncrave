@@ -16,7 +16,12 @@ export const penerimaanQcDetailSchema = z.object({
   catatan: z.string().max(255).optional().nullable(),
 });
 
-export const penerimaanQcSchema = z.object({
+/**
+ * Schema FORM — tanpa `details`. Baris dikelola state lokal komponen (bukan
+ * form state), jadi kalau `details` ikut divalidasi di sini rhf akan menolak
+ * submit dengan array kosong dan onSubmit tak pernah jalan — gagal diam-diam.
+ */
+export const penerimaanQcFormSchema = z.object({
   penerimaanHasilJahitId: z.string().uuid({ message: "Penerimaan hasil jahit wajib dipilih" }),
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
   lokasiId: z.string().uuid().optional().nullable(),
@@ -24,10 +29,14 @@ export const penerimaanQcSchema = z.object({
   prioritas: z.enum(qcPrioritasValues),
   targetSelesai: z.string().optional().nullable(),
   catatan: z.string().max(500).optional().nullable(),
+});
+
+/** Schema PAYLOAD — dipakai Server Action; di sini `details` wajib ada. */
+export const penerimaanQcSchema = penerimaanQcFormSchema.extend({
   details: z
     .array(penerimaanQcDetailSchema)
     .min(1, "Minimal satu baris bundel dikirim ke QC"),
 });
 
 export type PenerimaanQcInput = z.output<typeof penerimaanQcSchema>;
-export type PenerimaanQcFormValues = z.input<typeof penerimaanQcSchema>;
+export type PenerimaanQcFormValues = z.input<typeof penerimaanQcFormSchema>;
