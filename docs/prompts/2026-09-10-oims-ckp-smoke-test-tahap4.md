@@ -131,5 +131,5 @@ Ini kode yang belum pernah dijalankan sama sekali:
 
 - Update `docs/dashboard.md`: tambah bagian hasil smoke test (pola Tahap 3 — tabel 6 langkah
   + daftar bug yang ketemu + commit fix-nya)
-- Regenerate `python3 tools/dashboard/generate.py`
+- Dashboard: dibangkitkan dari meta-dashboard vault, tidak perlu regenerate di repo ini
 - Kalau ada temuan yang layak jadi aturan, simpan lewat `bd remember`

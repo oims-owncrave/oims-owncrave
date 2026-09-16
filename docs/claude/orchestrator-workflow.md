@@ -65,7 +65,7 @@ usulkan tutup sesi sendiri tanpa diminta.
 6. **Commit PER ISSUE** (setelah approve/grant), bukan per batch.
 7. `bd close <id>`.
 8. **Tutup sesi:** update `docs/dashboard.md` (coret yang closed, isi Changelog),
-   regenerate `python3 tools/dashboard/generate.py`, update roadmap kalau milestone,
+   update roadmap kalau milestone,
    laporkan pending + handoff.
 9. **Trigger breakdown tahap berikutnya (WAJIB cek tiap tutup sesi):** kalau issue
    eksekusi tahap berjalan tersisa ≤2 (atau semua closed), tambahkan baris sesi
