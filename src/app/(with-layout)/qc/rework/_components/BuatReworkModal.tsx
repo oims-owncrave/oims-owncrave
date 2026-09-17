@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Button } from "@/components/ui/Button";
@@ -181,12 +182,11 @@ export function BuatReworkModal({
                 placeholder="Pilih PIC"
                 disabled={isPending}
               />
-              <Input
+              <NumberInput
                 label="Estimasi Biaya"
-                type="number"
-                min="0"
+                placeholder="0"
                 value={estimasi}
-                onChange={(e) => setEstimasi(Number(e.target.value) || 0)}
+                onChange={(v) => setEstimasi(v ?? 0)}
                 disabled={isPending}
               />
             </div>

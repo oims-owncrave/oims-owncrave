@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -258,11 +259,14 @@ export function SisaLimbahSection({ woId, poId }: Props) {
               onChange={(v) => sisaForm.setValue("bahanId", (v as string) ?? "", { shouldValidate: true })}
               error={sisaForm.formState.errors.bahanId}
             />
-            <Input
-              type="number"
-              step="0.001"
+            <NumberInput
+              decimals={3}
+              placeholder="0"
               label="Jumlah"
-              {...sisaForm.register("jumlah", { valueAsNumber: true })}
+              value={sisaForm.watch("jumlah")}
+              onChange={(v) =>
+                sisaForm.setValue("jumlah", v as number, { shouldValidate: true })
+              }
               error={sisaForm.formState.errors.jumlah?.message}
             />
             <Select
@@ -300,11 +304,14 @@ export function SisaLimbahSection({ woId, poId }: Props) {
               onChange={(v) => limbahForm.setValue("bahanId", (v as string) ?? "", { shouldValidate: true })}
               error={limbahForm.formState.errors.bahanId}
             />
-            <Input
-              type="number"
-              step="0.001"
+            <NumberInput
+              decimals={3}
+              placeholder="0"
               label="Jumlah"
-              {...limbahForm.register("jumlah", { valueAsNumber: true })}
+              value={limbahForm.watch("jumlah")}
+              onChange={(v) =>
+                limbahForm.setValue("jumlah", v as number, { shouldValidate: true })
+              }
               error={limbahForm.formState.errors.jumlah?.message}
             />
             <div className="grid grid-cols-2 gap-4">

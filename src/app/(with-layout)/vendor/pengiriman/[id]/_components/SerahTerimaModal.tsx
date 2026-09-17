@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import {
@@ -39,6 +40,7 @@ export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Prop
     reset,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<SerahTerimaInput>({
     resolver: zodResolver(serahTerimaSchema),
@@ -116,7 +118,12 @@ export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Prop
                       <td className="py-2 pr-3">{src?.sku}</td>
                       <td className="py-2 pr-3 text-right">{src?.jumlahPcs}</td>
                       <td className="py-2 pr-3">
-                        <Input type="number" step="1" className="w-24" {...register(`details.${i}.jumlahDiterima`, { valueAsNumber: true })} error={errors.details?.[i]?.jumlahDiterima?.message} />
+                        <NumberInput
+            decimals={0}
+            placeholder="0" className="w-24" value={watch(`details.${i}.jumlahDiterima`)}
+  onChange={(v) =>
+    setValue(`details.${i}.jumlahDiterima`, v as number, { shouldValidate: true })
+  } error={errors.details?.[i]?.jumlahDiterima?.message} />
                       </td>
                       <td className="py-2 pr-3">
                         <Select className="w-40" options={KONDISI_BUNDEL.map((k) => ({ value: k, label: KONDISI_BUNDEL_LABEL[k] }))} {...register(`details.${i}.kondisi`)} />

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -93,7 +94,12 @@ export function TemplateFormModal({ open, onClose, initialData, produkList }: Pr
             <Select label="Posisi" options={DEKORASI_POSISI.map((p) => ({ value: p, label: DEKORASI_POSISI_LABEL[p] }))} {...register("posisi")} disabled={isPending} />
           </div>
           <Input label="Deskripsi" placeholder="Misal: logo 8cm, 2 warna" {...register("deskripsi")} disabled={isPending} />
-          <Input type="number" step="1" label="Tarif Default per Pcs (Rp)" {...register("tarifDefault", { valueAsNumber: true })} error={errors.tarifDefault?.message} disabled={isPending} />
+          <NumberInput
+            decimals={0}
+            placeholder="0" label="Tarif Default per Pcs (Rp)" value={watch("tarifDefault")}
+  onChange={(v) =>
+    setValue("tarifDefault", v as number, { shouldValidate: true })
+  } error={errors.tarifDefault?.message} disabled={isPending} />
 
           <div className="py-2">
             <Checkbox checked={isActive} onChange={(c) => setValue("isActive", c)} disabled={isPending} label="Status Aktif" />

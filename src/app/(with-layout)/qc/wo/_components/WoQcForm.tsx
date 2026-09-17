@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Button } from "@/components/ui/Button";
@@ -177,33 +178,45 @@ export function WoQcForm({ baris, standarOptions, userOptions }: Props) {
         {metode === "sampling" ? (
           <>
             <div className="mt-4 grid gap-4 sm:grid-cols-4">
-              <Input
+              <NumberInput
+                decimals={0}
+                placeholder="0"
                 label="Populasi"
-                type="number"
-                min="0"
-                {...register("populasi")}
+                value={watch("populasi")}
+                onChange={(v) =>
+                  setValue("populasi", v as number, { shouldValidate: true })
+                }
                 disabled={isPending}
               />
-              <Input
+              <NumberInput
+                decimals={0}
+                placeholder="0"
                 label="Jumlah Sampel"
-                type="number"
-                min="0"
                 error={errors.jumlahSampel?.message}
-                {...register("jumlahSampel")}
+                value={watch("jumlahSampel")}
+                onChange={(v) =>
+                  setValue("jumlahSampel", v as number, { shouldValidate: true })
+                }
                 disabled={isPending}
               />
-              <Input
+              <NumberInput
+                decimals={0}
+                placeholder="0"
                 label="Batas Diterima"
-                type="number"
-                min="0"
-                {...register("batasDiterima")}
+                value={watch("batasDiterima")}
+                onChange={(v) =>
+                  setValue("batasDiterima", v as number, { shouldValidate: true })
+                }
                 disabled={isPending}
               />
-              <Input
+              <NumberInput
+                decimals={0}
+                placeholder="0"
                 label="Batas Ditolak"
-                type="number"
-                min="0"
-                {...register("batasDitolak")}
+                value={watch("batasDitolak")}
+                onChange={(v) =>
+                  setValue("batasDitolak", v as number, { shouldValidate: true })
+                }
                 disabled={isPending}
               />
             </div>

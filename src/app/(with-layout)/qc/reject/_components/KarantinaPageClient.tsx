@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { PackageX, Eye, Check, X } from "lucide-react";
 import {
@@ -395,12 +396,11 @@ export function KarantinaPageClient({
                 />
               </div>
               <div className="w-28">
-                <Input
+                <NumberInput
                   label="Jumlah"
-                  type="number"
-                  min="1"
+                  placeholder="0"
                   value={tJumlah}
-                  onChange={(e) => setTJumlah(Number(e.target.value) || 0)}
+                  onChange={(v) => setTJumlah(v ?? 0)}
                   disabled={buatTindakan.isPending}
                 />
               </div>

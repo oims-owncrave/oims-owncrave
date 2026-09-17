@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -125,8 +126,18 @@ export function DekorasiForm({ woOptions, vendorList, lokasiList }: Props) {
             options={[{ value: "", label: "— Opsional —" }, ...lokasiList.filter((l) => l.isActive).map((l) => ({ value: l.id, label: `${l.kode} — ${l.nama}` }))]}
             {...register("lokasiTujuanId", { setValueAs: nullable })}
           />
-          <Input type="number" step="1" label="Jumlah (pcs)" required {...register("jumlah", { valueAsNumber: true })} error={errors.jumlah?.message} />
-          <Input type="number" step="1" label="Tarif per Pcs (Rp)" required {...register("tarif", { valueAsNumber: true })} error={errors.tarif?.message} />
+          <NumberInput
+            decimals={0}
+            placeholder="0" label="Jumlah (pcs)" required value={watch("jumlah")}
+  onChange={(v) =>
+    setValue("jumlah", v as number, { shouldValidate: true })
+  } error={errors.jumlah?.message} />
+          <NumberInput
+            decimals={0}
+            placeholder="0" label="Tarif per Pcs (Rp)" required value={watch("tarif")}
+  onChange={(v) =>
+    setValue("tarif", v as number, { shouldValidate: true })
+  } error={errors.tarif?.message} />
           <Input type="date" label="Tanggal" required {...register("tanggal")} error={errors.tanggal?.message} />
           <Input type="date" label="Target Selesai" {...register("targetSelesai")} />
           <Input label="Pengirim" placeholder="Opsional" {...register("pengirim")} />

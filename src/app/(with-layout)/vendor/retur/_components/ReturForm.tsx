@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -138,10 +139,20 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
                     <span className="text-xs text-dark-5 dark:text-dark-6">rusak {k?.jumlahRusak} · bisa diretur {k?.cap}</span>
                   </div>
                   <div className="grid gap-3 md:grid-cols-4">
-                    <Input type="number" step="1" label="Jumlah" {...register(`details.${i}.jumlah`, { valueAsNumber: true })} error={errors.details?.[i]?.jumlah?.message} />
+                    <NumberInput
+            decimals={0}
+            placeholder="0" label="Jumlah" value={watch(`details.${i}.jumlah`)}
+  onChange={(v) =>
+    setValue(`details.${i}.jumlah`, v as number, { shouldValidate: true })
+  } error={errors.details?.[i]?.jumlah?.message} />
                     <Input label="Jenis Kerusakan" placeholder="Misal: jahitan lepas" {...register(`details.${i}.jenisKerusakan`)} />
                     <Select label="Penanggung Biaya" options={(["vendor", "owncrave"] as const).map((p) => ({ value: p, label: PENANGGUNG_LABEL[p] }))} {...register(`details.${i}.penanggungBiaya`)} />
-                    <Input type="number" step="1" label="Tarif Perbaikan / pcs" {...register(`details.${i}.tarifPerbaikan`, { valueAsNumber: true })} disabled={details[i]?.penanggungBiaya === "vendor"} />
+                    <NumberInput
+            decimals={0}
+            placeholder="0" label="Tarif Perbaikan / pcs" value={watch(`details.${i}.tarifPerbaikan`)}
+  onChange={(v) =>
+    setValue(`details.${i}.tarifPerbaikan`, v as number, { shouldValidate: true })
+  } disabled={details[i]?.penanggungBiaya === "vendor"} />
                     <Input className="md:col-span-3" label="Instruksi Perbaikan" placeholder="Apa yang harus diperbaiki" {...register(`details.${i}.instruksi`)} />
                     <Input label="URL Foto" placeholder="Opsional" {...register(`details.${i}.fotoUrl`)} />
                   </div>

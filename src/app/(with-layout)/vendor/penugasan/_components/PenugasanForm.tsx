@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -285,11 +286,14 @@ export function PenugasanForm({ poOptions, vendorList, penjahitList, lokasiList,
                       <td className="py-2 pr-3 text-right">{b.jumlahPcs}</td>
                       <td className="py-2 pr-3">
                         {on && (
-                          <Input
-                            type="number"
-                            step="1"
+                          <NumberInput
+                            decimals={0}
+                            placeholder="0"
                             className="w-32"
-                            {...register(`details.${idx}.tarif`, { valueAsNumber: true })}
+                            value={watch(`details.${idx}.tarif`)}
+                            onChange={(v) =>
+                              setValue(`details.${idx}.tarif`, v as number, { shouldValidate: true })
+                            }
                             error={errors.details?.[idx]?.tarif?.message}
                           />
                         )}

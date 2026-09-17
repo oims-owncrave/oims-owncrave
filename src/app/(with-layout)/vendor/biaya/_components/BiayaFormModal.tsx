@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { formatRupiah } from "@/lib/utils";
 import { biayaSchema, type BiayaInput } from "@/lib/schemas/biaya-jasa-jahit";
@@ -69,10 +70,30 @@ export function BiayaFormModal({ item, onClose }: Props) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input type="number" step="1" label="Bonus" {...register("bonus", { valueAsNumber: true })} error={errors.bonus?.message} disabled={isPending} />
-            <Input type="number" step="1" label="Biaya Tambahan" {...register("biayaTambahan", { valueAsNumber: true })} error={errors.biayaTambahan?.message} disabled={isPending} />
-            <Input type="number" step="1" label="Potongan" {...register("potongan", { valueAsNumber: true })} error={errors.potongan?.message} disabled={isPending} />
-            <Input type="number" step="1" label="Uang Muka" {...register("uangMuka", { valueAsNumber: true })} error={errors.uangMuka?.message} disabled={isPending} />
+            <NumberInput
+            decimals={0}
+            placeholder="0" label="Bonus" value={watch("bonus")}
+  onChange={(v) =>
+    setValue("bonus", v as number, { shouldValidate: true })
+  } error={errors.bonus?.message} disabled={isPending} />
+            <NumberInput
+            decimals={0}
+            placeholder="0" label="Biaya Tambahan" value={watch("biayaTambahan")}
+  onChange={(v) =>
+    setValue("biayaTambahan", v as number, { shouldValidate: true })
+  } error={errors.biayaTambahan?.message} disabled={isPending} />
+            <NumberInput
+            decimals={0}
+            placeholder="0" label="Potongan" value={watch("potongan")}
+  onChange={(v) =>
+    setValue("potongan", v as number, { shouldValidate: true })
+  } error={errors.potongan?.message} disabled={isPending} />
+            <NumberInput
+            decimals={0}
+            placeholder="0" label="Uang Muka" value={watch("uangMuka")}
+  onChange={(v) =>
+    setValue("uangMuka", v as number, { shouldValidate: true })
+  } error={errors.uangMuka?.message} disabled={isPending} />
           </div>
 
           {adaUsulan && (

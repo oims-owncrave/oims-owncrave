@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Button } from "@/components/ui/Button";
@@ -166,22 +167,26 @@ export function KemasanFormModal({ open, onClose, initialData }: Props) {
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input
+            <NumberInput
+              decimals={2}
+              placeholder="0"
               label="Biaya per Unit"
-              type="number"
-              step="0.01"
-              min="0"
               error={errors.biaya?.message}
-              {...register("biaya")}
+              value={watch("biaya")}
+              onChange={(v) =>
+                setValue("biaya", v as number, { shouldValidate: true })
+              }
               disabled={isPending}
             />
-            <Input
+            <NumberInput
+              decimals={2}
+              placeholder="0"
               label="Stok Minimum"
-              type="number"
-              step="0.01"
-              min="0"
               error={errors.stokMinimum?.message}
-              {...register("stokMinimum")}
+              value={watch("stokMinimum")}
+              onChange={(v) =>
+                setValue("stokMinimum", v as number, { shouldValidate: true })
+              }
               disabled={isPending}
             />
           </div>

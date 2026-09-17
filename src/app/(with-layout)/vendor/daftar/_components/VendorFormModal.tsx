@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -171,11 +172,14 @@ export function VendorFormModal({ open, onClose, initialData }: Props) {
               {...register("kota")}
               disabled={isPending}
             />
-            <Input
+            <NumberInput
               label="Kapasitas Harian (pcs)"
-              type="number"
+              placeholder="0"
               error={errors.kapasitasHarian?.message}
-              {...register("kapasitasHarian", { setValueAs: (v) => (v === "" ? null : Number(v)) })}
+              value={watch("kapasitasHarian")}
+              onChange={(v) =>
+                setValue("kapasitasHarian", v ?? null, { shouldValidate: true })
+              }
               disabled={isPending}
             />
           </div>
@@ -241,18 +245,24 @@ export function VendorFormModal({ open, onClose, initialData }: Props) {
                 disabled={isPending}
               />
             )}
-            <Input
+            <NumberInput
               label="Termin Bayar (hari)"
-              type="number"
+              placeholder="0"
               error={errors.terminHari?.message}
-              {...register("terminHari", { setValueAs: (v) => (v === "" ? null : Number(v)) })}
+              value={watch("terminHari")}
+              onChange={(v) =>
+                setValue("terminHari", v ?? null, { shouldValidate: true })
+              }
               disabled={isPending}
             />
-            <Input
+            <NumberInput
               label="Lead Time (hari)"
-              type="number"
+              placeholder="0"
               error={errors.leadTimeHari?.message}
-              {...register("leadTimeHari", { setValueAs: (v) => (v === "" ? null : Number(v)) })}
+              value={watch("leadTimeHari")}
+              onChange={(v) =>
+                setValue("leadTimeHari", v ?? null, { shouldValidate: true })
+              }
               disabled={isPending}
             />
           </div>

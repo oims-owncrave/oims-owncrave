@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, formatRupiah, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Printer } from "lucide-react";
@@ -57,6 +58,8 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PenerimaanDekorasiInput>({
     resolver: zodResolver(penerimaanDekorasiSchema),
@@ -144,8 +147,18 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
               <Input type="datetime-local" label="Tanggal & Jam" required {...register("tanggalJam")} error={errors.tanggalJam?.message} />
               <Input label="Penerima" required {...register("penerima")} error={errors.penerima?.message} />
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input type="number" step="1" label="Selesai (pcs)" {...register("jumlahSelesai", { valueAsNumber: true })} error={errors.jumlahSelesai?.message} />
-                <Input type="number" step="1" label="Rusak (pcs)" {...register("jumlahRusak", { valueAsNumber: true })} error={errors.jumlahRusak?.message} />
+                <NumberInput
+            decimals={0}
+            placeholder="0" label="Selesai (pcs)" value={watch("jumlahSelesai")}
+  onChange={(v) =>
+    setValue("jumlahSelesai", v as number, { shouldValidate: true })
+  } error={errors.jumlahSelesai?.message} />
+                <NumberInput
+            decimals={0}
+            placeholder="0" label="Rusak (pcs)" value={watch("jumlahRusak")}
+  onChange={(v) =>
+    setValue("jumlahRusak", v as number, { shouldValidate: true })
+  } error={errors.jumlahRusak?.message} />
               </div>
               <Input label="Catatan" placeholder="Opsional" {...register("catatan")} />
               <div className="mt-6 flex justify-end gap-3">

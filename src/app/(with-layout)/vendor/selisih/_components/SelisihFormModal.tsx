@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -114,8 +115,18 @@ export function SelisihFormModal({ open, onClose, initialData }: Props) {
               {...register("klasifikasi")}
               disabled={isPending || autoRusak}
             />
-            <Input type="number" step="1" label="Jumlah (pcs)" required {...register("jumlah", { valueAsNumber: true })} error={errors.jumlah?.message} disabled={isPending || autoRusak} />
-            <Input type="number" step="1" label="Nilai per Pcs (Rp)" {...register("nilaiPerPcs", { valueAsNumber: true })} error={errors.nilaiPerPcs?.message} disabled={isPending} />
+            <NumberInput
+            decimals={0}
+            placeholder="0" label="Jumlah (pcs)" required value={watch("jumlah")}
+  onChange={(v) =>
+    setValue("jumlah", v as number, { shouldValidate: true })
+  } error={errors.jumlah?.message} disabled={isPending || autoRusak} />
+            <NumberInput
+            decimals={0}
+            placeholder="0" label="Nilai per Pcs (Rp)" value={watch("nilaiPerPcs")}
+  onChange={(v) =>
+    setValue("nilaiPerPcs", v as number, { shouldValidate: true })
+  } error={errors.nilaiPerPcs?.message} disabled={isPending} />
           </div>
 
           {klasifikasi === "rusak" && (

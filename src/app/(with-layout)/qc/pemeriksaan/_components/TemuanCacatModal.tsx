@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Button } from "@/components/ui/Button";
@@ -135,13 +136,15 @@ export function TemuanCacatModal({
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input
+            <NumberInput
+              decimals={0}
+              placeholder="0"
               label="Jumlah (pcs)"
-              type="number"
-              min="1"
-              max={sisa}
               error={errors.jumlah?.message}
-              {...register("jumlah")}
+              value={watch("jumlah")}
+              onChange={(v) =>
+                setValue("jumlah", v as number, { shouldValidate: true })
+              }
               disabled={isPending}
             />
             <Input

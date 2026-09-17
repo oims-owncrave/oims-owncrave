@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -206,8 +207,18 @@ export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, ini
                         <span className={over ? "font-semibold text-red-600" : ""}>{b?.cap}</span>
                         <p className="text-[10px] text-dark-5 dark:text-dark-6">{b?.info}</p>
                       </td>
-                      <td className="py-2 pr-3"><Input type="number" step="1" className="w-24" {...register(`details.${i}.jumlahBaik`, { valueAsNumber: true })} error={errors.details?.[i]?.jumlahBaik?.message} /></td>
-                      <td className="py-2 pr-3"><Input type="number" step="1" className="w-24" {...register(`details.${i}.jumlahRusak`, { valueAsNumber: true })} error={errors.details?.[i]?.jumlahRusak?.message} /></td>
+                      <td className="py-2 pr-3"><NumberInput
+            decimals={0}
+            placeholder="0" className="w-24" value={watch(`details.${i}.jumlahBaik`)}
+  onChange={(v) =>
+    setValue(`details.${i}.jumlahBaik`, v as number, { shouldValidate: true })
+  } error={errors.details?.[i]?.jumlahBaik?.message} /></td>
+                      <td className="py-2 pr-3"><NumberInput
+            decimals={0}
+            placeholder="0" className="w-24" value={watch(`details.${i}.jumlahRusak`)}
+  onChange={(v) =>
+    setValue(`details.${i}.jumlahRusak`, v as number, { shouldValidate: true })
+  } error={errors.details?.[i]?.jumlahRusak?.message} /></td>
                       <td className="py-2"><Input className="w-40" placeholder="Opsional" {...register(`details.${i}.catatan`)} /></td>
                     </tr>
                   );

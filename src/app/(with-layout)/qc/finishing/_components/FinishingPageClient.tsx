@@ -5,6 +5,7 @@ import { cn, formatTanggal } from "@/lib/utils";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Play, CheckCircle, Ban, Sparkles } from "lucide-react";
@@ -315,13 +316,12 @@ export function FinishingPageClient({ baris, listData, userOptions, bahanOptions
               />
             </div>
             <div className="w-32">
-              <Input
+              <NumberInput
                 label="Jumlah"
-                type="number"
-                min="0"
-                step="0.001"
+                decimals={3}
+                placeholder="0"
                 value={jumlahBahan}
-                onChange={(e) => setJumlahBahan(Number(e.target.value) || 0)}
+                onChange={(v) => setJumlahBahan(v ?? 0)}
                 disabled={pakaiBahan.isPending}
               />
             </div>

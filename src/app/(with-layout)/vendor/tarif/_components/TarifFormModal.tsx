@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import {
@@ -210,11 +211,15 @@ export function TarifFormModal({
               {...register("dasarTarif")}
               disabled={isPending}
             />
-            <Input
+            <NumberInput
+            decimals={0}
+            placeholder="0"
               label="Nominal (Rp)"
-              type="number"
               error={errors.nominal?.message}
-              {...register("nominal", { valueAsNumber: true })}
+              value={watch("nominal")}
+              onChange={(v) =>
+                setValue("nominal", v as number, { shouldValidate: true })
+              }
               disabled={isPending}
             />
             <Input

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { useTarifJasaJahitMutation } from "@/hooks/useTarifJasaJahit";
 import type { TarifRow } from "./TarifTable";
@@ -50,11 +51,11 @@ export function VersiBaruModal({ item, onClose }: Props) {
         </p>
 
         <div className="space-y-4">
-          <Input
+          <NumberInput
             label="Nominal Baru"
-            type="number"
+            placeholder="0"
             value={nominal}
-            onChange={(e) => setNominal(e.target.value)}
+            onChange={(v) => setNominal(v === undefined ? "" : String(v))}
             disabled={isPending}
           />
           <Input
