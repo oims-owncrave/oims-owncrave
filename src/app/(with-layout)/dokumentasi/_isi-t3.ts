@@ -1,11 +1,10 @@
 import type { Tutorial } from "./_data";
 
 /**
- * Alur sudah dijalankan sendiri 17 Sep 2026 dari bundling sampai tagihan
- * berstatus Menunggu QC, dan teks di bawah sudah disesuaikan dengan hasilnya —
- * bukan lagi perkiraan. 35 screenshot mentah ada di docs/tutorial/t3-vendor/raw/,
- * belum dianotasi (lihat resep tutorial.md). Setelah dianotasi, pindahkan hasilnya
- * ke public/img-panduan/t3-vendor/ dan buang `gambarMenyusul` di bawah.
+ * Alur dijalankan sendiri 17 Sep 2026 dari bundling sampai tagihan berstatus
+ * Menunggu QC — 16 gambar dianotasi dari screenshot alur sungguhan (bukan mockup),
+ * di public/img-panduan/t3-vendor/. Mentahnya (docs/tutorial/t3-vendor/raw/,
+ * tidak ikut repo) masih disimpan sampai gambar ini diperiksa sekali lagi.
  *
  * Dua bug ditemukan sambil memotret dan sudah diperbaiki: nomor dokumen kembar
  * (app-qh4u) dan form retur diam tanpa pesan (app-7wgi). Satu bug kosmetik
@@ -14,7 +13,6 @@ import type { Tutorial } from "./_data";
 export const T3_VENDOR: Tutorial = {
   slug: "t3-vendor",
   tahap: 3,
-  gambarMenyusul: true,
   judul: "Penjahitan Vendor & WIP",
   ringkas:
     "Menugaskan bundel ke penjahit, mengirimnya dengan surat jalan, menerima hasil jahit bertahap, dan menyelesaikan barang rusak atau hilang sampai tagihan siap dibayar.",
