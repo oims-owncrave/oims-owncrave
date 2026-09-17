@@ -44,5 +44,6 @@ export const TAHAP_LABEL: Record<1 | 2 | 3 | 4, string> = {
 };
 
 import { T1_PERSEDIAAN } from "./_isi-t1";
+import { T2_PRODUKSI } from "./_isi-t2";
 
-export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN];
+export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN, T2_PRODUKSI];
