@@ -40,7 +40,7 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
 
 export function BomDetailClient({ bomId, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [activateOpen, setActivateOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { data } = useBomDetail(bomId);
@@ -94,7 +94,7 @@ export function BomDetailClient({ bomId, initialData }: Props) {
               <Button size="sm" onClick={() => setActivateOpen(true)} loading={activate.isPending}>
                 Aktifkan
               </Button>
-              <Button size="sm" variant="outline" onClick={() => go(`/produksi/bom/${bomId}/edit`)}>
+              <Button size="sm" variant="outline" onClick={() => go(`/produksi/bom/${bomId}/edit`)} loading={isPending}>
                 Edit
               </Button>
               <Button size="sm" variant="outline" onClick={() => setDeleteOpen(true)} loading={remove.isPending}>

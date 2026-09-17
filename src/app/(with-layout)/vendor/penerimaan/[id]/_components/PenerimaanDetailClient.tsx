@@ -26,7 +26,7 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
 
 export function PenerimaanDetailClient({ id, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [hapusOpen, setHapusOpen] = useState(false);
   const { data } = usePenerimaanHasilDetail(id);
   const { remove } = usePenerimaanHasilMutation();
@@ -68,9 +68,9 @@ export function PenerimaanDetailClient({ id, initialData }: Props) {
 
         <div className="mt-5 flex flex-wrap gap-2 border-t border-stroke pt-4 dark:border-dark-3">
           {!d.returId && rusakBelumRetur > 0 && (
-            <Button size="sm" onClick={() => go(`/vendor/retur/baru?penerimaan=${id}`)}>Buat Retur Perbaikan ({rusakBelumRetur} pcs rusak)</Button>
+            <Button size="sm" onClick={() => go(`/vendor/retur/baru?penerimaan=${id}`)} loading={isPending}>Buat Retur Perbaikan ({rusakBelumRetur} pcs rusak)</Button>
           )}
-          <Button size="sm" variant="outline" onClick={() => go(`/vendor/penerimaan/baru?penugasan=${d.penugasanId}`)}>Terima Lagi (bertahap)</Button>
+          <Button size="sm" variant="outline" onClick={() => go(`/vendor/penerimaan/baru?penugasan=${d.penugasanId}`)} loading={isPending}>Terima Lagi (bertahap)</Button>
           <Button size="sm" variant="outline" onClick={() => setHapusOpen(true)}>Hapus</Button>
         </div>
       </div>

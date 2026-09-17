@@ -27,20 +27,27 @@ interface Props {
 
 export function WoTable({ initialData }: Props) {
   const router = useRouter();
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [, startNavigate] = useTransition();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const { data } = useWoList();
   const { remove } = useWoMutation();
   const items = data ?? initialData;
 
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actionsFor = (item: WoListRow): TableAction<WoListRow>[] => {
     const view: TableAction<WoListRow> = {
       icon: <Eye size={16} />,
       title: "Detail",
-      onClick: () => go(`/produksi/wo-cutting/${item.id}`),
+      onClick: () => goRow(item.id, `/produksi/wo-cutting/${item.id}`),
       variant: "default",
+      loading: (it) => pendingId === it.id,
     };
     if (item.status === "draft") {
       return [
@@ -48,8 +55,9 @@ export function WoTable({ initialData }: Props) {
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: () => go(`/produksi/wo-cutting/${item.id}/edit`),
+          onClick: () => goRow(item.id, `/produksi/wo-cutting/${item.id}/edit`),
           variant: "default",
+          loading: (it) => pendingId === it.id,
         },
         {
           icon: <Trash2 size={16} />,
@@ -118,7 +126,7 @@ export function WoTable({ initialData }: Props) {
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={() => go("/produksi/wo-cutting/baru")} className="hidden sm:inline-flex">
+            <Button onClick={() => go("/produksi/wo-cutting/baru")} loading={isPendingNew} className="hidden sm:inline-flex">
               + Buat WO
             </Button>
           </div>
@@ -129,6 +137,7 @@ export function WoTable({ initialData }: Props) {
           mobileFab={
             <Button
               onClick={() => go("/produksi/wo-cutting/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

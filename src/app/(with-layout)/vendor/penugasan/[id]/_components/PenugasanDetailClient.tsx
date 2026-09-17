@@ -29,7 +29,7 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
 
 export function PenugasanDetailClient({ id, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [confirm, setConfirm] = useState<{ status: string; label: string } | null>(null);
   const { data } = usePenugasanDetail(id);
   const { setStatus } = usePenugasanMutation();
@@ -76,14 +76,14 @@ export function PenugasanDetailClient({ id, initialData }: Props) {
         <div className="mt-5 flex flex-wrap gap-2 border-t border-stroke pt-4 dark:border-dark-3">
           {d.status === "draft" && (
             <>
-              <Button size="sm" variant="outline" onClick={() => go(`/vendor/penugasan/${id}/edit`)}>Edit</Button>
+              <Button size="sm" variant="outline" onClick={() => go(`/vendor/penugasan/${id}/edit`)} loading={isPending}>Edit</Button>
               <Button size="sm" onClick={() => setConfirm({ status: "aktif", label: "Aktifkan Penugasan" })} loading={setStatus.isPending}>
                 Aktifkan
               </Button>
             </>
           )}
           {bisaKirim && (
-            <Button size="sm" onClick={() => go(`/vendor/pengiriman/baru?penugasan=${id}`)}>
+            <Button size="sm" onClick={() => go(`/vendor/pengiriman/baru?penugasan=${id}`)} loading={isPending}>
               Buat Pengiriman ({belumDikirim} bundel)
             </Button>
           )}

@@ -30,18 +30,23 @@ function fmtDate(d: Date | string | null) {
 export function PbTable({ data }: { data: PbListRow[] }) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [rejectId, setRejectId] = useState<string | null>(null);
   const { submit, approve, reject, remove } = usePermintaanMutation();
 
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actionsFor = (item: PbListRow): TableAction<PbListRow>[] => {
     const view: TableAction<PbListRow> = {
       icon: <Eye size={16} />,
       title: "Detail",
-      onClick: () => go(`/produksi/permintaan-bahan/${item.id}`),
+      onClick: () => goRow(item.id, `/produksi/permintaan-bahan/${item.id}`),
       variant: "default",
+      loading: (it) => pendingId === it.id,
     };
     if (item.status === "draft") {
       return [
@@ -49,8 +54,9 @@ export function PbTable({ data }: { data: PbListRow[] }) {
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: () => go(`/produksi/permintaan-bahan/${item.id}/edit`),
+          onClick: () => goRow(item.id, `/produksi/permintaan-bahan/${item.id}/edit`),
           variant: "default",
+          loading: (it) => pendingId === it.id,
         },
         {
           icon: <Send size={16} />,

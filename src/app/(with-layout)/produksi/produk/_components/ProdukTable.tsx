@@ -35,13 +35,20 @@ export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
   const { remove } = useProdukMutation();
   const router = useRouter();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
+
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actions: TableAction<ProdukRow>[] = [
     {
       icon: <Layers size={16} />,
       title: "Varian",
-      onClick: (item) => startNavigate(() => router.push(`/produksi/produk/${item.id}`)),
+      onClick: (item) => goRow(item.id, `/produksi/produk/${item.id}`),
       variant: "default",
+      loading: (item) => pendingId === item.id,
     },
     {
       // Resep = BOM. Sudah ada -> buka BOM-nya; belum -> form BOM dengan produk terpilih.
@@ -49,14 +56,14 @@ export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
       icon: <ClipboardList size={16} />,
       title: "Resep bahan (BOM)",
       onClick: (item) =>
-        startNavigate(() =>
-          router.push(
-            item.bomAktifId
-              ? `/produksi/bom/${item.bomAktifId}`
-              : `/produksi/bom/baru?produk=${item.id}`,
-          ),
+        goRow(
+          item.id,
+          item.bomAktifId
+            ? `/produksi/bom/${item.bomAktifId}`
+            : `/produksi/bom/baru?produk=${item.id}`,
         ),
       variant: "default",
+      loading: (item) => pendingId === item.id,
     },
     {
       icon: <Pencil size={16} />,

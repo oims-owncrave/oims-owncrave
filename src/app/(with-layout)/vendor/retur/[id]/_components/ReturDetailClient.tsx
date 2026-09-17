@@ -34,7 +34,7 @@ const NEXT: Record<ReturDetailData["status"], { status: string; label: string; o
 
 export function ReturDetailClient({ id, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [confirm, setConfirm] = useState<{ status: string; label: string } | null>(null);
   const { data } = useReturDetail(id);
   const { setStatus } = useReturMutation();
@@ -69,8 +69,8 @@ export function ReturDetailClient({ id, initialData }: Props) {
         {d.catatan && <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{d.catatan}</p>}
 
         <div className="mt-5 flex flex-wrap gap-2 border-t border-stroke pt-4 dark:border-dark-3">
-          {d.status === "draft" && <Button size="sm" variant="outline" onClick={() => go(`/vendor/retur/${id}/edit`)}>Edit</Button>}
-          {bisaTerima && <Button size="sm" onClick={() => go(`/vendor/penerimaan/baru?retur=${id}`)}>Terima Hasil Perbaikan</Button>}
+          {d.status === "draft" && <Button size="sm" variant="outline" onClick={() => go(`/vendor/retur/${id}/edit`)} loading={isPending}>Edit</Button>}
+          {bisaTerima && <Button size="sm" onClick={() => go(`/vendor/penerimaan/baru?retur=${id}`)} loading={isPending}>Terima Hasil Perbaikan</Button>}
           {NEXT[d.status].map((a) => (
             <Button key={a.status} size="sm" variant={a.outline ? "outline" : undefined} onClick={() => setConfirm(a)} loading={setStatus.isPending}>{a.label}</Button>
           ))}

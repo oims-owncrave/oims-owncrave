@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -26,14 +26,32 @@ interface Props {
 
 export function PengirimanTable({ initialData }: Props) {
   const router = useRouter();
+  const [isPendingNew, startTransitionNew] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const [, startNavigate] = useTransition();
   const { data } = usePengirimanList();
   const items = data ?? initialData;
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
+  const goNew = (path: string) => startTransitionNew(() => router.push(path));
 
   const actions: TableAction<PengirimanListRow>[] = [
-    { icon: <Eye size={16} />, title: "Detail", onClick: (item) => go(`/vendor/pengiriman/${item.id}`), variant: "default" },
-    { icon: <Printer size={16} />, title: "Surat Jalan", onClick: (item) => go(`/vendor/pengiriman/${item.id}/surat-jalan`), variant: "default" },
+    {
+      icon: <Eye size={16} />,
+      title: "Detail",
+      onClick: (item) => goRow(item.id, `/vendor/pengiriman/${item.id}`),
+      variant: "default",
+      loading: (item) => pendingId === item.id,
+    },
+    {
+      icon: <Printer size={16} />,
+      title: "Surat Jalan",
+      onClick: (item) => goRow(item.id, `/vendor/pengiriman/${item.id}/surat-jalan`),
+      variant: "default",
+      loading: (item) => pendingId === item.id,
+    },
   ];
 
   const columns: ColumnDef<PengirimanListRow>[] = [
@@ -77,14 +95,14 @@ export function PengirimanTable({ initialData }: Props) {
           <ColumnToggle table={table} className="shrink-0" />
         </div>
         <div className="flex items-center gap-2">
-          <Button onClick={() => go("/vendor/pengiriman/baru")} className="hidden sm:inline-flex">+ Buat Pengiriman</Button>
+          <Button onClick={() => goNew("/vendor/pengiriman/baru")} loading={isPendingNew} className="hidden sm:inline-flex">+ Buat Pengiriman</Button>
         </div>
       </TableToolbar>
       <DataTable
         table={table}
         showRowNumber
         mobileFab={
-          <Button onClick={() => go("/vendor/pengiriman/baru")} className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center">
+          <Button onClick={() => goNew("/vendor/pengiriman/baru")} loading={isPendingNew} className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center">
             <Plus size={24} />
           </Button>
         }

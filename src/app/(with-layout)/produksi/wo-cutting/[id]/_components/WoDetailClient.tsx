@@ -29,7 +29,7 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
 
 export function WoDetailClient({ woId, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [confirmStatus, setConfirmStatus] = useState<{ status: string; label: string } | null>(null);
   const { data } = useWoDetail(woId);
   const { setStatus } = useWoMutation();
@@ -80,7 +80,7 @@ export function WoDetailClient({ woId, initialData }: Props) {
 
         <div className="mt-5 flex flex-wrap gap-2 border-t border-stroke pt-4 dark:border-dark-3">
           {detail.status === "draft" && (
-            <Button size="sm" variant="outline" onClick={() => go(`/produksi/wo-cutting/${woId}/edit`)}>
+            <Button size="sm" variant="outline" onClick={() => go(`/produksi/wo-cutting/${woId}/edit`)} loading={isPending}>
               Edit
             </Button>
           )}

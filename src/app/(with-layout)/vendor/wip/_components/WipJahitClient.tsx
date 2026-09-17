@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatRupiah, formatTanggal } from "@/lib/utils";
 import { Eye } from "lucide-react";
@@ -47,14 +47,18 @@ function Kartu({ label, value, hint, tone }: { label: string; value: string | nu
 export function WipJahitClient({ initialRows, initialRingkasan }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const { data: rows } = useWipJahit();
   const { data: ringkasan } = useRingkasanJahit();
   const items = rows ?? initialRows;
   const r = ringkasan ?? initialRingkasan;
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actions: TableAction<WipJahitRow>[] = [
-    { icon: <Eye size={16} />, title: "Detail penugasan", onClick: (item) => go(`/vendor/penugasan/${item.penugasanId}`), variant: "default" },
+    { icon: <Eye size={16} />, title: "Detail penugasan", onClick: (item) => goRow(item.penugasanId, `/vendor/penugasan/${item.penugasanId}`), variant: "default", loading: (item) => pendingId === item.penugasanId },
   ];
 
   const columns: ColumnDef<WipJahitRow>[] = [

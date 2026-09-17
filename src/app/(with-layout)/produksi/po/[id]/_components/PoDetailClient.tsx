@@ -33,7 +33,7 @@ function fmtDate(d: Date | string | null) {
 
 export function PoDetailClient({ poId, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [approveOpen, setApproveOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -91,7 +91,7 @@ export function PoDetailClient({ poId, initialData }: Props) {
               <Button size="sm" onClick={() => submit.mutate(poId)} loading={submit.isPending}>
                 Ajukan Persetujuan
               </Button>
-              <Button size="sm" variant="outline" onClick={() => go(`/produksi/po/${poId}/edit`)}>
+              <Button size="sm" variant="outline" onClick={() => go(`/produksi/po/${poId}/edit`)} loading={isPending}>
                 Edit
               </Button>
               <Button size="sm" variant="outline" onClick={() => setDeleteOpen(true)} loading={remove.isPending}>
@@ -105,7 +105,7 @@ export function PoDetailClient({ poId, initialData }: Props) {
             </Button>
           )}
           {detail.status === "disetujui" && (
-            <Button size="sm" onClick={() => go(`/produksi/permintaan-bahan/baru?po=${poId}`)}>
+            <Button size="sm" onClick={() => go(`/produksi/permintaan-bahan/baru?po=${poId}`)} loading={isPending}>
               Buat Permintaan Bahan
             </Button>
           )}

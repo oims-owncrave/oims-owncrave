@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatTanggal } from "@/lib/utils";
 import { Eye, Printer } from "lucide-react";
@@ -26,13 +26,17 @@ interface Props {
 export function SuratJalanTable({ initialData }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const { data } = useSuratJalanList();
   const items = data ?? initialData;
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actions: TableAction<SuratJalanListRow>[] = [
-    { icon: <Printer size={16} />, title: "Cetak", onClick: (item) => go(`/vendor/pengiriman/${item.pengirimanId}/surat-jalan`), variant: "default" },
-    { icon: <Eye size={16} />, title: "Pengiriman", onClick: (item) => go(`/vendor/pengiriman/${item.pengirimanId}`), variant: "default" },
+    { icon: <Printer size={16} />, title: "Cetak", onClick: (item) => goRow(item.id, `/vendor/pengiriman/${item.pengirimanId}/surat-jalan`), variant: "default", loading: (item) => pendingId === item.id },
+    { icon: <Eye size={16} />, title: "Pengiriman", onClick: (item) => goRow(item.id, `/vendor/pengiriman/${item.pengirimanId}`), variant: "default", loading: (item) => pendingId === item.id },
   ];
 
   const columns: ColumnDef<SuratJalanListRow>[] = [

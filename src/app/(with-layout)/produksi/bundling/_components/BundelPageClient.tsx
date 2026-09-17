@@ -42,13 +42,17 @@ const STATUS_BADGE: Record<string, string> = {
 export function BundelPageClient({ initialData, woOptions }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [cancelId, setCancelId] = useState<string | null>(null);
   const { data } = useBundelList();
   const { create, setStatus } = useBundelMutation();
   const items = data ?? initialData;
 
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const {
     register,
@@ -75,8 +79,9 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
     const label: TableAction<BundelListRow> = {
       icon: <Printer size={16} />,
       title: "Label",
-      onClick: () => go(`/produksi/bundling/${item.id}/label`),
+      onClick: () => goRow(item.id, `/produksi/bundling/${item.id}/label`),
       variant: "default",
+      loading: (it) => pendingId === it.id,
     };
     if (item.status === "draft") {
       return [

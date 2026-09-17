@@ -23,20 +23,27 @@ import {
 
 export function PoTable({ data }: { data: PoListRow[] }) {
   const router = useRouter();
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [approveId, setApproveId] = useState<string | null>(null);
   const [cancelId, setCancelId] = useState<string | null>(null);
   const { submit, approve, cancel, remove } = usePoMutation();
 
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actionsFor = (item: PoListRow): TableAction<PoListRow>[] => {
     const view: TableAction<PoListRow> = {
       icon: <Eye size={16} />,
       title: "Detail",
-      onClick: () => go(`/produksi/po/${item.id}`),
+      onClick: () => goRow(item.id, `/produksi/po/${item.id}`),
       variant: "default",
+      loading: (it) => pendingId === it.id,
     };
     if (item.status === "draft") {
       return [
@@ -44,8 +51,9 @@ export function PoTable({ data }: { data: PoListRow[] }) {
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: () => go(`/produksi/po/${item.id}/edit`),
+          onClick: () => goRow(item.id, `/produksi/po/${item.id}/edit`),
           variant: "default",
+          loading: (it) => pendingId === it.id,
         },
         {
           icon: <Send size={16} />,
@@ -160,7 +168,7 @@ export function PoTable({ data }: { data: PoListRow[] }) {
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={() => go("/produksi/po/baru")} className="hidden sm:inline-flex">
+            <Button onClick={() => go("/produksi/po/baru")} loading={isPendingNew} className="hidden sm:inline-flex">
               + Buat PO
             </Button>
           </div>
@@ -171,6 +179,7 @@ export function PoTable({ data }: { data: PoListRow[] }) {
           mobileFab={
             <Button
               onClick={() => go("/produksi/po/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

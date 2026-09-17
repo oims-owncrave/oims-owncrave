@@ -43,7 +43,7 @@ const nowLocalISO = () => {
 
 export function DekorasiDetailClient({ id, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [terimaOpen, setTerimaOpen] = useState(false);
   const [confirm, setConfirm] = useState<"kirim" | "batal" | null>(null);
   const { data } = usePekerjaanDekorasiDetail(id);
@@ -110,7 +110,7 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
             </>
           )}
           {d.sjNomor && (
-            <Button size="sm" variant="outline" onClick={() => go(`/vendor/dekorasi/${id}/surat-jalan`)}>
+            <Button size="sm" variant="outline" onClick={() => go(`/vendor/dekorasi/${id}/surat-jalan`)} loading={isPending}>
               <Printer size={16} className="mr-1.5" /> Surat Jalan
             </Button>
           )}

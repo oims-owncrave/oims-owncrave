@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -25,18 +25,25 @@ interface Props {
 
 export function PenerimaanTable({ initialData }: Props) {
   const router = useRouter();
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const { data } = usePenerimaanList();
   const items = data ?? initialData;
 
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actions: TableAction<PenerimaanListRow>[] = [
     {
       icon: <Eye size={16} />,
       title: "Detail",
-      onClick: (item) => go(`/produksi/penerimaan-cutting/${item.id}`),
+      onClick: (item) => goRow(item.id, `/produksi/penerimaan-cutting/${item.id}`),
       variant: "default",
+      loading: (item) => pendingId === item.id,
     },
   ];
 
@@ -98,7 +105,7 @@ export function PenerimaanTable({ initialData }: Props) {
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={() => go("/produksi/penerimaan-cutting/baru")} className="hidden sm:inline-flex">
+            <Button onClick={() => go("/produksi/penerimaan-cutting/baru")} loading={isPendingNew} className="hidden sm:inline-flex">
               + Catat Penerimaan
             </Button>
           </div>
@@ -109,6 +116,7 @@ export function PenerimaanTable({ initialData }: Props) {
           mobileFab={
             <Button
               onClick={() => go("/produksi/penerimaan-cutting/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

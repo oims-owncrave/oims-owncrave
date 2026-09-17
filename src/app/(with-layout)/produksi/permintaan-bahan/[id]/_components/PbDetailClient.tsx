@@ -35,7 +35,7 @@ const fmtQty = (n: number) =>
 
 export function PbDetailClient({ pbId, initialData }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [rejectOpen, setRejectOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { data } = usePermintaanDetail(pbId);
@@ -78,7 +78,7 @@ export function PbDetailClient({ pbId, initialData }: Props) {
               <Button size="sm" onClick={() => submit.mutate(pbId)} loading={submit.isPending}>
                 Ajukan ke Gudang
               </Button>
-              <Button size="sm" variant="outline" onClick={() => go(`/produksi/permintaan-bahan/${pbId}/edit`)}>
+              <Button size="sm" variant="outline" onClick={() => go(`/produksi/permintaan-bahan/${pbId}/edit`)} loading={isPending}>
                 Edit
               </Button>
               <Button size="sm" variant="outline" onClick={() => setDeleteOpen(true)} loading={remove.isPending}>
@@ -97,7 +97,7 @@ export function PbDetailClient({ pbId, initialData }: Props) {
             </>
           )}
           {detail.status === "disetujui" && !detail.selesai && (
-            <Button size="sm" onClick={() => go("/inventory/barang-keluar/baru")}>
+            <Button size="sm" onClick={() => go("/inventory/barang-keluar/baru")} loading={isPending}>
               Keluarkan via Barang Keluar
             </Button>
           )}

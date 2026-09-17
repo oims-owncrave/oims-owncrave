@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatRupiah, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -26,17 +26,23 @@ interface Props {
 
 export function DekorasiTable({ initialData }: Props) {
   const router = useRouter();
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [, startNavigate] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
   const { data } = usePekerjaanDekorasiList();
   const items = data ?? initialData;
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (id: string, path: string) => {
+    setPendingId(id);
+    startNavigate(() => router.push(path));
+  };
 
   const actionsFor = (item: PekerjaanDekorasiListRow): TableAction<PekerjaanDekorasiListRow>[] => {
     const a: TableAction<PekerjaanDekorasiListRow>[] = [
-      { icon: <Eye size={16} />, title: "Detail", onClick: () => go(`/vendor/dekorasi/${item.id}`), variant: "default" },
+      { icon: <Eye size={16} />, title: "Detail", onClick: () => goRow(item.id, `/vendor/dekorasi/${item.id}`), variant: "default", loading: (it) => pendingId === it.id },
     ];
     if (item.sjNomor) {
-      a.push({ icon: <Printer size={16} />, title: "Surat Jalan", onClick: () => go(`/vendor/dekorasi/${item.id}/surat-jalan`), variant: "default" });
+      a.push({ icon: <Printer size={16} />, title: "Surat Jalan", onClick: () => goRow(item.id, `/vendor/dekorasi/${item.id}/surat-jalan`), variant: "default", loading: (it) => pendingId === it.id });
     }
     return a;
   };
@@ -92,15 +98,15 @@ export function DekorasiTable({ initialData }: Props) {
           <ColumnToggle table={table} className="shrink-0" />
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => go("/vendor/dekorasi/template")} className="hidden sm:inline-flex">Template</Button>
-          <Button onClick={() => go("/vendor/dekorasi/baru")} className="hidden sm:inline-flex">+ Buat Pekerjaan</Button>
+          <Button variant="outline" onClick={() => go("/vendor/dekorasi/template")} loading={isPendingNew} className="hidden sm:inline-flex">Template</Button>
+          <Button onClick={() => go("/vendor/dekorasi/baru")} loading={isPendingNew} className="hidden sm:inline-flex">+ Buat Pekerjaan</Button>
         </div>
       </TableToolbar>
       <DataTable
         table={table}
         showRowNumber
         mobileFab={
-          <Button onClick={() => go("/vendor/dekorasi/baru")} className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center">
+          <Button onClick={() => go("/vendor/dekorasi/baru")} loading={isPendingNew} className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center">
             <Plus size={24} />
           </Button>
         }

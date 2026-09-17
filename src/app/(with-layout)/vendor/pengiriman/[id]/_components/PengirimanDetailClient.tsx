@@ -31,7 +31,7 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
 
 export function PengirimanDetailClient({ id, initialData, lokasiList }: Props) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isPending, startNavigate] = useTransition();
   const [stOpen, setStOpen] = useState(false);
   const [batalOpen, setBatalOpen] = useState(false);
   const [alasan, setAlasan] = useState("");
@@ -86,7 +86,7 @@ export function PengirimanDetailClient({ id, initialData, lokasiList }: Props) {
         )}
 
         <div className="mt-5 flex flex-wrap gap-2 border-t border-stroke pt-4 dark:border-dark-3">
-          <Button size="sm" variant="outline" onClick={() => go(`/vendor/pengiriman/${id}/surat-jalan`)}>
+          <Button size="sm" variant="outline" onClick={() => go(`/vendor/pengiriman/${id}/surat-jalan`)} loading={isPending}>
             <Printer size={16} className="mr-1.5" /> Surat Jalan
             {d.sjJumlahCetak != null && d.sjJumlahCetak > 0 && (
               <span className="ml-1.5 text-xs text-dark-5 dark:text-dark-6">(dicetak {d.sjJumlahCetak}×)</span>
