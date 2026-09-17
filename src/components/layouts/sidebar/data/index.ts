@@ -83,9 +83,9 @@ export const NAV_DATA: NavSection[] = [
         title: "Persediaan",
         icon: InventoryIcon,
         items: [
+          { title: "Stok Bahan", url: "/inventory/stok" },
           { title: "Barang Masuk", url: "/inventory/barang-masuk" },
           { title: "Barang Keluar", url: "/inventory/barang-keluar" },
-          { title: "Stok Bahan", url: "/inventory/stok" },
           { title: "Mutasi Stok", url: "/inventory/mutasi" },
           { title: "Penyesuaian Stok", url: "/inventory/penyesuaian" },
         ],
