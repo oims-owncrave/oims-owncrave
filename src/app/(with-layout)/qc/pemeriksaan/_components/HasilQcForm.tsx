@@ -202,7 +202,8 @@ export function HasilQcForm({ wo, baris, userOptions }: Props) {
                         <input
                           type="number"
                           min={0}
-                          value={a[k.key]}
+                          placeholder="0"
+                          value={a[k.key] || ""}
                           onChange={(e) => setNilai(b.id, k.key, Number(e.target.value) || 0)}
                           disabled={isPending || b.belumDiperiksa === 0}
                           className="w-full rounded-md border border-stroke bg-transparent px-2 py-1 text-right outline-hidden focus:border-primary disabled:opacity-50 dark:border-dark-3 dark:text-white"

@@ -29,7 +29,7 @@ interface Props {
   defaultValues?: BomInput;
 }
 
-const EMPTY_ROW = { bahanId: "", kuantitas: 0, toleransiPersen: 0, berlakuUkuran: "", keterangan: "" };
+const EMPTY_ROW = { bahanId: "", kuantitas: undefined as unknown as number, toleransiPersen: undefined as unknown as number, berlakuUkuran: "", keterangan: "" };
 
 export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: Props) {
   const router = useRouter();

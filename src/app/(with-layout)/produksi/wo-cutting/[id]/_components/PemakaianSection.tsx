@@ -54,10 +54,10 @@ export function PemakaianSection({ woId, poId }: Props) {
     resolver: zodResolver(pemakaianSchema),
     defaultValues: {
       bahanId: "",
-      jumlahDiterima: 0,
-      jumlahDigunakan: 0,
-      jumlahSisa: 0,
-      jumlahLimbah: 0,
+      jumlahDiterima: undefined,
+      jumlahDigunakan: undefined,
+      jumlahSisa: undefined,
+      jumlahLimbah: undefined,
       catatan: "",
     },
   });
@@ -78,10 +78,10 @@ export function PemakaianSection({ woId, poId }: Props) {
       } else {
         reset({
           bahanId: "",
-          jumlahDiterima: 0,
-          jumlahDigunakan: 0,
-          jumlahSisa: 0,
-          jumlahLimbah: 0,
+          jumlahDiterima: undefined,
+          jumlahDigunakan: undefined,
+          jumlahSisa: undefined,
+          jumlahLimbah: undefined,
           catatan: "",
         });
       }

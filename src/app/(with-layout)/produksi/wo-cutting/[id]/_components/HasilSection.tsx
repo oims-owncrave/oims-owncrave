@@ -52,7 +52,7 @@ export function HasilSection({ woId, woStatus }: Props) {
   useEffect(() => {
     if (modalOpen && rekap) {
       reset({ tanggal: todayISO(), catatan: "", details: [] });
-      replace(rekap.map((r) => ({ varianId: r.varianId, jumlahBaik: 0, jumlahRusak: 0 })));
+      replace(rekap.map((r) => ({ varianId: r.varianId, jumlahBaik: undefined as unknown as number, jumlahRusak: undefined as unknown as number })));
     }
   }, [modalOpen, rekap, reset, replace]);
 

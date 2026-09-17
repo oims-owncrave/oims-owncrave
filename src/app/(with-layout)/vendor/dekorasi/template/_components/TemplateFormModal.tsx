@@ -32,7 +32,7 @@ const EMPTY: TemplateInput = {
   jenis: "sablon",
   posisi: "dada_kiri",
   deskripsi: "",
-  tarifDefault: 0,
+  tarifDefault: undefined as unknown as number,
   isActive: true,
 };
 

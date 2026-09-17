@@ -232,7 +232,8 @@ export function ReQcPageClient({ sumber, riwayat, userOptions }: Props) {
                               type="number"
                               min={0}
                               max={s.sisa}
-                              value={v.jumlah}
+                              placeholder="0"
+                              value={v.jumlah || ""}
                               onChange={(e) =>
                                 set(s.hasilQcDetailId, {
                                   jumlah: Math.max(

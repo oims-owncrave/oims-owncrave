@@ -104,7 +104,7 @@ export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, ini
   );
 
   useEffect(() => {
-    replace(baris.filter((b) => b.cap > 0).map((b) => ({ penugasanDetailId: b.penugasanDetailId, jumlahBaik: 0, jumlahRusak: 0, catatan: "" })));
+    replace(baris.filter((b) => b.cap > 0).map((b) => ({ penugasanDetailId: b.penugasanDetailId, jumlahBaik: undefined as unknown as number, jumlahRusak: undefined as unknown as number, catatan: "" })));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baris]);
 

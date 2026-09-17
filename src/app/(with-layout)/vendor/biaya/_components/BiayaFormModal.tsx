@@ -28,7 +28,7 @@ export function BiayaFormModal({ item, onClose }: Props) {
     formState: { errors },
   } = useForm<BiayaInput>({
     resolver: zodResolver(biayaSchema),
-    defaultValues: { bonus: 0, biayaTambahan: 0, potongan: 0, uangMuka: 0, catatan: "" },
+    defaultValues: { bonus: undefined, biayaTambahan: undefined, potongan: undefined, uangMuka: undefined, catatan: "" },
   });
 
   useEffect(() => {

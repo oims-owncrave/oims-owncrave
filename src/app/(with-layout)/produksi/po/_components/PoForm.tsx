@@ -24,7 +24,7 @@ interface Props {
   defaultValues?: PoInput;
 }
 
-const EMPTY_ROW = { varianId: "", jumlahTarget: 0, toleransiPersen: 0 };
+const EMPTY_ROW = { varianId: "", jumlahTarget: undefined as unknown as number, toleransiPersen: undefined as unknown as number };
 
 const PRIORITAS_OPTIONS = [
   { value: "rendah", label: "Rendah" },

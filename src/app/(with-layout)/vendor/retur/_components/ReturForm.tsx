@@ -69,7 +69,7 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
           const cur = existing.get(k.penugasanDetailId);
           const cap = k.sisaBisaDiretur + (isEditing ? cur?.jumlah ?? 0 : 0);
           if (cap <= 0 && !cur) return null;
-          return cur ?? { penugasanDetailId: k.penugasanDetailId, jumlah: cap, jenisKerusakan: "", instruksi: "", tarifPerbaikan: 0, penanggungBiaya: "vendor" as const, fotoUrl: "" };
+          return cur ?? { penugasanDetailId: k.penugasanDetailId, jumlah: cap, jenisKerusakan: "", instruksi: "", tarifPerbaikan: undefined as unknown as number, penanggungBiaya: "vendor" as const, fotoUrl: "" };
         })
         .filter((x): x is NonNullable<typeof x> => x !== null),
     );

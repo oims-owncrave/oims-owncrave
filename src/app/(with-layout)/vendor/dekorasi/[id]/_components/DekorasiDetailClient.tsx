@@ -63,11 +63,11 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
     formState: { errors },
   } = useForm<PenerimaanDekorasiInput>({
     resolver: zodResolver(penerimaanDekorasiSchema),
-    defaultValues: { tanggalJam: nowLocalISO(), penerima: "", jumlahSelesai: 0, jumlahRusak: 0, catatan: "" },
+    defaultValues: { tanggalJam: nowLocalISO(), penerima: "", jumlahSelesai: undefined, jumlahRusak: undefined, catatan: "" },
   });
 
   const bukaTerima = () => {
-    reset({ tanggalJam: nowLocalISO(), penerima: "", jumlahSelesai: sisa, jumlahRusak: 0, catatan: "" });
+    reset({ tanggalJam: nowLocalISO(), penerima: "", jumlahSelesai: sisa, jumlahRusak: undefined, catatan: "" });
     setTerimaOpen(true);
   };
 

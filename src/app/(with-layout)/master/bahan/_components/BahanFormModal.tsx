@@ -61,10 +61,10 @@ export function BahanFormModal({
       nama: "",
       kategoriId: "",
       satuanId: "",
-      stokMinimum: 0,
+      stokMinimum: undefined,
       warnaId: null,
       isActive: true,
-      hargaAwal: 0,
+      hargaAwal: undefined,
     },
   });
 
@@ -87,9 +87,9 @@ export function BahanFormModal({
           kategoriId: "",
           satuanId: "",
           warnaId: null,
-          stokMinimum: 0,
+          stokMinimum: undefined,
           isActive: true,
-          hargaAwal: 0,
+          hargaAwal: undefined,
         });
       }
     }

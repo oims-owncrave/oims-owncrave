@@ -172,7 +172,8 @@ export function FinishingPageClient({ baris, listData, userOptions, bahanOptions
                           type="number"
                           min={0}
                           max={b.sisa}
-                          value={jumlah[b.sumberId] ?? 0}
+                          placeholder="0"
+                          value={(jumlah[b.sumberId] ?? 0) || ""}
                           onChange={(e) =>
                             setJumlah((p) => ({
                               ...p,

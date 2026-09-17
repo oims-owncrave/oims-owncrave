@@ -208,7 +208,8 @@ export function PackingPageClient({
                             type="number"
                             min={0}
                             max={b.sisa}
-                            value={jumlah[b.finishingDetailId] ?? 0}
+                            placeholder="0"
+                            value={(jumlah[b.finishingDetailId] ?? 0) || ""}
                             onChange={(e) =>
                               setJumlah((p) => ({
                                 ...p,

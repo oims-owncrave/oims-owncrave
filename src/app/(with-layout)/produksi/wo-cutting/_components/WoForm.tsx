@@ -187,7 +187,7 @@ export function WoForm({ poOptions, picOptions, editId, defaultValues }: Props) 
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => append({ varianId: "", targetCutting: 0 })}
+              onClick={() => append({ varianId: "", targetCutting: undefined as unknown as number })}
               disabled={!poId}
             >
               <Plus size={16} className="mr-1.5" />

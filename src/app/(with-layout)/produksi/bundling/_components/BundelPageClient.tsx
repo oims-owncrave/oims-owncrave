@@ -59,7 +59,7 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
     formState: { errors },
   } = useForm<BundelInput>({
     resolver: zodResolver(bundelSchema),
-    defaultValues: { woId: "", varianId: "", jumlahPcs: 0, tujuanPenjahit: "", keterangan: "" },
+    defaultValues: { woId: "", varianId: "", jumlahPcs: undefined, tujuanPenjahit: "", keterangan: "" },
   });
 
   const woId = watch("woId");
@@ -68,7 +68,7 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
   const sisaTerpilih = (sisaRows ?? []).find((r) => r.varianId === varianId);
 
   useEffect(() => {
-    if (modalOpen) reset({ woId: "", varianId: "", jumlahPcs: 0, tujuanPenjahit: "", keterangan: "" });
+    if (modalOpen) reset({ woId: "", varianId: "", jumlahPcs: undefined, tujuanPenjahit: "", keterangan: "" });
   }, [modalOpen, reset]);
 
   const actionsFor = (item: BundelListRow): TableAction<BundelListRow>[] => {

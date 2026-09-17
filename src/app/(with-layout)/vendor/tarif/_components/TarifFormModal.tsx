@@ -39,7 +39,7 @@ const EMPTY: TarifJasaJahitInput = {
   vendorId: null,
   penjahitId: null,
   dasarTarif: "per_pcs",
-  nominal: 0,
+  nominal: undefined as unknown as number,
   tanggalBerlaku: today(),
   catatan: "",
 };

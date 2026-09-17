@@ -218,7 +218,8 @@ export function KarantinaPageClient({
                         <input
                           type="number"
                           min={0}
-                          value={nilai[b.hasilQcDetailId] ?? 0}
+                          placeholder="0"
+                          value={(nilai[b.hasilQcDetailId] ?? 0) || ""}
                           onChange={(e) =>
                             setNilai((p) => ({
                               ...p,
@@ -234,7 +235,8 @@ export function KarantinaPageClient({
                           type="number"
                           min={0}
                           max={b.sisa}
-                          value={pilih[b.hasilQcDetailId] ?? 0}
+                          placeholder="0"
+                          value={(pilih[b.hasilQcDetailId] ?? 0) || ""}
                           onChange={(e) =>
                             setPilih((p) => ({
                               ...p,

@@ -247,7 +247,8 @@ export function BuatReworkModal({
                         type="number"
                         min={0}
                         max={b.sisa}
-                        value={jumlah[b.hasilQcDetailId] ?? 0}
+                        placeholder="0"
+                        value={(jumlah[b.hasilQcDetailId] ?? 0) || ""}
                         onChange={(e) => {
                           const v = Math.max(0, Math.min(b.sisa, Number(e.target.value) || 0));
                           setJumlah((prev) => ({ ...prev, [b.hasilQcDetailId]: v }));

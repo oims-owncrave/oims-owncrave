@@ -63,7 +63,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
       permintaanBahanId: "",
       tanggal: todayISO(),
       catatan: "",
-      detail: [{ bahanId: "", kuantitas: 0 }],
+      detail: [{ bahanId: "", kuantitas: undefined as unknown as number }],
     },
   });
 
@@ -138,7 +138,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => append({ bahanId: "", kuantitas: 0 })}
+            onClick={() => append({ bahanId: "", kuantitas: undefined as unknown as number })}
           >
             <Plus size={16} className="mr-1.5" />
             Tambah Bahan

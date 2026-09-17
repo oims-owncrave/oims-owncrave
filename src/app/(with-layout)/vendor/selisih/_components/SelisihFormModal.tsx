@@ -32,7 +32,7 @@ const EMPTY: SelisihInput = {
   penerimaanId: null,
   klasifikasi: "hilang",
   jumlah: 1,
-  nilaiPerPcs: 0,
+  nilaiPerPcs: undefined as unknown as number,
   kronologi: "",
   penanggungJawab: "",
   buktiUrl: "",

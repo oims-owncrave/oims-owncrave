@@ -82,19 +82,19 @@ export function SisaLimbahSection({ woId, poId }: Props) {
 
   const sisaForm = useForm<SisaInput>({
     resolver: zodResolver(sisaSchema),
-    defaultValues: { bahanId: "", jumlah: 0, jenis: "kain_utuh", catatan: "" },
+    defaultValues: { bahanId: "", jumlah: undefined as unknown as number, jenis: "kain_utuh", catatan: "" },
   });
   const limbahForm = useForm<LimbahInput>({
     resolver: zodResolver(limbahSchema),
-    defaultValues: { bahanId: "", jumlah: 0, jenis: "potongan_kecil", penanganan: "dibuang", penyebab: "", catatan: "" },
+    defaultValues: { bahanId: "", jumlah: undefined as unknown as number, jenis: "potongan_kecil", penanganan: "dibuang", penyebab: "", catatan: "" },
   });
 
   useEffect(() => {
-    if (sisaOpen) sisaForm.reset({ bahanId: "", jumlah: 0, jenis: "kain_utuh", catatan: "" });
+    if (sisaOpen) sisaForm.reset({ bahanId: "", jumlah: undefined as unknown as number, jenis: "kain_utuh", catatan: "" });
   }, [sisaOpen, sisaForm]);
   useEffect(() => {
     if (limbahOpen)
-      limbahForm.reset({ bahanId: "", jumlah: 0, jenis: "potongan_kecil", penanganan: "dibuang", penyebab: "", catatan: "" });
+      limbahForm.reset({ bahanId: "", jumlah: undefined as unknown as number, jenis: "potongan_kecil", penanganan: "dibuang", penyebab: "", catatan: "" });
   }, [limbahOpen, limbahForm]);
 
   const totalKerugian = (limbahRows ?? []).reduce(

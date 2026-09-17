@@ -188,7 +188,8 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
                         type="number"
                         min={0}
                         max={b.sisa}
-                        value={jumlah[b.penerimaanHasilDetailId] ?? 0}
+                        placeholder="0"
+                        value={(jumlah[b.penerimaanHasilDetailId] ?? 0) || ""}
                         onChange={(e) => {
                           const v = Math.max(
                             0,

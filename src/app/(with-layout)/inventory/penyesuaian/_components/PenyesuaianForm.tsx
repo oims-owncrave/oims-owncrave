@@ -46,7 +46,7 @@ export function PenyesuaianForm({ bahanOptions }: Props) {
     resolver: zodResolver(penyesuaianSchema),
     defaultValues: {
       bahanId: "",
-      kuantitasSetelah: 0,
+      kuantitasSetelah: undefined,
       alasan: "",
       tanggal: todayISO(),
     },

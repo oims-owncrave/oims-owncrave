@@ -35,8 +35,8 @@ const EMPTY: KemasanFormValues = {
   ukuran: "",
   bahanKemasan: "",
   supplierId: null,
-  biaya: 0,
-  stokMinimum: 0,
+  biaya: undefined,
+  stokMinimum: undefined,
   isActive: true,
 };
 

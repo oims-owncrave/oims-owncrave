@@ -28,7 +28,7 @@ interface Props {
   defaultValues: PbInput;
 }
 
-const EMPTY_ROW = { bahanId: "", kebutuhan: 0, jumlahDiminta: 0 };
+const EMPTY_ROW = { bahanId: "", kebutuhan: undefined as unknown as number, jumlahDiminta: undefined as unknown as number };
 
 export function PbForm({ poLabel, bahanOptions, editId, defaultValues }: Props) {
   const router = useRouter();
