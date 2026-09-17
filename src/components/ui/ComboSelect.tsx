@@ -98,13 +98,40 @@ export function ComboSelect({
     const trigger = triggerRef.current
     if (!trigger) return
     const rect = trigger.getBoundingClientRect()
-    setPanelStyle({
-      position: "fixed",
-      top: rect.bottom + 4,
-      left: rect.left,
-      minWidth: rect.width,
-      zIndex: 9999,
-    })
+    const vh = window.innerHeight
+    const vw = window.innerWidth
+    const PANEL_MAX = 280 // max-h-60 (240) + search (~40)
+    const PANEL_MAX_WIDTH = 320 // max-w-xs
+
+    // Vertikal: buka ke atas kalau ruang bawah sempit dan ruang atas lebih lega.
+    const spaceBelow = vh - rect.bottom - 8
+    const spaceAbove = rect.top - 8
+    const openAbove = spaceBelow < PANEL_MAX && spaceAbove > spaceBelow
+
+    // Mendatar: panel pakai w-max jadi bisa lebih lebar dari trigger dan
+    // menjulur ke tepi kanan — geser kiri secukupnya supaya tetap dalam layar.
+    const overflowRight = rect.left + PANEL_MAX_WIDTH - vw + 8
+    const left = overflowRight > 0 ? Math.max(8, rect.left - overflowRight) : rect.left
+
+    setPanelStyle(
+      openAbove
+        ? {
+            position: "fixed",
+            bottom: vh - rect.top + 4,
+            left,
+            minWidth: rect.width,
+            maxHeight: Math.min(spaceAbove, PANEL_MAX),
+            zIndex: 9999,
+          }
+        : {
+            position: "fixed",
+            top: rect.bottom + 4,
+            left,
+            minWidth: rect.width,
+            maxHeight: Math.min(spaceBelow, PANEL_MAX),
+            zIndex: 9999,
+          },
+    )
   }, [])
 
   useLayoutEffect(() => {
@@ -193,7 +220,7 @@ export function ComboSelect({
     <div
       ref={panelRef}
       style={panelStyle}
-      className="w-max max-w-xs overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg"
+      className="flex w-max max-w-xs flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg"
     >
       {searchable && (
         <div className="relative border-b border-gray-300 p-2">
@@ -209,7 +236,7 @@ export function ComboSelect({
         </div>
       )}
 
-      <div className="max-h-60 overflow-auto p-1">
+      <div className="min-h-0 flex-1 overflow-auto p-1">
         {multiple && allOptionLabel && (
           <button
             type="button"
