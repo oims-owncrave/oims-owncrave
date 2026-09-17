@@ -12,6 +12,7 @@ import type { Tutorial } from "./_data";
 export const T3_VENDOR: Tutorial = {
   slug: "t3-vendor",
   tahap: 3,
+  gambarMenyusul: true,
   judul: "Penjahitan Vendor & WIP",
   ringkas:
     "Menugaskan bundel ke penjahit, mengirimnya dengan surat jalan, menerima hasil jahit bertahap, dan menyelesaikan barang rusak atau hilang sampai tagihan siap dibayar.",

@@ -72,11 +72,13 @@ function Kartu({ children }: { children: React.ReactNode }) {
 function IsiTutorial({ t }: { t: Tutorial }) {
   // Semua gambar tutorial ini dikumpulkan berurutan supaya lightbox bisa
   // berpindah antar langkah, bukan hanya membuka satu gambar.
-  const galeri: GambarLightbox[] = t.bagian.flatMap((b) =>
-    b.langkah
-      .filter((l) => l.gambar)
-      .map((l) => ({ src: `/img-panduan/${t.slug}/${l.gambar}`, judul: l.judul })),
-  );
+  const galeri: GambarLightbox[] = t.gambarMenyusul
+    ? []
+    : t.bagian.flatMap((b) =>
+        b.langkah
+          .filter((l) => l.gambar)
+          .map((l) => ({ src: `/img-panduan/${t.slug}/${l.gambar}`, judul: l.judul })),
+      );
   const [dibuka, setDibuka] = useState<number | null>(null);
 
   return (
@@ -84,6 +86,13 @@ function IsiTutorial({ t }: { t: Tutorial }) {
       <Kartu>
         <h3 className="text-lg font-bold text-dark dark:text-white">{t.judul}</h3>
         <p className="mt-1 text-sm text-dark-5 dark:text-dark-6">{t.ringkas}</p>
+
+        {t.gambarMenyusul && (
+          <p className="mt-3 rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-200">
+            Gambar panduan untuk tahap ini masih dibuat. Langkahnya sudah lengkap dan
+            bisa diikuti.
+          </p>
+        )}
 
         {t.gambaranUmum?.length ? (
           <div className="mt-4 rounded-lg bg-gray-1 p-4 dark:bg-dark-2">
@@ -133,7 +142,7 @@ function IsiTutorial({ t }: { t: Tutorial }) {
                   {i + 1}. {l.judul}
                 </p>
                 <p className="mt-1 text-sm text-dark-5 dark:text-dark-6">{l.teks}</p>
-                {l.gambar && (
+                {l.gambar && !t.gambarMenyusul && (
                   <button
                     type="button"
                     onClick={() =>

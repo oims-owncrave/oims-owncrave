@@ -34,6 +34,9 @@ export type Tutorial = {
   /** gejala -> kemungkinan penyebab */
   kalauBermasalah?: [string, string][];
   belumTersedia?: string[];
+  /** true = teks sudah jadi tapi gambarnya belum dipotret; nama file di tiap
+   *  langkah diabaikan supaya tidak muncul gambar rusak */
+  gambarMenyusul?: boolean;
 };
 
 export const TAHAP_LABEL: Record<1 | 2 | 3 | 4, string> = {
@@ -49,10 +52,12 @@ import { T3_VENDOR } from "./_isi-t3";
 import { T4_QC } from "./_isi-t4";
 
 /**
- * T3 & T4 teksnya sudah jadi tapi gambarnya belum dipotret, jadi belum
- * ditayangkan — daftar di bawah yang menentukan apa yang terlihat staf.
- * Setelah pemotretan selesai, pindahkan T3_VENDOR dan T4_QC ke TUTORIAL.
+ * T3 tayang dengan `gambarMenyusul` — teksnya sudah ditulis dari alur sungguhan
+ * dan berguna dibaca, gambarnya menyusul. T4 belum tayang karena alurnya belum
+ * pernah dijalankan utuh (Tahap 4 belum smoke test), jadi teksnya belum terbukti.
+ *
+ * Setelah dipotret: buang `gambarMenyusul` dari tutorial yang bersangkutan.
  */
-export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN, T2_PRODUKSI];
+export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN, T2_PRODUKSI, T3_VENDOR];
 
-export const TUTORIAL_DRAF: Tutorial[] = [T3_VENDOR, T4_QC];
+export const TUTORIAL_DRAF: Tutorial[] = [T4_QC];
