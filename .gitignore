@@ -73,3 +73,7 @@ __pycache__/
 # Izin Claude Code khusus mesin ini (berisi path absolut + nama MCP lokal).
 # settings.json TETAP ikut repo; yang .local jangan.
 .claude/settings.local.json
+
+# Screenshot mentah tutorial: bahan sementara sebelum dianotasi annotate.py.
+# Yang ikut repo hanya hasil anotasi di docs/tutorial/*/img/.
+docs/tutorial/*/raw/
