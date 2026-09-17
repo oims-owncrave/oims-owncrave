@@ -46,7 +46,11 @@ export function MainContent({
   return (
     <div className="flex flex-1 flex-col min-w-0 bg-gray-2 transition-all duration-300 ease-in-out dark:bg-[#020d1a]">
       <Header userInfo={userInfo} userRole={userRole} userName={userName} />
-      <main className="w-full overflow-hidden p-4 pb-20 md:p-6 md:pb-6 2xl:p-10 min-[850px]:pb-0">
+      {/* Tanpa overflow-hidden: kalau dipasang, <main> jadi scroll container dan
+          position:sticky di dalamnya menempel ke kotak itu, bukan ke layar —
+          sidebar sticky halaman dokumentasi ikut tergulir habis. Tabel lebar
+          sudah ditahan overflow-x-auto di pembungkusnya masing-masing. */}
+      <main className="w-full min-w-0 p-4 pb-20 md:p-6 md:pb-6 2xl:p-10 min-[850px]:pb-0">
         {children}
       </main>
       <BottomNav userRole={userRole} />
