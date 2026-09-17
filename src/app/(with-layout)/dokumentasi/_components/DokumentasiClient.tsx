@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Lightbox, type GambarLightbox } from "@/components/ui/Lightbox";
@@ -13,7 +13,38 @@ function idBagian(slug: string, judul: string) {
 
 export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
   const [aktif, setAktif] = useState<string | null>(tutorial[0]?.slug ?? null);
+  const [lompatKe, setLompatKe] = useState<string | null>(null);
   const dipilih = tutorial.find((t) => t.slug === aktif);
+
+  // Pindah tutorial lewat sub-item: kartunya baru ada setelah render ini.
+  useEffect(() => {
+    if (!lompatKe) return;
+    document.getElementById(lompatKe)?.scrollIntoView({ behavior: "smooth" });
+    setLompatKe(null);
+  }, [lompatKe]);
+
+  // Tandai bagian yang sedang dibaca — penanda ikut bergerak saat menggulir.
+  // Posisinya dihitung ulang dari getBoundingClientRect tiap scroll, bukan dari
+  // IntersectionObserver: observer hanya melapor bagian yang status lintasnya
+  // BERUBAH, jadi bagian yang sudah lama memenuhi layar tidak pernah terlapor
+  // lagi dan penandanya tertinggal di bagian sebelumnya.
+  const [bagianAktif, setBagianAktif] = useState<string | null>(null);
+  useEffect(() => {
+    if (!dipilih) return;
+    const ids = dipilih.bagian.map((b) => idBagian(dipilih.slug, b.judul));
+    const hitung = () => {
+      // bagian yang sedang dibaca = yang atasnya terakhir melewati garis header
+      let terpilih = ids[0] ?? null;
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 200) terpilih = id;
+      }
+      setBagianAktif(terpilih);
+    };
+    hitung();
+    window.addEventListener("scroll", hitung, { passive: true });
+    return () => window.removeEventListener("scroll", hitung);
+  }, [dipilih]);
 
   const perTahap = ([1, 2, 3, 4] as const).map((n) => ({
     tahap: n,
@@ -31,9 +62,12 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
       {/* Daftar tutorial per tahap */}
-      {/* Sticky butuh tinggi terbatas + scroll sendiri; tanpa itu daftar yang
-          panjang ikut terdorong keluar layar dan sticky-nya tidak terasa. */}
-      <nav className="space-y-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto lg:pr-1">
+      {/* top-24 (bukan top-4): header aplikasi sticky setinggi ~73px, jadi
+          sidebar yang menempel lebih tinggi dari itu tertutup bagian atasnya.
+          Tinggi maksimum dan scroll sendiri untuk daftar yang lebih panjang
+          dari layar; overscroll-contain menahan scrollnya supaya tidak
+          merembet ke halaman saat sudah mentok. */}
+      <nav className="space-y-4 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
         {perTahap.map(({ tahap, isi }) =>
           isi.length ? (
             <div key={tahap}>
@@ -56,15 +90,40 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
                       {t.judul}
                     </button>
 
-                    {/* Bagian A–E tutorial yang sedang dibuka — lompat ke bagiannya
-                        tanpa menggulir manual, pola umum situs dokumentasi. */}
-                    {t.slug === aktif && t.bagian.length > 1 && (
+                    {/* Bagian A–E semua tutorial ditampilkan sekaligus — membuka satu
+                        tahap tidak menutup tahap lain, jadi seluruh isi panduan
+                        terlihat tanpa mengklik dulu. */}
+                    {t.bagian.length > 1 && (
                       <ul className="mt-1 space-y-0.5 border-l border-stroke pl-3 dark:border-dark-3">
                         {t.bagian.map((b) => (
                           <li key={b.judul}>
                             <a
                               href={`#${idBagian(t.slug, b.judul)}`}
-                              className="block rounded px-2 py-1.5 text-xs text-dark-5 transition-colors hover:bg-gray-1 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-2 dark:hover:text-white"
+                              onClick={(e) => {
+                                // Selalu ambil alih: anchor bawaan ikut menggulir
+                                // sidebar (anchornya di dalam container yang
+                                // bisa di-scroll), jadi daftarnya kepotong.
+                                e.preventDefault();
+                                if (t.slug === aktif) {
+                                  document
+                                    .getElementById(idBagian(t.slug, b.judul))
+                                    ?.scrollIntoView({ behavior: "smooth" });
+                                  return;
+                                }
+                                // Bagian tutorial lain belum ada di DOM — pindah
+                                // dulu, lompat setelah kartunya dirender.
+                                setAktif(t.slug);
+                                setLompatKe(idBagian(t.slug, b.judul));
+                              }}
+                              className={cn(
+                                "block rounded px-2 py-1.5 text-xs transition-colors hover:bg-gray-1 hover:text-dark dark:hover:bg-dark-2 dark:hover:text-white",
+                                t.slug === aktif &&
+                                  idBagian(t.slug, b.judul) === bagianAktif
+                                  ? "font-medium text-primary"
+                                  : t.slug === aktif
+                                    ? "text-dark-5 dark:text-dark-6"
+                                    : "text-dark-5/70 dark:text-dark-6/70",
+                              )}
                             >
                               {b.judul}
                             </a>
