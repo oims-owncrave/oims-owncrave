@@ -1,13 +1,15 @@
 import type { Tutorial } from "./_data";
 
 /**
- * KERANGKA — teks ditulis dari alur sungguhan di kode, GAMBAR BELUM DIPOTRET.
- * Master vendor/penjahit/lokasi/tarif sudah siap di DB dev (17 Sep 2026).
- * Potret sekali jalan mulai dari bundling: 91 pcs hasil cutting SPN-Htm belum
- * dibundel (M 41, XL 50), cukup untuk memotret pembuatan bundel dari nol.
- * Pakai VDR-0001 CV Jahit Cibaduyut untuk alur utama — VDR-0002 ber-qcMode
- * vendor, barangnya tidak masuk antrean QC Tahap 4.
- * Angka pada teks di bawah masih perkiraan; sesuaikan setelah pemotretan.
+ * Alur sudah dijalankan sendiri 17 Sep 2026 dari bundling sampai tagihan
+ * berstatus Menunggu QC, dan teks di bawah sudah disesuaikan dengan hasilnya —
+ * bukan lagi perkiraan. 35 screenshot mentah ada di docs/tutorial/t3-vendor/raw/,
+ * belum dianotasi (lihat resep tutorial.md). Setelah dianotasi, pindahkan hasilnya
+ * ke public/img-panduan/t3-vendor/ dan buang `gambarMenyusul` di bawah.
+ *
+ * Dua bug ditemukan sambil memotret dan sudah diperbaiki: nomor dokumen kembar
+ * (app-qh4u) dan form retur diam tanpa pesan (app-7wgi). Satu bug kosmetik
+ * (app-zqqu, sisa WIP negatif di tabel) juga sudah diperbaiki.
  */
 export const T3_VENDOR: Tutorial = {
   slug: "t3-vendor",
@@ -157,8 +159,13 @@ export const T3_VENDOR: Tutorial = {
         },
         {
           judul: "Susun tagihan jasa jahit",
-          teks: "Biaya dasar dihitung dari pcs yang kembali baik dikali tarif SPK. Tombol Terapkan Usulan mengisi potongan dari kasus yang ditanggung vendor dan biaya tambahan dari perbaikan yang ditanggung Owncrave.",
+          teks: "Biaya dasar dihitung dari pcs yang kembali baik dikali tarif SPK. Kalau nilai per pcs diisi saat memutuskan kasus di Selisih, tombol Terapkan Usulan mengisi potongan dan biaya tambahan otomatis — isi nilainya sebelum menekan Putuskan, karena kasus yang sudah diputuskan tidak bisa diedit lagi.",
           gambar: "step15-biaya.jpg",
+        },
+        {
+          judul: "Lanjutkan ke Menunggu QC",
+          teks: "Tagihan tidak langsung menunggu verifikasi keuangan. Begitu penugasan selesai, langkah berikutnya adalah menunggu hasil jahit diperiksa di Tahap 4 — verifikasi produksi dan keuangan baru terjadi sesudahnya.",
+          gambar: "step16-menunggu-qc.jpg",
         },
       ],
     },

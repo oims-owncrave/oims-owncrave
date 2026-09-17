@@ -76,7 +76,11 @@ export async function getWipJahit() {
     const totalPcs = rekap.reduce((s, x) => s + x.jumlahPcs, 0);
     const baik = rekap.reduce((s, x) => s + x.baik, 0);
     const rusak = rekap.reduce((s, x) => s + x.rusak, 0);
-    const sisa = rekap.reduce((s, x) => s + x.sisa, 0);
+    // clamp ke 0: sisa per-bundel dari rekap.ts bisa negatif kalau kasus rusak yang
+    // sudah diputuskan menghitung pcs yang juga sudah kembali baik (dua jalur mengurangi
+    // yang sama). Bukan hutang, tampilan "sisa -1" untuk penugasan yang sudah selesai itu
+    // yang membingungkan staf, bukan angka mentahnya.
+    const sisa = Math.max(0, rekap.reduce((s, x) => s + x.sisa, 0));
     const selesai = r.penugasanStatus === "selesai";
 
     // status derived — urutan cek dari kondisi paling akhir ke paling awal
