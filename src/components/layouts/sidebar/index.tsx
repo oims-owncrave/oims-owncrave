@@ -151,44 +151,54 @@ export function Sidebar({ userRole }: { userRole: string }) {
                               )}
                             </MenuItem>
 
-                            <ul
+                            <div
                               className={cn(
-                                "ml-9 mr-0 space-y-1.5 pr-0 overflow-hidden transition-all duration-500 ease-in-out",
+                                "grid transition-all duration-500 ease-in-out",
                                 !collapsed &&
                                   expandedItems.includes(item.title)
-                                  ? "max-h-96 opacity-100 pb-3.75 pt-2"
-                                  : "max-h-0 opacity-0 pb-0 pt-0",
+                                  ? "grid-rows-[1fr] opacity-100"
+                                  : "grid-rows-[0fr] opacity-0",
                               )}
-                              role="menu"
                             >
-                              {item.items.map((subItem) =>
-                                subItem.disabled ? (
-                                  /* Menu tahap berikutnya — tampil abu-abu, tidak bisa diklik */
-                                  <li key={subItem.title} role="none">
-                                    <div
-                                      className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-dark-5/60 dark:text-dark-6/60"
-                                      title="Segera hadir"
-                                      aria-disabled="true"
-                                    >
-                                      <span>{subItem.title}</span>
-                                      <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium dark:bg-dark-3">
-                                        Segera
-                                      </span>
-                                    </div>
-                                  </li>
-                                ) : (
-                                  <li key={subItem.title} role="none">
-                                    <MenuItem
-                                      as="link"
-                                      href={subItem.url}
-                                      isActive={pathname === subItem.url}
-                                    >
-                                      <span>{subItem.title}</span>
-                                    </MenuItem>
-                                  </li>
-                                ),
-                              )}
-                            </ul>
+                              <ul
+                                className={cn(
+                                  "ml-9 mr-0 space-y-1.5 overflow-hidden pr-0",
+                                  !collapsed &&
+                                    expandedItems.includes(item.title)
+                                    ? "pb-3.75 pt-2"
+                                    : "pb-0 pt-0",
+                                )}
+                                role="menu"
+                              >
+                                {item.items.map((subItem) =>
+                                  subItem.disabled ? (
+                                    /* Menu tahap berikutnya — tampil abu-abu, tidak bisa diklik */
+                                    <li key={subItem.title} role="none">
+                                      <div
+                                        className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-dark-5/60 dark:text-dark-6/60"
+                                        title="Segera hadir"
+                                        aria-disabled="true"
+                                      >
+                                        <span>{subItem.title}</span>
+                                        <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium dark:bg-dark-3">
+                                          Segera
+                                        </span>
+                                      </div>
+                                    </li>
+                                  ) : (
+                                    <li key={subItem.title} role="none">
+                                      <MenuItem
+                                        as="link"
+                                        href={subItem.url}
+                                        isActive={pathname === subItem.url}
+                                      >
+                                        <span>{subItem.title}</span>
+                                      </MenuItem>
+                                    </li>
+                                  ),
+                                )}
+                              </ul>
+                            </div>
                           </div>
                         ) : (
                           <MenuItem
