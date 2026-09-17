@@ -4,6 +4,7 @@ import { and, eq, isNull, sql, getTableColumns } from "drizzle-orm";
 import { db } from "@/db";
 import { produk, varianProduk, auditLog, bom } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
+import { urutkanUkuran } from "@/lib/bom-ukuran";
 import type { ProdukInput } from "@/lib/schemas/produk";
 
 async function currentUserId(): Promise<string | null> {
@@ -97,6 +98,23 @@ export async function updateProduk(id: string, input: ProdukInput) {
 
   await writeAudit("UPDATE", id, before, row, userId);
   return { data: row };
+}
+
+/** Ukuran unik varian aktif per produk, dipakai buat isi pilihan MultiSelect di form BOM. */
+export async function listUkuranPerProduk(): Promise<Record<string, string[]>> {
+  const rows = await db
+    .selectDistinct({ produkId: varianProduk.produkId, ukuran: varianProduk.ukuran })
+    .from(varianProduk)
+    .where(isNull(varianProduk.deletedAt));
+
+  const map: Record<string, string[]> = {};
+  for (const r of rows) {
+    (map[r.produkId] ??= []).push(r.ukuran);
+  }
+  for (const produkId of Object.keys(map)) {
+    map[produkId] = urutkanUkuran(map[produkId]);
+  }
+  return map;
 }
 
 export async function softDeleteProduk(id: string) {

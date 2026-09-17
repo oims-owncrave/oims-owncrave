@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { useTransition } from "react";
+import { useTransition, useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
+import { MultiSelect } from "@/components/ui/MultiSelect";
 import { bomSchema, type BomInput } from "@/lib/schemas/bom";
 import { useBomMutation } from "@/hooks/useBom";
 
@@ -24,6 +25,8 @@ type BahanOption = {
 interface Props {
   produkOptions: ProdukOption[];
   bahanOptions: BahanOption[];
+  /** ukuran varian aktif per produk, untuk isi pilihan MultiSelect kolom Ukuran */
+  ukuranPerProduk: Record<string, string[]>;
   /** Mode edit (draft only): id + defaultValues terisi */
   editId?: string;
   defaultValues?: BomInput;
@@ -31,7 +34,7 @@ interface Props {
 
 const EMPTY_ROW = { bahanId: "", kuantitas: undefined as unknown as number, toleransiPersen: undefined as unknown as number, berlakuUkuran: "", keterangan: "" };
 
-export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: Props) {
+export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, defaultValues }: Props) {
   const router = useRouter();
   const { create, update } = useBomMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -43,6 +46,7 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
     control,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<BomInput>({
     resolver: zodResolver(bomSchema),
@@ -55,6 +59,28 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
 
   const { fields, append, remove } = useFieldArray({ control, name: "details" });
   const details = watch("details");
+  const produkId = watch("produkId");
+  const ukuranOptions = (ukuranPerProduk[produkId] ?? []).map((u) => ({ label: u, value: u }));
+
+  // Produk diganti setelah baris terisi — buang ukuran yang tak lagi berlaku,
+  // jangan biarkan baris menyimpan ukuran milik produk lain (app-ut7f).
+  const produkSebelumnya = useRef(produkId);
+  useEffect(() => {
+    if (produkSebelumnya.current === produkId) return;
+    produkSebelumnya.current = produkId;
+    const berlaku = new Set(ukuranPerProduk[produkId] ?? []);
+    getValues("details")?.forEach((row, i) => {
+      if (!row.berlakuUkuran) return;
+      const sisa = row.berlakuUkuran
+        .split(",")
+        .map((u) => u.trim())
+        .filter((u) => berlaku.has(u));
+      if (sisa.length !== row.berlakuUkuran.split(",").filter(Boolean).length) {
+        setValue(`details.${i}.berlakuUkuran`, sisa.join(","));
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [produkId]);
 
   // FK dropdown filter aktif — keep yang sedang terpilih (edit value existing)
   const produkChoices = produkOptions.filter(
@@ -107,11 +133,25 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="font-semibold text-dark dark:text-white">Kebutuhan Bahan per Pcs</h3>
-          <Button type="button" variant="outline" size="sm" onClick={() => append(EMPTY_ROW)}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={!produkId}
+            onClick={() => append(EMPTY_ROW)}
+          >
             <Plus size={16} className="mr-1.5" />
             Tambah Baris
           </Button>
         </div>
+
+        {/* BOM itu resep milik satu produk — tanpa produk, baris bahan tak punya acuan
+            (ukuran diambil dari variannya). Kunci dulu daripada membiarkan terisi separuh. */}
+        {!produkId && (
+          <p className="mb-3 text-xs text-dark-5 dark:text-dark-6">
+            Pilih produk dulu di atas untuk mengisi kebutuhan bahan.
+          </p>
+        )}
 
         {typeof errors.details?.message === "string" && (
           <p className="mb-3 text-xs text-red-500">{errors.details.message}</p>
@@ -146,7 +186,8 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.5fr)_2.5rem] md:items-start">
                   <ComboSelect
                     label={index === 0 ? "Bahan" : undefined}
-                    placeholder="Pilih bahan"
+                    disabled={!produkId}
+                    placeholder={produkId ? "Pilih bahan" : "Pilih produk dulu"}
                     options={bahanChoices(index).map((b) => ({
                       label: `${b.kode} — ${b.nama}`,
                       value: b.id,
@@ -162,6 +203,7 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
 
                   <NumberInput
                     decimals={3}
+                    disabled={!produkId}
                     placeholder="0"
                     label={index === 0 ? "Kuantitas" : undefined}
                     icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
@@ -175,6 +217,7 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
 
                   <NumberInput
                     decimals={1}
+                    disabled={!produkId}
                     placeholder="0"
                     label={index === 0 ? "Toleransi (%)" : undefined}
                     value={watch(`details.${index}.toleransiPersen`)}
@@ -184,15 +227,33 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
                     error={errors.details?.[index]?.toleransiPersen?.message}
                   />
 
-                  <Input
-                    label={index === 0 ? "Ukuran" : undefined}
-                    placeholder="Semua"
-                    {...register(`details.${index}.berlakuUkuran`)}
-                    error={errors.details?.[index]?.berlakuUkuran?.message}
-                  />
+                  <div>
+                    {index === 0 && (
+                      <label className="mb-1.5 block text-sm font-medium text-dark dark:text-white">
+                        Ukuran
+                      </label>
+                    )}
+                    <MultiSelect
+                      options={ukuranOptions}
+                      disabled={!produkId}
+                      placeholder={produkId ? "Semua" : "Pilih produk dulu"}
+                      value={row?.berlakuUkuran ? row.berlakuUkuran.split(",").filter(Boolean) : []}
+                      onChange={(vals) =>
+                        setValue(`details.${index}.berlakuUkuran`, vals.join(","), {
+                          shouldValidate: true,
+                        })
+                      }
+                    />
+                    {errors.details?.[index]?.berlakuUkuran?.message && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {errors.details[index]?.berlakuUkuran?.message}
+                      </p>
+                    )}
+                  </div>
 
                   <Input
                     label={index === 0 ? "Keterangan" : undefined}
+                    disabled={!produkId}
                     placeholder="Opsional"
                     {...register(`details.${index}.keterangan`)}
                     error={errors.details?.[index]?.keterangan?.message}

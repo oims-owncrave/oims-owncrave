@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { listProduk } from "@/services/produk";
+import { listProduk, listUkuranPerProduk } from "@/services/produk";
 import { listBahan } from "@/services/bahan";
 import { requireRole } from "@/lib/auth";
 import { BomForm } from "../_components/BomForm";
@@ -19,9 +19,10 @@ export default async function BomBaruPage({
   // ?produk=<id> — jalan pintas dari halaman Produk, produk langsung terpilih
   const { produk } = await searchParams;
 
-  const [produkOptions, bahanOptions] = await Promise.all([
+  const [produkOptions, bahanOptions, ukuranPerProduk] = await Promise.all([
     listProduk(),
     listBahan(),
+    listUkuranPerProduk(),
   ]);
 
   const awal = produk && produkOptions.some((p) => p.id === produk)
@@ -38,7 +39,12 @@ export default async function BomBaruPage({
           { label: "Baru" },
         ]}
       />
-      <BomForm produkOptions={produkOptions} bahanOptions={bahanOptions} defaultValues={awal} />
+      <BomForm
+        produkOptions={produkOptions}
+        bahanOptions={bahanOptions}
+        ukuranPerProduk={ukuranPerProduk}
+        defaultValues={awal}
+      />
     </div>
   );
 }

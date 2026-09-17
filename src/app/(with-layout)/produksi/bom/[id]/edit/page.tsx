@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getBomDetail } from "@/services/bom";
-import { listProduk } from "@/services/produk";
+import { listProduk, listUkuranPerProduk } from "@/services/produk";
 import { listBahan } from "@/services/bahan";
 import { requireRole } from "@/lib/auth";
 import { BomForm } from "../../_components/BomForm";
@@ -23,9 +23,10 @@ export default async function BomEditPage({
   if (!detail) notFound();
   if (detail.status !== "draft") redirect(`/produksi/bom/${id}`);
 
-  const [produkOptions, bahanOptions] = await Promise.all([
+  const [produkOptions, bahanOptions, ukuranPerProduk] = await Promise.all([
     listProduk(),
     listBahan(),
+    listUkuranPerProduk(),
   ]);
 
   return (
@@ -42,6 +43,7 @@ export default async function BomEditPage({
       <BomForm
         produkOptions={produkOptions}
         bahanOptions={bahanOptions}
+        ukuranPerProduk={ukuranPerProduk}
         editId={id}
         defaultValues={{
           produkId: detail.produkId,
