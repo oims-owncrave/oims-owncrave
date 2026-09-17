@@ -9,7 +9,7 @@ Bantu build fitur ERP: schema, Server Actions, UI komponen, hooks, form. Deliver
 ## Protokol Mulai Kerja
 
 1. **Cek skill dulu** — `new-feature-workflow` wajib sebelum coding fitur baru. Lihat `docs/plans/` untuk plan aktif.
-2. **Dashboard eksekusi**: [`docs/dashboard.md`](docs/dashboard.md) — status + urutan rencana bergelombang. Versi HTML ada di meta-dashboard vault (`second-brain/tools/dashboard`). Aturan sesi gelombang: `docs/claude/orchestrator-workflow.md` (1 sesi = 1 gelombang).
+2. **Dashboard eksekusi**: HTML di vault, bukan file di repo ini — `python3 ~/Documents/second-brain/tools/dashboard/generate.py` lalu buka `out/index.html`. Dibaca langsung dari beads. `docs/dashboard.md` dihapus 17 Sep 2026; visi, catatan keputusan, dan changelog sesi diarsipkan di [`docs/archive/2026-09-17-dashboard-md-arsip.md`](docs/archive/2026-09-17-dashboard-md-arsip.md). Aturan sesi gelombang: `docs/claude/orchestrator-workflow.md` (1 sesi = 1 gelombang).
 3. **Baca file sebelum edit** — selalu Read file dulu.
 4. **Baca `docs/konsep-produksi.md`** sebelum coding fitur domain (stok, mutasi, HPP, dll).
 5. **Baca `docs/reference-projects.md`** sebelum buat komponen UI baru — ada yang sudah tersedia.
