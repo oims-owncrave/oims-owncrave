@@ -6,6 +6,11 @@ import { cn } from "@/lib/utils";
 import { Lightbox, type GambarLightbox } from "@/components/ui/Lightbox";
 import { TAHAP_LABEL, type Tutorial } from "../_data";
 
+/** "A. Mencatat bahan masuk" -> "a-mencatat-bahan-masuk" (id anchor bagian) */
+function idBagian(slug: string, judul: string) {
+  return `${slug}--${judul.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+}
+
 export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
   const [aktif, setAktif] = useState<string | null>(tutorial[0]?.slug ?? null);
   const dipilih = tutorial.find((t) => t.slug === aktif);
@@ -26,7 +31,9 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
       {/* Daftar tutorial per tahap */}
-      <nav className="space-y-4 lg:sticky lg:top-4 lg:self-start">
+      {/* Sticky butuh tinggi terbatas + scroll sendiri; tanpa itu daftar yang
+          panjang ikut terdorong keluar layar dan sticky-nya tidak terasa. */}
+      <nav className="space-y-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto lg:pr-1">
         {perTahap.map(({ tahap, isi }) =>
           isi.length ? (
             <div key={tahap}>
@@ -48,6 +55,23 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
                     >
                       {t.judul}
                     </button>
+
+                    {/* Bagian A–E tutorial yang sedang dibuka — lompat ke bagiannya
+                        tanpa menggulir manual, pola umum situs dokumentasi. */}
+                    {t.slug === aktif && t.bagian.length > 1 && (
+                      <ul className="mt-1 space-y-0.5 border-l border-stroke pl-3 dark:border-dark-3">
+                        {t.bagian.map((b) => (
+                          <li key={b.judul}>
+                            <a
+                              href={`#${idBagian(t.slug, b.judul)}`}
+                              className="block rounded px-2 py-1.5 text-xs text-dark-5 transition-colors hover:bg-gray-1 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-2 dark:hover:text-white"
+                            >
+                              {b.judul}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -61,9 +85,23 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
   );
 }
 
-function Kartu({ children }: { children: React.ReactNode }) {
+function Kartu({
+  children,
+  id,
+  className,
+}: {
+  children: React.ReactNode;
+  id?: string;
+  className?: string;
+}) {
   return (
-    <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
+    <div
+      id={id}
+      className={cn(
+        "rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card",
+        className,
+      )}
+    >
       {children}
     </div>
   );
@@ -130,7 +168,8 @@ function IsiTutorial({ t }: { t: Tutorial }) {
       </Kartu>
 
       {t.bagian.map((b) => (
-        <Kartu key={b.judul}>
+        // scroll-mt supaya judul tidak tertutup header saat dilompati dari sidebar
+        <Kartu key={b.judul} id={idBagian(t.slug, b.judul)} className="scroll-mt-20">
           <h4 className="font-semibold text-dark dark:text-white">{b.judul}</h4>
           {b.pengantar && (
             <p className="mt-1 text-sm text-dark-5 dark:text-dark-6">{b.pengantar}</p>
