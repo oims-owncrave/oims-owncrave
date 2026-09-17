@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -37,18 +37,27 @@ const STATUS_BADGE: Record<BomListRow["status"], { label: string; className: str
 
 export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () => void }) {
   const router = useRouter();
-  const [, startNavigate] = useTransition();
+  const [isNavigating, startNavigate] = useTransition();
+  const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [activateId, setActivateId] = useState<string | null>(null);
   const { activate, deactivate, newVersion, remove } = useBomMutation();
 
-  const go = (path: string) => startNavigate(() => router.push(path));
+  // rowId yang sedang dituju — dipakai DataTable buat tandai baris itu sedang dimuat.
+  const go = (path: string, rowId?: string) => {
+    if (rowId) setLoadingRowId(rowId);
+    startNavigate(() => router.push(path));
+  };
+  // Transition selesai (navigasi berhasil ATAU dibatalkan) — lepas kuncian baris.
+  useEffect(() => {
+    if (!isNavigating) setLoadingRowId(null);
+  }, [isNavigating]);
 
   const actionsFor = (item: BomListRow): TableAction<BomListRow>[] => {
     const view: TableAction<BomListRow> = {
       icon: <Eye size={16} />,
       title: "Detail",
-      onClick: () => go(`/produksi/bom/${item.id}`),
+      onClick: () => go(`/produksi/bom/${item.id}`, item.id),
       variant: "default",
     };
     const copy: TableAction<BomListRow> = {
@@ -64,7 +73,7 @@ export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () 
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: () => go(`/produksi/bom/${item.id}/edit`),
+          onClick: () => go(`/produksi/bom/${item.id}/edit`, item.id),
           variant: "default",
         },
         {
@@ -166,6 +175,7 @@ export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () 
         <DataTable
           table={table}
           showRowNumber
+          getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
               onClick={() => go("/produksi/bom/baru")}

@@ -19,6 +19,7 @@ import { Tooltip } from "@/components/ui/Tooltip"
 import { HelpCircle, LayoutList, Table2, MoreVertical } from "lucide-react"
 import { Dropdown, DropdownTrigger, DropdownContent, DropdownClose } from "@/components/ui/Dropdown"
 import { TableActionsVariantContext } from "./table-actions"
+import { Spinner } from "@/components/ui/Spinner"
 
 // Context
 const TableContext = createContext<TableState<unknown> | null>(null)
@@ -43,6 +44,9 @@ interface DataTableProps<TData> {
   stickyHeader?: boolean
   /** Scroll-container height when `stickyHeader` is on (default `"70vh"`). */
   maxHeight?: string
+  /** Baris sedang membuka aksi (navigasi/mutation) — spinner + warna menimpa baris,
+   *  klik lain pada baris itu dikunci sampai selesai. Sama di tampilan tabel dan kartu. */
+  getRowLoading?: (item: TData) => boolean
   /** FAB (floating action button) untuk mobile mode Tabel. Render fixed bottom-right di atas bottom nav. */
   mobileFab?: React.ReactNode
 }
@@ -112,7 +116,7 @@ function CardKebabDropdown<TData>({
   )
 }
 
-export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, showRowNumber = false, stickyHeader = false, maxHeight, mobileFab }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, children, renderExpandedRow, className, enableSelection = false, showRowNumber = false, stickyHeader = false, maxHeight, getRowLoading, mobileFab }: DataTableProps<TData>) {
   const visibleColumns = useMemo(
     () => table.orderedColumns.filter((col) => table.columnVisibility[col.key] !== false),
     [table.orderedColumns, table.columnVisibility],
@@ -295,6 +299,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
               const rowId = table.getRowId(item, rowIndex)
               const isExpanded = table.isRowExpanded(rowId)
               const isSelected = table.selectedRowIds.has(rowId)
+              const isRowLoading = getRowLoading?.(item) ?? false
 
               const roles = visibleColumns
                 .map((c, idx) => ({ col: c, role: inferRole(c, idx) }))
@@ -309,12 +314,20 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                 <div
                   key={rowId}
                   className={cn(
-                    "rounded-xl border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark overflow-hidden transition-colors",
+                    "relative rounded-xl border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark overflow-hidden transition-colors",
                     enableSelection && isSelected && "border-primary/50 bg-primary/5 dark:bg-primary/10",
+                    isRowLoading && "bg-gray-1 dark:bg-dark-2",
                     renderExpandedRow && "cursor-pointer"
                   )}
-                  onClick={() => renderExpandedRow && table.toggleRowExpansion(rowId)}
+                  aria-busy={isRowLoading}
+                  onClick={() => !isRowLoading && renderExpandedRow && table.toggleRowExpansion(rowId)}
                 >
+                  {isRowLoading && (
+                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 dark:bg-gray-dark/60">
+                      <Spinner size={20} />
+                    </div>
+                  )}
+                  <div className={cn(isRowLoading && "pointer-events-none opacity-40")}>
                   {/* Card Header: bg-gray-1 dark:bg-dark-2 (sama dengan header tabel) */}
                   <div className="flex items-center justify-between gap-3 bg-gray-1 px-4 py-3 dark:bg-dark-2 border-b border-stroke dark:border-dark-3">
                     <div className="flex items-center gap-2 min-w-0">
@@ -380,6 +393,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                       {renderExpandedRow(item, rowIndex)}
                     </div>
                   )}
+                  </div>
                 </div>
               );
             })}
@@ -457,14 +471,17 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                   const rowId = table.getRowId(item, rowIndex)
                   const isExpanded = table.isRowExpanded(rowId)
                   const isSelected = table.selectedRowIds.has(rowId)
+                  const isRowLoading = getRowLoading?.(item) ?? false
                   return (
                     <Fragment key={rowId}>
                       <TableRow
                         className={cn(
-                          "cursor-pointer",
+                          "relative cursor-pointer",
                           enableSelection && isSelected && "bg-primary/5 dark:bg-primary/10",
+                          isRowLoading && "bg-gray-1 dark:bg-dark-2 [&>td]:pointer-events-none [&>td]:opacity-40",
                         )}
-                        onClick={() => renderExpandedRow && table.toggleRowExpansion(rowId)}
+                        aria-busy={isRowLoading}
+                        onClick={() => !isRowLoading && renderExpandedRow && table.toggleRowExpansion(rowId)}
                       >
                         {enableSelection && (
                           <TableCell className="w-10 px-4" onClick={(e) => { e.stopPropagation(); table.toggleRowSelection(rowId) }}>
@@ -477,7 +494,11 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         )}
                         {showRowNumber && (
                           <TableCell className="w-14 px-4 text-center text-dark-5 dark:text-dark-6">
-                            {table.pageStartIndex + rowIndex}
+                            {isRowLoading ? (
+                              <Spinner size={16} className="!block mx-auto" />
+                            ) : (
+                              table.pageStartIndex + rowIndex
+                            )}
                           </TableCell>
                         )}
                         {visibleColumns.map((col) => {
