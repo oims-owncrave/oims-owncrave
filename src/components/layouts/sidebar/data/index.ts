@@ -164,6 +164,16 @@ export const NAV_DATA: NavSection[] = [
     ],
   },
   {
+    label: "BANTUAN",
+    items: [
+      {
+        title: "Dokumentasi",
+        icon: SistemIcon,
+        items: [{ title: "Panduan Pemakaian", url: "/dokumentasi" }],
+      },
+    ],
+  },
+  {
     label: "SISTEM",
     ownerOnly: true,
     items: [
