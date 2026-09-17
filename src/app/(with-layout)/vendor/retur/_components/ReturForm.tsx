@@ -4,6 +4,7 @@ import { useEffect, useTransition } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
@@ -69,7 +70,10 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
           const cur = existing.get(k.penugasanDetailId);
           const cap = k.sisaBisaDiretur + (isEditing ? cur?.jumlah ?? 0 : 0);
           if (cap <= 0 && !cur) return null;
-          return cur ?? { penugasanDetailId: k.penugasanDetailId, jumlah: cap, jenisKerusakan: "", instruksi: "", tarifPerbaikan: undefined as unknown as number, penanggungBiaya: "vendor" as const, fotoUrl: "" };
+          // tarifPerbaikan 0, bukan undefined: penanggung default vendor membuat kolomnya
+          // disabled, jadi nilainya tidak pernah terisi sendiri dan zod menolak diam-diam
+          // (form tidak pindah halaman, tanpa pesan apa pun).
+          return cur ?? { penugasanDetailId: k.penugasanDetailId, jumlah: cap, jenisKerusakan: "", instruksi: "", tarifPerbaikan: 0, penanggungBiaya: "vendor" as const, fotoUrl: "" };
         })
         .filter((x): x is NonNullable<typeof x> => x !== null),
     );
@@ -79,6 +83,12 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
   async function onSubmit(data: ReturInput) {
     const res = isEditing ? await update.mutateAsync({ id: editId, input: data }) : await create.mutateAsync(data);
     if (!res.error && res.data) router.push(`/vendor/retur/${res.data.id}`);
+  }
+
+  /** Sebagian field retur tersembunyi/disabled, jadi pesan zod-nya tidak terlihat di layar —
+   *  tanpa ini tombol Simpan seperti tidak berfungsi sama sekali. */
+  function onInvalid() {
+    toast.error("Ada isian yang belum benar — periksa kembali barang yang diretur");
   }
 
   const isPending = create.isPending || update.isPending;
@@ -92,7 +102,7 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
   const biayaOwncrave = details.reduce((s, d) => s + (d.penanggungBiaya === "owncrave" ? (Number(d.jumlah) || 0) * (Number(d.tarifPerbaikan) || 0) : 0), 0);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6">
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <ComboSelect
