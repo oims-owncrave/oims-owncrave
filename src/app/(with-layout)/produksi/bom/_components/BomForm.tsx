@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { bomSchema, type BomInput } from "@/lib/schemas/bom";
@@ -159,21 +160,27 @@ export function BomForm({ produkOptions, bahanOptions, editId, defaultValues }: 
                     error={errors.details?.[index]?.bahanId}
                   />
 
-                  <Input
-                    type="number"
-                    step="0.001"
+                  <NumberInput
+                    decimals={3}
+                    placeholder="0"
                     label={index === 0 ? "Kuantitas" : undefined}
                     icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
                     iconPosition="right"
-                    {...register(`details.${index}.kuantitas`, { valueAsNumber: true })}
+                    value={watch(`details.${index}.kuantitas`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.kuantitas`, v as number, { shouldValidate: true })
+                    }
                     error={errors.details?.[index]?.kuantitas?.message}
                   />
 
-                  <Input
-                    type="number"
-                    step="0.5"
+                  <NumberInput
+                    decimals={1}
+                    placeholder="0"
                     label={index === 0 ? "Toleransi (%)" : undefined}
-                    {...register(`details.${index}.toleransiPersen`, { valueAsNumber: true })}
+                    value={watch(`details.${index}.toleransiPersen`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.toleransiPersen`, v as number, { shouldValidate: true })
+                    }
                     error={errors.details?.[index]?.toleransiPersen?.message}
                   />
 

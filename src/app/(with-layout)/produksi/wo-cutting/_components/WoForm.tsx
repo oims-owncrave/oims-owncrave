@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -140,26 +141,32 @@ export function WoForm({ poOptions, picOptions, editId, defaultValues }: Props) 
             placeholder="Opsional"
             {...register("nomorPola")}
           />
-          <Input
-            type="number"
-            step="1"
+          <NumberInput
+            decimals={0}
             label="Jumlah Layer"
             placeholder="Opsional"
-            {...register("jumlahLayer", { valueAsNumber: true })}
+            value={watch("jumlahLayer")}
+            onChange={(v) =>
+              setValue("jumlahLayer", v as number, { shouldValidate: true })
+            }
           />
-          <Input
-            type="number"
-            step="0.01"
+          <NumberInput
+            decimals={2}
             label="Panjang Marker (m)"
             placeholder="Opsional"
-            {...register("panjangMarker", { valueAsNumber: true })}
+            value={watch("panjangMarker")}
+            onChange={(v) =>
+              setValue("panjangMarker", v as number, { shouldValidate: true })
+            }
           />
-          <Input
-            type="number"
-            step="0.01"
+          <NumberInput
+            decimals={2}
             label="Lebar Kain (cm)"
             placeholder="Opsional"
-            {...register("lebarKain", { valueAsNumber: true })}
+            value={watch("lebarKain")}
+            onChange={(v) =>
+              setValue("lebarKain", v as number, { shouldValidate: true })
+            }
           />
           <Input
             label="Catatan"
@@ -218,11 +225,14 @@ export function WoForm({ poOptions, picOptions, editId, defaultValues }: Props) 
                   }
                   error={errors.details?.[index]?.varianId}
                 />
-                <Input
-                  type="number"
-                  step="1"
+                <NumberInput
+                  decimals={0}
+                  placeholder="0"
                   label={index === 0 ? "Target (pcs)" : undefined}
-                  {...register(`details.${index}.targetCutting`, { valueAsNumber: true })}
+                  value={watch(`details.${index}.targetCutting`)}
+                  onChange={(v) =>
+                    setValue(`details.${index}.targetCutting`, v as number, { shouldValidate: true })
+                  }
                   error={errors.details?.[index]?.targetCutting?.message}
                 />
                 <div className="hidden md:block">

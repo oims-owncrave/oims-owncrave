@@ -5,6 +5,7 @@ import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import {
@@ -98,12 +99,15 @@ export function PenyesuaianForm({ bahanOptions }: Props) {
           </div>
 
           {/* Kuantitas fisik (input) */}
-          <Input
-            type="number"
-            step="0.001"
+          <NumberInput
+            decimals={3}
+            placeholder="0"
             label={`Kuantitas Fisik${selectedBahan?.satuanSingkatan ? ` (${selectedBahan.satuanSingkatan})` : ""}`}
             required
-            {...register("kuantitasSetelah", { valueAsNumber: true })}
+            value={watch("kuantitasSetelah")}
+            onChange={(v) =>
+              setValue("kuantitasSetelah", v as number, { shouldValidate: true })
+            }
             error={errors.kuantitasSetelah?.message}
           />
 

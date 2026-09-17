@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -191,24 +192,29 @@ export function BahanFormModal({
             disabled={isPending}
           />
 
-          <Input
-            type="number"
+          <NumberInput
+            decimals={0}
             label="Stok Minimum"
             placeholder="0"
             error={errors.stokMinimum?.message}
-            {...register("stokMinimum", { valueAsNumber: true })}
+            value={watch("stokMinimum")}
+            onChange={(v) =>
+              setValue("stokMinimum", v as number, { shouldValidate: true })
+            }
             disabled={isPending}
           />
 
 
           {!isEditing && (
-            <Input
-              type="number"
-              step="1"
+            <NumberInput
+              decimals={0}
               label="Harga Awal (Rp)"
               placeholder="0"
               error={errors.hargaAwal?.message}
-              {...register("hargaAwal", { valueAsNumber: true })}
+              value={watch("hargaAwal")}
+              onChange={(v) =>
+                setValue("hargaAwal", v as number, { shouldValidate: true })
+              }
               disabled={isPending}
             />
           )}

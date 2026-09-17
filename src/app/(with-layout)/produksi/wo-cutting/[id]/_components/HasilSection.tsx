@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Trash2 } from "lucide-react";
 import { hasilSchema, type HasilInput } from "@/lib/schemas/wo-cutting";
@@ -39,6 +40,8 @@ export function HasilSection({ woId, woStatus }: Props) {
     handleSubmit,
     control,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<HasilInput>({
     resolver: zodResolver(hasilSchema),
@@ -161,18 +164,24 @@ export function HasilSection({ woId, woStatus }: Props) {
                       )}
                       <div className="flex h-10 items-center">{r.sku}</div>
                     </div>
-                    <Input
-                      type="number"
-                      step="1"
+                    <NumberInput
+                      decimals={0}
+                      placeholder="0"
                       label={index === 0 ? "Baik" : undefined}
-                      {...register(`details.${index}.jumlahBaik`, { valueAsNumber: true })}
+                      value={watch(`details.${index}.jumlahBaik`)}
+                      onChange={(v) =>
+                        setValue(`details.${index}.jumlahBaik`, v as number, { shouldValidate: true })
+                      }
                       error={errors.details?.[index]?.jumlahBaik?.message}
                     />
-                    <Input
-                      type="number"
-                      step="1"
+                    <NumberInput
+                      decimals={0}
+                      placeholder="0"
                       label={index === 0 ? "Rusak" : undefined}
-                      {...register(`details.${index}.jumlahRusak`, { valueAsNumber: true })}
+                      value={watch(`details.${index}.jumlahRusak`)}
+                      onChange={(v) =>
+                        setValue(`details.${index}.jumlahRusak`, v as number, { shouldValidate: true })
+                      }
                       error={errors.details?.[index]?.jumlahRusak?.message}
                     />
                   </div>

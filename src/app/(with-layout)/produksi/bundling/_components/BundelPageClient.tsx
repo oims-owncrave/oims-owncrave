@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Printer, Send, Ban, Plus, Undo2 } from "lucide-react";
@@ -238,11 +239,14 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
                 disabled={!woId}
               />
               <div>
-                <Input
-                  type="number"
-                  step="1"
+                <NumberInput
+                  decimals={0}
+                  placeholder="0"
                   label="Jumlah (pcs)"
-                  {...register("jumlahPcs", { valueAsNumber: true })}
+                  value={watch("jumlahPcs")}
+                  onChange={(v) =>
+                    setValue("jumlahPcs", v as number, { shouldValidate: true })
+                  }
                   error={errors.jumlahPcs?.message}
                 />
                 {sisaTerpilih && (

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
@@ -225,19 +226,25 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
                     disabled={!produkId}
                   />
 
-                  <Input
-                    type="number"
-                    step="1"
+                  <NumberInput
+                    decimals={0}
+                    placeholder="0"
                     label={index === 0 ? "Target (pcs)" : undefined}
-                    {...register(`details.${index}.jumlahTarget`, { valueAsNumber: true })}
+                    value={watch(`details.${index}.jumlahTarget`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.jumlahTarget`, v as number, { shouldValidate: true })
+                    }
                     error={errors.details?.[index]?.jumlahTarget?.message}
                   />
 
-                  <Input
-                    type="number"
-                    step="0.5"
+                  <NumberInput
+                    decimals={1}
+                    placeholder="0"
                     label={index === 0 ? "Toleransi (%)" : undefined}
-                    {...register(`details.${index}.toleransiPersen`, { valueAsNumber: true })}
+                    value={watch(`details.${index}.toleransiPersen`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.toleransiPersen`, v as number, { shouldValidate: true })
+                    }
                     error={errors.details?.[index]?.toleransiPersen?.message}
                   />
 

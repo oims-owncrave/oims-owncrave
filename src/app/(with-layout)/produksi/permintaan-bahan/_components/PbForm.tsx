@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { pbSchema, type PbInput } from "@/lib/schemas/permintaan-bahan";
@@ -147,21 +148,27 @@ export function PbForm({ poLabel, bahanOptions, editId, defaultValues }: Props) 
                     error={errors.details?.[index]?.bahanId}
                   />
 
-                  <Input
-                    type="number"
-                    step="0.001"
+                  <NumberInput
+                    decimals={3}
+                    placeholder="0"
                     label={index === 0 ? "Kebutuhan (estimasi)" : undefined}
-                    {...register(`details.${index}.kebutuhan`, { valueAsNumber: true })}
+                    value={watch(`details.${index}.kebutuhan`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.kebutuhan`, v as number, { shouldValidate: true })
+                    }
                     error={errors.details?.[index]?.kebutuhan?.message}
                   />
 
-                  <Input
-                    type="number"
-                    step="0.001"
+                  <NumberInput
+                    decimals={3}
+                    placeholder="0"
                     label={index === 0 ? "Diminta" : undefined}
                     icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
                     iconPosition="right"
-                    {...register(`details.${index}.jumlahDiminta`, { valueAsNumber: true })}
+                    value={watch(`details.${index}.jumlahDiminta`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.jumlahDiminta`, v as number, { shouldValidate: true })
+                    }
                     error={errors.details?.[index]?.jumlahDiminta?.message}
                   />
 

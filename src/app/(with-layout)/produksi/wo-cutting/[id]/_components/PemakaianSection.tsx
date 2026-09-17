@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Pencil, Trash2 } from "lucide-react";
@@ -231,32 +232,44 @@ export function PemakaianSection({ woId, poId }: Props) {
                 disabled={!!editRow}
               />
               <div className="grid grid-cols-2 gap-4">
-                <Input
-                  type="number"
-                  step="0.001"
+                <NumberInput
+                  decimals={3}
+                  placeholder="0"
                   label="Diterima"
-                  {...register("jumlahDiterima", { valueAsNumber: true })}
+                  value={watch("jumlahDiterima")}
+                  onChange={(v) =>
+                    setValue("jumlahDiterima", v as number, { shouldValidate: true })
+                  }
                   error={errors.jumlahDiterima?.message}
                 />
-                <Input
-                  type="number"
-                  step="0.001"
+                <NumberInput
+                  decimals={3}
+                  placeholder="0"
                   label="Digunakan"
-                  {...register("jumlahDigunakan", { valueAsNumber: true })}
+                  value={watch("jumlahDigunakan")}
+                  onChange={(v) =>
+                    setValue("jumlahDigunakan", v as number, { shouldValidate: true })
+                  }
                   error={errors.jumlahDigunakan?.message}
                 />
-                <Input
-                  type="number"
-                  step="0.001"
+                <NumberInput
+                  decimals={3}
+                  placeholder="0"
                   label="Sisa"
-                  {...register("jumlahSisa", { valueAsNumber: true })}
+                  value={watch("jumlahSisa")}
+                  onChange={(v) =>
+                    setValue("jumlahSisa", v as number, { shouldValidate: true })
+                  }
                   error={errors.jumlahSisa?.message}
                 />
-                <Input
-                  type="number"
-                  step="0.001"
+                <NumberInput
+                  decimals={3}
+                  placeholder="0"
                   label="Limbah"
-                  {...register("jumlahLimbah", { valueAsNumber: true })}
+                  value={watch("jumlahLimbah")}
+                  onChange={(v) =>
+                    setValue("jumlahLimbah", v as number, { shouldValidate: true })
+                  }
                   error={errors.jumlahLimbah?.message}
                 />
               </div>
