@@ -20,7 +20,7 @@ export const T2_PRODUKSI: Tutorial = {
   salahKaprah: [
     [
       "Rencana cutting sama dengan target PO",
-      "Selalu lebih banyak. Target 150 pcs dengan toleransi 3% menjadi 156 pcs, karena sebagian pasti cacat saat dipotong.",
+      "Selalu lebih banyak. Target 150 pcs dengan lebihan 6 pcs menjadi 156 pcs, karena sebagian pasti cacat saat dipotong.",
     ],
     [
       "BOM boleh diubah kapan saja",
@@ -48,7 +48,7 @@ export const T2_PRODUKSI: Tutorial = {
         },
         {
           judul: "Buat PO Produksi, isi target tiap SKU",
-          teks: "Kolom Rencana Cutting terisi sendiri dari target ditambah toleransi. Angka inilah yang dipakai cutting, bukan target aslinya.",
+          teks: "Kolom Rencana Cutting terisi sendiri dari target ditambah lebihan. Angka inilah yang dipakai cutting, bukan target aslinya.",
           gambar: "step2-target-po.jpg",
         },
         {

@@ -79,7 +79,7 @@ export function WoForm({ poOptions, picOptions, editId, defaultValues }: Props) 
     replace(
       poDetail.details.map((d) => ({
         varianId: d.varianId,
-        targetCutting: Math.ceil(d.jumlahTarget * (1 + Number(d.toleransiPersen) / 100)),
+        targetCutting: d.jumlahTarget + d.lebihanPcs,
       })),
     );
   }

@@ -46,7 +46,7 @@ export function PoDetailClient({ poId, initialData }: Props) {
 
   const totalTarget = detail.details.reduce((s, d) => s + d.jumlahTarget, 0);
   const totalRencana = detail.details.reduce(
-    (s, d) => s + Math.ceil(d.jumlahTarget * (1 + Number(d.toleransiPersen) / 100)),
+    (s, d) => s + d.jumlahTarget + d.lebihanPcs,
     0,
   );
 
@@ -130,7 +130,7 @@ export function PoDetailClient({ poId, initialData }: Props) {
                 <th className="px-5 py-3 font-medium">SKU</th>
                 <th className="px-5 py-3 font-medium">Warna / Ukuran</th>
                 <th className="px-5 py-3 font-medium text-right">Target</th>
-                <th className="px-5 py-3 font-medium text-right">Toleransi</th>
+                <th className="px-5 py-3 font-medium text-right">Lebihan</th>
                 <th className="px-5 py-3 font-medium text-right">Rencana Cutting</th>
               </tr>
             </thead>
@@ -141,9 +141,9 @@ export function PoDetailClient({ poId, initialData }: Props) {
                   <td className="px-5 py-3 font-medium text-dark dark:text-white">{d.sku}</td>
                   <td className="px-5 py-3 text-dark dark:text-white">{d.warnaNama} / {d.ukuran}</td>
                   <td className="px-5 py-3 text-right text-dark dark:text-white">{d.jumlahTarget} pcs</td>
-                  <td className="px-5 py-3 text-right text-dark dark:text-white">{Number(d.toleransiPersen)}%</td>
+                  <td className="px-5 py-3 text-right text-dark dark:text-white">{d.lebihanPcs} pcs</td>
                   <td className="px-5 py-3 text-right text-dark dark:text-white">
-                    {Math.ceil(d.jumlahTarget * (1 + Number(d.toleransiPersen) / 100))} pcs
+                    {d.jumlahTarget + d.lebihanPcs} pcs
                   </td>
                 </tr>
               ))}

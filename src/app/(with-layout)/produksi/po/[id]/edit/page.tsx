@@ -60,7 +60,7 @@ export default async function PoEditPage({
           details: detail.details.map((d) => ({
             varianId: d.varianId,
             jumlahTarget: d.jumlahTarget,
-            toleransiPersen: Number(d.toleransiPersen),
+            lebihanPcs: d.lebihanPcs,
           })),
         }}
       />

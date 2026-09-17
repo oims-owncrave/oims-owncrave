@@ -17,10 +17,10 @@ export const poDetailSchema = z.object({
     .number({ message: "Target wajib diisi" })
     .int("Target harus bilangan bulat")
     .min(1, "Minimal 1 pcs"),
-  toleransiPersen: z
-    .number({ message: "Toleransi wajib angka" })
-    .min(0, "Minimal 0")
-    .max(100, "Maksimal 100"),
+  lebihanPcs: z
+    .number({ message: "Lebihan wajib angka" })
+    .int("Lebihan harus bilangan bulat")
+    .min(0, "Minimal 0"),
 });
 
 export const poSchema = z.object({

@@ -7,14 +7,13 @@ import { Select } from "@/components/ui/Select";
 import { MultiSelect } from "@/components/ui/MultiSelect";
 import { useWarnaList } from "@/hooks/useWarna";
 import { useVarianMutation } from "@/hooks/useVarianProduk";
+import { UKURAN_STANDAR } from "@/lib/bom-ukuran";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   produkId: string;
 }
-
-const UKURAN_STANDAR = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
 
 const JENIS_KELAMIN_OPTIONS = [
   { value: "Pria", label: "Pria" },

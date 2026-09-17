@@ -24,7 +24,7 @@ interface Props {
   defaultValues?: PoInput;
 }
 
-const EMPTY_ROW = { varianId: "", jumlahTarget: undefined as unknown as number, toleransiPersen: undefined as unknown as number };
+const EMPTY_ROW = { varianId: "", jumlahTarget: undefined as unknown as number, lebihanPcs: undefined as unknown as number };
 
 const PRIORITAS_OPTIONS = [
   { value: "rendah", label: "Rendah" },
@@ -79,7 +79,7 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
   const totalTarget = (details ?? []).reduce((s, d) => s + (Number(d.jumlahTarget) || 0), 0);
   const totalRencana = (details ?? []).reduce(
     (s, d) =>
-      s + Math.ceil((Number(d.jumlahTarget) || 0) * (1 + (Number(d.toleransiPersen) || 0) / 100)),
+      s + (Number(d.jumlahTarget) || 0) + (Number(d.lebihanPcs) || 0),
     0,
   );
 
@@ -183,9 +183,7 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
         <div className="space-y-3">
           {fields.map((field, index) => {
             const row = details?.[index];
-            const rencana = Math.ceil(
-              (Number(row?.jumlahTarget) || 0) * (1 + (Number(row?.toleransiPersen) || 0) / 100),
-            );
+            const rencana = (Number(row?.jumlahTarget) || 0) + (Number(row?.lebihanPcs) || 0);
             return (
               <div
                 key={field.id}
@@ -238,14 +236,14 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
                   />
 
                   <NumberInput
-                    decimals={1}
+                    decimals={0}
                     placeholder="0"
-                    label={index === 0 ? "Toleransi (%)" : undefined}
-                    value={watch(`details.${index}.toleransiPersen`)}
+                    label={index === 0 ? "Lebihan (pcs)" : undefined}
+                    value={watch(`details.${index}.lebihanPcs`)}
                     onChange={(v) =>
-                      setValue(`details.${index}.toleransiPersen`, v as number, { shouldValidate: true })
+                      setValue(`details.${index}.lebihanPcs`, v as number, { shouldValidate: true })
                     }
-                    error={errors.details?.[index]?.toleransiPersen?.message}
+                    error={errors.details?.[index]?.lebihanPcs?.message}
                   />
 
                   <div className="flex items-center justify-between border-t border-stroke/40 pt-2 dark:border-dark-3/40 md:block md:border-t-0 md:pt-0">

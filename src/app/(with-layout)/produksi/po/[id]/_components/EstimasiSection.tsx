@@ -50,7 +50,7 @@ export function EstimasiSection({ poId }: { poId: string }) {
               <tr className="bg-gray-50 text-left text-xs uppercase text-gray-500 dark:bg-dark-2 dark:text-gray-400">
                 <th className="px-5 py-3 font-medium">Bahan</th>
                 <th className="px-5 py-3 font-medium text-right">Kebutuhan Standar</th>
-                <th className="px-5 py-3 font-medium text-right">Total (+toleransi)</th>
+                <th className="px-5 py-3 font-medium text-right">Total (+toleransi bahan)</th>
                 <th className="px-5 py-3 font-medium text-right">Stok</th>
                 <th className="px-5 py-3 font-medium text-right">Kekurangan</th>
                 <th className="px-5 py-3 font-medium">Status</th>

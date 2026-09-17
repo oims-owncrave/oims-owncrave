@@ -764,7 +764,9 @@ export const poProduksiDetail = pgTable(
     poId: uuid("po_id").notNull().references(() => poProduksi.id),
     varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
     jumlahTarget: integer("jumlah_target").notNull(), // pcs produk utuh
-    toleransiPersen: numeric("toleransi_persen", { precision: 5, scale: 2 }).notNull().default("0"),
+    // "Lebihan" — istilah & satuan klien (bukan persen). Rencana cutting = target + lebihan.
+    // Beda dari bom_detail.toleransiPersen (susut bahan per pcs, tetap persen).
+    lebihanPcs: integer("lebihan_pcs").notNull().default(0),
   },
   (t) => [index("po_detail_po_idx").on(t.poId)]
 );

@@ -17,6 +17,7 @@ import {
   auditLog,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
+import { cocokkanUkuranBerlaku } from "@/lib/bom-ukuran";
 import type { PoInput } from "@/lib/schemas/po-produksi";
 
 const READ_ROLES = [
@@ -128,7 +129,7 @@ export async function getPoDetail(id: string) {
       warnaNama: warna.nama,
       ukuran: varianProduk.ukuran,
       jumlahTarget: poProduksiDetail.jumlahTarget,
-      toleransiPersen: poProduksiDetail.toleransiPersen,
+      lebihanPcs: poProduksiDetail.lebihanPcs,
     })
     .from(poProduksiDetail)
     .innerJoin(varianProduk, eq(poProduksiDetail.varianId, varianProduk.id))
@@ -146,7 +147,7 @@ function detailValues(poId: string, input: PoInput) {
     poId,
     varianId: d.varianId,
     jumlahTarget: d.jumlahTarget,
-    toleransiPersen: String(d.toleransiPersen),
+    lebihanPcs: d.lebihanPcs,
   }));
 }
 
@@ -393,7 +394,7 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
     .select({
       varianUkuran: varianProduk.ukuran,
       jumlahTarget: poProduksiDetail.jumlahTarget,
-      toleransiPersen: poProduksiDetail.toleransiPersen,
+      lebihanPcs: poProduksiDetail.lebihanPcs,
     })
     .from(poProduksiDetail)
     .innerJoin(varianProduk, eq(poProduksiDetail.varianId, varianProduk.id))
@@ -420,16 +421,17 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
     : [];
   const stokMap = new Map(stokRows.map((s) => [s.bahanId, Number(s.kuantitas)]));
 
-  // pcs efektif per varian = ceil(target × (1 + tolPO/100)) = total rencana cutting
+  // pcs efektif per varian = target + lebihan (pcs, istilah klien) = total rencana cutting
   const pcsEfektif = details.map((d) => ({
     ukuran: d.varianUkuran.toUpperCase(),
-    pcs: Math.ceil(d.jumlahTarget * (1 + Number(d.toleransiPersen) / 100)),
+    pcs: d.jumlahTarget + d.lebihanPcs,
   }));
 
   const agg = new Map<string, EstimasiRow>();
   for (const r of bomRows) {
-    const applicable = r.berlakuUkuran
-      ? pcsEfektif.filter((p) => p.ukuran === r.berlakuUkuran!.toUpperCase())
+    const ukuranBerlaku = cocokkanUkuranBerlaku(r.berlakuUkuran);
+    const applicable = ukuranBerlaku
+      ? pcsEfektif.filter((p) => ukuranBerlaku.includes(p.ukuran))
       : pcsEfektif;
     const pcs = applicable.reduce((s, p) => s + p.pcs, 0);
     const standar = pcs * Number(r.kuantitas);
