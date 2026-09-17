@@ -21,7 +21,7 @@ import {
   auditLog,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
-import { generateDocNumber } from "@/lib/document-number";
+import { generateDocNumber, pisahNomor } from "@/lib/document-number";
 import { getRekapDetailPenugasan, refreshPenugasanSelesai } from "@/lib/jahit/rekap";
 import type { PenerimaanHasilInput } from "@/lib/schemas/penerimaan-hasil-jahit";
 
@@ -293,7 +293,7 @@ export async function createPenerimaanHasil(input: PenerimaanHasilInput): Promis
           }
         }
 
-        const nomorDokumen = await generateDocNumber("RCV-JHT", "penerimaan_hasil_jahit");
+        const nomorDokumen = await generateDocNumber("RCV-JHT", "penerimaan_hasil_jahit", "nomor_dokumen", tx);
         const [header] = await tx
           .insert(penerimaanHasilJahit)
           .values({
@@ -324,17 +324,24 @@ export async function createPenerimaanHasil(input: PenerimaanHasilInput): Promis
         );
 
         // rusak → kasus selisih otomatis (menunggu keputusan; retur mengacu ke sini)
-        for (const d of aktif.filter((x) => x.jumlahRusak > 0)) {
-          const nomorKasus = await generateDocNumber("SLS-JHT", "selisih_jahit", "nomor_kasus");
-          await tx.insert(selisihJahit).values({
-            nomorKasus,
-            penugasanDetailId: d.penugasanDetailId,
-            penerimaanId: header.id,
-            klasifikasi: "rusak",
-            jumlah: d.jumlahRusak,
-            catatan: d.catatan?.trim() || null,
-            createdBy: user.id,
-          });
+        // Nomor diambil SEKALI lalu dinaikkan sendiri: COUNT(*) tidak melihat baris yang
+        // baru di-insert dalam transaksi ini, jadi memanggilnya per baris memberi nomor
+        // kembar dan melanggar unique (app-qh4u).
+        const rusak = aktif.filter((x) => x.jumlahRusak > 0);
+        if (rusak.length) {
+          const nomorAwal = await generateDocNumber("SLS-JHT", "selisih_jahit", "nomor_kasus", tx);
+          const [prefixBulan, urutAwal] = pisahNomor(nomorAwal);
+          await tx.insert(selisihJahit).values(
+            rusak.map((d, i) => ({
+              nomorKasus: `${prefixBulan}-${String(urutAwal + i).padStart(4, "0")}`,
+              penugasanDetailId: d.penugasanDetailId,
+              penerimaanId: header.id,
+              klasifikasi: "rusak" as const,
+              jumlah: d.jumlahRusak,
+              catatan: d.catatan?.trim() || null,
+              createdBy: user.id,
+            })),
+          );
         }
 
         if (input.returId) {
