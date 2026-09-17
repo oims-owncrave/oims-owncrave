@@ -43,4 +43,6 @@ export const TAHAP_LABEL: Record<1 | 2 | 3 | 4, string> = {
   4: "Tahap 4 — Quality Control",
 };
 
-export const TUTORIAL: Tutorial[] = [];
+import { T1_PERSEDIAAN } from "./_isi-t1";
+
+export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN];

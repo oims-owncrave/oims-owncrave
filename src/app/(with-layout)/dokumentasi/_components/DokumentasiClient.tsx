@@ -125,7 +125,7 @@ function IsiTutorial({ t }: { t: Tutorial }) {
                 <p className="mt-1 text-sm text-dark-5 dark:text-dark-6">{l.teks}</p>
                 {l.gambar && (
                   <Image
-                    src={`/dokumentasi/${t.slug}/${l.gambar}`}
+                    src={`/img-panduan/${t.slug}/${l.gambar}`}
                     alt={l.judul}
                     width={1400}
                     height={800}

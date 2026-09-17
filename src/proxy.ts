@@ -11,7 +11,8 @@ export const config = {
      * Match all request paths EXCEPT:
      * - _next/static, _next/image (Next.js internals)
      * - favicon.ico, manifest, icons, sw.js (static/PWA assets)
+     * - img-panduan (gambar tutorial di halaman dokumentasi)
      */
-    "/((?!_next/static|_next/image|favicon.ico|manifest.json|icons|sw.js|workbox-.*.js).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.json|icons|img-panduan|sw.js|workbox-.*.js).*)",
   ],
 };
