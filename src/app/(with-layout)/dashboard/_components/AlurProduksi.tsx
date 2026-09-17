@@ -1,9 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import { Spinner } from "@/components/ui/Spinner";
 import type { AlurProduksi as Data } from "@/services/alur-produksi";
 
 interface Props {
@@ -26,7 +27,12 @@ type Tahap = {
 export function AlurProduksi({ data }: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
-  const go = (href?: string) => href && startNavigate(() => router.push(href));
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const go = (href?: string) => {
+    if (!href) return;
+    setPendingHref(href);
+    startNavigate(() => router.push(href));
+  };
 
   const tahap: Tahap[] = [
     { label: "PO Aktif", value: data.poAktif, satuan: "PO", href: "/produksi/po" },
@@ -50,14 +56,15 @@ export function AlurProduksi({ data }: Props) {
             <div key={t.label} className="flex flex-1 items-center gap-2">
               <button
                 type="button"
-                disabled={!clickable}
+                disabled={!clickable || pendingHref === t.href}
                 onClick={() => go(t.href)}
                 className={cn(
-                  "flex-1 rounded-lg px-3 py-3 text-left transition-colors sm:text-center",
+                  "relative flex-1 rounded-lg px-3 py-3 text-left transition-colors sm:text-center",
                   clickable && "hover:bg-gray-50 dark:hover:bg-gray-800",
                   belumAda && "opacity-50",
                 )}
               >
+                {pendingHref === t.href && <Spinner size={14} className="absolute right-2 top-2" />}
                 <p className="text-xs text-dark-5 dark:text-dark-6">{t.label}</p>
                 <p className={cn("mt-0.5 text-2xl font-bold", belumAda ? "text-dark-5 dark:text-dark-6" : "text-dark dark:text-white")}>
                   {t.value === null ? "—" : t.value.toLocaleString("id-ID")}

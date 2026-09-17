@@ -6,6 +6,7 @@ import { cn, formatRupiah, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Spinner } from "@/components/ui/Spinner";
 import { useReturDetail, useReturMutation } from "@/hooks/useReturJahit";
 import type { ReturDetailData } from "@/services/retur-jahit";
 import { RETUR_STATUS_LABEL, PENANGGUNG_LABEL } from "@/lib/schemas/retur-jahit";
@@ -24,6 +25,16 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
+/** Link teks kecil yang navigasi — spinner inline hanya di link yang diklik. */
+function NavText({ pending, onClick, children }: { pending: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button type="button" disabled={pending} className="inline-flex items-center gap-1.5 text-primary hover:underline disabled:no-underline" onClick={onClick}>
+      {children}
+      {pending && <Spinner size={12} />}
+    </button>
+  );
+}
+
 const NEXT: Record<ReturDetailData["status"], { status: string; label: string; outline?: boolean }[]> = {
   draft: [{ status: "dikirim", label: "Kirim ke Vendor" }, { status: "dibatalkan", label: "Batalkan", outline: true }],
   dikirim: [{ status: "dibatalkan", label: "Batalkan", outline: true }],
@@ -35,13 +46,19 @@ const NEXT: Record<ReturDetailData["status"], { status: string; label: string; o
 export function ReturDetailClient({ id, initialData }: Props) {
   const router = useRouter();
   const [isPending, startNavigate] = useTransition();
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<{ status: string; label: string } | null>(null);
   const { data } = useReturDetail(id);
   const { setStatus } = useReturMutation();
 
   const d = data ?? initialData;
   const badge = RETUR_STATUS_LABEL[d.status];
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => {
+    setPendingPath(path);
+    startNavigate(() => router.push(path));
+  };
+  const pathPenugasan = `/vendor/penugasan/${d.penugasanId}`;
+  const pathPenerimaanAsal = `/vendor/penerimaan/${d.penerimaanAsalId}`;
   const totalPcs = d.details.reduce((s, x) => s + x.jumlah, 0);
   const totalKembali = d.details.reduce((s, x) => s + x.sudahKembali, 0);
   const biaya = d.details.reduce((s, x) => s + (x.penanggungBiaya === "owncrave" ? x.jumlah * Number(x.tarifPerbaikan) : 0), 0);
@@ -57,9 +74,9 @@ export function ReturDetailClient({ id, initialData }: Props) {
       <div className="rounded-[10px] border border-stroke bg-white p-5 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           <InfoItem label="Status" value={<span className={cn("rounded-full px-2.5 py-1 text-xs font-medium", badge.className)}>{badge.label}</span>} />
-          <InfoItem label="Penugasan" value={<button type="button" className="text-primary hover:underline" onClick={() => go(`/vendor/penugasan/${d.penugasanId}`)}>{d.penugasanNomor}</button>} />
+          <InfoItem label="Penugasan" value={<NavText pending={pendingPath === pathPenugasan} onClick={() => go(pathPenugasan)}>{d.penugasanNomor}</NavText>} />
           <InfoItem label="Vendor / Penjahit" value={d.pihakNama} />
-          <InfoItem label="Dari Penerimaan" value={d.penerimaanAsalId ? <button type="button" className="text-primary hover:underline" onClick={() => go(`/vendor/penerimaan/${d.penerimaanAsalId}`)}>{d.penerimaanAsalNomor}</button> : null} />
+          <InfoItem label="Dari Penerimaan" value={d.penerimaanAsalId ? <NavText pending={pendingPath === pathPenerimaanAsal} onClick={() => go(pathPenerimaanAsal)}>{d.penerimaanAsalNomor}</NavText> : null} />
           <InfoItem label="Tanggal Retur" value={formatTanggal(d.tanggalRetur)} />
           <InfoItem label="Target Kembali" value={formatTanggal(d.targetKembali)} />
           <InfoItem label="Progres" value={`${totalKembali}/${totalPcs} pcs kembali`} />
@@ -120,15 +137,22 @@ export function ReturDetailClient({ id, initialData }: Props) {
           <p className="text-sm text-gray-500 dark:text-gray-400">Belum ada hasil perbaikan yang kembali.</p>
         ) : (
           <ul className="divide-y divide-stroke dark:divide-dark-3">
-            {d.penerimaanKembali.map((p) => (
-              <li key={p.id} className="flex items-center justify-between gap-3 py-2 text-sm">
-                <button type="button" className="text-left" onClick={() => go(`/vendor/penerimaan/${p.id}`)}>
-                  <p className="font-medium text-primary hover:underline">{p.nomorDokumen}</p>
-                  <p className="text-xs text-dark-5 dark:text-dark-6">{formatTanggal(p.tanggalJam, true)}</p>
-                </button>
-                <span className="text-xs whitespace-nowrap">baik {p.totalBaik} · rusak {p.totalRusak}</span>
-              </li>
-            ))}
+            {d.penerimaanKembali.map((p) => {
+              const path = `/vendor/penerimaan/${p.id}`;
+              const pending = pendingPath === path;
+              return (
+                <li key={p.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                  <button type="button" disabled={pending} className="text-left" onClick={() => go(path)}>
+                    <p className="flex items-center gap-1.5 font-medium text-primary hover:underline">
+                      {p.nomorDokumen}
+                      {pending && <Spinner size={12} />}
+                    </p>
+                    <p className="text-xs text-dark-5 dark:text-dark-6">{formatTanggal(p.tanggalJam, true)}</p>
+                  </button>
+                  <span className="text-xs whitespace-nowrap">baik {p.totalBaik} · rusak {p.totalRusak}</span>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

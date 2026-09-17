@@ -6,6 +6,7 @@ import { cn, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Spinner } from "@/components/ui/Spinner";
 import { usePenerimaanHasilDetail, usePenerimaanHasilMutation } from "@/hooks/usePenerimaanHasilJahit";
 import type { PenerimaanHasilDetailData } from "@/services/penerimaan-hasil-jahit";
 import { KLASIFIKASI_LABEL, SELISIH_STATUS_LABEL } from "@/lib/schemas/selisih-jahit";
@@ -24,18 +25,34 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
+/** Link teks kecil yang navigasi — spinner inline hanya di link yang diklik. */
+function NavText({ pending, onClick, children }: { pending: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button type="button" disabled={pending} className="inline-flex items-center gap-1.5 text-primary hover:underline disabled:no-underline" onClick={onClick}>
+      {children}
+      {pending && <Spinner size={12} />}
+    </button>
+  );
+}
+
 export function PenerimaanDetailClient({ id, initialData }: Props) {
   const router = useRouter();
   const [isPending, startNavigate] = useTransition();
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [hapusOpen, setHapusOpen] = useState(false);
   const { data } = usePenerimaanHasilDetail(id);
   const { remove } = usePenerimaanHasilMutation();
 
   const d = data ?? initialData;
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => {
+    setPendingPath(path);
+    startNavigate(() => router.push(path));
+  };
   const totalBaik = d.details.reduce((s, x) => s + x.jumlahBaik, 0);
   const totalRusak = d.details.reduce((s, x) => s + x.jumlahRusak, 0);
   const rusakBelumRetur = d.details.reduce((s, x) => s + Math.max(0, x.jumlahRusak - x.sudahDiretur), 0);
+  const pathPenugasan = `/vendor/penugasan/${d.penugasanId}`;
+  const pathRetur = `/vendor/retur/${d.returId}`;
 
   return (
     <div className="space-y-6">
@@ -48,13 +65,13 @@ export function PenerimaanDetailClient({ id, initialData }: Props) {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           <InfoItem
             label="Penugasan"
-            value={<button type="button" className="text-primary hover:underline" onClick={() => go(`/vendor/penugasan/${d.penugasanId}`)}>{d.penugasanNomor}</button>}
+            value={<NavText pending={pendingPath === pathPenugasan} onClick={() => go(pathPenugasan)}>{d.penugasanNomor}</NavText>}
           />
           <InfoItem label="PO" value={`${d.poNomor} — ${d.produkNama}`} />
           <InfoItem label="Dari" value={d.pihakNama} />
           <InfoItem
             label="Jenis"
-            value={d.returNomor ? <button type="button" className="text-primary hover:underline" onClick={() => go(`/vendor/retur/${d.returId}`)}>Hasil perbaikan {d.returNomor}</button> : "Setoran"}
+            value={d.returNomor ? <NavText pending={pendingPath === pathRetur} onClick={() => go(pathRetur)}>Hasil perbaikan {d.returNomor}</NavText> : "Setoran"}
           />
           <InfoItem label="Diterima" value={formatTanggal(d.tanggalJam, true)} />
           <InfoItem label="Penerima" value={d.penerima} />
@@ -151,7 +168,9 @@ export function PenerimaanDetailClient({ id, initialData }: Props) {
               return (
                 <li key={s.id} className="flex items-center justify-between gap-3 py-2 text-sm">
                   <div>
-                    <button type="button" className="font-medium text-primary hover:underline" onClick={() => go("/vendor/selisih")}>{s.nomorKasus}</button>
+                    <NavText pending={pendingPath === "/vendor/selisih"} onClick={() => go("/vendor/selisih")}>
+                      <span className="font-medium">{s.nomorKasus}</span>
+                    </NavText>
                     <span className="ml-2 text-dark-5 dark:text-dark-6">{s.bundelNomor} · {KLASIFIKASI_LABEL[s.klasifikasi]} · {s.jumlah} pcs</span>
                   </div>
                   <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap", b.className)}>{s.keputusan ? "Diputuskan" : b.label}</span>

@@ -6,6 +6,7 @@ import { cn, formatRupiah, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Spinner } from "@/components/ui/Spinner";
 import { usePenugasanDetail, usePenugasanMutation } from "@/hooks/usePenugasanJahit";
 import type { PenugasanDetailData } from "@/services/penugasan-jahit";
 import { PENUGASAN_STATUS_LABEL } from "@/lib/schemas/penugasan-jahit";
@@ -30,13 +31,17 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
 export function PenugasanDetailClient({ id, initialData }: Props) {
   const router = useRouter();
   const [isPending, startNavigate] = useTransition();
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<{ status: string; label: string } | null>(null);
   const { data } = usePenugasanDetail(id);
   const { setStatus } = usePenugasanMutation();
 
   const d = data ?? initialData;
   const badge = PENUGASAN_STATUS_LABEL[d.status];
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => {
+    setPendingPath(path);
+    startNavigate(() => router.push(path));
+  };
 
   const totalPcs = d.details.reduce((s, x) => s + x.jumlahPcs, 0);
   const estimasi = d.details.reduce((s, x) => s + x.jumlahPcs * Number(x.tarifSnapshot), 0);
@@ -149,10 +154,15 @@ export function PenugasanDetailClient({ id, initialData }: Props) {
           <ul className="divide-y divide-stroke dark:divide-dark-3">
             {d.pengiriman.map((p) => {
               const b = PENGIRIMAN_STATUS_LABEL[p.status];
+              const path = `/vendor/pengiriman/${p.id}`;
+              const pending = pendingPath === path;
               return (
                 <li key={p.id} className="flex items-center justify-between gap-3 py-2">
-                  <button type="button" onClick={() => go(`/vendor/pengiriman/${p.id}`)} className="text-left">
-                    <p className="font-medium text-primary hover:underline">{p.nomorDokumen}</p>
+                  <button type="button" disabled={pending} onClick={() => go(path)} className="text-left">
+                    <p className="flex items-center gap-1.5 font-medium text-primary hover:underline">
+                      {p.nomorDokumen}
+                      {pending && <Spinner size={12} />}
+                    </p>
                     <p className="text-xs text-dark-5 dark:text-dark-6">
                       {formatTanggal(p.tanggalJam, true)} · {p.totalBundel} bundel
                     </p>

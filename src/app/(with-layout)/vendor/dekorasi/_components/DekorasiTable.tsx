@@ -27,11 +27,13 @@ interface Props {
 export function DekorasiTable({ initialData }: Props) {
   const router = useRouter();
   const [isPendingNew, startTransitionNew] = useTransition();
+  const [isPendingTemplate, startTransitionTemplate] = useTransition();
   const [, startNavigate] = useTransition();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const { data } = usePekerjaanDekorasiList();
   const items = data ?? initialData;
   const go = (path: string) => startTransitionNew(() => router.push(path));
+  const goTemplate = (path: string) => startTransitionTemplate(() => router.push(path));
   const goRow = (id: string, path: string) => {
     setPendingId(id);
     startNavigate(() => router.push(path));
@@ -98,7 +100,7 @@ export function DekorasiTable({ initialData }: Props) {
           <ColumnToggle table={table} className="shrink-0" />
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => go("/vendor/dekorasi/template")} loading={isPendingNew} className="hidden sm:inline-flex">Template</Button>
+          <Button variant="outline" onClick={() => goTemplate("/vendor/dekorasi/template")} loading={isPendingTemplate} className="hidden sm:inline-flex">Template</Button>
           <Button onClick={() => go("/vendor/dekorasi/baru")} loading={isPendingNew} className="hidden sm:inline-flex">+ Buat Pekerjaan</Button>
         </div>
       </TableToolbar>

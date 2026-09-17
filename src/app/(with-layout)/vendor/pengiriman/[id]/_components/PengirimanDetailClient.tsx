@@ -6,6 +6,7 @@ import { cn, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Spinner } from "@/components/ui/Spinner";
 import { Printer } from "lucide-react";
 import { usePengirimanDetail, usePengirimanMutation } from "@/hooks/usePengirimanJahit";
 import type { PengirimanDetailData } from "@/services/pengiriman-jahit";
@@ -29,9 +30,20 @@ function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
+/** Link teks kecil yang navigasi — spinner inline hanya di link yang diklik. */
+function NavText({ pending, onClick, children }: { pending: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button type="button" disabled={pending} className="inline-flex items-center gap-1.5 text-primary hover:underline disabled:no-underline" onClick={onClick}>
+      {children}
+      {pending && <Spinner size={12} />}
+    </button>
+  );
+}
+
 export function PengirimanDetailClient({ id, initialData, lokasiList }: Props) {
   const router = useRouter();
   const [isPending, startNavigate] = useTransition();
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [stOpen, setStOpen] = useState(false);
   const [batalOpen, setBatalOpen] = useState(false);
   const [alasan, setAlasan] = useState("");
@@ -40,7 +52,11 @@ export function PengirimanDetailClient({ id, initialData, lokasiList }: Props) {
 
   const d = data ?? initialData;
   const badge = PENGIRIMAN_STATUS_LABEL[d.status];
-  const go = (path: string) => startNavigate(() => router.push(path));
+  const go = (path: string) => {
+    setPendingPath(path);
+    startNavigate(() => router.push(path));
+  };
+  const pathPenugasan = `/vendor/penugasan/${d.penugasanId}`;
   const totalPcs = d.details.reduce((s, x) => s + x.jumlahPcs, 0);
   const stMap = new Map(d.serahTerima?.details.map((x) => [x.pengirimanDetailId, x]) ?? []);
 
@@ -64,7 +80,7 @@ export function PengirimanDetailClient({ id, initialData, lokasiList }: Props) {
           <InfoItem label="Surat Jalan" value={d.sjNomor} />
           <InfoItem
             label="Penugasan"
-            value={<button type="button" className="text-primary hover:underline" onClick={() => go(`/vendor/penugasan/${d.penugasanId}`)}>{d.penugasanNomor}</button>}
+            value={<NavText pending={pendingPath === pathPenugasan} onClick={() => go(pathPenugasan)}>{d.penugasanNomor}</NavText>}
           />
           <InfoItem label="PO" value={`${d.poNomor} — ${d.produkNama}`} />
           <InfoItem label="Tujuan" value={d.pihakNama} />
