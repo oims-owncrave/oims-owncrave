@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Lightbox, type GambarLightbox } from "@/components/ui/Lightbox";
 import { TAHAP_LABEL, type Tutorial } from "../_data";
 
 export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
@@ -69,6 +70,15 @@ function Kartu({ children }: { children: React.ReactNode }) {
 }
 
 function IsiTutorial({ t }: { t: Tutorial }) {
+  // Semua gambar tutorial ini dikumpulkan berurutan supaya lightbox bisa
+  // berpindah antar langkah, bukan hanya membuka satu gambar.
+  const galeri: GambarLightbox[] = t.bagian.flatMap((b) =>
+    b.langkah
+      .filter((l) => l.gambar)
+      .map((l) => ({ src: `/img-panduan/${t.slug}/${l.gambar}`, judul: l.judul })),
+  );
+  const [dibuka, setDibuka] = useState<number | null>(null);
+
   return (
     <article className="space-y-6">
       <Kartu>
@@ -124,13 +134,22 @@ function IsiTutorial({ t }: { t: Tutorial }) {
                 </p>
                 <p className="mt-1 text-sm text-dark-5 dark:text-dark-6">{l.teks}</p>
                 {l.gambar && (
-                  <Image
-                    src={`/img-panduan/${t.slug}/${l.gambar}`}
-                    alt={l.judul}
-                    width={1400}
-                    height={800}
-                    className="mt-3 w-full rounded-lg border border-stroke dark:border-dark-3"
-                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setDibuka(galeri.findIndex((g) => g.src.endsWith(l.gambar!)))
+                    }
+                    className="mt-3 block w-full cursor-zoom-in overflow-hidden rounded-lg border border-stroke transition hover:border-primary dark:border-dark-3"
+                    title="Klik untuk memperbesar"
+                  >
+                    <Image
+                      src={`/img-panduan/${t.slug}/${l.gambar}`}
+                      alt={l.judul}
+                      width={1400}
+                      height={800}
+                      className="w-full"
+                    />
+                  </button>
                 )}
               </li>
             ))}
@@ -177,6 +196,13 @@ function IsiTutorial({ t }: { t: Tutorial }) {
           </div>
         </Kartu>
       ) : null}
+
+      <Lightbox
+        gambar={galeri}
+        aktif={dibuka}
+        onTutup={() => setDibuka(null)}
+        onPindah={setDibuka}
+      />
 
       {t.belumTersedia?.length ? (
         <Kartu>
