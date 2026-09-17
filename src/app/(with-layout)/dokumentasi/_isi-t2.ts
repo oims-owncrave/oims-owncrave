@@ -9,12 +9,12 @@ export const T2_PRODUKSI: Tutorial = {
   tahap: 2,
   judul: "Produksi & Cutting",
   ringkas:
-    "Dari resep produk menjadi order produksi, menghitung kebutuhan bahan, memotong kain, sampai bundel siap dikirim ke penjahit.",
+    "Dari resep produk menjadi PO Produksi, menghitung kebutuhan bahan, memotong kain, sampai bundel siap dikirim ke penjahit.",
 
   gambaranUmum: [
     "BOM adalah resep: berapa banyak tiap bahan untuk membuat SATU pcs jaket. Semua hitungan kebutuhan berangkat dari sini.",
-    "PO menetapkan berapa yang mau diproduksi. Sistem mengalikan BOM dengan target, lalu membandingkannya dengan stok yang ada.",
-    "Rantainya berurutan dan saling mengunci: BOM → PO → estimasi bahan → permintaan bahan → WO cutting → hasil cutting → bundel.",
+    "PO Produksi menetapkan berapa yang mau diproduksi — warna apa, ukuran berapa, masing-masing berapa pcs. Sistem mengalikan BOM dengan target, lalu membandingkannya dengan stok yang ada.",
+    "Rantainya berurutan dan saling mengunci: BOM → PO Produksi → estimasi bahan → permintaan bahan → Cutting → hasil cutting → bundel.",
   ],
 
   salahKaprah: [
@@ -32,13 +32,13 @@ export const T2_PRODUKSI: Tutorial = {
     ],
     [
       "Hasil cutting bisa dicatat kapan saja",
-      "Tombolnya terkunci sampai WO berstatus Sedang Dikerjakan. Urutannya Draft → Siap Dikerjakan → Sedang Dikerjakan.",
+      "Tombolnya terkunci sampai cutting berstatus Sedang Dikerjakan. Urutannya Draft → Siap Dikerjakan → Sedang Dikerjakan.",
     ],
   ],
 
   bagian: [
     {
-      judul: "A. Resep dan order produksi",
+      judul: "A. Resep dan PO Produksi",
       pengantar: "BOM dibuat sekali per produk, lalu dipakai berulang oleh setiap PO.",
       langkah: [
         {
@@ -47,7 +47,7 @@ export const T2_PRODUKSI: Tutorial = {
           gambar: "step1-bom.jpg",
         },
         {
-          judul: "Buat order produksi, isi target tiap SKU",
+          judul: "Buat PO Produksi, isi target tiap SKU",
           teks: "Kolom Rencana Cutting terisi sendiri dari target ditambah toleransi. Angka inilah yang dipakai cutting, bukan target aslinya.",
           gambar: "step2-target-po.jpg",
         },
@@ -78,10 +78,10 @@ export const T2_PRODUKSI: Tutorial = {
     {
       judul: "C. Cutting",
       pengantar:
-        "Work order cutting adalah perintah kerja untuk memotong kain. Statusnya berjenjang supaya hasil tidak dicatat sebelum kerjanya mulai.",
+        "Cutting adalah perintah kerja untuk memotong kain. Statusnya berjenjang supaya hasil tidak dicatat sebelum kerjanya mulai.",
       langkah: [
         {
-          judul: "Buat WO cutting, tekan Isi dari PO",
+          judul: "Buat cutting, tekan Isi dari PO",
           teks: "Varian dan jumlahnya diambil dari rencana cutting PO — 62, 42, dan 52 pcs, bukan 60, 40, 50.",
           gambar: "step6-wo-cutting.jpg",
         },
@@ -122,8 +122,8 @@ export const T2_PRODUKSI: Tutorial = {
   ],
 
   kalauBermasalah: [
-    ["Tombol Catat Hasil tidak bisa ditekan", "Status WO masih Draft atau Siap Dikerjakan. Tekan Mulai Kerjakan dulu."],
-    ["PO tidak muncul saat membuat WO cutting", "PO belum disetujui. Hanya PO berstatus disetujui yang bisa dipotong."],
+    ["Tombol Catat Hasil tidak bisa ditekan", "Status cutting masih Draft atau Siap Dikerjakan. Tekan Mulai Kerjakan dulu."],
+    ["PO tidak muncul saat membuat cutting", "PO belum disetujui. Hanya PO berstatus disetujui yang bisa dipotong."],
     ["Estimasi bahan kosong padahal PO sudah disetujui", "Produk belum punya BOM aktif saat PO disetujui. Aktifkan BOM lalu buat PO baru."],
     ["Varian tidak muncul saat membuat bundel", "Hasil cutting yang baik belum dicatat, atau seluruhnya sudah dibundel."],
     ["Permintaan bahan tidak bisa dibuat", "Halaman ini selalu dibuka dari PO. Buka detail PO dan buat permintaan dari sana."],
@@ -131,7 +131,7 @@ export const T2_PRODUKSI: Tutorial = {
 
   belumTersedia: [
     "Kebutuhan kain berbeda per ukuran — BOM menyimpan satu angka rata-rata, padahal ukuran 3XL memakai kain lebih banyak dari M.",
-    "Menggabungkan beberapa PO dalam satu WO cutting.",
+    "Menggabungkan beberapa PO dalam satu cutting.",
     "Menghitung sisa kain menjadi stok yang bisa dipakai PO berikutnya.",
   ],
 };

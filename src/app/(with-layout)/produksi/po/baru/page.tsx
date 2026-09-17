@@ -20,10 +20,10 @@ export default async function PoBaruPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Buat Order Produksi"
+        title="Buat PO Produksi"
         breadcrumb={[
           { label: "Produksi" },
-          { label: "Order Produksi", href: "/produksi/po" },
+          { label: "PO Produksi", href: "/produksi/po" },
           { label: "Baru" },
         ]}
       />

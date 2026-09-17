@@ -94,7 +94,7 @@ export const NAV_DATA: NavSection[] = [
         title: "Produksi",
         icon: ProduksiIcon,
         items: [
-          { title: "Order Produksi", url: "/produksi/po" },
+          { title: "PO Produksi", url: "/produksi/po" },
           { title: "Permintaan Bahan", url: "/produksi/permintaan-bahan" },
           { title: "Cutting", url: "/produksi/cutting" },
           { title: "Bundle", url: "/produksi/bundling" },

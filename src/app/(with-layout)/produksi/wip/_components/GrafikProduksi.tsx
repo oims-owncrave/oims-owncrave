@@ -67,7 +67,7 @@ export function GrafikProduksi({ data }: { data: GrafikData }) {
     <div className="grid grid-cols-1 gap-4 min-[850px]:grid-cols-2">
       {/* 1. Target vs hasil + efisiensi per PO */}
       <Card
-        title="Target vs Hasil per Order Produksi"
+        title="Target vs Hasil per PO Produksi"
         subtitle="Batang = hasil baik terhadap target cutting; persentase = efisiensi"
         empty={targetHasil.length === 0}
       >

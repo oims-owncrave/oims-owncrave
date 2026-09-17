@@ -37,7 +37,7 @@ export default async function PoEditPage({
         title={`Edit ${detail.nomorDokumen}`}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "Order Produksi", href: "/produksi/po" },
+          { label: "PO Produksi", href: "/produksi/po" },
           { label: detail.nomorDokumen, href: `/produksi/po/${id}` },
           { label: "Edit" },
         ]}
