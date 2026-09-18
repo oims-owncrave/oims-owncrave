@@ -483,6 +483,11 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         aria-busy={isRowLoading}
                         onClick={() => !isRowLoading && renderExpandedRow && table.toggleRowExpansion(rowId)}
                       >
+                        {isRowLoading && (
+                          <TableCell className="absolute inset-0 z-10 flex items-center justify-center border-0 !opacity-100 bg-white/60 dark:bg-gray-dark/60">
+                            <Spinner size={20} />
+                          </TableCell>
+                        )}
                         {enableSelection && (
                           <TableCell className="w-10 px-4" onClick={(e) => { e.stopPropagation(); table.toggleRowSelection(rowId) }}>
                             <Checkbox
@@ -494,11 +499,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         )}
                         {showRowNumber && (
                           <TableCell className="w-14 px-4 text-center text-dark-5 dark:text-dark-6">
-                            {isRowLoading ? (
-                              <Spinner size={16} className="!block mx-auto" />
-                            ) : (
-                              table.pageStartIndex + rowIndex
-                            )}
+                            {table.pageStartIndex + rowIndex}
                           </TableCell>
                         )}
                         {visibleColumns.map((col) => {
