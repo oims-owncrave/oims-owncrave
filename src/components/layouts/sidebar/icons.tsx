@@ -10,6 +10,7 @@ import {
   Settings,
   Scissors,
   Truck,
+  Paintbrush,
   BadgeCheck,
   Activity,
   Users,
@@ -31,6 +32,7 @@ export const LaporanIcon = BarChart3;
 export const SistemIcon = Settings;
 export const ProduksiIcon = Scissors;
 export const VendorIcon = Truck;
+export const DekorasiIcon = Paintbrush;
 export const QcIcon = BadgeCheck;
 export const MonitoringIcon = Activity;
 export const PenggunaIcon = Users;

@@ -5,6 +5,7 @@ import {
   InventoryIcon,
   ProduksiIcon,
   VendorIcon,
+  DekorasiIcon,
   QcIcon,
   MonitoringIcon,
   LaporanIcon,
@@ -117,7 +118,7 @@ export const NAV_DATA: NavSection[] = [
       },
       {
         title: "Sablon & Bordir",
-        icon: VendorIcon,
+        icon: DekorasiIcon,
         items: [
           { title: "Pekerjaan Dekorasi", url: "/vendor/dekorasi" },
           { title: "Template Dekorasi", url: "/vendor/dekorasi/template" },
