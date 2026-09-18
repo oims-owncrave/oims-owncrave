@@ -147,7 +147,11 @@ export function WipJahitClient({ initialRows, initialRingkasan }: Props) {
           </div>
           <div />
         </TableToolbar>
-        <DataTable table={table} showRowNumber />
+        <DataTable
+          table={table}
+          showRowNumber
+          getRowLoading={(item) => item.penugasanId === pendingId}
+        />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>
     </>

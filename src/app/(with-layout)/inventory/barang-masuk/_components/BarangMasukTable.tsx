@@ -113,6 +113,7 @@ export function BarangMasukTable({ data }: Props) {
       <DataTable
         table={table}
         showRowNumber
+        getRowLoading={(item) => item.id === pendingId}
         mobileFab={
           <Button
             disabled={isPendingNew}

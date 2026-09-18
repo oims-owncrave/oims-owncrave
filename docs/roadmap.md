@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-08-08 · Status: **Tahap 1 selesai. Gelombang D (import batch Excel) selesai — jpn.15 + jpn.16 done. Berikutnya: planning Tahap 2.**
+> Diperbarui: 2026-09-18 · Status: **Tahap 1-4 selesai. Gelombang H (integritas data + loading UX) 4/9 selesai — app-7u06 siap Antigravity, app-gtf4.1/.2/.3/.4 tertahan jawaban klien.**
 
 ---
 
@@ -188,6 +188,26 @@ tabel Tahap 3 tidak diubah. Kontrol eksekusi bergelombang: `docs/dashboard.md`.
 - [x] **4D barang jadi** ✅ **DONE**: `.11` finishing · `.12` packing · `.13` barang jadi + stok + mutasi · `.14` transfer + penyesuaian · `.15` dashboard + yield/COPQ
 - [ ] Backlog P3: `.16` QC per pcs + barcode · `.17` kinerja vendor dari data QC
 
+### 🔜 GELOMBANG H — Integritas data & UX loading (18 Sep 2026)
+
+Feedback Abu sebagai developer: kolom teks bebas yang seharusnya FK ke master, dan
+loading indicator yang hilang di banyak navigasi. Detail: `app-gtf4` (epic, PARENT
+`app-2fq` M3.1), `app-9bkl`/`app-9g1l`/`app-vhaa`/`app-7u06`.
+
+- [x] `app-vhaa` — Fix sidebar submenu >7 item terpotong `max-h-96` ✅ **DONE** (commit `2ed9ea5`)
+- [x] `app-9bkl` — Loading indicator (icon jadi Spinner) di 22 file navigasi ✅ **DONE** (commit `0c05bfd`)
+- [x] `app-9g1l` — Sisa loading indicator: dashboard card, link kecil, dual-button ✅ **DONE** (commit `641cde5`)
+- [x] `app-gtf4.5` — Audit 14 kolom teks vs master (6 FK users, 2 pgEnum, 1 FK PO, 5 tetap teks) ✅ **DONE**, dokumen `docs/insight-bisnis/audit-kolom-teks-vs-master.md` (commit `44be143`)
+- [x] `app-7u06` — **Row highlight** (`getRowLoading`) di 18 tabel dengan icon mata ✅ **DONE** (Antigravity eksekusi + Claude review 18 Sep: fix AuditLogTable kode mati + WoQcTable tombol terlewat)
+- [ ] `app-gtf4.1` — Sambungkan pengirim/penerima jahit ke master (P1) — **blocked**: nunggu jawaban klien soal istilah "Konveksi" (vendor vs penjahit satu/dua master) + daftar staf ke menu Pengguna (masih 1 baris). Insight: `docs/insight-bisnis/istilah-vendor-penjahit-konveksi.md`
+- [ ] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1) — **blocked**: nunggu klien pastikan angka `66cm` yang salah ketik (produk Vision GMC No5)
+- [ ] `app-gtf4.2` — jenisKerusakan & bagianProduk → master jenisCacat (P2), belum digali
+- [ ] `app-gtf4.3` — Kategori/Brand/Jenis produk → master (P2) — butuh keputusan produk
+- [ ] `app-gy84` — Potret ulang 2 gambar tutorial T2 yang basi (P2), belum disentuh
+
+Urutan eksekusi: `app-7u06` bisa jalan sekarang (Antigravity, nol blocker). `app-gtf4.1/.2/.3/.4`
+tertahan jawaban klien — satu pertanyaan gabungan (Konveksi + daftar staf + PO + angka bahan).
+
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
 
@@ -209,6 +229,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-18 (2)** — app-7u06 dieksekusi Antigravity + direview Claude: row highlight `getRowLoading` di 16/18 tabel (13 reuse pendingId, 3 pola BomTable). 2 penyimpangan ditemukan saat review: AuditLogTable dapat state loading yang gak pernah kelihatan (modal instant, bukan navigasi) — dihapus; KarantinaPageClient terlewat Antigravity — ternyata bukan kandidat sama sekali (bukan DataTable, icon Eye cuma toggle expand) — kesalahan di plan, bukan eksekusi. Bonus fix: WoQcTable tombol "Catat hasil QC" gak ke-highlight + belum pernah dapat icon-spinner app-9bkl. Typecheck pass. Epic Gelombang H: 5/9 selesai.
+- **2026-09-18** — Planning + eksekusi Gelombang H: 4 issue selesai & commit (app-vhaa sidebar fix, app-9bkl+app-9g1l loading indicator 28 file total, app-gtf4.5 audit 14 kolom teks vs master). app-7u06 di-plan ulang (cakupan 7→18 file, verifikasi kode), plan+prompt+GH #17 siap eksekusi Antigravity. app-gtf4.1/.4 tertahan jawaban klien — insight ditulis di `docs/insight-bisnis/` (Konveksi vs Vendor/Penjahit, audit kolom teks). 5 kartu backlog lama diparkir (app-abz, oims-ckp.16, oims-eba.14, app-616, oims-rcr) dengan suffix `[PARKIR]`.
 - **2026-09-10 (3)** — **TAHAP 4 KODE SELESAI**: 4B (standar QC berversi + WO QC/sampling + hasil QC per varian + temuan cacat), 4C (rework dua jalur guard bersama + Re-QC + karantina reject ber-approval), 4D (finishing + packing checklist ter-guard + barang jadi stok immutable + transfer 2-fase + penyesuaian + rumus yield/COPQ). 15 issue inti closed, epic `oims-ckp` closed. 3 migration via MCP, 20 tabel baru, 10 route `/qc/*`, tsc + build clean, verifikasi SQL tiap gelombang. Aturan kritis yang dijaga: rumus keseimbangan grade tiga lapis (Zod + Server Action + DB CHECK), guard kapasitas rework satu fungsi untuk dua jalur, approval gate sebelum tindakan reject/penyesuaian berdampak, stok barang jadi immutable (satu-satunya penulis kuantitas di `lib/qc/stok-fg.ts`). COPQ mengembalikan null untuk komponen tanpa sumber (Tahap 5 skip), bukan 0. **Belum smoke test end-to-end** — perlu sesi tersendiri.
 - **2026-09-10 (2)** — Eksekusi Tahap 4A oleh Claude (lanjut di sesi planning, permintaan Abu): `oims-ckp.2` master jenis cacat + kemasan, `oims-ckp.3` master gudang barang jadi (isDefault tepat satu dalam transaksi), `oims-ckp.4` penerimaan QC + antrean DERIVED (guard sisa dihitung ulang di transaksi; vendor ber-qcMode `vendor` dilewati). 3 issue closed, 3 commit, 5 route baru, tsc + build clean. Verifikasi lewat SQL: kirim 25/30 → sisa 5 · qc_mode=vendor → 0 baris antrean · soft delete → sisa balik 30 · hapus+buat ulang kode sama berhasil · duplikat aktif ditolak · 2 gudang default → tetap 1. Berikutnya: 4B (standar QC berversi, WO QC, hasil QC + grade).
 - **2026-09-10** — Planning breakdown Tahap 4: epic `oims-ckp` dipecah **17 issue anak** (15 inti + 2 backlog P3) + rantai dependensi. 3 keputusan cakupan dijawab Abu: QC **per varian agregat** (bukan per pcs PRD §11 — hulu T2-T3 semua agregat, app lama sukses tanpa; per-pcs jadi backlog `.16`), finishing/packing **modul penuh** (gap terbesar PRD, dijanjikan klien), stok barang jadi **tabel + mutasi sendiri** pola immutable stok bahan (kunci komposit SKU+grade+gudang+batch). Gelombang 4A (`.2` master jenis cacat+kemasan, `.3` master gudang, `.4` penerimaan QC + antrean derived) di-plan+prompt; migration `tahap4a_master_qc_gudang_penerimaan_qc` applied via MCP (6 enum + 5 tabel, unique index semua PARTIAL — diverifikasi query), schema.ts + document-number.ts ter-update, tsc clean. Checklist review Tahap 4 (18 poin) masuk skill oims-review. Koreksi: proyek TIDAK punya DB trigger cache stok — di-maintain dalam Server Action transaction + SELECT FOR UPDATE; issue `.13` dikoreksi. Siap eksekusi Antigravity (urutan `.2` → `.3` → `.4`).

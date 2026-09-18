@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -34,7 +34,17 @@ export function StandarQcTable({ data }: Props) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isNav, startNav] = useTransition();
+  const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const { versiBaru, activate, deactivate, remove } = useStandarQcMutation();
+
+  const go = (path: string, rowId?: string) => {
+    if (rowId) setLoadingRowId(rowId);
+    startNav(() => router.push(path));
+  };
+
+  useEffect(() => {
+    if (!isNav) setLoadingRowId(null);
+  }, [isNav]);
 
   // aksi ikut status: draft bisa edit/aktifkan, aktif bisa nonaktifkan/versi baru
   const actionsFor = (item: StandarQcRow): TableAction<StandarQcRow>[] => {
@@ -42,7 +52,7 @@ export function StandarQcTable({ data }: Props) {
       {
         icon: <Eye size={16} />,
         title: "Lihat",
-        onClick: (r) => startNav(() => router.push(`/qc/standar/${r.id}`)),
+        onClick: (r) => go(`/qc/standar/${r.id}`, r.id),
         variant: "default",
       },
     ];
@@ -52,7 +62,7 @@ export function StandarQcTable({ data }: Props) {
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: (r) => startNav(() => router.push(`/qc/standar/${r.id}/edit`)),
+          onClick: (r) => go(`/qc/standar/${r.id}/edit`, r.id),
           variant: "default",
         },
         {
@@ -161,7 +171,7 @@ export function StandarQcTable({ data }: Props) {
           <div className="flex items-center gap-2">
             <Button
               loading={isNav}
-              onClick={() => startNav(() => router.push("/qc/standar/baru"))}
+              onClick={() => go("/qc/standar/baru")}
               className="hidden sm:inline-flex"
             >
               + Tambah Standar
@@ -171,9 +181,10 @@ export function StandarQcTable({ data }: Props) {
         <DataTable
           table={table}
           showRowNumber
+          getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => startNav(() => router.push("/qc/standar/baru"))}
+              onClick={() => go("/qc/standar/baru")}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

@@ -107,6 +107,7 @@ export function DekorasiTable({ initialData }: Props) {
       <DataTable
         table={table}
         showRowNumber
+        getRowLoading={(item) => item.id === pendingId}
         mobileFab={
           <Button onClick={() => go("/vendor/dekorasi/baru")} loading={isPendingNew} className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center">
             <Plus size={24} />

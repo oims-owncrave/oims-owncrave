@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -34,14 +34,24 @@ export function HasilQcTable({ data }: Props) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isNav, startNav] = useTransition();
+  const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const { verifikasi, remove } = useHasilQcMutation();
+
+  const go = (path: string, rowId?: string) => {
+    if (rowId) setLoadingRowId(rowId);
+    startNav(() => router.push(path));
+  };
+
+  useEffect(() => {
+    if (!isNav) setLoadingRowId(null);
+  }, [isNav]);
 
   const actionsFor = (item: HasilQcRow): TableAction<HasilQcRow>[] => {
     const list: TableAction<HasilQcRow>[] = [
       {
         icon: <Eye size={16} />,
         title: "Lihat & catat cacat",
-        onClick: (r) => startNav(() => router.push(`/qc/pemeriksaan/${r.id}`)),
+        onClick: (r) => go(`/qc/pemeriksaan/${r.id}`, r.id),
         variant: "default",
       },
     ];
@@ -142,7 +152,7 @@ export function HasilQcTable({ data }: Props) {
           <div className="flex items-center gap-2">
             <Button
               loading={isNav}
-              onClick={() => startNav(() => router.push("/qc/pemeriksaan/baru"))}
+              onClick={() => go("/qc/pemeriksaan/baru")}
               className="hidden sm:inline-flex"
             >
               + Catat Hasil QC
@@ -152,9 +162,10 @@ export function HasilQcTable({ data }: Props) {
         <DataTable
           table={table}
           showRowNumber
+          getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => startNav(() => router.push("/qc/pemeriksaan/baru"))}
+              onClick={() => go("/qc/pemeriksaan/baru")}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

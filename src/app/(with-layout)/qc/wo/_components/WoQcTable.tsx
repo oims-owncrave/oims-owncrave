@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cn, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -35,15 +35,26 @@ export function WoQcTable({ data }: Props) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isNav, startNav] = useTransition();
+  const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const { setStatus, remove } = useWoQcMutation();
+
+  const go = (path: string, rowId?: string) => {
+    if (rowId) setLoadingRowId(rowId);
+    startNav(() => router.push(path));
+  };
+
+  useEffect(() => {
+    if (!isNav) setLoadingRowId(null);
+  }, [isNav]);
 
   const actionsFor = (item: WoQcRow): TableAction<WoQcRow>[] => {
     const list: TableAction<WoQcRow>[] = [
       {
         icon: <Eye size={16} />,
         title: "Lihat",
-        onClick: (r) => startNav(() => router.push(`/qc/wo/${r.id}`)),
+        onClick: (r) => go(`/qc/wo/${r.id}`, r.id),
         variant: "default",
+        loading: (it) => loadingRowId === it.id,
       },
     ];
 
@@ -69,8 +80,9 @@ export function WoQcTable({ data }: Props) {
         {
           icon: <ClipboardCheck size={16} />,
           title: "Catat hasil QC",
-          onClick: (r) => startNav(() => router.push(`/qc/pemeriksaan/baru?wo=${r.id}`)),
+          onClick: (r) => go(`/qc/pemeriksaan/baru?wo=${r.id}`, r.id),
           variant: "default",
+          loading: (it) => loadingRowId === it.id,
         },
         {
           icon: <CheckCircle size={16} />,
@@ -162,7 +174,7 @@ export function WoQcTable({ data }: Props) {
           <div className="flex items-center gap-2">
             <Button
               loading={isNav}
-              onClick={() => startNav(() => router.push("/qc/wo/baru"))}
+              onClick={() => go("/qc/wo/baru")}
               className="hidden sm:inline-flex"
             >
               + Buat Work Order
@@ -172,9 +184,10 @@ export function WoQcTable({ data }: Props) {
         <DataTable
           table={table}
           showRowNumber
+          getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => startNav(() => router.push("/qc/wo/baru"))}
+              onClick={() => go("/qc/wo/baru")}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

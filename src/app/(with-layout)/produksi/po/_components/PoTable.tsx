@@ -176,6 +176,7 @@ export function PoTable({ data }: { data: PoListRow[] }) {
         <DataTable
           table={table}
           showRowNumber
+          getRowLoading={(item) => item.id === pendingId}
           mobileFab={
             <Button
               onClick={() => go("/produksi/po/baru")}

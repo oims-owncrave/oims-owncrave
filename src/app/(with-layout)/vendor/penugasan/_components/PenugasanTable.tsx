@@ -130,6 +130,7 @@ export function PenugasanTable({ initialData }: Props) {
         <DataTable
           table={table}
           showRowNumber
+          getRowLoading={(item) => item.id === pendingId}
           mobileFab={
             <Button
               onClick={() => go("/vendor/penugasan/baru")}
