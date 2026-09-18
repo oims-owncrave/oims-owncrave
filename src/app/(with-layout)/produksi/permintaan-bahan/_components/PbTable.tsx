@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Eye, Pencil, Trash2, Send, Check, Ban } from "lucide-react";
+import { Eye, Pencil, Trash2, Send, Check, Ban, Plus } from "lucide-react";
 import { usePermintaanMutation } from "@/hooks/usePermintaanBahan";
 import type { PbListRow } from "@/services/permintaan-bahan";
 import { PB_STATUS_BADGE } from "./pb-status";
@@ -30,10 +30,13 @@ function fmtDate(d: Date | string | null) {
 export function PbTable({ data }: { data: PbListRow[] }) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [rejectId, setRejectId] = useState<string | null>(null);
   const { submit, approve, reject, remove } = usePermintaanMutation();
+
+  const go = (path: string) => startTransitionNew(() => router.push(path));
 
   const goRow = (id: string, path: string) => {
     setPendingId(id);
@@ -144,11 +147,29 @@ export function PbTable({ data }: { data: PbListRow[] }) {
             <TableSearch table={table} placeholder="Cari permintaan..." className="flex-1 sm:w-64" />
             <ColumnToggle table={table} className="shrink-0" />
           </div>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => go("/produksi/permintaan-bahan/baru")}
+              loading={isPendingNew}
+              className="hidden sm:inline-flex"
+            >
+              + Buat Permintaan
+            </Button>
+          </div>
         </TableToolbar>
         <DataTable
           table={table}
           showRowNumber
           getRowLoading={(item) => item.id === pendingId}
+          mobileFab={
+            <Button
+              onClick={() => go("/produksi/permintaan-bahan/baru")}
+              loading={isPendingNew}
+              className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
+            >
+              <Plus size={24} />
+            </Button>
+          }
         />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
       </div>
