@@ -201,29 +201,37 @@ loading indicator yang hilang di banyak navigasi. Detail: `app-gtf4` (epic, PARE
 - [x] `app-7u06` — **Row highlight** (`getRowLoading`) di 18 tabel dengan icon mata ✅ **DONE** (Antigravity eksekusi + Claude review 18 Sep: fix AuditLogTable kode mati + WoQcTable tombol terlewat)
 - [x] `app-bvre` — Row loading overlay desktop disamakan mobile ✅ **DONE** (Antigravity eksekusi Opsi A, direvisi Claude ke Opsi B setelah screenshot Abu: overlay `<td absolute inset-0>` — data tetap redup + spinner tengah, bukan colSpan yang buang data)
 - [ ] `app-gtf4.1` — Sambungkan pengirim/penerima jahit ke master (P1) — **blocked**: nunggu jawaban klien soal istilah "Konveksi" (vendor vs penjahit satu/dua master) + daftar staf ke menu Pengguna (masih 1 baris). Insight: `docs/insight-bisnis/istilah-vendor-penjahit-konveksi.md`
-- [ ] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1) — **blocked**: nunggu klien pastikan angka `66cm` yang salah ketik (produk Vision GMC No5)
+- [ ] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1). Klien sudah jawab 18 Sep: ukuran ditentukan di BOM (`berlakuUkuran`, sudah ada), BUKAN field baru di master bahan — nama bahan tinggal dibersihkan dari "(M,L,XL,...)". Sisa blocker: angka `66cm` yang salah ketik (Vision GMC No5) masih perlu dipastikan klien
 - [ ] `app-gtf4.2` — jenisKerusakan & bagianProduk → master jenisCacat (P2), belum digali
 - [ ] `app-gtf4.3` — Kategori/Brand/Jenis produk → master (P2) — butuh keputusan produk
 - [ ] `app-gy84` — Potret ulang 2 gambar tutorial T2 yang basi (P2), belum disentuh
+
+Sisa blocker Gelombang H: `app-gtf4.1` nunggu jawaban klien (istilah Konveksi +
+daftar staf ke menu Pengguna), `app-gtf4.4` nunggu koreksi angka `66cm`,
+`app-gtf4.3` nunggu keputusan produk. `app-gy84` bisa jalan kapan saja (cuma
+perlu screenshot ulang, bukan koding).
 
 ### 🔜 GELOMBANG I — Sederhanakan sidebar: gabung menu jadi tab (18 Sep 2026)
 
 Ide Abu: sidebar Master Data 15 item + Laporan 5 item, terlalu banyak padahal
 banyak yang nyambung (CRUD sepele, sama-sama read-only). Epic `app-z4wp`, pola
 gabung sudah ada di proyek: `CuttingPageClient.tsx` (2 tabel jadi 1 halaman +
-tab). Sengaja TIDAK termasuk: Quality Control (10 item, rantai FK + approval
-tiap tahap), Persediaan (5 item, tiap form logic transaksi beda), Produksi/
-Produk/BOM (beda level kompleksitas).
+tab). Sengaja TIDAK digabung penuh: Quality Control 10 item (rantai FK +
+approval tiap tahap — cuma 2 pasang kecil di `.5`), Persediaan 5 item (tiap
+form logic transaksi beda), Produksi/Produk/BOM (beda level kompleksitas).
 
 - [ ] `app-z4wp.1` — Data Bahan: Kategori+Satuan+Warna+Bahan+Supplier (5→1) (P2). Plan+prompt siap, GH #19. ⏳ **belum jalan**
 - [ ] `app-z4wp.2` — Laporan: Barang Masuk+Keluar+Stok+Nilai+Mutasi (5→1) (P3), belum di-plan
 - [ ] `app-z4wp.3` — Data Mitra: Vendor+Penjahit+Lokasi+Tarif (4→1) (P3), belum di-plan. Cek: Tarif berversi, mungkin perlu tetap terpisah
+- [ ] `app-pbxe` — Surat Jalan jadi tab di Pengiriman Vendor (7→6) (P3), belum di-plan. Cek: surat jalan dipakai 2 alur (jahit + dekorasi), jangan sampai entry dekorasi hilang dari UI
 - [ ] `app-z4wp.4` — Data QC master: Standar QC+Jenis Cacat (2→1) (P4), belum di-plan. Cek: Standar QC berversi
+- [ ] `app-z4wp.5` — QC: Penerimaan+Antrean, Rework+Re-QC jadi 2 pasang tab (10→8) (P4), belum di-plan
 
-Efek total kalau semua selesai: sidebar Master Data 15→~4 menu, Laporan 5→1 menu.
+Efek total kalau semua selesai: Master Data 15→~4, Laporan 5→1, Vendor & Gudang
+7→6, QC 10→8.
 
-Urutan eksekusi: `app-7u06` bisa jalan sekarang (Antigravity, nol blocker). `app-gtf4.1/.2/.3/.4`
-tertahan jawaban klien — satu pertanyaan gabungan (Konveksi + daftar staf + PO + angka bahan).
+Urutan eksekusi: `.1` dulu sebagai percobaan pola (plan+prompt sudah siap). Sisanya
+di-plan just-in-time setelah pola `.1` terbukti, biar plan tidak keburu basi.
 
 ### 🧹 Nice-to-have (kapan saja)
 - [ ] Vitest untuk document-number generator + weighted average
