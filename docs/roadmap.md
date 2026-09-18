@@ -206,6 +206,22 @@ loading indicator yang hilang di banyak navigasi. Detail: `app-gtf4` (epic, PARE
 - [ ] `app-gtf4.3` — Kategori/Brand/Jenis produk → master (P2) — butuh keputusan produk
 - [ ] `app-gy84` — Potret ulang 2 gambar tutorial T2 yang basi (P2), belum disentuh
 
+### 🔜 GELOMBANG I — Sederhanakan sidebar: gabung menu jadi tab (18 Sep 2026)
+
+Ide Abu: sidebar Master Data 15 item + Laporan 5 item, terlalu banyak padahal
+banyak yang nyambung (CRUD sepele, sama-sama read-only). Epic `app-z4wp`, pola
+gabung sudah ada di proyek: `CuttingPageClient.tsx` (2 tabel jadi 1 halaman +
+tab). Sengaja TIDAK termasuk: Quality Control (10 item, rantai FK + approval
+tiap tahap), Persediaan (5 item, tiap form logic transaksi beda), Produksi/
+Produk/BOM (beda level kompleksitas).
+
+- [ ] `app-z4wp.1` — Data Bahan: Kategori+Satuan+Warna+Bahan+Supplier (5→1) (P2). Plan+prompt siap, GH #19. ⏳ **belum jalan**
+- [ ] `app-z4wp.2` — Laporan: Barang Masuk+Keluar+Stok+Nilai+Mutasi (5→1) (P3), belum di-plan
+- [ ] `app-z4wp.3` — Data Mitra: Vendor+Penjahit+Lokasi+Tarif (4→1) (P3), belum di-plan. Cek: Tarif berversi, mungkin perlu tetap terpisah
+- [ ] `app-z4wp.4` — Data QC master: Standar QC+Jenis Cacat (2→1) (P4), belum di-plan. Cek: Standar QC berversi
+
+Efek total kalau semua selesai: sidebar Master Data 15→~4 menu, Laporan 5→1 menu.
+
 Urutan eksekusi: `app-7u06` bisa jalan sekarang (Antigravity, nol blocker). `app-gtf4.1/.2/.3/.4`
 tertahan jawaban klien — satu pertanyaan gabungan (Konveksi + daftar staf + PO + angka bahan).
 
@@ -230,6 +246,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-18 (5)** — Epic app-z4wp dibuat: gabung menu master data jadi tab (4 anak, lihat Gelombang I). app-z4wp.1 (Data Bahan) di-plan lengkap + GH #19, siap eksekusi Antigravity. app-z4wp.2-4 dicatat cakupannya, belum di-plan detail. Bonus fix: app-g23s — regex `\D` di 3 fungsi generate kode (lokasi/vendor/penjahit) kehilangan backslash lewat postgres.js sql tagged template, fix `\\D`, diverifikasi via node script langsung.
 - **2026-09-18 (4)** — app-bvre selesai + direvisi: Antigravity eksekusi Opsi A (colSpan) sesuai plan, Abu screenshot hasilnya dan nilai kurang (data hilang total, bukan "buram+spinner"). Claude revisi ke Opsi B: `<TableCell className="absolute inset-0">` — `<tr>` sudah `position:relative` jadi otomatis containing block, overlay melebar ke seluruh row tanpa hitung lebar kolom manual. Kekhawatiran sticky/pinned column (alasan awal tolak Opsi B) ternyata tak relevan — dicek ulang, nol tabel pakai sticky aktif. Terverifikasi visual `/produksi/permintaan-bahan`. 1 file `table.tsx`, otomatis berlaku 16+ tabel.
 - **2026-09-18 (3)** — app-bvre di-plan: row loading overlay desktop tak konsisten dengan mobile (cuma kolom No. jadi spinner kecil, bukan overlay 1 spinner di tengah baris). Opsi A dipilih Abu: `<TableCell colSpan>` menggantikan seluruh baris saat loading (kolom No. ikut hilang), reuse rumus colSpan yang sudah ada di file yang sama. 1 file (`table.tsx`), otomatis berlaku ke 16+ tabel. GH #18, plan+prompt siap eksekusi Antigravity.
 - **2026-09-18 (2)** — app-7u06 dieksekusi Antigravity + direview Claude: row highlight `getRowLoading` di 16/18 tabel (13 reuse pendingId, 3 pola BomTable). 2 penyimpangan ditemukan saat review: AuditLogTable dapat state loading yang gak pernah kelihatan (modal instant, bukan navigasi) — dihapus; KarantinaPageClient terlewat Antigravity — ternyata bukan kandidat sama sekali (bukan DataTable, icon Eye cuma toggle expand) — kesalahan di plan, bukan eksekusi. Bonus fix: WoQcTable tombol "Catat hasil QC" gak ke-highlight + belum pernah dapat icon-spinner app-9bkl. Typecheck pass. Epic Gelombang H: 5/9 selesai.
