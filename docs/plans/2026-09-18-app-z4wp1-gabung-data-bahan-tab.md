@@ -1,6 +1,10 @@
 # app-z4wp.1 — Gabung Data Bahan jadi 1 halaman + tab
 
-**Beads:** app-z4wp.1 (child dari epic app-z4wp)
+**Beads:** `app-z4wp` **poin 1** dari checklist
+
+> Awalnya issue terpisah `app-z4wp.1`. Dilipat 18 Sep 2026 atas permintaan Abu —
+> 6 issue sejajar bikin list ramai padahal satu tema, jadi digabung jadi 1 kartu
+> `app-z4wp` berisi checklist 6 poin. Plan ini tetap berlaku untuk poin 1.
 
 ## Konteks
 

@@ -6,7 +6,7 @@ CRITICAL: Baca @CLAUDE.md untuk SEMUA coding rules, patterns, dan constraints se
 TASK:
 Eksekusi implementation plan di @docs/plans/2026-09-18-app-z4wp1-gabung-data-bahan-tab.md
 
-ISSUE: app-z4wp.1 / GH-#19
+ISSUE: app-z4wp (poin 1 dari checklist) / GH-#19
 BRANCH: feat/app-z4wp1-gabung-data-bahan-tab
 
 REQUIREMENTS:
