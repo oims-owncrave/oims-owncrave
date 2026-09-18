@@ -12,13 +12,13 @@
 ## 📋 Versi siap kirim WA (salin dari sini sampai garis penutup)
 
 ```
-Cup, ada beberapa yang mau gue tanyain nih biar appnya pas sama cara kerja
-lo di lapangan. Gak usah dijawab semua sekaligus juga gapapa — yang nomor
-1-3 aja dulu yang paling gue butuhin.
+Cup, ada beberapa yang mau saya tanyain nih biar appnya pas sama cara kerja
+kamu di lapangan. Gak usah dijawab semua sekaligus juga gapapa — yang nomor
+1-3 aja dulu yang paling saya butuhin.
 
 1. Siapa aja yang perlu bisa login ke app? Sebutin nama + tugasnya aja,
    misal staf gudang yang antar/terima barang, admin produksi, yang ngecek
-   QC. Nanti gue buatin akunnya. (Sekarang baru ada 1 akun: Owner)
+   QC. Nanti saya buatin akunnya. (Sekarang baru ada 1 akun: Owner)
 
 2. Buat tempat jahit — enaknya dibikin 2 daftar kepisah (CV/perusahaan
    sendiri, penjahit perorangan sendiri), atau 1 daftar aja campur semua?
@@ -38,19 +38,19 @@ lo di lapangan. Gak usah dijawab semua sekaligus juga gapapa — yang nomor
 5. Kalo bahan keluar dari gudang, itu selalu buat PO/pesanan tertentu, atau
    ada juga yang keluar bukan buat pesanan? Misal buat sampel atau perbaikan.
 
-6. Soal "Lebihan" yang kemarin lo jelasin (jaga-jaga barang ilang/kurang) —
+6. Soal "Lebihan" yang kemarin kamu jelasin (jaga-jaga barang ilang/kurang) —
    itu kepake juga pas nentuin jumlah produksi gak? Misal mau jual 100 pcs
    tapi diproduksi 105 buat jaga-jaga. Atau lebihan cuma buat bahan doang?
 
 7. Buat produk yang ada sablon/bordirnya — sablon selalu dikerjain sebelum
    kainnya dijait, atau pernah ada yang disablon setelah jadi baju?
 
-8. Lo sehari-hari nyebutnya "WIF" atau "PO Produksi"? Di gambar skema lo
-   tertulis WIF, di app gue pake PO Produksi. Gue ikut istilah yang biasa
-   lo pake aja biar gak bingung.
+8. Kamu sehari-hari nyebutnya "WIF" atau "PO Produksi"? Di gambar skema kamu
+   tertulis WIF, di app saya pake PO Produksi. Saya ikut istilah yang biasa
+   kamu pake aja biar gak bingung.
 
-9. Finishing sama Packing itu menurut lo masuk bagian QC, atau bagian
-   gudang? Gue mau naro menunya sesuai cara lo mandang aja.
+9. Finishing sama Packing itu menurut kamu masuk bagian QC, atau bagian
+   gudang? Saya mau naro menunya sesuai cara kamu mandang aja.
 
 Makasih Cup 🙏
 ```
@@ -275,8 +275,8 @@ Di aplikasi kami pakai istilah **"PO Produksi"**.
 
 **Pertanyaannya:**
 
-> "Lo sehari-hari nyebutnya apa — WIF atau PO Produksi? Gue ikut istilah yang biasa
-> lo pake aja biar gak bingung."
+> "Kamu sehari-hari nyebutnya apa — WIF atau PO Produksi? Saya ikut istilah yang
+> biasa kamu pake aja biar gak bingung."
 
 **Catatan internal:** murah diperbaiki (ganti label menu). Sejalan dengan pola
 proyek: istilah aplikasi ikut bahasa klien. Kartu: `app-x98y`.
@@ -293,8 +293,8 @@ Tapi di gambar skema klien, urutannya: QC → **Penerimaan Gudang** → Stok Jak
 
 **Pertanyaannya:**
 
-> "Finishing sama Packing itu menurut lo masuk bagian **QC**, atau bagian
-> **gudang**? Gue mau naro menunya sesuai cara lo mandang aja."
+> "Finishing sama Packing itu menurut kamu masuk bagian **QC**, atau bagian
+> **gudang**? Saya mau naro menunya sesuai cara kamu mandang aja."
 
 **Catatan internal:** app vibe-coding klien juga menaruh Finishing/Packing di luar
 grup QC — dua sumber terpisah sama-sama begitu. Kartu: `app-x98y`.
