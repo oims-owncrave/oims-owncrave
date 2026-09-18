@@ -12,48 +12,102 @@
 ## 📋 Versi siap kirim WA (salin dari sini sampai garis penutup)
 
 ```
-Pak, ada beberapa hal yang perlu saya tanyakan biar aplikasinya pas sama cara
-kerja di lapangan. Kalau berkenan dijawab yang mana dulu juga tidak apa-apa —
-nomor 1-3 yang paling saya butuhkan.
+Cup, ada beberapa yang mau gue tanyain nih biar appnya pas sama cara kerja
+lo di lapangan. Gak usah dijawab semua sekaligus juga gapapa — yang nomor
+1-3 aja dulu yang paling gue butuhin.
 
-1. Siapa saja yang perlu bisa masuk ke aplikasi? Sebutkan nama + tugasnya.
-   Misalnya staf gudang yang antar/terima barang, admin produksi, petugas QC.
-   Nanti saya buatkan akunnya. (Sekarang baru ada 1 akun: Owner)
+1. Siapa aja yang perlu bisa login ke app? Sebutin nama + tugasnya aja,
+   misal staf gudang yang antar/terima barang, admin produksi, yang ngecek
+   QC. Nanti gue buatin akunnya. (Sekarang baru ada 1 akun: Owner)
 
-2. Untuk tempat jahit — mau dibuat 2 daftar terpisah (Perusahaan/CV sendiri,
-   Penjahit perorangan sendiri), atau 1 daftar saja berisi semuanya?
-   Bedanya terasa waktu bayar: perusahaan biasanya pakai rekening + termin,
-   perorangan biasanya upah langsung.
+2. Buat tempat jahit — enaknya dibikin 2 daftar kepisah (CV/perusahaan
+   sendiri, penjahit perorangan sendiri), atau 1 daftar aja campur semua?
+   Bedanya kerasa pas bayar sih: kalo CV biasanya pake rekening + termin,
+   kalo perorangan upah langsung.
 
-3. Siapa yang memeriksa hasil jahitan (QC) di lapangan sekarang? Ada orang
-   khusus, atau dikerjakan orang yang sama dengan yang urus produksi?
+3. Yang ngecek hasil jahitan (QC) di lapangan siapa? Ada orang khusus, atau
+   yang ngurus produksi sekalian yang ngecek?
 
-4. Ada 3 resleting yang ukurannya kayaknya salah ketik:
+4. Ada 3 resleting yang ukurannya kayaknya salah ketik nih:
    - Vision GMC No5 24Inch/66cm
    - Vision GMC No5 30Inch/66cm
    - Vision GMC No5 32Inch/66cm
-   Incinya beda-beda (24, 30, 32) tapi cm-nya sama semua 66cm. Yang benar
-   berapa ya? (Yang lain sudah benar, misal 28inch/71cm)
+   Incinya beda-beda (24, 30, 32) tapi cm-nya sama semua 66cm. Yang bener
+   berapa ya? (Yang lain udah bener kok, misal 28inch/71cm)
 
-5. Kalau bahan keluar dari gudang, itu selalu untuk pesanan/PO tertentu, atau
-   ada juga yang keluar bukan untuk pesanan? Misal buat sampel atau perbaikan.
+5. Kalo bahan keluar dari gudang, itu selalu buat PO/pesanan tertentu, atau
+   ada juga yang keluar bukan buat pesanan? Misal buat sampel atau perbaikan.
 
-6. Soal "Lebihan" yang kemarin Bapak jelaskan (jaga-jaga barang hilang/kurang) —
-   itu dipakai juga waktu menentukan jumlah produksi? Misal mau jual 100 pcs
-   tapi diproduksi 105 pcs. Atau lebihan cuma untuk bahan saja?
+6. Soal "Lebihan" yang kemarin lo jelasin (jaga-jaga barang ilang/kurang) —
+   itu kepake juga pas nentuin jumlah produksi gak? Misal mau jual 100 pcs
+   tapi diproduksi 105 buat jaga-jaga. Atau lebihan cuma buat bahan doang?
 
-7. Untuk produk yang ada sablon/bordir — sablon selalu dikerjakan sebelum kain
-   dijahit, atau pernah ada yang disablon setelah jadi baju?
+7. Buat produk yang ada sablon/bordirnya — sablon selalu dikerjain sebelum
+   kainnya dijait, atau pernah ada yang disablon setelah jadi baju?
 
-8. Sehari-hari Bapak menyebutnya "WIF" atau "PO Produksi"? Di gambar skema
-   Bapak tertulis WIF, di aplikasi saya pakai PO Produksi. Saya ikut istilah
-   yang biasa dipakai saja biar tidak bingung.
+8. Lo sehari-hari nyebutnya "WIF" atau "PO Produksi"? Di gambar skema lo
+   tertulis WIF, di app gue pake PO Produksi. Gue ikut istilah yang biasa
+   lo pake aja biar gak bingung.
 
-9. Finishing dan Packing itu menurut Bapak bagian dari pemeriksaan (QC), atau
-   bagian dari gudang? Saya mau taruh menunya sesuai cara Bapak memandang.
+9. Finishing sama Packing itu menurut lo masuk bagian QC, atau bagian
+   gudang? Gue mau naro menunya sesuai cara lo mandang aja.
 
-Terima kasih Pak 🙏
+Makasih Cup 🙏
 ```
+
+---
+
+## 📋 Versi Sunda-Indo (kalau mau yang lebih cair)
+
+```
+Cup, aya sababaraha hal nu rék ditanyakeun, sangkan app-na pas jeung cara
+gawé di lapangan. Teu kudu dijawab sakaligus ogé, nu nomer 1-3 heula waé
+nu paling dibutuhkeun.
+
+1. Saha waé nu perlu bisa login ka app? Sebutkeun ngaran + tugasna waé,
+   misalna staf gudang nu anteur/nampa barang, admin produksi, nu ngecék
+   QC. Engké dijieunkeun akunna. (Ayeuna kakara aya 1 akun: Owner)
+
+2. Keur tempat ngaput — leuwih hadé dijieun 2 daftar papisah (CV/parusahaan
+   sorangan, penjahit perorangan sorangan), atawa 1 daftar waé campur?
+   Bédana karasa pas mayar: lamun CV biasana maké rekening + termin, lamun
+   perorangan upah langsung.
+
+3. Nu ngecék hasil paputan (QC) di lapangan saha? Aya jalma husus, atawa nu
+   ngurus produksi sakalian nu ngecék?
+
+4. Aya 3 resleting nu ukuranana siga salah ketik:
+   - Vision GMC No5 24Inch/66cm
+   - Vision GMC No5 30Inch/66cm
+   - Vision GMC No5 32Inch/66cm
+   Incina béda-béda (24, 30, 32) tapi cm-na sarua kabéh 66cm. Nu bener
+   sabaraha nya? (Nu séjén mah geus bener, misalna 28inch/71cm)
+
+5. Lamun bahan kaluar ti gudang, éta salawasna keur PO/pesenan nu tangtu,
+   atawa aya ogé nu kaluar lain keur pesenan? Misalna keur sampel atawa
+   ngoméan.
+
+6. Perkara "Lebihan" nu kamari dijelaskeun (jaga-jaga barang leungit/kurang) —
+   éta kapaké ogé pas nangtukeun jumlah produksi teu? Misalna rék ngajual
+   100 pcs tapi diproduksi 105 keur jaga-jaga. Atawa lebihan ngan keur
+   bahan waé?
+
+7. Keur produk nu aya sablon/bordirna — sablon salawasna dipigawé saméméh
+   lawonna diput, atawa kungsi aya nu disablon sanggeus jadi baju?
+
+8. Manéh sapopoé nyebutna "WIF" atawa "PO Produksi"? Di gambar skéma manéh
+   ditulis WIF, di app mah maké PO Produksi. Milu istilah nu biasa dipaké
+   waé sangkan teu bingung.
+
+9. Finishing jeung Packing éta cék manéh asup bagian QC, atawa bagian
+   gudang? Rék nempatkeun menuna luyu jeung cara manéh nempo.
+
+Hatur nuhun Cup 🙏
+```
+
+> **Catatan:** Sunda di sini gaya obrolan sehari-hari (loma), bukan Sunda lemes.
+> Kalau ada kata yang janggal buat Ucup, tinggal ganti — yang penting isinya sama
+> dengan versi Indonesia di atas.
 
 ---
 
@@ -221,8 +275,8 @@ Di aplikasi kami pakai istilah **"PO Produksi"**.
 
 **Pertanyaannya:**
 
-> "Sehari-hari Bapak menyebutnya apa — WIF atau PO Produksi? Kami ikut istilah yang
-> biasa dipakai, biar tidak bingung."
+> "Lo sehari-hari nyebutnya apa — WIF atau PO Produksi? Gue ikut istilah yang biasa
+> lo pake aja biar gak bingung."
 
 **Catatan internal:** murah diperbaiki (ganti label menu). Sejalan dengan pola
 proyek: istilah aplikasi ikut bahasa klien. Kartu: `app-x98y`.
@@ -239,8 +293,8 @@ Tapi di gambar skema klien, urutannya: QC → **Penerimaan Gudang** → Stok Jak
 
 **Pertanyaannya:**
 
-> "Finishing dan Packing itu menurut Bapak bagian dari **pemeriksaan (QC)**, atau
-> bagian dari **gudang**? Kami mau menaruh menunya sesuai cara Bapak memandang."
+> "Finishing sama Packing itu menurut lo masuk bagian **QC**, atau bagian
+> **gudang**? Gue mau naro menunya sesuai cara lo mandang aja."
 
 **Catatan internal:** app vibe-coding klien juga menaruh Finishing/Packing di luar
 grup QC — dua sumber terpisah sama-sama begitu. Kartu: `app-x98y`.
