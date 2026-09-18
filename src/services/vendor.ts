@@ -32,7 +32,7 @@ async function writeAudit(
 /** Kode vendor otomatis: VDR-NNNN (counter global, bukan per bulan). */
 export async function generateVendorKode(): Promise<string> {
   const rows = await db.execute<{ max: number }>(
-    sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\D', '', 'g'), '')::int), 0) AS max
+    sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\\D', '', 'g'), '')::int), 0) AS max
         FROM vendor WHERE kode LIKE 'VDR-%'`,
   );
   return `VDR-${String(Number(rows[0]?.max ?? 0) + 1).padStart(4, "0")}`;

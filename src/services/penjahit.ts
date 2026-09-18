@@ -41,7 +41,7 @@ export async function generatePenjahitKode(jenis: string): Promise<string> {
   const prefix = jenis === "internal" || jenis === "sampel" ? "JHT-INT" : "JHT-EXT";
   const like = `${prefix}-%`;
   const rows = await db.execute<{ max: number }>(
-    sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(split_part(kode, '-', 3), '\D', '', 'g'), '')::int), 0) AS max
+    sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(split_part(kode, '-', 3), '\\D', '', 'g'), '')::int), 0) AS max
         FROM penjahit WHERE kode LIKE ${like}`,
   );
   return `${prefix}-${String(Number(rows[0]?.max ?? 0) + 1).padStart(4, "0")}`;

@@ -32,7 +32,7 @@ async function writeAudit(
 /** Kode lokasi otomatis: LOK-NNNN. */
 export async function generateLokasiKode(): Promise<string> {
   const rows = await db.execute<{ max: number }>(
-    sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\D', '', 'g'), '')::int), 0) AS max
+    sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\\D', '', 'g'), '')::int), 0) AS max
         FROM lokasi_produksi WHERE kode LIKE 'LOK-%'`,
   );
   return `LOK-${String(Number(rows[0]?.max ?? 0) + 1).padStart(4, "0")}`;
