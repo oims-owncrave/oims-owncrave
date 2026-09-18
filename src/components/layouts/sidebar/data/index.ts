@@ -16,6 +16,8 @@ export type NavSubItem = {
   url: string;
   /** Belum tersedia (tahap berikutnya) — tampil abu-abu, tidak bisa diklik. */
   disabled?: boolean;
+  /** Label pemisah sebelum item ini (mis. "Data Produk") — bukan link, cuma penanda visual. */
+  heading?: string;
 };
 
 export type NavItem = {
@@ -57,21 +59,21 @@ export const NAV_DATA: NavSection[] = [
         title: "Master Data",
         icon: MasterIcon,
         items: [
-          { title: "Kategori", url: "/master/kategori" },
+          { title: "Kategori", url: "/master/kategori", heading: "Data Bahan" },
           { title: "Satuan", url: "/master/satuan" },
           { title: "Warna", url: "/master/warna" },
           { title: "Bahan", url: "/master/bahan" },
           { title: "Supplier", url: "/master/supplier" },
-          { title: "Produk", url: "/produksi/produk" },
+          { title: "Produk", url: "/produksi/produk", heading: "Data Produk" },
           { title: "BOM", url: "/produksi/bom" },
-          { title: "Vendor", url: "/vendor/daftar" },
+          { title: "Kemasan", url: "/master/kemasan" },
+          { title: "Gudang Barang Jadi", url: "/master/gudang-jadi" },
+          { title: "Vendor", url: "/vendor/daftar", heading: "Data Mitra" },
           { title: "Penjahit", url: "/vendor/penjahit" },
           { title: "Lokasi Produksi", url: "/vendor/lokasi" },
           { title: "Tarif Jasa Jahit", url: "/vendor/tarif" },
-          { title: "Standar QC", url: "/qc/standar" },
+          { title: "Standar QC", url: "/qc/standar", heading: "Data QC" },
           { title: "Jenis Cacat", url: "/master/jenis-cacat" },
-          { title: "Kemasan", url: "/master/kemasan" },
-          { title: "Gudang Barang Jadi", url: "/master/gudang-jadi" },
         ],
       },
     ],

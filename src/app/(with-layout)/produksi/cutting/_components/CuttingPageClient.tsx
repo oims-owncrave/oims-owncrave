@@ -17,11 +17,11 @@ type Tab = "wo" | "penerimaan";
 
 /** Cutting = satu area kerja, dua dokumen (penerimaan bahan + work order) — pola app lama. */
 export function CuttingPageClient({ initialPenerimaan, initialWo }: Props) {
-  const [tab, setTab] = useState<Tab>("wo");
+  const [tab, setTab] = useState<Tab>("penerimaan");
 
   const tabs: { key: Tab; label: string; count: number }[] = [
-    { key: "wo", label: "Work Order", count: initialWo.length },
     { key: "penerimaan", label: "Penerimaan Bahan", count: initialPenerimaan.length },
+    { key: "wo", label: "Work Order", count: initialWo.length },
   ];
 
   return (

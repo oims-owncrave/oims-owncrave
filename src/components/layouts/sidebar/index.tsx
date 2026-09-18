@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -170,8 +171,18 @@ export function Sidebar({ userRole }: { userRole: string }) {
                                 )}
                                 role="menu"
                               >
-                                {item.items.map((subItem) =>
-                                  subItem.disabled ? (
+                                {item.items.map((subItem) => (
+                                  <Fragment key={subItem.title}>
+                                  {subItem.heading ? (
+                                    <li
+                                      key={`${subItem.title}-heading`}
+                                      role="none"
+                                      className="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wide text-dark-5/70 dark:text-dark-6/70 first:pt-0"
+                                    >
+                                      {subItem.heading}
+                                    </li>
+                                  ) : null}
+                                  {subItem.disabled ? (
                                     /* Menu tahap berikutnya — tampil abu-abu, tidak bisa diklik */
                                     <li key={subItem.title} role="none">
                                       <div
@@ -195,8 +206,9 @@ export function Sidebar({ userRole }: { userRole: string }) {
                                         <span>{subItem.title}</span>
                                       </MenuItem>
                                     </li>
-                                  ),
-                                )}
+                                  )}
+                                  </Fragment>
+                                ))}
                               </ul>
                             </div>
                           </div>
