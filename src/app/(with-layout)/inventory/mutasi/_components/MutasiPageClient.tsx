@@ -9,7 +9,7 @@ interface Props {
   initialRows: MutasiRow[];
   initialTotal: number;
   pageSize: number;
-  bahanOptions: { id: string; kode: string; nama: string }[];
+  bahanOptions: { id: string; kode: string; nama: string; ukuran?: string | null }[];
 }
 
 export function MutasiPageClient({

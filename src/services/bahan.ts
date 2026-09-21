@@ -65,6 +65,7 @@ export async function listBahan() {
       id: bahan.id,
       kode: bahan.kode,
       nama: bahan.nama,
+      ukuran: bahan.ukuran,
       kategoriId: bahan.kategoriId,
       kategoriNama: kategori.nama,
       satuanId: bahan.satuanId,
@@ -95,6 +96,7 @@ export async function createBahan(input: BahanInput) {
       .values({
         kode,
         nama: input.nama,
+        ukuran: input.ukuran?.trim() || null,
         kategoriId: input.kategoriId,
         satuanId: input.satuanId,
         stokMinimum: String(input.stokMinimum),
@@ -129,6 +131,7 @@ export async function updateBahan(id: string, input: BahanInput) {
     .update(bahan)
     .set({
       nama: input.nama,
+      ukuran: input.ukuran?.trim() || null,
       kategoriId: input.kategoriId,
       satuanId: input.satuanId,
       warnaId: input.warnaId ?? null,

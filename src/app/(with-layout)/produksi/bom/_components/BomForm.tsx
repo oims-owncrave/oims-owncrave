@@ -18,6 +18,7 @@ type BahanOption = {
   id: string;
   kode: string;
   nama: string;
+  ukuran?: string | null;
   satuanSingkatan: string | null;
   isActive: boolean;
 };
@@ -189,7 +190,7 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
                     disabled={!produkId}
                     placeholder={produkId ? "Pilih bahan" : "Pilih produk dulu"}
                     options={bahanChoices(index).map((b) => ({
-                      label: `${b.kode} — ${b.nama}`,
+                      label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""}`,
                       value: b.id,
                     }))}
                     value={row?.bahanId || null}

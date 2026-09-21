@@ -58,7 +58,7 @@ interface Props {
   onFilterTipeChange: (v: string) => void;
   onFilterFromChange: (v: string) => void;
   onFilterToChange: (v: string) => void;
-  bahanOptions: { id: string; kode: string; nama: string }[];
+  bahanOptions: { id: string; kode: string; nama: string; ukuran?: string | null }[];
 }
 
 export function MutasiTable({
@@ -172,13 +172,13 @@ export function MutasiTable({
                 placeholder="Semua bahan"
                 options={[
                   { label: "Semua bahan", value: "" },
-                  ...bahanOptions.map((b) => ({ label: `${b.kode} — ${b.nama}`, value: b.id })),
+                  ...bahanOptions.map((b) => ({ label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""}`, value: b.id })),
                 ]}
                 value={filterBahanLabel || null}
                 onChange={(v) => {
                   const id = (v as string) ?? "";
                   const opt = bahanOptions.find((b) => b.id === id);
-                  onFilterBahanChange(id, opt ? `${opt.kode} — ${opt.nama}` : "");
+                  onFilterBahanChange(id, opt ? `${opt.kode} — ${opt.nama}${opt.ukuran ? " · " + opt.ukuran : ""}` : "");
                 }}
                 className="flex-1 sm:w-48 sm:flex-none"
               />

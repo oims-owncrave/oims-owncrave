@@ -259,6 +259,7 @@ export async function listBahanForPenyesuaian() {
       id: bahan.id,
       kode: bahan.kode,
       nama: bahan.nama,
+      ukuran: bahan.ukuran,
       satuanSingkatan: satuan.singkatan,
       stokKuantitas: stok.kuantitas,
     })

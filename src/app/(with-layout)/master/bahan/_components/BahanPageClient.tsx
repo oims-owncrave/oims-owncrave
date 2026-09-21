@@ -14,6 +14,7 @@ type BahanItem = {
   id: string;
   kode: string;
   nama: string;
+  ukuran: string | null;
   kategoriId: string;
   kategoriNama: string | null;
   satuanId: string;

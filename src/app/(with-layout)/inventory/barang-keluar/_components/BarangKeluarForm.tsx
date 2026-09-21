@@ -20,6 +20,7 @@ type BahanOption = {
   id: string;
   kode: string;
   nama: string;
+  ukuran?: string | null;
   satuanSingkatan: string | null;
   hargaRataRata: string;
   kuantitasStok: string;
@@ -199,7 +200,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions, poOptions }: Props) 
                       label={i === 0 ? "Bahan" : undefined}
                       placeholder="Pilih bahan"
                       options={activeBahan.map((b) => ({
-                        label: `${b.kode} — ${b.nama} (Stok: ${Number(b.kuantitasStok)} ${b.satuanSingkatan || ""})`,
+                        label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""} (Stok: ${Number(b.kuantitasStok)} ${b.satuanSingkatan || ""})`,
                         value: b.id,
                       }))}
                       value={row?.bahanId || null}

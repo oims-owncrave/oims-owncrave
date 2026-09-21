@@ -16,6 +16,7 @@ type BahanItem = {
   id: string;
   kode: string;
   nama: string;
+  ukuran: string | null;
   kategoriId: string;
   kategoriNama: string | null;
   satuanId: string;
@@ -59,6 +60,7 @@ export function BahanFormModal({
     resolver: zodResolver(bahanSchema),
     defaultValues: {
       nama: "",
+      ukuran: "",
       kategoriId: "",
       satuanId: "",
       stokMinimum: undefined,
@@ -75,6 +77,7 @@ export function BahanFormModal({
       if (initialData) {
         reset({
           nama: initialData.nama,
+          ukuran: initialData.ukuran ?? "",
           kategoriId: initialData.kategoriId,
           satuanId: initialData.satuanId,
           warnaId: initialData.warnaId ?? null,
@@ -84,6 +87,7 @@ export function BahanFormModal({
       } else {
         reset({
           nama: "",
+          ukuran: "",
           kategoriId: "",
           satuanId: "",
           warnaId: null,
@@ -153,6 +157,14 @@ export function BahanFormModal({
             placeholder="Misal: Kain Katun Merah"
             error={errors.nama?.message}
             {...register("nama")}
+            disabled={isPending}
+          />
+
+          <Input
+            label="Ukuran"
+            placeholder="Misal: 30inch/76cm"
+            error={errors.ukuran?.message}
+            {...register("ukuran")}
             disabled={isPending}
           />
 

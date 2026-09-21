@@ -22,6 +22,7 @@ type BahanItem = {
   id: string;
   kode: string;
   nama: string;
+  ukuran: string | null;
   kategoriId: string;
   kategoriNama: string | null;
   satuanId: string;
@@ -70,6 +71,11 @@ export function BahanTable({ data, onEdit, onAdd, onImport }: Props) {
   const columns: ColumnDef<BahanItem>[] = [
     { key: "kode", label: "Kode" },
     { key: "nama", label: "Nama Bahan" },
+    {
+      key: "ukuran",
+      label: "Ukuran",
+      renderCell: (item) => item.ukuran || "—",
+    },
     {
       key: "kategoriNama",
       label: "Kategori",

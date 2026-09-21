@@ -9,7 +9,7 @@ interface Props {
   initialData?: {
     rows: MutasiRow[];
   };
-  bahanOptions: { id: string; kode: string; nama: string }[];
+  bahanOptions: { id: string; kode: string; nama: string; ukuran?: string | null }[];
 }
 
 export function LaporanMutasiClient({ initialData, bahanOptions }: Props) {

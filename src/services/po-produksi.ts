@@ -371,6 +371,7 @@ export type EstimasiRow = {
   bahanId: string;
   bahanKode: string;
   bahanNama: string;
+  bahanUkuran?: string | null;
   satuanSingkatan: string;
   kebutuhanStandar: number;
   totalKebutuhan: number;
@@ -427,6 +428,7 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
       bahanId: bomDetail.bahanId,
       bahanKode: bahan.kode,
       bahanNama: bahan.nama,
+      bahanUkuran: bahan.ukuran,
       satuanSingkatan: satuan.singkatan,
       kuantitas: bomDetail.kuantitas,
       toleransiPersen: bomDetail.toleransiPersen,
@@ -468,6 +470,7 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
         bahanId: r.bahanId,
         bahanKode: r.bahanKode,
         bahanNama: r.bahanNama,
+        bahanUkuran: r.bahanUkuran,
         satuanSingkatan: r.satuanSingkatan,
         kebutuhanStandar: standar,
         totalKebutuhan: total,

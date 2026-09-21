@@ -223,7 +223,7 @@ export function PemakaianSection({ woId, poId }: Props) {
                 required
                 placeholder="Pilih bahan (dari BOM)"
                 options={bahanChoices.map((b) => ({
-                  label: `${b.bahanKode} — ${b.bahanNama}`,
+                  label: `${b.bahanKode} — ${b.bahanNama}${b.bahanUkuran ? " · " + b.bahanUkuran : ""}`,
                   value: b.bahanId,
                 }))}
                 value={bahanId || null}

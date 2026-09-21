@@ -2,7 +2,7 @@
 
 > **File ini = peta arah project.** Sumber tunggal visi + status + next up.
 > Spec detail di [`docs/konsep-produksi.md`], PRD di [`~/second-brain/3.Resources/freelance/aplikasi-produksi/OIMS_PRD_Tahap_1_sampai_5.md`], task detail di tracker (prefix `oims-`), plan per-fitur di [`docs/plans/`].
-> Diperbarui: 2026-09-18 · Status: **Tahap 1-4 selesai. Gelombang H (integritas data + loading UX) 4/9 selesai — app-7u06 siap Antigravity, app-gtf4.1/.2/.3/.4 tertahan jawaban klien.**
+> Diperbarui: 2026-09-21 · Status: **Tahap 1-4 selesai. Gelombang H TUNTAS kecuali `app-gy84` (potret ulang gambar tutorial) — epic `app-gtf4` closed kelima anaknya. Gelombang J selesai. Berikutnya: Gelombang K (lebihan bahan + estimasi live di form PO), belum di-plan.**
 
 ---
 
@@ -202,15 +202,20 @@ loading indicator yang hilang di banyak navigasi. Detail: `app-gtf4` (epic, PARE
 - [x] `app-bvre` — Row loading overlay desktop disamakan mobile ✅ **DONE** (Antigravity eksekusi Opsi A, direvisi Claude ke Opsi B setelah screenshot Abu: overlay `<td absolute inset-0>` — data tetap redup + spinner tengah, bukan colSpan yang buang data)
 - [x] `app-gtf4.1` — Sambungkan pengirim/penerima jahit ke master (P1) ✅ **DONE** (Antigravity + review Claude 21 Sep, **0 error, tanpa fix**). 3 kolom jadi FK ke users/vendor/penjahit, 3 kolom pihak vendor tetap teks — diverifikasi lewat `information_schema` + DB CHECK, bukan layar (browser gagal 2x). ⚠️ **Prod belum dimigrasi** — pemetaan teks→FK di sana harus dicek manual.
 - [x] `app-glx1` — `barangKeluar.tujuan` → FK notNull ke PO ✅ **DONE** (Antigravity + review Claude 21 Sep: 1 fix — PO tidak ikut dikosongkan saat PB dibatalkan). Belum diverifikasi visual
-- [ ] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1). Ukuran ditentukan di BOM (`berlakuUkuran`), BUKAN field baru di master bahan — nama bahan tinggal dibersihkan. **Sisa blocker:** angka resleting 30/32/34 inch belum terjawab (pertanyaan awal ambigu, susulan sudah disiapkan)
+- [x] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1) ✅ **DONE** (Antigravity + review Claude 21 Sep, **0 error, 1 bersih-bersih**: field `ukuran` mubazir di `getBahanBomAktif` dibuang). Arah akhirnya BERBEDA dari catatan awal: `bahan.ukuran` (dimensi fisik) memang jadi kolom sendiri, terpisah dari `bomDetail.berlakuUkuran` (ukuran baju yang berlaku) — dua hal beda, dan komentar `schema.ts:504-506` menegaskan pemisahan itu. Bug data asli terperbaiki: 24/30/32 inch yang semuanya tertulis 66cm kini 61/76/81cm; 6 "Vision GMC No5" akhirnya bisa dibedakan. 16 dari 61 bahan terisi ukuran, 9 dropdown menampilkannya. Belum diverifikasi visual.
 - [x] `app-gtf4.2` — jenisKerusakan & bagianProduk → master (P2) ✅ **DONE** (Antigravity + review Claude 21 Sep, 0 error, 1 fix: nav entry belum sejalan dengan guard halaman). Master Bagian Produk baru berisi 10 isian awal.
 - [x] `app-gtf4.3` — ~~Kategori/Brand/Jenis produk → master~~ → **DIHAPUS** (P2) ✅ **DONE** (Claude langsung 21 Sep, terverifikasi browser). Arah berubah setelah ditelusuri: ketiganya tak dipakai query mana pun, asalnya placeholder plan 2 Sep, dan `kategori`/`jenis` isinya tertukar arti. Bukan dibuatkan master.
 - [ ] `app-gy84` — Potret ulang 2 gambar tutorial T2 yang basi (P2), belum disentuh
 
-Sisa blocker Gelombang H: `app-gtf4.4` nunggu koreksi angka resleting, `app-gtf4.3`
-nunggu keputusan produk, `app-itl4` nunggu klarifikasi Lebihan Pcs level produk jadi.
-Pertanyaan susulan untuk ketiganya sudah disiapkan di `docs/pertanyaan-klien-18sep.md`.
-`app-gy84` bisa jalan kapan saja (cuma perlu screenshot ulang, bukan koding).
+Epic `app-gtf4` TUNTAS — kelima anaknya (gtf4.1-gtf4.5) closed. Angka resleting yang
+dulu memblokir `app-gtf4.4` sudah terjawab, dan `app-gtf4.3` berakhir dihapus, bukan
+dibuatkan master.
+
+Sisa Gelombang H: `app-gy84` (potret ulang 2 gambar tutorial T2) — bisa jalan kapan
+saja, cuma perlu screenshot ulang, bukan koding.
+
+`app-itl4` (Lebihan Pcs level produk) masih deferred, tapi **bukan lagi menunggu
+klien** — klarifikasinya sudah masuk 18 Sep. Lihat Gelombang K.
 
 ### 🔜 GELOMBANG J — Audit komponen UI + perbaikan halaman (21 Sep 2026)
 
@@ -240,6 +245,53 @@ single tidak konsisten — **0 pemakai**, jebakan yang menunggu pemakai pertama)
 `middleware.ts`, dan guard per-halaman tidak merata (`inventory/stok` nol guard). Setelah
 `app-qr6o` ditutup, akses lewat URL langsung TETAP terbuka. Sudah dicatat di `CLAUDE.md`
 § Utang Teknis. Butuh keputusan bisnis role→route sebelum bisa dikerjakan.
+
+### 🔜 GELOMBANG K — Lebihan bahan + estimasi live di form PO (21 Sep 2026, BELUM DI-PLAN)
+
+Lahir dari pertanyaan Abu saat review `app-jroq`: *"kenapa tidak ada langsung muncul
+bahan yang dibutuhkan yah? lalu untuk mengisi data lebihan bahan nya dimana dong?"*
+Sesi planning 21 Sep malam menggali Excel klien + repo klien; arahnya berubah dua kali,
+jadi catatan ini menyimpan **kesimpulan akhirnya**, bukan langkah-langkahnya.
+
+**Temuan 1 — "Lebihan" klien ada di level BAHAN, bukan produk.** Di `_PRODUKSI OWNC.xlsx`,
+lembar "SURAT JALAN KEBUTUHAN AKSESORIS" menaruh Lebihan per baris bahan (Kepala Resleting
+1, Cebol 2, Stopper 5, Tali Resleting 5, Tali Hantag 5, Plastik 2). Angkanya identik di
+24 sheet PO lintas 3 produk (NORDIC/SUPERNOVA/HIDDEN) selama 4 bulan. Kita menaruhnya di
+`poProduksiDetail.lebihanPcs` — per varian jaket, diisi ulang tiap PO.
+
+**Temuan 2 — keteraturan itu BUKAN aturan.** `app-itl4` sudah merekam klarifikasi langsung
+klien 18 Sep: angka konsisten itu **kebiasaan manual**, bukan formula, dan klien mau tetap
+mengisi sendiri per situasi ("jangan bikin auto-suggest"). Tujuannya jaga-jaga barang
+**hilang/kurang** (logistik), bukan reject kualitas. Jadi rencana "kolom default di master
+bahan" — yang sempat disusun malam ini — **ditolak oleh data yang sudah ada**. Dicatat di
+sini supaya tidak diusulkan ulang.
+
+**Temuan 3 — app klien tidak punya pembanding.** Repo `3_resources/oims/oims-production`:
+tidak ada BOM, tidak ada bahan, tidak ada lebihan. Seluruh state satu JSON blob di
+`app_state.payload`. PO di sana cuma `{color, size, qty}[]`. Tak ada yang bisa ditiru.
+
+**Bentuk yang disepakati Abu 21 Sep:**
+- Tabel baru `po_produksi_lebihan_bahan` (po_id, bahan_id, lebihan) — **diisi manual per PO
+  per bahan**, kosong secara default. Tulis setelah PO tersimpan, satu transaksi (pola
+  `poProduksiDetail`).
+- Blok "Kebutuhan Bahan" di form PO menggantikan tempat blok "Lebihan Pcs (Opsional)":
+  daftar bahan + kolom Lebihan manual + badge cukup/kurang. Perkalian BOM di frontend
+  (instan), stok dari server dengan **debounce ~500ms** — bukan tombol "Hitung" (tombol
+  melimpahkan kerja ke user dan bisa menampilkan angka basi).
+- Lebihan per varian disembunyikan lewat konstanta `TAMPILKAN_LEBIHAN_VARIAN = false`,
+  **bukan di-comment-out** (kode terkomentari tidak ikut type-check dan akan busuk).
+  Kolom DB dipertahankan. ⚠️ Efek samping yang harus disadari: `WoForm.tsx:82` memakai
+  `targetCutting = jumlahTarget + lebihanPcs` — dengan lebihan selalu 0, rencana cutting
+  jatuh ke target polos. Itu justru sesuai Excel klien, tapi harus disengaja, bukan kaget.
+- Rumus estimasi diekstrak ke `src/lib/produksi/estimasi.ts` (server-only tanpa
+  `"use server"`, pola `src/lib/jahit/rekap.ts`). **Jangan salin rumus ke frontend.**
+
+**Urutan wajib: rumus dulu, tampilan belakangan.** Live preview menampilkan hasil
+`getEstimasiBahan`; kalau preview dibangun sebelum rumusnya final, ia dibongkar dua kali.
+
+Menggantikan rencana lama `app-1u2w` (a/b/c) — deskripsi kartunya masih menyebut
+`pcs efektif = jumlahTarget + lebihanPcs`, yang sudah tidak berlaku. `app-itl4` ikut
+terjawab di sini: lebihan level produk disembunyikan, tidak dihapus.
 
 ### 🔜 GELOMBANG I — Sederhanakan sidebar: gabung menu jadi tab (18 Sep 2026)
 
@@ -293,6 +345,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 - **2026-09-21 (13)** — `app-z4wp` poin 3 & 4 selesai, poin 5 ditambahkan. **Poin 3 (Laporan):** 5 halaman jadi 1 bertab, instruksinya sengaja kebalikan poin 1-2 (reuse `Client` bukan `Table`, karena `PageHeader` di sini ada di `page.tsx`). 1 fix dariku: pemuatan pertama tiap tab tak punya indikator — `DataTable` ternyata sudah punya `isLoading` + skeleton, cuma tak pernah disambungkan. **Poin 4 (QC 10→8):** tanpa fix. Alur kerja diverifikasi di browser, bukan cuma tampilan — kirim bundel ke QC, tab Penerimaan 0→1 dan Antrean 6→4 tanpa reload. Sempat terlihat gagal, ternyata validasi "Penerima wajib diisi" yang menolak; kucek DB dulu sebelum menyimpulkan bug. **Poin 5 baru:** klien bilang QC masih terlalu banyak. Abu menunjukkan aplikasi lama klien membaginya jadi 2 grup sidebar, dan **pembagian itu lebih baik dari caraku** — aku menggabung berdasarkan hulu-hilir, klien memisahkan jalur normal dari jalur pengecualian. Rencananya 3 grup (QC · Rework & Karantina · Finishing & Gudang), 8 entri jadi 7 tapi tiap accordion tinggal 2-3 baris. Plus Finishing+Packing jadi tab — `konsep-produksi.md` sendiri menulisnya sebagai satu langkah. Bagian tersulitnya: role Finishing dan Packing **berbeda**, jadi guard halaman pakai union dan tabnya disaring.
 - **2026-09-21 (12)** — Prompt poin 3 & 4 `app-z4wp` ditulis. Keduanya disesuaikan dengan struktur nyata, bukan disalin dari poin sebelumnya. **Poin 3 (Laporan):** diperiksa dulu — `PageHeader` ada di `page.tsx`, **bukan** di komponen, jadi instruksinya justru **kebalikan** poin 1 & 2: reuse `Client` langsung, bukan cuma `Table`. Kalau ikut kebiasaan poin sebelumnya, semua state filter harus ditulis ulang. Ditambah dua peringatan: state filter tetap milik tiap Client (kalau disatukan, ganti tanggal di satu laporan ikut mengubah yang lain), dan jangan fetch kelima laporan sekaligus karena Nilai Persediaan menghitung seluruh stok. **Poin 4 (QC):** diverifikasi keempat menu yang digabung rolenya **sama persis**, jadi tidak perlu filter tab maupun `opsional()` — lebih sederhana dari poin 2. Bagian Surat Jalan **sengaja dilewati** (dirujuk dua alur). Verifikasi utamanya bukan tampilan tapi **alur kerja**: angka Antrean harus ikut berubah setelah mencatat penerimaan. **Temuan sampingan → `app-yok1` (P3):** nav QC dibatasi `owner, admin_produksi` padahal `READ_ROLES` service mengizinkan semua role — menu lebih **ketat** dari server, kebalikan dari ketimpangan biasa. Saya sendiri yang mengisi roles itu saat `app-qr6o` tanpa mencatat alasannya. Perlu diputuskan mana yang benar sebelum "diperbaiki".
 - **2026-09-21 (11)** — `app-z4wp` poin 2 selesai, **tanpa fix review**. Master Data **12 entri → 4 halaman** bertab, heading dibuang: Data Bahan, Data Produk, Data Mitra, Data QC. 3 halaman baru, 12 route lama jadi redirect, 22 file diubah, 0 error. Bagian baru yang belum pernah ada — **tab difilter per role** — ketiga jebakannya ditangani benar: tab aktif divalidasi terhadap daftar yang *sudah* difilter (bukan daftar penuh), data tab terlarang dibungkus `opsional()` tepat di 4 service terbatas saja, dan halaman gabungan sengaja tak diberi guard supaya role yang cuma boleh sebagian tab tetap bisa masuk. Diverifikasi di layar sebagai Staf Gudang 1: `?tab=bom` → tab BOM hilang dan jatuh ke Produk dengan data tampil; Data QC hanya menyisakan Jenis Cacat; `/vendor/penjahit` mendarat tepat di tab Penjahit dengan Tarif tersembunyi. Sebagai owner keempat tab muncul. Link internal bersih, breadcrumb halaman anak sudah diarahkan ulang, dan `[id]/page.tsx` tak tersentuh sama sekali. Catatan: laporan menyebut "glitch-free navigation" lewat `replaceState`+`popstate` seolah tambahan — dicek, pola itu sudah dipakai sejak poin 1. Sisa: poin 3 (Laporan, plan siap, prompt belum) dan poin 4 (QC + Surat Jalan, paling berisiko).
+- **2026-09-21 (11)** — `app-gtf4.4` selesai — **epic `app-gtf4` tuntas, kelima anaknya closed.** 22 file, `tsc` 0 error, 1 bersih-bersih saat review (field `ukuran` ditambahkan ke `getBahanBomAktif` tapi satu-satunya pemanggilnya cuma memetakan `bahanId`+`hargaSatuan` — dibuang). Yang sebenarnya diperbaiki bukan tampilan melainkan **data yang sudah salah dan tak terdeteksi**: BH-TR-SLG-005/009/010 menulis 24, 30, dan 32 inch dengan cm yang sama persis (66cm) — mustahil, dan tak ada yang bisa mengeceknya selama angka itu cuma teks di dalam nama. Kini 61/76/81cm di kolom sendiri, dan enam bahan bernama sama "Vision GMC No5" akhirnya punya pembeda (24–34 inch, semua unik). 16 dari 61 bahan terisi, 9 dropdown menampilkannya. **Regresi yang dijaga:** `bomDetail.berlakuUkuran` utuh (24 baris, `L,XL` dst masih ada) — `bahan.ukuran` itu dimensi fisik, `berlakuUkuran` itu ukuran baju, dua hal beda dan komentar `schema.ts:504-506` menegaskannya. **Koreksi catatan roadmap sendiri:** baris lama menulis "BUKAN field baru di master bahan", padahal justru kolom itu yang dibuat — arahnya berubah setelah angka resleting terjawab. Dua dropdown `qc/pemeriksaan` & `qc/standar` yang masih polos sengaja dilewati: isinya Bagian Produk, bukan bahan. Belum diverifikasi visual. Ditulis juga **Gelombang K** — hasil penggalian Excel klien + repo klien malam ini, termasuk pembatalan rencana "lebihan default di master bahan" karena `app-itl4` sudah merekam klien menolak auto-suggest.
 - **2026-09-21 (10)** — `app-z4wp` poin 1 selesai + checklist direvisi total. **Poin 1:** Kategori/Satuan/Warna/Bahan jadi 1 halaman 4 tab, route lama jadi redirect, link dashboard diarahkan ulang. Jebakan utama dihindari — reuse `Table` bukan `PageClient`, jadi PageHeader tetap satu. **Supplier dikeluarkan** atas keputusan Abu: dia penjual bahan, sementara vendor/penjahit penyedia jasa, jadi dikelompokkan menurut jenis pihak lebih mudah ditebak. Keberatan saya (menambah supplier dari form Barang Masuk jadi perlu pindah grup) gugur setelah diperiksa — bedanya satu klik, dan hanya saat ada supplier baru. **Checklist direvisi:** Abu melihat heading "DATA BAHAN" kini menaungi satu entri saja dan mengusulkan Produk+BOM digabung juga. Dua keberatan lama saya gugur: berversi bukan alasan (tab hanya mengganti isi layar, alur versi tetap utuh), dan halaman anak tidak menghalangi (yang digabung cuma daftarnya). Enam poin lama jadi empat: poin 2 = Master Data 12 entri → **4 halaman tanpa heading** (menggabungkan poin 3 & 5 lama), poin 3 = Laporan, poin 4 = QC + Surat Jalan. Tiga plan ditulis, prompt poin 2 siap. Bagian baru yang belum pernah ada: **tab difilter per role** — BOM/Tarif/Standar QC/Bagian Produk dibatasi produksi, tabnya disembunyikan dan datanya dibungkus `opsional()` supaya halaman tak crash. Surat Jalan diverifikasi dirujuk **dua alur** (jahit + dekorasi), jadi menaruhnya sebagai tab di Pengiriman perlu diputuskan dulu — kalau ragu, dilewati.
 - **2026-09-21 (9)** — `app-gtf4.2` selesai. 18 file diubah + 4 baru: master Bagian Produk (page + 3 komponen + service + Zod + hook), tiga kolom teks jadi dropdown, entri nav. Yang membuktikan prompt bekerja: **kesebelas file UI/schema yang saya daftar eksplisit semuanya disentuh** — 7 typecheck error hanya menunjuk 3 service, jadi tanpa daftar itu form dan tampilannya akan tertinggal sementara typecheck sudah hijau. Yang benar dan mudah luput: `leftJoin` di ketiga service (kalau `innerJoin`, baris ber-FK NULL akan hilang dari daftar), `?? "—"` untuk nilai kosong, filter `isActive`, dan `'\\D'` di regexp. **Partial unique index diuji langsung** — soft-delete BP-10 lalu insert kode sama berhasil, dua baris hidup berdampingan. **1 fix review:** entri nav dibuat tanpa `roles` sementara halamannya dijaga `bolehAkses(['owner','admin_produksi'])`, jadi gudang melihat menunya lalu ditolak — ketimpangan menu-vs-server yang persis dihindari di `app-qr6o`. **Koreksi prompt saya:** saya menyuruh pakai `generateDocNumber`, padahal itu untuk nomor transaksi `[TIPE]-YYYYMM-NNNN`, bukan kode master. Antigravity membuat generator `BP-NN` sendiri, dan itu yang benar. Epic `app-gtf4` tinggal `.4` yang menunggu jawaban Ucup.
 - **2026-09-21 (8)** — `app-gtf4.3` selesai, dikerjakan Claude langsung. Abu melihat tabel Master Produk masih menampilkan kolom Kategori/Brand/Jenis berisi `—` semua (kolomnya sudah hilang dari DB, kodenya belum) dan minta sekalian dibereskan. 7 file: `ProdukTable` (3 definisi kolom — ini yang terlihat di layar, dan justru file yang belum tercatat di plan), `ProdukFormModal` (prop, defaultValues, reset, seluruh blok 3 Input), `ProdukPageClient` (helper `saran()` + 3 prop), `ProdukDetailClient` (3 InfoItem + grid 6→3 kolom), Zod schema. Terverifikasi di browser: tabel bersih, form tinggal 5 field, simpan produk baru berhasil, dan **regresi Laporan Stok dicek** — filter kategori masih jalan karena itu `bahan.kategoriId`, hal yang berbeda meski namanya mirip. 10 error milik issue ini habis; sisa 7 murni `app-gtf4.2`.

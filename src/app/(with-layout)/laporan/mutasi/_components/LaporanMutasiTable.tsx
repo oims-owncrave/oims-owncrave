@@ -54,7 +54,7 @@ interface Props {
   onFromChange: (v: string) => void;
   onToChange: (v: string) => void;
   onBahanChange: (v: string) => void;
-  bahanOptions: { id: string; kode: string; nama: string }[];
+  bahanOptions: { id: string; kode: string; nama: string; ukuran?: string | null }[];
 }
 
 export function LaporanMutasiTable({
@@ -171,7 +171,7 @@ export function LaporanMutasiTable({
               options={[
                 { label: "Semua Bahan", value: "" },
                 ...bahanOptions.map((b) => ({
-                  label: `${b.kode} — ${b.nama}`,
+                  label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""}`,
                   value: b.id,
                 })),
               ]}

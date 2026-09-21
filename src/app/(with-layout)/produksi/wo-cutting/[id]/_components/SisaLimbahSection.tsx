@@ -254,7 +254,7 @@ export function SisaLimbahSection({ woId, poId }: Props) {
               label="Bahan"
               required
               placeholder="Pilih bahan (dari BOM)"
-              options={bahanChoices.map((b) => ({ label: `${b.bahanKode} — ${b.bahanNama}`, value: b.bahanId }))}
+              options={bahanChoices.map((b) => ({ label: `${b.bahanKode} — ${b.bahanNama}${b.bahanUkuran ? " · " + b.bahanUkuran : ""}`, value: b.bahanId }))}
               value={sisaForm.watch("bahanId") || null}
               onChange={(v) => sisaForm.setValue("bahanId", (v as string) ?? "", { shouldValidate: true })}
               error={sisaForm.formState.errors.bahanId}
@@ -299,7 +299,7 @@ export function SisaLimbahSection({ woId, poId }: Props) {
               label="Bahan"
               required
               placeholder="Pilih bahan (dari BOM)"
-              options={bahanChoices.map((b) => ({ label: `${b.bahanKode} — ${b.bahanNama}`, value: b.bahanId }))}
+              options={bahanChoices.map((b) => ({ label: `${b.bahanKode} — ${b.bahanNama}${b.bahanUkuran ? " · " + b.bahanUkuran : ""}`, value: b.bahanId }))}
               value={limbahForm.watch("bahanId") || null}
               onChange={(v) => limbahForm.setValue("bahanId", (v as string) ?? "", { shouldValidate: true })}
               error={limbahForm.formState.errors.bahanId}

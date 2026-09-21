@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const bahanSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi").max(150),
+  ukuran: z.string().max(50).optional().nullable().or(z.literal("")),
   kategoriId: z.string().uuid("Kategori wajib dipilih"),
   satuanId: z.string().uuid("Satuan wajib dipilih"),
   warnaId: z.string().uuid().optional().nullable(),

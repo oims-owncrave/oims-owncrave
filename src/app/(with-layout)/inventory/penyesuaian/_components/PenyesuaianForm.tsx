@@ -19,6 +19,7 @@ type BahanOption = {
   id: string;
   kode: string;
   nama: string;
+  ukuran?: string | null;
   satuanSingkatan: string | null;
   stokKuantitas: string | null;
 };
@@ -75,7 +76,7 @@ export function PenyesuaianForm({ bahanOptions }: Props) {
               required
               placeholder="Pilih bahan..."
               options={bahanOptions.map((b) => ({
-                label: `${b.kode} — ${b.nama}`,
+                label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""}`,
                 value: b.id,
               }))}
               value={bahanId || null}

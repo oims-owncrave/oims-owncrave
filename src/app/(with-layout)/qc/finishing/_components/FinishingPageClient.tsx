@@ -14,7 +14,7 @@ import { useBarisSiapFinishing, useFinishingList, useFinishingMutation } from "@
 import type { BarisFinishingRow, FinishingRow } from "@/services/finishing";
 
 type UserOpt = { id: string; displayName: string; isActive: boolean };
-type BahanOpt = { id: string; kode: string; nama: string; isActive: boolean };
+type BahanOpt = { id: string; kode: string; nama: string; ukuran?: string | null; isActive: boolean };
 
 interface Props {
   baris: BarisFinishingRow[];
@@ -73,7 +73,7 @@ export function FinishingPageClient({
 
   const bahanChoices = bahanOptions
     .filter((b) => b.isActive || b.id === bahanId)
-    .map((b) => ({ value: b.id, label: `${b.kode} — ${b.nama}` }));
+    .map((b) => ({ value: b.id, label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""}` }));
 
   async function simpan() {
     if (details.length === 0) return;

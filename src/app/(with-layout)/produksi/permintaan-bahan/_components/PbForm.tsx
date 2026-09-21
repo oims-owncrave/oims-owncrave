@@ -16,6 +16,7 @@ type BahanOption = {
   id: string;
   kode: string;
   nama: string;
+  ukuran?: string | null;
   satuanSingkatan: string | null;
   isActive: boolean;
 };
@@ -138,7 +139,7 @@ export function PbForm({ poLabel, bahanOptions, editId, defaultValues }: Props) 
                     label={index === 0 ? "Bahan" : undefined}
                     placeholder="Pilih bahan"
                     options={bahanChoices(index).map((b) => ({
-                      label: `${b.kode} — ${b.nama}`,
+                      label: `${b.kode} — ${b.nama}${b.ukuran ? " · " + b.ukuran : ""}`,
                       value: b.id,
                     }))}
                     value={row?.bahanId || null}

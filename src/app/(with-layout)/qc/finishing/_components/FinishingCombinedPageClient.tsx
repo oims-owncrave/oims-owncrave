@@ -14,7 +14,7 @@ import type { GudangBarangJadi } from "@/db/schema";
 import type { UserRole } from "@/components/layouts/sidebar/data";
 
 type UserOpt = { id: string; displayName: string; isActive: boolean };
-type BahanOpt = { id: string; kode: string; nama: string; isActive: boolean };
+type BahanOpt = { id: string; kode: string; nama: string; ukuran?: string | null; isActive: boolean };
 
 type Tab = "finishing" | "packing";
 

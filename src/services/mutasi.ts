@@ -116,7 +116,7 @@ export async function listBahanForMutasiFilter() {
     "viewer",
   ]);
   return db
-    .select({ id: bahan.id, kode: bahan.kode, nama: bahan.nama })
+    .select({ id: bahan.id, kode: bahan.kode, nama: bahan.nama, ukuran: bahan.ukuran })
     .from(bahan)
     .where(isNull(bahan.deletedAt))
     .orderBy(bahan.nama);
