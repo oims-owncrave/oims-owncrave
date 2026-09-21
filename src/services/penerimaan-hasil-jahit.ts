@@ -18,6 +18,7 @@ import {
   vendor,
   penjahit,
   lokasiProduksi,
+  users,
   auditLog,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
@@ -69,7 +70,8 @@ export async function listPenerimaanHasil() {
       pihakNama,
       returNomor: returJahit.nomorDokumen,
       tanggalJam: penerimaanHasilJahit.tanggalJam,
-      penerima: penerimaanHasilJahit.penerima,
+      penerimaId: penerimaanHasilJahit.penerimaId,
+      penerimaNama: users.displayName,
       totalBaik: sql<number>`(SELECT COALESCE(SUM(h.jumlah_baik), 0)::int FROM penerimaan_hasil_jahit_detail h WHERE h.penerimaan_id = ${penerimaanHasilJahit.id})`,
       totalRusak: sql<number>`(SELECT COALESCE(SUM(h.jumlah_rusak), 0)::int FROM penerimaan_hasil_jahit_detail h WHERE h.penerimaan_id = ${penerimaanHasilJahit.id})`,
     })
@@ -77,6 +79,7 @@ export async function listPenerimaanHasil() {
     .innerJoin(penugasanJahit, eq(penerimaanHasilJahit.penugasanId, penugasanJahit.id))
     .innerJoin(poProduksi, eq(penugasanJahit.poId, poProduksi.id))
     .innerJoin(produk, eq(poProduksi.produkId, produk.id))
+    .leftJoin(users, eq(penerimaanHasilJahit.penerimaId, users.id))
     .leftJoin(vendor, eq(penugasanJahit.vendorId, vendor.id))
     .leftJoin(penjahit, eq(penugasanJahit.penjahitId, penjahit.id))
     .leftJoin(returJahit, eq(penerimaanHasilJahit.returId, returJahit.id))
@@ -102,7 +105,8 @@ export async function getPenerimaanHasilDetail(id: string) {
       returId: penerimaanHasilJahit.returId,
       returNomor: returJahit.nomorDokumen,
       tanggalJam: penerimaanHasilJahit.tanggalJam,
-      penerima: penerimaanHasilJahit.penerima,
+      penerimaId: penerimaanHasilJahit.penerimaId,
+      penerimaNama: users.displayName,
       lokasiNama: lokasiProduksi.nama,
       tanggalKirimVendor: penerimaanHasilJahit.tanggalKirimVendor,
       pengirimVendor: penerimaanHasilJahit.pengirimVendor,
@@ -115,6 +119,7 @@ export async function getPenerimaanHasilDetail(id: string) {
     .innerJoin(penugasanJahit, eq(penerimaanHasilJahit.penugasanId, penugasanJahit.id))
     .innerJoin(poProduksi, eq(penugasanJahit.poId, poProduksi.id))
     .innerJoin(produk, eq(poProduksi.produkId, produk.id))
+    .leftJoin(users, eq(penerimaanHasilJahit.penerimaId, users.id))
     .leftJoin(vendor, eq(penugasanJahit.vendorId, vendor.id))
     .leftJoin(penjahit, eq(penugasanJahit.penjahitId, penjahit.id))
     .leftJoin(returJahit, eq(penerimaanHasilJahit.returId, returJahit.id))
@@ -301,7 +306,7 @@ export async function createPenerimaanHasil(input: PenerimaanHasilInput): Promis
             penugasanId: input.penugasanId,
             returId: input.returId || null,
             tanggalJam: new Date(input.tanggalJam),
-            penerima: input.penerima.trim(),
+            penerimaId: input.penerimaId || null,
             lokasiId: input.lokasiId || null,
             tanggalKirimVendor: input.tanggalKirimVendor ? new Date(input.tanggalKirimVendor) : null,
             pengirimVendor: input.pengirimVendor?.trim() || null,

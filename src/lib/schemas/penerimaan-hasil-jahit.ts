@@ -12,7 +12,7 @@ export const penerimaanHasilSchema = z
     penugasanId: z.string().min(1, "Pilih penugasan"),
     returId: z.string().nullable(), // terisi = hasil perbaikan kembali
     tanggalJam: z.string().min(1, "Tanggal/jam wajib diisi"),
-    penerima: z.string().min(1, "Nama penerima wajib diisi"),
+    penerimaId: z.string().uuid("Penerima wajib dipilih").optional().or(z.literal("")),
     lokasiId: z.string().nullable(),
     tanggalKirimVendor: z.string().optional(),
     pengirimVendor: z.string().optional(),

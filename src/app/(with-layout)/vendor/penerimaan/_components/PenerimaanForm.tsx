@@ -18,6 +18,7 @@ interface Props {
   penugasanOptions: PenugasanBisaTerima[];
   returOptions: ReturMenungguKembali[];
   lokasiList: LokasiRow[];
+  userOptions?: { id: string; displayName: string; isActive?: boolean }[];
   initialPenugasanId?: string;
   initialReturId?: string;
 }
@@ -38,7 +39,14 @@ type BarisCap = { penugasanDetailId: string; bundelNomor: string; sku: string; w
 const KOSONG: never[] = [];
 
 
-export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, initialPenugasanId = "", initialReturId = "" }: Props) {
+export function PenerimaanForm({
+  penugasanOptions,
+  returOptions,
+  lokasiList,
+  userOptions = [],
+  initialPenugasanId = "",
+  initialReturId = "",
+}: Props) {
   const router = useRouter();
   const { create } = usePenerimaanHasilMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -58,7 +66,7 @@ export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, ini
       penugasanId: returAwal?.penugasanId ?? initialPenugasanId,
       returId: initialReturId || null,
       tanggalJam: nowLocalISO(),
-      penerima: "",
+      penerimaId: "",
       lokasiId: lokasiList.find((l) => l.jenis === "workshop_internal" && l.isActive)?.id ?? null,
       tanggalKirimVendor: "",
       pengirimVendor: "",
@@ -151,7 +159,17 @@ export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, ini
             disabled={modeRetur}
           />
           <Input type="datetime-local" label="Tanggal & Jam Terima" required {...register("tanggalJam")} error={errors.tanggalJam?.message} />
-          <Input label="Penerima" required placeholder="Petugas gudang" {...register("penerima")} error={errors.penerima?.message} />
+          <ComboSelect
+            label="Penerima"
+            placeholder="Pilih petugas gudang"
+            clearable
+            options={userOptions
+              .filter((u) => (u.isActive ?? true) || u.id === watch("penerimaId"))
+              .map((u) => ({ value: u.id, label: u.displayName }))}
+            value={watch("penerimaId") || null}
+            onChange={(v) => setValue("penerimaId", (v as string) ?? "", { shouldValidate: true })}
+            error={errors.penerimaId}
+          />
           <Select
             label="Lokasi Terima"
             options={[{ value: "", label: "— Pilih lokasi —" }, ...lokasiList.filter((l) => l.isActive).map((l) => ({ value: l.id, label: `${l.kode} — ${l.nama}` }))]}

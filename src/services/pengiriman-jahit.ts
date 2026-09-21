@@ -1,6 +1,7 @@
 "use server";
 
 import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
 import {
   pengirimanJahit,
@@ -36,7 +37,7 @@ function isUniqueViolation(e: unknown): boolean {
 }
 
 async function writeAudit(
-  tx: Pick<typeof db, "insert">,
+  tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
   tabel: string,
   aksi: string,
   recordId: string,
@@ -55,6 +56,7 @@ async function writeAudit(
 }
 
 const pihakNama = sql<string>`COALESCE(${vendor.nama}, ${penjahit.nama})`;
+const pengirimUser = alias(users, "pengirim_user");
 
 export async function listPengiriman() {
   await requireRole([...READ_ROLES]);
@@ -113,7 +115,8 @@ export async function getPengirimanDetail(id: string) {
       lokasiTujuanId: pengirimanJahit.lokasiTujuanId,
       lokasiTujuanNama: lokasiProduksi.nama,
       lokasiTujuanAlamat: lokasiProduksi.alamat,
-      pengirim: pengirimanJahit.pengirim,
+      pengirimId: pengirimanJahit.pengirimId,
+      pengirimNama: pengirimUser.displayName,
       penerima: pengirimanJahit.penerima,
       kendaraan: pengirimanJahit.kendaraan,
       kurir: pengirimanJahit.kurir,
@@ -132,6 +135,7 @@ export async function getPengirimanDetail(id: string) {
     .innerJoin(poProduksi, eq(penugasanJahit.poId, poProduksi.id))
     .innerJoin(produk, eq(poProduksi.produkId, produk.id))
     .innerJoin(users, eq(pengirimanJahit.createdBy, users.id))
+    .leftJoin(pengirimUser, eq(pengirimanJahit.pengirimId, pengirimUser.id))
     .leftJoin(vendor, eq(penugasanJahit.vendorId, vendor.id))
     .leftJoin(penjahit, eq(penugasanJahit.penjahitId, penjahit.id))
     .leftJoin(asal, eq(pengirimanJahit.lokasiAsalId, asal.id))
@@ -277,7 +281,7 @@ export async function createPengiriman(input: PengirimanInput): Promise<Pengirim
             tanggalJam: new Date(input.tanggalJam),
             lokasiAsalId: input.lokasiAsalId || null,
             lokasiTujuanId: input.lokasiTujuanId || penugasan.lokasiTujuanId,
-            pengirim: input.pengirim?.trim() || null,
+            pengirimId: input.pengirimId || null,
             penerima: input.penerima?.trim() || null,
             kendaraan: input.kendaraan?.trim() || null,
             kurir: input.kurir?.trim() || null,

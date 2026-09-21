@@ -60,7 +60,7 @@ export function LabelClient({ data }: Props) {
           <Row label="SKU" value={data.sku} />
           <Row label="Warna / Ukuran" value={`${data.warnaNama} / ${data.ukuran}`} />
           <Row label="Jumlah" value={`${data.jumlahPcs} pcs`} />
-          <Row label="Tujuan" value={data.tujuanPenjahit ?? "—"} />
+          <Row label="Tujuan" value={data.tujuanNama ?? "—"} />
           <Row label="Tanggal" value={fmtDate(data.createdAt)} />
         </div>
 

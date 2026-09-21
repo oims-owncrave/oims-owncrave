@@ -52,7 +52,7 @@ export const pengirimanSchema = z.object({
   tanggalJam: z.string().min(1, "Tanggal/jam wajib diisi"),
   lokasiAsalId: z.string().nullable(),
   lokasiTujuanId: z.string().nullable(),
-  pengirim: z.string().optional(),
+  pengirimId: z.string().uuid().optional().or(z.literal("")),
   penerima: z.string().optional(),
   kendaraan: z.string().optional(),
   kurir: z.string().optional(),

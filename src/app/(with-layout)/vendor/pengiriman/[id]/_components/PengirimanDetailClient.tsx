@@ -89,7 +89,7 @@ export function PengirimanDetailClient({ id, initialData, lokasiList }: Props) {
           <InfoItem label="Target Selesai" value={formatTanggal(d.targetSelesai)} />
           <InfoItem label="Lokasi Asal" value={d.lokasiAsalNama} />
           <InfoItem label="Lokasi Tujuan" value={d.lokasiTujuanNama} />
-          <InfoItem label="Pengirim" value={d.pengirim} />
+          <InfoItem label="Pengirim" value={d.pengirimNama} />
           <InfoItem label="Kurir / Kendaraan" value={[d.kurir, d.kendaraan].filter(Boolean).join(" · ") || null} />
           <InfoItem label="Total" value={`${d.details.length} bundel · ${totalPcs} pcs`} />
           <InfoItem label="Dibuat oleh" value={d.createdByNama} />

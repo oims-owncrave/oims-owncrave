@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth";
 import { listPenugasanBisaDikirim } from "@/services/penugasan-jahit";
 import { listLokasiProduksi } from "@/services/lokasi-produksi";
+import { listUserOptions } from "@/services/user";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { PengirimanForm } from "../_components/PengirimanForm";
 
@@ -11,9 +12,10 @@ export default async function PengirimanBaruPage({
 }) {
   await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const { penugasan } = await searchParams;
-  const [penugasanOptions, lokasiList] = await Promise.all([
+  const [penugasanOptions, lokasiList, userOptions] = await Promise.all([
     listPenugasanBisaDikirim(),
     listLokasiProduksi(),
+    listUserOptions(),
   ]);
   return (
     <div className="space-y-6">
@@ -28,6 +30,7 @@ export default async function PengirimanBaruPage({
       <PengirimanForm
         penugasanOptions={penugasanOptions}
         lokasiList={lokasiList}
+        userOptions={userOptions}
         initialPenugasanId={penugasan ?? ""}
       />
     </div>

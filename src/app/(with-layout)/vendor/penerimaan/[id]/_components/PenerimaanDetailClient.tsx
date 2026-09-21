@@ -74,7 +74,7 @@ export function PenerimaanDetailClient({ id, initialData }: Props) {
             value={d.returNomor ? <NavText pending={pendingPath === pathRetur} onClick={() => go(pathRetur)}>Hasil perbaikan {d.returNomor}</NavText> : "Setoran"}
           />
           <InfoItem label="Diterima" value={formatTanggal(d.tanggalJam, true)} />
-          <InfoItem label="Penerima" value={d.penerima} />
+          <InfoItem label="Penerima" value={d.penerimaNama} />
           <InfoItem label="Lokasi" value={d.lokasiNama} />
           <InfoItem label="Kirim dari Vendor" value={d.tanggalKirimVendor ? formatTanggal(d.tanggalKirimVendor) : null} />
           <InfoItem label="Pengirim / Resi" value={[d.pengirimVendor, d.kurirResi].filter(Boolean).join(" · ") || null} />

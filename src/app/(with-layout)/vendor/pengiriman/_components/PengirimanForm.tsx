@@ -17,6 +17,7 @@ import type { LokasiRow } from "../../lokasi/_components/LokasiTable";
 interface Props {
   penugasanOptions: PenugasanBisaDikirim[];
   lokasiList: LokasiRow[];
+  userOptions?: { id: string; displayName: string; isActive?: boolean }[];
   initialPenugasanId?: string;
 }
 
@@ -29,7 +30,12 @@ const nowLocalISO = () => {
   return d.toISOString().slice(0, 16);
 };
 
-export function PengirimanForm({ penugasanOptions, lokasiList, initialPenugasanId = "" }: Props) {
+export function PengirimanForm({
+  penugasanOptions,
+  lokasiList,
+  userOptions = [],
+  initialPenugasanId = "",
+}: Props) {
   const router = useRouter();
   const { create } = usePengirimanMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -48,7 +54,7 @@ export function PengirimanForm({ penugasanOptions, lokasiList, initialPenugasanI
       tanggalJam: nowLocalISO(),
       lokasiAsalId: lokasiList.find((l) => l.jenis === "workshop_internal" && l.isActive)?.id ?? null,
       lokasiTujuanId: penugasanOptions.find((p) => p.id === initialPenugasanId)?.lokasiTujuanId ?? null,
-      pengirim: "",
+      pengirimId: "",
       penerima: "",
       kendaraan: "",
       kurir: "",
@@ -110,7 +116,17 @@ export function PengirimanForm({ penugasanOptions, lokasiList, initialPenugasanI
           <Input type="datetime-local" label="Tanggal & Jam Kirim" required {...register("tanggalJam")} error={errors.tanggalJam?.message} />
           <Select label="Lokasi Asal" options={lokasiOpts} {...register("lokasiAsalId", { setValueAs: nullable })} />
           <Select label="Lokasi Tujuan" options={lokasiOpts} {...register("lokasiTujuanId", { setValueAs: nullable })} />
-          <Input label="Pengirim" placeholder="Nama petugas" {...register("pengirim")} />
+          <ComboSelect
+            label="Pengirim"
+            placeholder="Pilih petugas pengirim"
+            clearable
+            options={userOptions
+              .filter((u) => (u.isActive ?? true) || u.id === watch("pengirimId"))
+              .map((u) => ({ value: u.id, label: u.displayName }))}
+            value={watch("pengirimId") || null}
+            onChange={(v) => setValue("pengirimId", (v as string) ?? "", { shouldValidate: true })}
+            error={errors.pengirimId}
+          />
           <Input label="Penerima (rencana)" placeholder="Nama di vendor" {...register("penerima")} />
           <Input label="Kendaraan" placeholder="Opsional" {...register("kendaraan")} />
           <Input label="Kurir / Ekspedisi" placeholder="Opsional" {...register("kurir")} />

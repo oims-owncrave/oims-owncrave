@@ -39,6 +39,21 @@ export async function listUsers() {
   return db.select().from(users);
 }
 
+/** List user options for dropdowns — accessible by staff roles. */
+export async function listUserOptions() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
+  return db
+    .select({
+      id: users.id,
+      displayName: users.displayName,
+      isActive: users.isActive,
+    })
+    .from(users)
+    .orderBy(users.displayName);
+}
+
+export type UserOption = Awaited<ReturnType<typeof listUserOptions>>[number];
+
 /** Create new user — generates synthetic email, creates auth.users via Admin API, then inserts public.users. */
 export async function createUser(input: UserInput) {
   const currentUser = await requireRole(["owner"]);

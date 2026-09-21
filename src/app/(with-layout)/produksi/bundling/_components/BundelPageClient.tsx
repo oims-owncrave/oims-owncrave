@@ -30,6 +30,8 @@ import {
 interface Props {
   initialData: BundelListRow[];
   woOptions: WoBisaDibundel[];
+  vendorOptions?: { id: string; nama: string; isActive?: boolean }[];
+  penjahitOptions?: { id: string; nama: string; isActive?: boolean }[];
 }
 
 const STATUS_BADGE: Record<string, string> = {
@@ -39,7 +41,12 @@ const STATUS_BADGE: Record<string, string> = {
   dibatalkan: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300",
 };
 
-export function BundelPageClient({ initialData, woOptions }: Props) {
+export function BundelPageClient({
+  initialData,
+  woOptions,
+  vendorOptions = [],
+  penjahitOptions = [],
+}: Props) {
   const router = useRouter();
   const [, startNavigate] = useTransition();
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -63,7 +70,7 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
     formState: { errors },
   } = useForm<BundelInput>({
     resolver: zodResolver(bundelSchema),
-    defaultValues: { woId: "", varianId: "", jumlahPcs: undefined, tujuanPenjahit: "", keterangan: "" },
+    defaultValues: { woId: "", varianId: "", jumlahPcs: undefined, vendorId: "", penjahitId: "", keterangan: "" },
   });
 
   const woId = watch("woId");
@@ -72,7 +79,7 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
   const sisaTerpilih = (sisaRows ?? []).find((r) => r.varianId === varianId);
 
   useEffect(() => {
-    if (modalOpen) reset({ woId: "", varianId: "", jumlahPcs: undefined, tujuanPenjahit: "", keterangan: "" });
+    if (modalOpen) reset({ woId: "", varianId: "", jumlahPcs: undefined, vendorId: "", penjahitId: "", keterangan: "" });
   }, [modalOpen, reset]);
 
   const actionsFor = (item: BundelListRow): TableAction<BundelListRow>[] => {
@@ -137,9 +144,9 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
     },
     { key: "jumlahPcs", label: "Pcs", align: "center" },
     {
-      key: "tujuanPenjahit",
+      key: "tujuanNama",
       label: "Tujuan",
-      renderCell: (item) => item.tujuanPenjahit ?? "—",
+      renderCell: (item) => item.tujuanNama ?? "—",
     },
     {
       key: "status",
@@ -261,10 +268,35 @@ export function BundelPageClient({ initialData, woOptions }: Props) {
                   </p>
                 )}
               </div>
-              <Input
-                label="Tujuan Penjahit"
-                placeholder="Misal: Vendor A (opsional — master vendor di Tahap 3)"
-                {...register("tujuanPenjahit")}
+              <ComboSelect
+                label="Vendor (opsional)"
+                placeholder="Pilih vendor (jika CV/PT)"
+                clearable
+                options={vendorOptions
+                  .filter((v) => v.isActive ?? true)
+                  .map((v) => ({ value: v.id, label: v.nama }))}
+                value={watch("vendorId") || null}
+                onChange={(v) => {
+                  setValue("vendorId", (v as string) ?? "", { shouldValidate: true });
+                  if (v) setValue("penjahitId", "", { shouldValidate: true });
+                }}
+                error={errors.vendorId}
+                disabled={create.isPending}
+              />
+              <ComboSelect
+                label="Penjahit (opsional)"
+                placeholder="Pilih penjahit (jika perorangan)"
+                clearable
+                options={penjahitOptions
+                  .filter((p) => p.isActive ?? true)
+                  .map((p) => ({ value: p.id, label: p.nama }))}
+                value={watch("penjahitId") || null}
+                onChange={(v) => {
+                  setValue("penjahitId", (v as string) ?? "", { shouldValidate: true });
+                  if (v) setValue("vendorId", "", { shouldValidate: true });
+                }}
+                error={errors.penjahitId}
+                disabled={create.isPending}
               />
               <Input label="Keterangan" placeholder="Isi panel/aksesoris (opsional)" {...register("keterangan")} />
               <div className="flex justify-end gap-3">

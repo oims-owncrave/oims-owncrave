@@ -213,12 +213,16 @@ export async function listBundelSiapTugas(poId: string, excludePenugasanId?: str
       warnaNama: warna.nama,
       ukuran: varianProduk.ukuran,
       jumlahPcs: bundling.jumlahPcs,
-      tujuanPenjahit: bundling.tujuanPenjahit,
+      vendorId: bundling.vendorId,
+      penjahitId: bundling.penjahitId,
+      tujuanNama: sql<string | null>`COALESCE(${vendor.nama}, ${penjahit.nama})`,
     })
     .from(bundling)
     .innerJoin(workOrderCutting, eq(bundling.woId, workOrderCutting.id))
     .innerJoin(varianProduk, eq(bundling.varianId, varianProduk.id))
     .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+    .leftJoin(vendor, eq(bundling.vendorId, vendor.id))
+    .leftJoin(penjahit, eq(bundling.penjahitId, penjahit.id))
     .where(and(eq(workOrderCutting.poId, poId), bundelBebasFilter(excludePenugasanId)))
     .orderBy(bundling.nomorDokumen);
 }

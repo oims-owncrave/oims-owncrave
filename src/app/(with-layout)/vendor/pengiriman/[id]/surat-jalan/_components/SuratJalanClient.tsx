@@ -80,7 +80,7 @@ export function SuratJalanClient({ data }: Props) {
           <div className="space-y-1">
             <p className="text-xs font-semibold uppercase text-gray-500">Dari</p>
             <p className="font-medium">Owncrave — {data.lokasiAsalNama ?? "Gudang Cutting"}</p>
-            <p>Pengirim: {data.pengirim ?? "—"}</p>
+            <p>Pengirim: {data.pengirimNama ?? "—"}</p>
             <p>Kurir / Kendaraan: {[data.kurir, data.kendaraan].filter(Boolean).join(" · ") || "—"}</p>
           </div>
           <div className="space-y-1">

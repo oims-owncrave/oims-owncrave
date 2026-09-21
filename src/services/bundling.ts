@@ -11,6 +11,8 @@ import {
   produk,
   varianProduk,
   warna,
+  vendor,
+  penjahit,
   auditLog,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
@@ -69,7 +71,9 @@ export async function listBundel() {
       warnaNama: warna.nama,
       ukuran: varianProduk.ukuran,
       jumlahPcs: bundling.jumlahPcs,
-      tujuanPenjahit: bundling.tujuanPenjahit,
+      vendorId: bundling.vendorId,
+      penjahitId: bundling.penjahitId,
+      tujuanNama: sql<string | null>`COALESCE(${vendor.nama}, ${penjahit.nama})`,
       status: bundling.status,
       createdAt: bundling.createdAt,
     })
@@ -79,6 +83,8 @@ export async function listBundel() {
     .innerJoin(produk, eq(poProduksi.produkId, produk.id))
     .innerJoin(varianProduk, eq(bundling.varianId, varianProduk.id))
     .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+    .leftJoin(vendor, eq(bundling.vendorId, vendor.id))
+    .leftJoin(penjahit, eq(bundling.penjahitId, penjahit.id))
     .where(isNull(bundling.deletedAt))
     .orderBy(desc(bundling.createdAt));
 }
@@ -204,7 +210,8 @@ export async function createBundel(input: BundelInput): BundelResult {
             woId: input.woId,
             varianId: input.varianId,
             jumlahPcs: input.jumlahPcs,
-            tujuanPenjahit: input.tujuanPenjahit?.trim() || null,
+            vendorId: input.vendorId || null,
+            penjahitId: input.penjahitId || null,
             keterangan: input.keterangan?.trim() || null,
             createdBy: user.id,
           })
@@ -269,7 +276,9 @@ export async function getBundelLabel(id: string) {
       warnaNama: warna.nama,
       ukuran: varianProduk.ukuran,
       jumlahPcs: bundling.jumlahPcs,
-      tujuanPenjahit: bundling.tujuanPenjahit,
+      vendorId: bundling.vendorId,
+      penjahitId: bundling.penjahitId,
+      tujuanNama: sql<string | null>`COALESCE(${vendor.nama}, ${penjahit.nama})`,
       keterangan: bundling.keterangan,
       status: bundling.status,
       createdAt: bundling.createdAt,
@@ -280,6 +289,8 @@ export async function getBundelLabel(id: string) {
     .innerJoin(produk, eq(poProduksi.produkId, produk.id))
     .innerJoin(varianProduk, eq(bundling.varianId, varianProduk.id))
     .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+    .leftJoin(vendor, eq(bundling.vendorId, vendor.id))
+    .leftJoin(penjahit, eq(bundling.penjahitId, penjahit.id))
     .where(and(eq(bundling.id, id), isNull(bundling.deletedAt)))
     .limit(1);
   if (!row) return null;
