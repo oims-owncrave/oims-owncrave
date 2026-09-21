@@ -343,6 +343,7 @@ export function BarangMasukForm({ bahanOptions, supplierOptions, produkOptions }
             <ComboSelect
               label="Isi bahan dari produk (opsional)"
               placeholder={memuatBom ? "Memuat..." : "Pilih produk"}
+              clearable
               options={produkOptions
                 .filter((p) => p.isActive)
                 .map((p) => ({ label: `${p.kode} — ${p.nama}`, value: p.id }))}

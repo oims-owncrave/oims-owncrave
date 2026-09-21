@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo, useLayoutEffect, useCallback } from "react"
 import { createPortal } from "react-dom"
-import { ChevronDown, Check, Search } from "lucide-react"
+import { ChevronDown, Check, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export interface ComboOption {
@@ -29,6 +29,8 @@ interface ComboSelectProps {
   allOptionLabel?: string
   variant?: "form" | "filter"
   className?: string
+  /** Tampilkan tombol × untuk mengosongkan nilai. Hanya untuk field opsional. */
+  clearable?: boolean
 }
 
 export function ComboSelect({
@@ -46,9 +48,11 @@ export function ComboSelect({
   allOptionLabel,
   variant = "form",
   className,
+  clearable = false,
 }: ComboSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState("")
+  const [activeIndex, setActiveIndex] = useState(-1)
   const [mounted, setMounted] = useState(false)
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -84,7 +88,15 @@ export function ComboSelect({
   }, [filtered, hasGroups])
 
   const enabledOptions = useMemo(() => options.filter((o) => !o.disabled), [options])
+  // Urutan navigasi keyboard harus sama dengan urutan yang terlihat di panel —
+  // kalau opsi dikelompokkan, panel merender per grup, bukan urutan filtered.
+  const navigable = useMemo(
+    () => (hasGroups ? groupedFiltered.flatMap((g) => g.items) : filtered).filter((o) => !o.disabled),
+    [hasGroups, groupedFiltered, filtered],
+  )
   const allSelected = multiple && enabledOptions.length > 0 && enabledOptions.every((o) => selectedValues.includes(o.value))
+
+  useEffect(() => { setActiveIndex(-1) }, [search, isOpen])
 
   const displayText = useMemo(() => {
     if (selectedValues.length === 0) return ""
@@ -167,6 +179,36 @@ export function ComboSelect({
     if (isOpen && searchable) searchRef.current?.focus()
   }, [isOpen, searchable])
 
+  const onKeyNav = (e: React.KeyboardEvent) => {
+    if (disabled) return
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault()
+      if (!isOpen) {
+        setIsOpen(true)
+        setActiveIndex(0)
+        return
+      }
+      if (navigable.length === 0) return
+      const arah = e.key === "ArrowDown" ? 1 : -1
+      setActiveIndex((i) => {
+        const next = i + arah
+        if (next < 0) return navigable.length - 1
+        if (next >= navigable.length) return 0
+        return next
+      })
+    } else if (e.key === "Enter") {
+      if (!isOpen) return
+      e.preventDefault()
+      const opt = navigable[activeIndex]
+      if (opt) handleSelect(opt.value, opt.disabled)
+    } else if (e.key === "Escape") {
+      if (!isOpen) return
+      e.preventDefault()
+      setIsOpen(false)
+      setSearch("")
+    }
+  }
+
   const handleSelect = (val: string | number, isDisabled?: boolean) => {
     if (isDisabled) return
     if (multiple) {
@@ -188,16 +230,20 @@ export function ComboSelect({
   const renderOption = (opt: ComboOption) => {
     const selected = selectedValues.includes(opt.value)
     const isDisabled = !!opt.disabled
+    const isActive = navigable[activeIndex]?.value === opt.value
     return (
       <button
         key={opt.value}
         type="button"
+        role="option"
+        aria-selected={selected}
         onMouseDown={(e) => { e.preventDefault(); handleSelect(opt.value, isDisabled) }}
         disabled={isDisabled}
         className={cn(
           "flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm",
           isDisabled ? "cursor-not-allowed opacity-40" : "hover:bg-gray-100",
           !multiple && selected && !isDisabled && "bg-gray-100",
+          isActive && !isDisabled && "bg-gray-100",
         )}
       >
         {multiple && <OptionCheckbox checked={selected} disabled={isDisabled} />}
@@ -220,6 +266,7 @@ export function ComboSelect({
     <div
       ref={panelRef}
       style={panelStyle}
+      role="listbox"
       className="flex w-max max-w-xs flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg"
     >
       {searchable && (
@@ -230,6 +277,7 @@ export function ComboSelect({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={onKeyNav}
             placeholder={searchPlaceholder}
             className="w-full rounded-md border border-gray-300 bg-transparent py-1.5 pl-9 pr-3 text-sm text-gray-900 outline-none focus:border-blue-600"
           />
@@ -277,21 +325,49 @@ export function ComboSelect({
     <button
       ref={triggerRef}
       type="button"
+      role="combobox"
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
       disabled={disabled}
       onClick={() => { if (!disabled) setIsOpen((o) => !o) }}
+      onKeyDown={onKeyNav}
       className={triggerClass}
     >
       <span className={cn("truncate", selectedValues.length === 0 && (isFilter ? "text-blue-600" : "text-gray-400"))}>
         {displayText || placeholder}
       </span>
-      <ChevronDown
-        size={18}
-        className={cn(
-          "shrink-0 transition-transform",
-          isFilter ? "text-blue-600" : "text-gray-400",
-          isOpen && "rotate-180",
+      <div className="flex shrink-0 items-center gap-1">
+        {clearable && !disabled && selectedValues.length > 0 && (
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label="Kosongkan"
+            className="rounded p-0.5 text-gray-400 hover:text-gray-600 transition-colors"
+            onMouseDown={(e) => { e.stopPropagation(); e.preventDefault(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange(multiple ? [] : null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                e.stopPropagation();
+                onChange(multiple ? [] : null);
+              }
+            }}
+          >
+            <X size={14} />
+          </span>
         )}
-      />
+        <ChevronDown
+          size={18}
+          className={cn(
+            "shrink-0 transition-transform",
+            isFilter ? "text-blue-600" : "text-gray-400",
+            isOpen && "rotate-180",
+          )}
+        />
+      </div>
     </button>
   )
 

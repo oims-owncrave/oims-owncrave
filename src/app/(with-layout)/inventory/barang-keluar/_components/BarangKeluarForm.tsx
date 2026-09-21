@@ -94,6 +94,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions, poOptions }: Props) 
           <ComboSelect
             label="Permintaan Bahan (opsional)"
             placeholder="Tanpa permintaan"
+            clearable
             options={pbOptions.map((pb) => ({
               label: `${pb.nomorDokumen} / ${pb.poNomor}`,
               value: pb.id,
@@ -103,8 +104,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions, poOptions }: Props) 
               const id = (v as string) ?? "";
               setValue("permintaanBahanId", id);
               // PB menentukan PO-nya. Dikosongkan → PO ikut dikosongkan supaya user
-              // memilih ulang sadar. (Belum bisa dipicu dari UI: ComboSelect single
-              // tak punya tombol clear — lihat app-46vb.)
+              // memilih ulang sadar.
               const pb = pbOptions.find((o) => o.id === id);
               setValue("poId", pb?.poId ?? "", { shouldValidate: true });
             }}

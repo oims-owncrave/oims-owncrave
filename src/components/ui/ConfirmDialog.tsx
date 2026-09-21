@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { useModalBehavior } from "@/hooks/useModalBehavior";
 
 interface Props {
   open: boolean;
@@ -25,16 +26,30 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: Props) {
+  useModalBehavior(open, onCancel, !loading);
+
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-70 flex items-center justify-center p-6">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={loading ? undefined : onCancel} />
-      <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-title"
+        className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+      >
+        <h3 id="confirm-title" className="text-lg font-semibold text-gray-900">{title}</h3>
         {message && <p className="mt-2 text-sm text-gray-500">{message}</p>}
         <div className="mt-6 flex gap-3">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading} className="flex-1 cursor-pointer">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={loading}
+            autoFocus
+            className="flex-1 cursor-pointer"
+          >
             {cancelLabel}
           </Button>
           <Button

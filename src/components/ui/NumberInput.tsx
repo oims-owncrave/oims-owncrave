@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { Input } from "./Input";
 
 type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "type"> & {
@@ -34,6 +34,14 @@ function formatKetikan(raw: string, decimals: number): string {
   return `${ribuan},${pecahan}`; // "1," tetap "1," supaya desimal bisa diketik
 }
 
+/** "12.310,5" -> 12310.5. Kosong/tak valid -> undefined. */
+function parse(tampil: string): number | undefined {
+  const angka = tampil.replace(/\./g, "").replace(",", ".");
+  if (angka === "" || angka === ".") return undefined;
+  const n = Number(angka);
+  return Number.isNaN(n) ? undefined : n;
+}
+
 /**
  * Input angka dengan pemisah ribuan.
  *
@@ -49,6 +57,18 @@ export const NumberInput = forwardRef<HTMLInputElement, Props>(
   ({ value, onChange, decimals = 0, onBlur, ...rest }, ref) => {
     const [draft, setDraft] = useState<string | null>(null);
 
+    // Nilai yang TERAKHIR dikirim komponen ini lewat onChange. Dipakai untuk
+    // membedakan perubahan value yang berasal dari ketikan user (draft dipertahankan,
+    // supaya "1," tidak terpangkas jadi "1") dan yang datang dari luar lewat setValue
+    // (draft dibuang, supaya layar tidak menampilkan angka basi).
+    const terakhirDikirim = useRef<number | undefined>(undefined);
+
+    useEffect(() => {
+      const v = value === "" || value === null ? undefined : Number(value);
+      const sama = Number.isNaN(v as number) ? value === undefined : v === terakhirDikirim.current;
+      if (!sama) setDraft(null);
+    }, [value]);
+
     return (
       <Input
         ref={ref}
@@ -58,10 +78,9 @@ export const NumberInput = forwardRef<HTMLInputElement, Props>(
         onChange={(e) => {
           const tampil = formatKetikan(e.target.value, decimals);
           setDraft(tampil);
-          const angka = tampil.replace(/\./g, "").replace(",", ".");
-          if (angka === "" || angka === ".") return onChange(undefined);
-          const n = Number(angka);
-          if (!Number.isNaN(n)) onChange(n);
+          const n = parse(tampil);
+          terakhirDikirim.current = n;
+          onChange(n);
         }}
         onBlur={(e) => {
           setDraft(null); // kembali ke bentuk terformat dari nilai sebenarnya

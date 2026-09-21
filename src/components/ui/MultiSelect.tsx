@@ -47,6 +47,7 @@ export function MultiSelect({
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [mounted, setMounted] = useState(false);
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties | null>(null);
 
@@ -73,6 +74,13 @@ export function MultiSelect({
     }
     return Array.from(map, ([group, items]) => ({ group, items }));
   }, [filtered, hasGroups]);
+
+  const navigable = useMemo(
+    () => (hasGroups ? groupedFiltered.flatMap((g) => g.items) : filtered),
+    [hasGroups, groupedFiltered, filtered]
+  );
+
+  useEffect(() => { setActiveIndex(-1); }, [search, isOpen]);
 
   const allSelected = options.length > 0 && options.every((o) => value.includes(o.value));
 
@@ -161,14 +169,50 @@ export function MultiSelect({
     onChange([]);
   }
 
+  const onKeyNav = (e: React.KeyboardEvent) => {
+    if (disabled) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!isOpen) {
+        setIsOpen(true);
+        setActiveIndex(0);
+        return;
+      }
+      if (navigable.length === 0) return;
+      const arah = e.key === "ArrowDown" ? 1 : -1;
+      setActiveIndex((i) => {
+        const next = i + arah;
+        if (next < 0) return navigable.length - 1;
+        if (next >= navigable.length) return 0;
+        return next;
+      });
+    } else if (e.key === "Enter") {
+      if (!isOpen) return;
+      e.preventDefault();
+      const opt = navigable[activeIndex];
+      if (opt) toggle(opt.value);
+    } else if (e.key === "Escape") {
+      if (!isOpen) return;
+      e.preventDefault();
+      setIsOpen(false);
+      setSearch("");
+    }
+  };
+
   function renderOption(opt: MultiSelectOption) {
     const selected = value.includes(opt.value);
+    const isActive = navigable[activeIndex]?.value === opt.value;
     return (
       <button
         key={opt.value}
         type="button"
+        role="option"
+        aria-selected={selected}
         onMouseDown={(e) => { e.preventDefault(); toggle(opt.value); }}
-        className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm hover:bg-gray-100 transition-colors"
+        className={cn(
+          "flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm hover:bg-gray-100 transition-colors",
+          isActive && "bg-gray-100"
+        )}
       >
         <span
           className={cn(
@@ -188,6 +232,7 @@ export function MultiSelect({
         <div
           ref={panelRef}
           style={panelStyle}
+          role="listbox"
           className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg flex flex-col"
         >
           {searchable && (
@@ -198,6 +243,7 @@ export function MultiSelect({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={onKeyNav}
                 placeholder={searchPlaceholder}
                 className="w-full rounded-lg border border-gray-200 py-1.5 pl-9 pr-3 text-sm text-gray-900 outline-none focus:border-blue-500"
               />
@@ -252,8 +298,12 @@ export function MultiSelect({
       <button
         ref={triggerRef}
         type="button"
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
         disabled={disabled}
         onClick={() => { if (!disabled) setIsOpen((o) => !o); }}
+        onKeyDown={onKeyNav}
         className={cn(
           "flex w-full items-center justify-between gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-50",
           isOpen && "border-blue-500 ring-2 ring-blue-500/20"
@@ -272,8 +322,15 @@ export function MultiSelect({
             <span
               role="button"
               tabIndex={0}
-              onMouseDown={(e) => { e.stopPropagation(); }}
+              onMouseDown={(e) => { e.stopPropagation(); e.preventDefault(); }}
               onClick={clearAll}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onChange([]);
+                }
+              }}
               className="rounded p-0.5 text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Clear"
             >

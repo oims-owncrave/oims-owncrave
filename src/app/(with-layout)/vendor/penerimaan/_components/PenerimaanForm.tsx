@@ -125,6 +125,7 @@ export function PenerimaanForm({ penugasanOptions, returOptions, lokasiList, ini
           <ComboSelect
             label="Hasil perbaikan dari retur (opsional)"
             placeholder="— Setoran biasa —"
+            clearable
             options={returOptions.map((r) => ({ label: `${r.nomorDokumen} — ${r.pihakNama} (${r.penugasanNomor})`, value: r.id }))}
             value={returId}
             onChange={(v) => {

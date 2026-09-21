@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Download, Upload, X, FileSpreadsheet, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { toastStyles } from "@/lib/utils";
+import { useModalBehavior } from "@/hooks/useModalBehavior";
 import type { ImportColumn, ImportResult, RowError } from "@/lib/import/types";
 import { parseXlsx } from "@/lib/import/parse-xlsx";
 import { downloadTemplate } from "@/lib/import/template";
@@ -34,8 +35,6 @@ export function ImportExcelModal({
   const [rowErrors, setRowErrors] = useState<RowError[] | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  if (!open) return null;
-
   const handleReset = () => {
     setFile(null);
     setRows(null);
@@ -49,9 +48,15 @@ export function ImportExcelModal({
     onClose();
   };
 
+  useModalBehavior(open, handleClose, !isPending);
+
+  if (!open) return null;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
+
+    e.target.value = "";
 
     setFile(selectedFile);
     setParseError(null);
@@ -91,8 +96,16 @@ export function ImportExcelModal({
   };
 
   return (
-    <div className="fixed inset-0 z-70 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="relative w-full max-w-lg rounded-xl border border-stroke bg-white p-6 shadow-xl dark:border-dark-3 dark:bg-gray-dark">
+    <div className="fixed inset-0 z-70 flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-xs"
+        onClick={isPending ? undefined : handleClose}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="relative w-full max-w-lg rounded-xl border border-stroke bg-white p-6 shadow-xl dark:border-dark-3 dark:bg-gray-dark"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-stroke pb-4 dark:border-dark-3">
           <div className="flex items-center gap-2.5">
