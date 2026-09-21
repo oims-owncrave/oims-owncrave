@@ -102,6 +102,44 @@ Workflow: `bd create` SEBELUM coding, `bd close` SETELAH Abu approve hasil.
 
 Manual, zero-dependency. `public/sw.js` pakai `BUILD_VERSION` — **update BUILD_VERSION tiap meaningful deploy** (format `YYYY-MM-DD`) supaya cache lama di-purge otomatis. Gak perlu ubah `next.config.ts` untuk PWA.
 
+## Utang Teknis yang Diketahui (jangan disangka sudah beres)
+
+### Proteksi route belum merata — menu tersembunyi BUKAN proteksi
+
+Diketahui 21 Sep 2026 saat mengerjakan `app-qr6o`.
+
+**Tidak ada `middleware.ts`** di proyek ini (sudah dicek: tak ada di root maupun
+`src/`). Proteksi akses murni per-halaman, dan **tidak merata**:
+
+| Halaman | Guard |
+|---|---|
+| `sistem/pengguna/page.tsx` | ada (cek manual `role !== "owner"` → redirect) |
+| `sistem/log`, `master/bahan` | ada |
+| `inventory/stok` | **TIDAK ADA** |
+
+Artinya: **menyembunyikan menu dari sidebar tidak memproteksi apa pun.** User yang
+menunya disembunyikan tetap bisa mengetik URL dan halamannya terbuka. Filter sidebar
+itu kerapian tampilan, bukan keamanan.
+
+`app-qr6o` sengaja dikerjakan **hanya sampai level menu** (keputusan Abu 21 Sep 2026:
+"sementara agar cepat A dulu saja"). Jadi JANGAN menyimpulkan akses sudah aman setelah
+issue itu ditutup.
+
+**Yang masih harus dikerjakan nanti:**
+1. Audit semua route — mana yang sudah punya guard, mana yang belum
+2. Tentukan peta role→route (keputusan bisnis, harus dari Abu/klien — bukan ditebak)
+3. Pasang guard yang kurang, atau `middleware.ts` terpusat
+
+**Hambatan yang harus disadari sebelum mulai:** peta "role mana boleh apa" sekarang
+**tersebar di tiap service file** (`READ_ROLES` / `WRITE_ROLES` per file, ~70 call site
+`requireRole`). Tidak ada peta terpusat. Kalau peta baru dibuat untuk route, ia harus
+SEJALAN dengan yang sudah dienforce services — kalau beda, menu bilang boleh tapi
+server menolak, dan user bingung.
+
+Catatan terkait: daftar 5 role diduplikasi di 4 tempat (`schema.ts`, `lib/schemas/user.ts`,
+`UserFormModal`, `UserTable`). Kalau menambah peta role→menu, itu duplikasi kelima —
+pertimbangkan satu konstanta bersama.
+
 ## Kesalahan yang Pasti Kamu Buat Kalau Gak Baca Ini
 
 | # | Nama | Gejala | Aturan |

@@ -212,6 +212,35 @@ nunggu keputusan produk, `app-itl4` nunggu klarifikasi Lebihan Pcs level produk 
 Pertanyaan susulan untuk ketiganya sudah disiapkan di `docs/pertanyaan-klien-18sep.md`.
 `app-gy84` bisa jalan kapan saja (cuma perlu screenshot ulang, bukan koding).
 
+### 🔜 GELOMBANG J — Audit komponen UI + perbaikan halaman (21 Sep 2026)
+
+Lahir dari review `app-glx1`: satu bug ComboSelect memicu pertanyaan "apa lagi yang
+menyimpang dari spec industri?" Audit `src/components/ui/` menemukan 5 temuan; 3 di
+antaranya dinaikkan jadi aturan tetap di vault (`ui_conventions.md` §12b/§12c/§12d),
+2 sisanya cukup jadi issue karena belum menggigit.
+
+Plan+prompt semuanya siap. Dua batch, boleh paralel (tidak ada file yang bertabrakan).
+
+**Batch A — komponen UI bersama** (`docs/prompts/2026-09-21-batch-A-komponen-ui.md`):
+- [ ] `app-823x` — **P1** NumberInput: draft ketikan tidak sinkron saat `value` diubah dari luar. 32 file. Angka uang/stok bisa tersimpan beda dari yang terlihat, **tanpa gejala apa pun**. Jalur nyata terverifikasi di `DekorasiForm`
+- [ ] `app-egkt` — Modal tanpa Escape/focus return/scroll lock: `ConfirmDialog` (42 file, selalu di jalur hapus) + `ImportExcelModal` (8 file). Pola benarnya sudah ada di repo (`Lightbox.tsx`) tapi tak menyeberang
+- [ ] `app-n5fy` — ImportExcelModal: pilih file bernama sama dua kali tak terdeteksi (`e.target.value` tak direset). Alur import memang iteratif, jadi pasti kena
+- [ ] `app-46vb` — ComboSelect tombol clear (prop `clearable` opt-in) + keyboard navigation di ComboSelect & MultiSelect
+
+**Batch B — halaman** (`docs/prompts/2026-09-21-batch-B-halaman.md`):
+- [ ] `app-qr6o` — Sidebar difilter per role sampai level item/subitem. **Scope menu saja** (keputusan Abu 21 Sep) — tiga tempat harus diubah bareng (sidebar, bottom-nav, menu-sheet), kalau cuma sidebar mobile tetap bocor
+- [ ] `app-fbra` — Peringatan (bukan larangan) saat bikin Template Dekorasi untuk produk yang `dekorasiProses='none'`
+
+**P3 hasil audit, sengaja ditunda** — belum menggigit, jangan dikerjakan sebelum ada
+pemicunya: `app-66nu` (DateInput tak di-portal, akan terpotong kalau dipakai dalam
+modal — sekarang 6 pemakai semuanya halaman datar), `app-2ttp` (SingleSelect mode
+single tidak konsisten — **0 pemakai**, jebakan yang menunggu pemakai pertama).
+
+⚠️ **Utang yang dibuka `app-qr6o`:** menyembunyikan menu BUKAN proteksi. Tidak ada
+`middleware.ts`, dan guard per-halaman tidak merata (`inventory/stok` nol guard). Setelah
+`app-qr6o` ditutup, akses lewat URL langsung TETAP terbuka. Sudah dicatat di `CLAUDE.md`
+§ Utang Teknis. Butuh keputusan bisnis role→route sebelum bisa dikerjakan.
+
 ### 🔜 GELOMBANG I — Sederhanakan sidebar: gabung menu jadi tab (18 Sep 2026)
 
 Ide Abu: sidebar terlalu banyak item (Master Data 15, Laporan 5, Vendor & Gudang
@@ -261,6 +290,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-21 (3)** — Audit komponen UI + planning batch 6 issue (Gelombang J). Dipicu satu bug ComboSelect di review app-glx1: kalau satu komponen menyimpang dari spec industri, apa lagi? Audit `src/components/ui/` menemukan 5 temuan. **Disaring, bukan semua dinaikkan jadi aturan** — 3 naik ke `ui_conventions.md` vault (§12c input angka draft, §12d modal Escape/focus/scroll, §12b diperluas ke MultiSelect + keyboard), 2 cukup jadi beads karena belum menggigit (DateInput 6 pemakai halaman datar, SingleSelect 0 pemakai). Yang paling serius `app-823x` (P1): NumberInput menampilkan ketikan lama saat `value` diubah dari luar — 32 file, angka uang/stok bisa tersimpan beda dari yang terlihat **tanpa gejala**, dan jalurnya terverifikasi nyata di DekorasiForm (dropdown ber-`preventDefault` sengaja mencegah blur). **Koreksi diagnosis:** audit awal keliru menuduh `handleSelect` ComboSelect salah — dibaca langsung, cabang single sudah benar; yang hilang cuma tombol clear. Aturan vault + deskripsi beads sudah dibetulkan supaya tak menyesatkan. 6 issue di-plan+prompt jadi 2 batch (A komponen, B halaman). `app-qr6o` dipersempit ke **menu saja** atas keputusan Abu — temuan sampingannya: tak ada `middleware.ts` dan guard halaman tak merata (`inventory/stok` nol), jadi sembunyikan menu ≠ proteksi; dicatat di CLAUDE.md § Utang Teknis. Juga ditulis aturan global baru di `~/.claude/CLAUDE.md`: subagent mewarisi model induk kalau `model` tak diisi — wajib diisi eksplisit, explorer cukup Sonnet.
 - **2026-09-21 (2)** — app-glx1 selesai: Antigravity eksekusi Task 2-5, direview Claude. 10 file (8 sesuai plan + 2 helper `listActivePoOptions` & `poId` di PB yang memang dibutuhkan dropdown). Kualitas rapi — guard PB↔PO terpasang persis, `requireRole` + filter soft-delete di helper baru, `ComboSelect` pakai objek error sesuai API komponen. 1 fix review: saat PB dikosongkan, `poId` tidak ikut dibersihkan sehingga PO warisan PB lama nyangkut tanpa disadari user. Typecheck: 4 error milik issue ini hilang, sisa 9 murni milik app-gtf4.1.
 - **2026-09-21** — Planning batch integritas data: 2 issue di-plan+prompt setelah jawaban klien lengkap (app-gtf4.1 sambung pengirim/penerima ke master GH #21, app-glx1 barangKeluar→PO GH #20). **DB migration kedua issue sudah dieksekusi Claude via MCP** (dev `fzkszkhjswtcugrqjzgx`): 4 kolom teks dibuang, 5 kolom FK baru + 1 CHECK + 3 index. `schema.ts` ter-update, menyisakan 13 typecheck error yang SENGAJA — itu peta kerja Antigravity (9 untuk gtf4.1, 4 untuk glx1), nol kejutan di luar file target. Keputusan kunci: pengirim/penerima = staf internal (bukan penjahit), tempat jahit 1 daftar tapi bentuk kolom tetap 2 (ikut pola `penugasanJahit`, siap kalau nanti pakai CV), dan hanya 3 dari 6 kolom jadi FK — 3 sisanya orang pihak vendor, sengaja tetap teks. Dari 9 pertanyaan klien: 7 terjawab tuntas, 2 (angka resleting, Lebihan Pcs) kena salah paham dan disusun ulang.
 - **2026-09-18 (5)** — Epic app-z4wp dibuat: gabung menu master data jadi tab (4 anak, lihat Gelombang I). app-z4wp.1 (Data Bahan) di-plan lengkap + GH #19, siap eksekusi Antigravity. app-z4wp.2-4 dicatat cakupannya, belum di-plan detail. Bonus fix: app-g23s — regex `\D` di 3 fungsi generate kode (lokasi/vendor/penjahit) kehilangan backslash lewat postgres.js sql tagged template, fix `\\D`, diverifikasi via node script langsung.
