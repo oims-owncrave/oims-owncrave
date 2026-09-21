@@ -6,6 +6,7 @@ import { gudangBarangJadi, auditLog } from "@/db/schema";
 import type { GudangBarangJadi } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { GudangBarangJadiInput } from "@/lib/schemas/gudang-barang-jadi";
+import { requireRole } from "@/lib/auth";
 
 /** Union eksplisit: tanpa ini TS menyempitkan ke cabang {data} saja saat semua
  * return di dalam transaksi sukses, lalu res.error di hook jadi error tipe. */
@@ -38,6 +39,7 @@ async function writeAudit(
 }
 
 export async function listGudangBarangJadi() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(gudangBarangJadi)
@@ -61,6 +63,7 @@ async function lepasDefaultLain(tx: Tx, exceptId?: string) {
 }
 
 export async function createGudangBarangJadi(input: GudangBarangJadiInput): Promise<GudangResult> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const existing = await db
@@ -91,6 +94,7 @@ export async function createGudangBarangJadi(input: GudangBarangJadiInput): Prom
 }
 
 export async function updateGudangBarangJadi(id: string, input: GudangBarangJadiInput): Promise<GudangResult> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const [before] = await db
@@ -133,6 +137,7 @@ export async function updateGudangBarangJadi(id: string, input: GudangBarangJadi
 }
 
 export async function softDeleteGudangBarangJadi(id: string): Promise<GudangResult> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // TODO(oims-ckp.13): guard referensi stok_barang_jadi + barang_jadi

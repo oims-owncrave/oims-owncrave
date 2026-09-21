@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { supplier, barangMasuk, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { SupplierInput } from "@/lib/schemas/supplier";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -30,6 +31,7 @@ async function writeAudit(
 }
 
 export async function listSupplier() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(supplier)
@@ -38,6 +40,7 @@ export async function listSupplier() {
 }
 
 export async function createSupplier(input: SupplierInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard unique code (only for active rows)
@@ -65,6 +68,7 @@ export async function createSupplier(input: SupplierInput) {
 }
 
 export async function updateSupplier(id: string, input: SupplierInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -102,6 +106,7 @@ export async function updateSupplier(id: string, input: SupplierInput) {
 }
 
 export async function softDeleteSupplier(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard: tidak boleh hapus jika punya transaksi barang masuk

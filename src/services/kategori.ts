@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { kategori, bahan, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { KategoriInput } from "@/lib/schemas/kategori";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -30,6 +31,7 @@ async function writeAudit(
 }
 
 export async function listKategori() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(kategori)
@@ -38,6 +40,7 @@ export async function listKategori() {
 }
 
 export async function createKategori(input: KategoriInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard kode unik (hanya yang belum soft-deleted)
@@ -57,6 +60,7 @@ export async function createKategori(input: KategoriInput) {
 }
 
 export async function updateKategori(id: string, input: KategoriInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -90,6 +94,7 @@ export async function updateKategori(id: string, input: KategoriInput) {
 }
 
 export async function softDeleteKategori(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard: tidak boleh hapus jika ada bahan pakai kategori ini

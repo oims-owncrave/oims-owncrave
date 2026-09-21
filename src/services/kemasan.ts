@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { kemasan, supplier, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { KemasanInput } from "@/lib/schemas/kemasan";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -32,6 +33,7 @@ async function writeAudit(
 export type KemasanRow = typeof kemasan.$inferSelect & { supplierNama: string | null };
 
 export async function listKemasan(): Promise<KemasanRow[]> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   const rows = await db
     .select({
       kemasan: kemasan,
@@ -61,6 +63,7 @@ function toValues(input: KemasanInput) {
 }
 
 export async function createKemasan(input: KemasanInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const existing = await db
@@ -79,6 +82,7 @@ export async function createKemasan(input: KemasanInput) {
 }
 
 export async function updateKemasan(id: string, input: KemasanInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db.select().from(kemasan).where(eq(kemasan.id, id)).limit(1);
 
@@ -107,6 +111,7 @@ export async function updateKemasan(id: string, input: KemasanInput) {
 }
 
 export async function softDeleteKemasan(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // TODO(oims-ckp.12): guard referensi packing_detail (tabel belum ada di gelombang ini)

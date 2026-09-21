@@ -137,20 +137,32 @@ Samakan `roles` nav dengan `READ_ROLES` masing-masing service.
 
 ---
 
-## Master data yang belum punya guard sama sekali
+## Master data — sudah diberi guard (21 Sep 2026 malam)
 
-Sepuluh master ini tidak punya `requireRole` di service-nya — terbuka untuk
-semua yang login:
+Dua belas master sebelumnya tidak punya `requireRole` sama sekali. Sekarang
+semuanya dijaga, dengan baca longgar dan tulis ketat:
 
-Kategori, Satuan, Warna, Supplier, Produk, Kemasan, Vendor, Penjahit,
-Lokasi Produksi, Jenis Cacat.
+| | Role |
+|---|---|
+| **Baca** (`list*`, `get*`) | semua role |
+| **Tulis** (`create*`, `update*`, `softDelete*`, `generate*Kode`) | owner, admin_gudang, admin_produksi |
 
-**Dibiarkan terbuka untuk sekarang** (keputusan Abu 21 Sep). Menyembunyikannya
-di menu tanpa guard server hanya ilusi — URL tetap bisa dibuka. Tercatat di
-`CLAUDE.md` § Utang Teknis.
+Daftarnya: Kategori, Satuan, Warna, Supplier, Produk, Kemasan, Vendor,
+Penjahit, Lokasi Produksi, Jenis Cacat, Gudang Barang Jadi, Bagian Produk.
+(Catatan audit lama menyebut sepuluh — ternyata dua belas.)
 
-Kalau nanti diperketat, urutannya: pasang `requireRole` di service **dulu**,
-baru `roles` di nav. Bukan sebaliknya.
+**Kenapa baca dibuka untuk semua:** PRD menyebut keuangan "melihat harga bahan"
+dan viewer "melihat dashboard dan laporan". Laporan menampilkan nama bahan,
+kategori, dan supplier — kalau master dikunci, laporannya jadi setengah kosong.
+Yang berbahaya bukan membaca, tapi mengubah.
+
+**Kenapa tulis memuat admin_produksi:** dia mengelola master Produk, BOM, dan
+varian. Memisahkannya per master akan membuat dua belas daftar berbeda yang
+sulit dipelihara; kalau nanti perlu dibedakan, lakukan per service, bukan
+mengubah aturan umum ini.
+
+`generate*Kode` diberi guard tulis karena hanya dipanggil dari FormModal —
+diverifikasi, tidak ada pemanggil dari jalur baca.
 
 ---
 

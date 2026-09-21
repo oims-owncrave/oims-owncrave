@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { jenisCacat, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { JenisCacatInput } from "@/lib/schemas/jenis-cacat";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -30,6 +31,7 @@ async function writeAudit(
 }
 
 export async function listJenisCacat() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(jenisCacat)
@@ -38,6 +40,7 @@ export async function listJenisCacat() {
 }
 
 export async function createJenisCacat(input: JenisCacatInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard kode unik aktif — pesan bagus sebelum kena partial unique index DB
@@ -60,6 +63,7 @@ export async function createJenisCacat(input: JenisCacatInput) {
 }
 
 export async function updateJenisCacat(id: string, input: JenisCacatInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -96,6 +100,7 @@ export async function updateJenisCacat(id: string, input: JenisCacatInput) {
 }
 
 export async function softDeleteJenisCacat(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // TODO(oims-ckp.7 / oims-ckp.1): guard referensi temuan_cacat + standar_qc_detail

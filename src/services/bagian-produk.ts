@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { bagianProduk, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { BagianProdukInput } from "@/lib/schemas/bagian-produk";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -31,6 +32,7 @@ async function writeAudit(
 
 /** Kode bagian produk otomatis: BP-NN (counter global). */
 export async function generateBagianProdukKode(): Promise<string> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const rows = await db.execute<{ max: number }>(
     sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\\D', '', 'g'), '')::int), 0) AS max
         FROM bagian_produk WHERE kode LIKE 'BP-%'`,
@@ -39,6 +41,7 @@ export async function generateBagianProdukKode(): Promise<string> {
 }
 
 export async function listBagianProduk() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(bagianProduk)
@@ -49,6 +52,7 @@ export async function listBagianProduk() {
 export type BagianProdukRow = Awaited<ReturnType<typeof listBagianProduk>>[number];
 
 export async function createBagianProduk(input: BagianProdukInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard kode unik aktif — pesan ramah sebelum kena partial unique index DB
@@ -71,6 +75,7 @@ export async function createBagianProduk(input: BagianProdukInput) {
 }
 
 export async function updateBagianProduk(id: string, input: BagianProdukInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -106,6 +111,7 @@ export async function updateBagianProduk(id: string, input: BagianProdukInput) {
 }
 
 export async function softDeleteBagianProduk(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const [before] = await db

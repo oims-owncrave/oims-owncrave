@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { warna, bahan, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { WarnaInput } from "@/lib/schemas/warna";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -30,6 +31,7 @@ async function writeAudit(
 }
 
 export async function listWarna() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(warna)
@@ -38,6 +40,7 @@ export async function listWarna() {
 }
 
 export async function createWarna(input: WarnaInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const existing = await db
@@ -56,6 +59,7 @@ export async function createWarna(input: WarnaInput) {
 }
 
 export async function updateWarna(id: string, input: WarnaInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -88,6 +92,7 @@ export async function updateWarna(id: string, input: WarnaInput) {
 }
 
 export async function softDeleteWarna(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const used = await db

@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { lokasiProduksi, penjahit, vendor, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { LokasiProduksiInput } from "@/lib/schemas/lokasi-produksi";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -31,6 +32,7 @@ async function writeAudit(
 
 /** Kode lokasi otomatis: LOK-NNNN. */
 export async function generateLokasiKode(): Promise<string> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const rows = await db.execute<{ max: number }>(
     sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\\D', '', 'g'), '')::int), 0) AS max
         FROM lokasi_produksi WHERE kode LIKE 'LOK-%'`,
@@ -55,6 +57,7 @@ function normalize(input: LokasiProduksiInput) {
 
 /** Lokasi + nama vendor (untuk kolom tabel tanpa query tambahan di client). */
 export async function listLokasiProduksi() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select({
       id: lokasiProduksi.id,
@@ -77,6 +80,7 @@ export async function listLokasiProduksi() {
 }
 
 export async function createLokasiProduksi(input: LokasiProduksiInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const existing = await db
@@ -96,6 +100,7 @@ export async function createLokasiProduksi(input: LokasiProduksiInput) {
 }
 
 export async function updateLokasiProduksi(id: string, input: LokasiProduksiInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -128,6 +133,7 @@ export async function updateLokasiProduksi(id: string, input: LokasiProduksiInpu
 }
 
 export async function softDeleteLokasiProduksi(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const [penjahitRef] = await db

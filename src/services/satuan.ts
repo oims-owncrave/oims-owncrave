@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { satuan, bahan, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { SatuanInput } from "@/lib/schemas/satuan";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -30,6 +31,7 @@ async function writeAudit(
 }
 
 export async function listSatuan() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(satuan)
@@ -38,6 +40,7 @@ export async function listSatuan() {
 }
 
 export async function createSatuan(input: SatuanInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard nama unik (hanya yang belum soft-deleted)
@@ -57,6 +60,7 @@ export async function createSatuan(input: SatuanInput) {
 }
 
 export async function updateSatuan(id: string, input: SatuanInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -91,6 +95,7 @@ export async function updateSatuan(id: string, input: SatuanInput) {
 }
 
 export async function softDeleteSatuan(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard: tidak boleh hapus jika ada bahan pakai satuan ini

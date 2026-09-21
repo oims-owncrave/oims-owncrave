@@ -12,6 +12,7 @@ import {
 } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { PenjahitInput } from "@/lib/schemas/penjahit";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -38,6 +39,7 @@ async function writeAudit(
 
 /** Kode penjahit otomatis: JHT-INT-NNNN (internal/sampel) atau JHT-EXT-NNNN. */
 export async function generatePenjahitKode(jenis: string): Promise<string> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const prefix = jenis === "internal" || jenis === "sampel" ? "JHT-INT" : "JHT-EXT";
   const like = `${prefix}-%`;
   const rows = await db.execute<{ max: number }>(
@@ -65,6 +67,7 @@ function normalize(input: PenjahitInput) {
 }
 
 export async function listPenjahit() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   const rows = await db
     .select({
       id: penjahit.id,
@@ -117,6 +120,7 @@ async function syncProduk(
 }
 
 export async function createPenjahit(input: PenjahitInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const existing = await db
@@ -141,6 +145,7 @@ export async function createPenjahit(input: PenjahitInput) {
 }
 
 export async function updatePenjahit(id: string, input: PenjahitInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db.select().from(penjahit).where(eq(penjahit.id, id)).limit(1);
 
@@ -173,6 +178,7 @@ export async function updatePenjahit(id: string, input: PenjahitInput) {
 }
 
 export async function softDeletePenjahit(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const [tarifRef] = await db

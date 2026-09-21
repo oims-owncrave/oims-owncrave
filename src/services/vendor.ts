@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { vendor, penjahit, lokasiProduksi, tarifJasaJahit, auditLog } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import type { VendorInput } from "@/lib/schemas/vendor";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -31,6 +32,7 @@ async function writeAudit(
 
 /** Kode vendor otomatis: VDR-NNNN (counter global, bukan per bulan). */
 export async function generateVendorKode(): Promise<string> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const rows = await db.execute<{ max: number }>(
     sql`SELECT COALESCE(MAX(NULLIF(regexp_replace(kode, '\\D', '', 'g'), '')::int), 0) AS max
         FROM vendor WHERE kode LIKE 'VDR-%'`,
@@ -65,6 +67,7 @@ function normalize(input: VendorInput) {
 }
 
 export async function listVendor() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select()
     .from(vendor)
@@ -73,6 +76,7 @@ export async function listVendor() {
 }
 
 export async function createVendor(input: VendorInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   const existing = await db
@@ -92,6 +96,7 @@ export async function createVendor(input: VendorInput) {
 }
 
 export async function updateVendor(id: string, input: VendorInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db.select().from(vendor).where(eq(vendor.id, id)).limit(1);
 
@@ -120,6 +125,7 @@ export async function updateVendor(id: string, input: VendorInput) {
 }
 
 export async function softDeleteVendor(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard: vendor yang sudah dipakai penjahit/lokasi/tarif tidak boleh dihapus

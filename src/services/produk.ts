@@ -6,6 +6,7 @@ import { produk, varianProduk, auditLog, bom } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import { urutkanUkuran } from "@/lib/bom-ukuran";
 import type { ProdukInput } from "@/lib/schemas/produk";
+import { requireRole } from "@/lib/auth";
 
 async function currentUserId(): Promise<string | null> {
   const supabase = await createClient();
@@ -31,6 +32,7 @@ async function writeAudit(
 }
 
 export async function listProduk() {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   // bomAktifId: null = produk belum punya resep. Kolom tambahan, bentuk lama tetap utuh
   // supaya pemakai lain (form barang masuk, PO, WO) tidak terpengaruh.
   return db
@@ -50,6 +52,7 @@ export async function listProduk() {
 }
 
 export async function createProduk(input: ProdukInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard kode unik (hanya yang belum soft-deleted)
@@ -69,6 +72,7 @@ export async function createProduk(input: ProdukInput) {
 }
 
 export async function updateProduk(id: string, input: ProdukInput) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
   const [before] = await db
     .select()
@@ -102,6 +106,7 @@ export async function updateProduk(id: string, input: ProdukInput) {
 
 /** Ukuran unik varian aktif per produk, dipakai buat isi pilihan MultiSelect di form BOM. */
 export async function listUkuranPerProduk(): Promise<Record<string, string[]>> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   const rows = await db
     .selectDistinct({ produkId: varianProduk.produkId, ukuran: varianProduk.ukuran })
     .from(varianProduk)
@@ -118,6 +123,7 @@ export async function listUkuranPerProduk(): Promise<Record<string, string[]>> {
 }
 
 export async function softDeleteProduk(id: string) {
+  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
   const userId = await currentUserId();
 
   // Guard: tidak boleh hapus jika masih punya varian aktif
