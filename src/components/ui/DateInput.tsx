@@ -12,6 +12,7 @@ interface Props {
   placeholder?: string;
   className?: string;
   containerClassName?: string;
+  disabled?: boolean;
 }
 
 function toDate(s: string | undefined): Date | undefined {
@@ -27,7 +28,7 @@ function toStr(d: Date): string {
   return `${y}-${m}-${dd}`;
 }
 
-export function DateInput({ value, onChange, placeholder = "Pilih tanggal", className, containerClassName }: Props) {
+export function DateInput({ value, onChange, placeholder = "Pilih tanggal", className, containerClassName, disabled = false }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -39,6 +40,17 @@ export function DateInput({ value, onChange, placeholder = "Pilih tanggal", clas
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
+  // Escape menutup kalender. Tanpa ini user yang terlanjur membuka harus
+  // mengklik ke luar — refleksnya menekan Escape dan tidak terjadi apa-apa.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const selected = toDate(value);
   const display = selected
     ? selected.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })
@@ -48,9 +60,13 @@ export function DateInput({ value, onChange, placeholder = "Pilih tanggal", clas
     <div ref={ref} className={cn("relative", containerClassName)}>
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { if (!disabled) setOpen((o) => !o); }}
+        disabled={disabled}
+        aria-haspopup="dialog"
+        aria-expanded={open}
         className={cn(
           "h-10 min-w-36 cursor-pointer rounded-lg border border-primary bg-white px-3 text-left text-sm text-primary outline-none transition focus:ring-1 focus:ring-primary dark:border-primary dark:bg-gray-dark dark:text-white",
+          "disabled:cursor-not-allowed disabled:opacity-50",
           !display && "text-primary/60",
           className,
         )}
@@ -58,8 +74,8 @@ export function DateInput({ value, onChange, placeholder = "Pilih tanggal", clas
         {display || placeholder}
       </button>
 
-      {open && (
-        <div className="absolute z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-3 dark:bg-gray-dark">
+      {open && !disabled && (
+        <div role="dialog" aria-label="Pilih tanggal" className="absolute z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-3 dark:bg-gray-dark">
           <DayPicker
             mode="single"
             selected={selected}

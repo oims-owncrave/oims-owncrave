@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check, Search, X } from "lucide-react";
+import { ComboSelect } from "./ComboSelect";
 import { cn } from "@/lib/utils";
 
 export interface MultiSelectOption {
@@ -370,13 +371,39 @@ interface SingleSelectProps {
   disabled?: boolean;
 }
 
-export function SingleSelect({ value, onChange, direction = "auto", ...rest }: SingleSelectProps) {
+/**
+ * Membungkus ComboSelect, BUKAN MultiSelect.
+ *
+ * MultiSelect selalu toggle: memilih ulang opsi yang sedang aktif justru
+ * mengosongkan nilainya, dan panelnya tidak pernah menutup setelah memilih —
+ * dua hal yang salah untuk single-pick. ComboSelect sudah benar di dua-duanya
+ * (mengganti nilai lalu menutup panel), jadi lebih aman dibungkus daripada
+ * menambal perilaku toggle.
+ *
+ * `direction` dan `iconPrefix` tidak diteruskan: ComboSelect menghitung arah
+ * panelnya sendiri dan tidak punya slot ikon. Keduanya tetap ada di tipe prop
+ * supaya pemanggil lama tidak gagal compile.
+ */
+export function SingleSelect({
+  value,
+  onChange,
+  options,
+  placeholder,
+  searchPlaceholder,
+  searchable,
+  className,
+  disabled,
+}: SingleSelectProps) {
   return (
-    <MultiSelect
-      {...rest}
-      direction={direction}
-      value={value ? [value] : []}
-      onChange={(vals) => onChange(vals[vals.length - 1] ?? "")}
+    <ComboSelect
+      options={options}
+      value={value || null}
+      onChange={(v) => onChange((v as string) ?? "")}
+      placeholder={placeholder}
+      searchPlaceholder={searchPlaceholder}
+      searchable={searchable}
+      className={className}
+      disabled={disabled}
     />
   );
 }
