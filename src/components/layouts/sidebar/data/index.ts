@@ -7,6 +7,8 @@ import {
   VendorIcon,
   DekorasiIcon,
   QcIcon,
+  ReworkIcon,
+  GudangJadiIcon,
   MonitoringIcon,
   LaporanIcon,
   SistemIcon,
@@ -146,7 +148,7 @@ export const NAV_DATA: NavSection[] = [
       {
         title: "Rework & Karantina",
         roles: ["owner", "admin_produksi"],
-        icon: QcIcon,
+        icon: ReworkIcon,
         items: [
           { title: "Rework", url: "/qc/rework", roles: ["owner", "admin_produksi"] },
           { title: "Karantina Reject", url: "/qc/reject", roles: ["owner", "admin_produksi"] },
@@ -155,7 +157,7 @@ export const NAV_DATA: NavSection[] = [
       {
         title: "Finishing & Gudang",
         roles: ["owner", "admin_produksi", "admin_gudang"],
-        icon: QcIcon,
+        icon: GudangJadiIcon,
         items: [
           { title: "Finishing", url: "/qc/finishing", roles: ["owner", "admin_produksi", "admin_gudang"] },
           { title: "Stok Barang Jadi", url: "/qc/stok-jadi", roles: ["owner", "admin_produksi", "admin_gudang"] },

@@ -12,6 +12,8 @@ import {
   Truck,
   Paintbrush,
   BadgeCheck,
+  RotateCcw,
+  Warehouse,
   Activity,
   Users,
   ActivitySquare,
@@ -34,6 +36,8 @@ export const ProduksiIcon = Scissors;
 export const VendorIcon = Truck;
 export const DekorasiIcon = Paintbrush;
 export const QcIcon = BadgeCheck;
+export const ReworkIcon = RotateCcw;        // jalur pengecualian: barang balik untuk diperbaiki
+export const GudangJadiIcon = Warehouse;    // hilir: barang selesai masuk gudang
 export const MonitoringIcon = Activity;
 export const PenggunaIcon = Users;
 export const LogIcon = ActivitySquare;
