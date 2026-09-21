@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { listBahan } from "@/services/bahan";
 import { listApprovedPermintaan } from "@/services/permintaan-bahan";
+import { listActivePoOptions } from "@/services/po-produksi";
 import { requireRole } from "@/lib/auth";
-import { BarangKeluarForm } from "../\_components/BarangKeluarForm";
+import { BarangKeluarForm } from "../_components/BarangKeluarForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { db } from "@/db";
 import { stok } from "@/db/schema";
@@ -15,7 +16,11 @@ export const metadata: Metadata = {
 export default async function BarangKeluarBaruPage() {
   await requireRole(["owner", "admin_gudang"]);
 
-  const [bahanList, pbOptions] = await Promise.all([listBahan(), listApprovedPermintaan()]);
+  const [bahanList, pbOptions, poOptions] = await Promise.all([
+    listBahan(),
+    listApprovedPermintaan(),
+    listActivePoOptions(),
+  ]);
   const bahanIds = bahanList.map((b) => b.id);
 
   const stokList = bahanIds.length
@@ -38,7 +43,11 @@ export default async function BarangKeluarBaruPage() {
           { label: "Baru" },
         ]}
       />
-      <BarangKeluarForm bahanOptions={bahanOptions} pbOptions={pbOptions} />
+      <BarangKeluarForm
+        bahanOptions={bahanOptions}
+        pbOptions={pbOptions}
+        poOptions={poOptions}
+      />
     </div>
   );
 }

@@ -154,6 +154,7 @@ export async function listApprovedPermintaan() {
     .select({
       id: permintaanBahan.id,
       nomorDokumen: permintaanBahan.nomorDokumen,
+      poId: permintaanBahan.poId,
       poNomor: poProduksi.nomorDokumen,
     })
     .from(permintaanBahan)

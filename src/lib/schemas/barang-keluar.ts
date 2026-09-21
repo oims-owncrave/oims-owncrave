@@ -6,7 +6,7 @@ export const barangKeluarDetailSchema = z.object({
 });
 
 export const barangKeluarSchema = z.object({
-  tujuan: z.string().max(200).optional().or(z.literal("")),
+  poId: z.string().uuid("PO wajib dipilih"),
   permintaanBahanId: z.string().uuid().optional().or(z.literal("")),
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
   catatan: z.string().max(500).optional().or(z.literal("")),

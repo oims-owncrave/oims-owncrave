@@ -56,9 +56,9 @@ export function LaporanBarangKeluarTable({
       renderCell: (item) => fmtDate(item.tanggal),
     },
     {
-      key: "tujuan",
-      label: "Tujuan",
-      renderCell: (item) => item.tujuan || "-",
+      key: "poNomor",
+      label: "PO",
+      renderCell: (item) => item.poNomor || "-",
     },
     {
       key: "bahanNama",
@@ -111,7 +111,7 @@ export function LaporanBarangKeluarTable({
           label: "Tanggal",
           formatter: (v) => fmtDate(new Date(v)),
         },
-        { key: "tujuan", label: "Tujuan" },
+        { key: "poNomor", label: "PO" },
         { key: "bahanKode", label: "Kode Bahan" },
         { key: "bahanNama", label: "Nama Bahan" },
         { key: "kuantitas", label: "Qty" },
@@ -155,7 +155,7 @@ export function LaporanBarangKeluarTable({
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <TableSearch table={table} placeholder="Cari dokumen / bahan / tujuan..." className="flex-1 sm:w-64" />
+            <TableSearch table={table} placeholder="Cari dokumen / bahan / PO..." className="flex-1 sm:w-64" />
             <ColumnToggle table={table} className="shrink-0" />
           </div>
         </TableToolbar>

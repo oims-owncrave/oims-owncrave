@@ -49,9 +49,9 @@ export default async function BarangKeluarDetailPage({
             </dd>
           </div>
           <div>
-            <dt className="text-sm text-dark-5 dark:text-dark-6">Tujuan</dt>
+            <dt className="text-sm text-dark-5 dark:text-dark-6">PO</dt>
             <dd className="font-medium text-dark dark:text-white">
-              {header.tujuan || "-"}
+              {header.poNomor || "-"}
             </dd>
           </div>
           <div>

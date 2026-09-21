@@ -14,6 +14,7 @@ import {
   supplier,
   mutasiStok,
   users,
+  poProduksi,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 
@@ -36,7 +37,7 @@ export type LaporanKeluarItem = {
   id: string;
   nomorDokumen: string;
   tanggal: Date;
-  tujuan: string | null;
+  poNomor: string | null;
   bahanKode: string;
   bahanNama: string;
   satuanSingkatan: string | null;
@@ -138,7 +139,7 @@ export async function getLaporanBarangKeluar(from?: string, to?: string) {
       id: barangKeluarDetail.id,
       nomorDokumen: barangKeluar.nomorDokumen,
       tanggal: barangKeluar.tanggal,
-      tujuan: barangKeluar.tujuan,
+      poNomor: poProduksi.nomorDokumen,
       bahanKode: bahan.kode,
       bahanNama: bahan.nama,
       satuanSingkatan: satuan.singkatan,
@@ -150,6 +151,7 @@ export async function getLaporanBarangKeluar(from?: string, to?: string) {
     .from(barangKeluarDetail)
     .innerJoin(barangKeluar, eq(barangKeluarDetail.barangKeluarId, barangKeluar.id))
     .innerJoin(bahan, eq(barangKeluarDetail.bahanId, bahan.id))
+    .leftJoin(poProduksi, eq(barangKeluar.poId, poProduksi.id))
     .leftJoin(satuan, eq(bahan.satuanId, satuan.id))
     .leftJoin(users, eq(barangKeluar.createdBy, users.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -159,7 +161,7 @@ export async function getLaporanBarangKeluar(from?: string, to?: string) {
     id: r.id,
     nomorDokumen: r.nomorDokumen,
     tanggal: r.tanggal,
-    tujuan: r.tujuan,
+    poNomor: r.poNomor,
     bahanKode: r.bahanKode,
     bahanNama: r.bahanNama,
     satuanSingkatan: r.satuanSingkatan,

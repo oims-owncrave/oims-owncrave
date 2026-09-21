@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, notInArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   poProduksi,
@@ -91,6 +91,28 @@ export async function listPo() {
 }
 
 export type PoListRow = Awaited<ReturnType<typeof listPo>>[number];
+
+/** PO relevan untuk dropdown (mis. form barang keluar: tidak selesai/dibatalkan). */
+export async function listActivePoOptions() {
+  await requireRole([...READ_ROLES]);
+  return db
+    .select({
+      id: poProduksi.id,
+      nomorDokumen: poProduksi.nomorDokumen,
+      produkNama: produk.nama,
+    })
+    .from(poProduksi)
+    .innerJoin(produk, eq(poProduksi.produkId, produk.id))
+    .where(
+      and(
+        notInArray(poProduksi.status, ["selesai", "dibatalkan"]),
+        isNull(poProduksi.deletedAt),
+      ),
+    )
+    .orderBy(desc(poProduksi.createdAt));
+}
+
+export type PoOption = Awaited<ReturnType<typeof listActivePoOptions>>[number];
 
 export async function getPoDetail(id: string) {
   await requireRole([...READ_ROLES]);

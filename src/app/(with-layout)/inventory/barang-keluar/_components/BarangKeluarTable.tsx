@@ -19,7 +19,7 @@ type BarangKeluarRow = {
   id: string;
   nomorDokumen: string;
   tanggal: Date;
-  tujuan: string | null;
+  poNomor: string | null;
 };
 
 interface Props {
@@ -47,9 +47,9 @@ export function BarangKeluarTable({ data }: Props) {
       renderCell: (item) => fmtDate(item.tanggal),
     },
     {
-      key: "tujuan",
-      label: "Tujuan",
-      renderCell: (item) => item.tujuan || "-",
+      key: "poNomor",
+      label: "PO",
+      renderCell: (item) => item.poNomor || "-",
     },
     {
       key: "id",
@@ -89,7 +89,7 @@ export function BarangKeluarTable({ data }: Props) {
     <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
       <TableToolbar>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <TableSearch table={table} placeholder="Cari nomor / tujuan..." className="flex-1 sm:w-64" />
+          <TableSearch table={table} placeholder="Cari nomor / PO..." className="flex-1 sm:w-64" />
           <ColumnToggle table={table} className="shrink-0" />
         </div>
         <Button

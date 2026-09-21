@@ -26,11 +26,14 @@ type BahanOption = {
   isActive: boolean;
 };
 
-type PbOption = { id: string; nomorDokumen: string; poNomor: string };
+type PbOption = { id: string; nomorDokumen: string; poId: string; poNomor: string };
+
+type PoOption = { id: string; nomorDokumen: string; produkNama: string };
 
 interface Props {
   bahanOptions: BahanOption[];
   pbOptions: PbOption[];
+  poOptions: PoOption[];
 }
 
 const rupiah = (n: number) =>
@@ -44,7 +47,7 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
+export function BarangKeluarForm({ bahanOptions, pbOptions, poOptions }: Props) {
   const router = useRouter();
   const { create } = useBarangKeluarMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -59,7 +62,7 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
   } = useForm<BarangKeluarFormInput>({
     resolver: zodResolver(barangKeluarSchema),
     defaultValues: {
-      tujuan: "",
+      poId: "",
       permintaanBahanId: "",
       tanggal: todayISO(),
       catatan: "",
@@ -99,17 +102,27 @@ export function BarangKeluarForm({ bahanOptions, pbOptions }: Props) {
             onChange={(v) => {
               const id = (v as string) ?? "";
               setValue("permintaanBahanId", id);
+              // PB menentukan PO-nya. Dikosongkan → PO ikut dikosongkan supaya user
+              // memilih ulang sadar. (Belum bisa dipicu dari UI: ComboSelect single
+              // tak punya tombol clear — lihat app-46vb.)
               const pb = pbOptions.find((o) => o.id === id);
-              if (pb && !watch("tujuan")) {
-                setValue("tujuan", `${pb.nomorDokumen} / ${pb.poNomor}`);
-              }
+              setValue("poId", pb?.poId ?? "", { shouldValidate: true });
             }}
           />
-          <Input
-            label="Tujuan"
-            placeholder="Misal: Produksi PO-001"
-            {...register("tujuan")}
-            error={errors.tujuan?.message}
+          <ComboSelect
+            label="PO Produksi"
+            required
+            placeholder="Pilih PO..."
+            options={poOptions.map((po) => ({
+              label: `${po.nomorDokumen} — ${po.produkNama}`,
+              value: po.id,
+            }))}
+            value={watch("poId") || null}
+            disabled={Boolean(watch("permintaanBahanId"))}
+            onChange={(v) => {
+              setValue("poId", (v as string) ?? "", { shouldValidate: true });
+            }}
+            error={errors.poId}
           />
           <Input
             type="date"

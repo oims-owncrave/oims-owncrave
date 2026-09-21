@@ -9,6 +9,8 @@ import {
   bahan,
   stok,
   auditLog,
+  poProduksi,
+  permintaanBahan,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 import { generateDocNumber } from "@/lib/document-number";
@@ -68,6 +70,22 @@ export async function createBarangKeluar(
           });
         }
 
+        // Guard konsistensi PB↔PO
+        if (input.permintaanBahanId) {
+          const [pb] = await tx
+            .select({ poId: permintaanBahan.poId })
+            .from(permintaanBahan)
+            .where(eq(permintaanBahan.id, input.permintaanBahanId))
+            .limit(1);
+
+          if (!pb) {
+            return { error: "Permintaan bahan tidak ditemukan" };
+          }
+          if (pb.poId !== input.poId) {
+            return { error: "PO tidak cocok dengan Permintaan Bahan yang dipilih" };
+          }
+        }
+
         const nomorDokumen = await generateDocNumber("BK", "barang_keluar");
 
         // 1. header
@@ -75,7 +93,7 @@ export async function createBarangKeluar(
           .insert(barangKeluar)
           .values({
             nomorDokumen,
-            tujuan: input.tujuan || null,
+            poId: input.poId,
             permintaanBahanId: input.permintaanBahanId || null,
             tanggal: new Date(input.tanggal),
             catatan: input.catatan || null,
@@ -163,10 +181,12 @@ export async function listBarangKeluar() {
       id: barangKeluar.id,
       nomorDokumen: barangKeluar.nomorDokumen,
       tanggal: barangKeluar.tanggal,
-      tujuan: barangKeluar.tujuan,
+      poId: barangKeluar.poId,
+      poNomor: poProduksi.nomorDokumen,
       createdAt: barangKeluar.createdAt,
     })
     .from(barangKeluar)
+    .leftJoin(poProduksi, eq(poProduksi.id, barangKeluar.poId))
     .orderBy(desc(barangKeluar.tanggal), desc(barangKeluar.createdAt));
 }
 
@@ -178,11 +198,13 @@ export async function getBarangKeluarDetail(id: string) {
       id: barangKeluar.id,
       nomorDokumen: barangKeluar.nomorDokumen,
       tanggal: barangKeluar.tanggal,
-      tujuan: barangKeluar.tujuan,
+      poId: barangKeluar.poId,
+      poNomor: poProduksi.nomorDokumen,
       catatan: barangKeluar.catatan,
       createdAt: barangKeluar.createdAt,
     })
     .from(barangKeluar)
+    .leftJoin(poProduksi, eq(poProduksi.id, barangKeluar.poId))
     .where(eq(barangKeluar.id, id))
     .limit(1);
 
