@@ -44,7 +44,7 @@ export function Sidebar({ userRole }: { userRole: UserRole }) {
     <aside
       className={cn(
         "sticky top-0 z-30 h-screen shrink-0 border-r border-gray-200 bg-white transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-dark hidden min-[850px]:block",
-        isOpen ? "w-72.5" : "w-[100.5px]",
+        isOpen ? "w-80" : "w-[100.5px]",
       )}
       aria-label="Main navigation"
     >

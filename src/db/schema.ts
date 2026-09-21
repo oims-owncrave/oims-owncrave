@@ -501,6 +501,10 @@ export const bahan = pgTable(
     // kode otomatis: BH-[KODE_KATEGORI]-[NOMOR] e.g. "BH-KTN-001" — unik hanya baris aktif
     kode: text("kode").notNull(),
     nama: text("nama").notNull(),
+    // Dimensi fisik bahan: "30inch/76cm", "15mm", "120Gsm". Teks karena satuannya
+    // beragam dan sebagian menyimpan dua sekaligus. BUKAN untuk ukuran baju yang
+    // berlaku — itu milik bomDetail.berlakuUkuran.
+    ukuran: text("ukuran"),
     kategoriId: uuid("kategori_id").notNull().references(() => kategori.id),
     satuanId: uuid("satuan_id").notNull().references(() => satuan.id),
     warnaId: uuid("warna_id").references(() => warna.id), // nullable — bahan lama tidak punya warna

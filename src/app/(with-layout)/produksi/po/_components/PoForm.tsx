@@ -1,10 +1,9 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
-import { useTransition } from "react";
+import { useMemo, useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
@@ -14,6 +13,7 @@ import { poSchema, type PoInput, PO_JENIS } from "@/lib/schemas/po-produksi";
 import { usePoMutation } from "@/hooks/usePoProduksi";
 import { useProdukDetail } from "@/hooks/useVarianProduk";
 import type { PicOption } from "@/services/po-produksi";
+import { MatrixTargetInput } from "./MatrixTargetInput";
 
 type ProdukOption = { id: string; kode: string; nama: string; isActive: boolean };
 
@@ -23,8 +23,6 @@ interface Props {
   editId?: string;
   defaultValues?: PoInput;
 }
-
-const EMPTY_ROW = { varianId: "", jumlahTarget: undefined as unknown as number, lebihanPcs: undefined as unknown as number };
 
 const PRIORITAS_OPTIONS = [
   { value: "rendah", label: "Rendah" },
@@ -46,7 +44,6 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
   const {
     register,
     handleSubmit,
-    control,
     watch,
     setValue,
     formState: { errors },
@@ -61,23 +58,59 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
       jenis: "reguler",
       penanggungJawab: "",
       catatan: "",
-      details: [EMPTY_ROW],
+      details: [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({ control, name: "details" });
-  const details = watch("details");
+  const details = watch("details") || [];
   const produkId = watch("produkId");
 
   // Varian dari produk terpilih (fetch client-side saat produk dipilih)
-  const { data: produkDetail } = useProdukDetail(produkId || "");
+  const { data: produkDetail, isLoading: isLoadingProduk } = useProdukDetail(produkId || "");
   const varianOptions = (produkId && produkDetail?.varian) || [];
-  const aktifVarian = varianOptions.filter((v) => v.isActive);
+
+  // Di mode edit, varian yang tersimpan di PO tetap ditampilkan walau sudah di-nonaktifkan
+  const varianUntukMatrix = useMemo(() => {
+    const detailVarianIds = new Set(details.map((d) => d.varianId));
+    return varianOptions.filter((v) => v.isActive || detailVarianIds.has(v.id));
+  }, [varianOptions, details]);
+
+  const targetMap = useMemo(
+    () => Object.fromEntries(details.map((d) => [d.varianId, d.jumlahTarget])),
+    [details],
+  );
+
+  const handleTargetChange = (varianId: string, val: number | undefined) => {
+    const current = watch("details") || [];
+    if (val === undefined || val <= 0) {
+      const next = current.filter((d) => d.varianId !== varianId);
+      setValue("details", next, { shouldValidate: true, shouldDirty: true });
+    } else {
+      const idx = current.findIndex((d) => d.varianId === varianId);
+      if (idx >= 0) {
+        const next = current.map((d, i) =>
+          i === idx ? { ...d, jumlahTarget: val } : d,
+        );
+        setValue("details", next, { shouldValidate: true, shouldDirty: true });
+      } else {
+        const next = [...current, { varianId, jumlahTarget: val, lebihanPcs: 0 }];
+        setValue("details", next, { shouldValidate: true, shouldDirty: true });
+      }
+    }
+  };
+
+  const handleLebihanChange = (varianId: string, val: number | undefined) => {
+    const current = watch("details") || [];
+    const next = current.map((d) =>
+      d.varianId === varianId ? { ...d, lebihanPcs: val ?? 0 } : d,
+    );
+    setValue("details", next, { shouldValidate: true, shouldDirty: true });
+  };
 
   const produkChoices = produkOptions.filter((p) => p.isActive || p.id === produkId);
 
-  const totalTarget = (details ?? []).reduce((s, d) => s + (Number(d.jumlahTarget) || 0), 0);
-  const totalRencana = (details ?? []).reduce(
+  const totalTarget = details.reduce((s, d) => s + (Number(d.jumlahTarget) || 0), 0);
+  const totalRencana = details.reduce(
     (s, d) =>
       s + (Number(d.jumlahTarget) || 0) + (Number(d.lebihanPcs) || 0),
     0,
@@ -106,7 +139,7 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
             onChange={(v) => {
               setValue("produkId", (v as string) ?? "", { shouldValidate: true });
               // reset baris varian saat ganti produk — varian terikat produk
-              setValue("details", [EMPTY_ROW]);
+              setValue("details", [], { shouldValidate: true });
             }}
             error={errors.produkId}
             disabled={isEditing}
@@ -165,127 +198,118 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
 
       {/* Detail per SKU */}
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4">
           <h3 className="font-semibold text-dark dark:text-white">Target per SKU</h3>
-          <Button type="button" variant="outline" size="sm" onClick={() => append(EMPTY_ROW)} disabled={!produkId}>
-            <Plus size={16} className="mr-1.5" />
-            Tambah SKU
-          </Button>
+          <p className="text-xs text-dark-5 dark:text-dark-6">
+            Isi target produksi (pcs) pada tabel matrix warna dan ukuran di bawah.
+          </p>
         </div>
 
-        {!produkId && (
-          <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">Pilih produk dulu untuk memilih varian.</p>
-        )}
-        {typeof errors.details?.message === "string" && (
-          <p className="mb-3 text-xs text-red-500">{errors.details.message}</p>
-        )}
+        {!produkId ? (
+          <p className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            Pilih produk terlebih dahulu untuk mengisi target varian.
+          </p>
+        ) : isLoadingProduk ? (
+          <p className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            Memuat varian produk...
+          </p>
+        ) : varianUntukMatrix.length === 0 ? (
+          <p className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            Produk ini belum memiliki varian aktif. Tambahkan varian di Master Produk terlebih dahulu.
+          </p>
+        ) : (
+          <div className="space-y-6">
+            <MatrixTargetInput
+              varian={varianUntukMatrix}
+              values={targetMap}
+              onChange={handleTargetChange}
+              disabled={isPending}
+            />
 
-        <div className="space-y-3">
-          {fields.map((field, index) => {
-            const row = details?.[index];
-            const rencana = (Number(row?.jumlahTarget) || 0) + (Number(row?.lebihanPcs) || 0);
-            return (
-              <div
-                key={field.id}
-                className="rounded-lg border border-stroke p-4 dark:border-dark-3 md:border-none md:p-0 md:border-b md:pb-3 md:last:border-none"
-              >
-                <div className="mb-3 flex items-center justify-between md:hidden">
-                  <span className="text-xs font-semibold text-dark-5 dark:text-dark-6">SKU #{index + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => fields.length > 1 && remove(index)}
-                    disabled={fields.length <= 1}
-                    className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30 disabled:opacity-30 transition-colors"
-                  >
-                    <Trash2 size={14} />
-                    <span>Hapus</span>
-                  </button>
+            {/* Lebihan Pcs (Opsional) */}
+            {details.length > 0 && (
+              <div className="border-t border-stroke pt-5 dark:border-dark-3">
+                <div className="mb-3">
+                  <h4 className="text-sm font-semibold text-dark dark:text-white">
+                    Lebihan Pcs (Opsional)
+                  </h4>
+                  <p className="text-xs text-dark-5 dark:text-dark-6">
+                    Diisi manual untuk cadangan/jaga-jaga pada SKU tertentu (bukan rumus tetap).
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_2.5rem] md:items-start">
-                  <ComboSelect
-                    label={index === 0 ? "Varian (SKU)" : undefined}
-                    placeholder="Pilih varian"
-                    options={aktifVarian
-                      .filter(
-                        (v) =>
-                          v.id === row?.varianId ||
-                          !details?.some((d, di) => di !== index && d.varianId === v.id),
-                      )
-                      .map((v) => ({
-                        label: `${v.sku} (${v.warnaNama}/${v.ukuran})`,
-                        value: v.id,
-                      }))}
-                    value={row?.varianId || null}
-                    onChange={(v) =>
-                      setValue(`details.${index}.varianId`, (v as string) ?? "", { shouldValidate: true })
-                    }
-                    error={errors.details?.[index]?.varianId}
-                    disabled={!produkId}
-                  />
+                <div className="overflow-x-auto rounded-lg border border-stroke dark:border-dark-3">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-1 text-xs uppercase font-semibold text-dark-5 dark:bg-dark-2 dark:text-dark-6">
+                      <tr>
+                        <th scope="col" className="px-4 py-2.5">
+                          SKU / Varian
+                        </th>
+                        <th scope="col" className="px-4 py-2.5 text-right w-28">
+                          Target
+                        </th>
+                        <th scope="col" className="px-4 py-2.5 text-right w-36">
+                          Lebihan (pcs)
+                        </th>
+                        <th scope="col" className="px-4 py-2.5 text-right w-36">
+                          Rencana Cutting
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stroke dark:divide-dark-3 bg-white dark:bg-gray-dark">
+                      {details.map((d) => {
+                        const varian = varianUntukMatrix.find((v) => v.id === d.varianId);
+                        const label = varian
+                          ? `${varian.sku} (${varian.warnaNama} / ${varian.ukuran})`
+                          : d.varianId;
+                        const rencana = (Number(d.jumlahTarget) || 0) + (Number(d.lebihanPcs) || 0);
 
-                  <NumberInput
-                    decimals={0}
-                    placeholder="0"
-                    label={index === 0 ? "Target (pcs)" : undefined}
-                    value={watch(`details.${index}.jumlahTarget`)}
-                    onChange={(v) =>
-                      setValue(`details.${index}.jumlahTarget`, v as number, { shouldValidate: true })
-                    }
-                    error={errors.details?.[index]?.jumlahTarget?.message}
-                  />
-
-                  <NumberInput
-                    decimals={0}
-                    placeholder="0"
-                    label={index === 0 ? "Lebihan (pcs)" : undefined}
-                    value={watch(`details.${index}.lebihanPcs`)}
-                    onChange={(v) =>
-                      setValue(`details.${index}.lebihanPcs`, v as number, { shouldValidate: true })
-                    }
-                    error={errors.details?.[index]?.lebihanPcs?.message}
-                  />
-
-                  <div className="flex items-center justify-between border-t border-stroke/40 pt-2 dark:border-dark-3/40 md:block md:border-t-0 md:pt-0">
-                    <span className="text-xs text-dark-5 dark:text-dark-6 md:hidden">Rencana Cutting:</span>
-                    {index === 0 && (
-                      <div className="mb-2 hidden h-5 text-right text-sm font-medium text-dark dark:text-white md:block">
-                        Rencana Cutting
-                      </div>
-                    )}
-                    <div className="flex h-10 items-center justify-end px-0 text-sm font-semibold text-dark dark:text-white md:px-4 md:font-medium">
-                      {rencana} pcs
-                    </div>
-                  </div>
-
-                  <div className="hidden md:block">
-                    {index === 0 && <div className="mb-2 h-5" aria-hidden />}
-                    <div className="flex h-10 items-center justify-center">
-                      <button
-                        type="button"
-                        onClick={() => fields.length > 1 && remove(index)}
-                        disabled={fields.length <= 1}
-                        className="rounded p-2 text-dark-5 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-30 disabled:hover:bg-transparent dark:text-dark-6 dark:hover:bg-red-500/10"
-                        title="Hapus baris"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </div>
+                        return (
+                          <tr key={d.varianId}>
+                            <td className="px-4 py-2.5 font-medium text-dark dark:text-white">
+                              {label}
+                            </td>
+                            <td className="px-4 py-2.5 text-right text-dark-5 dark:text-dark-6">
+                              {Number(d.jumlahTarget) || 0} pcs
+                            </td>
+                            <td className="px-4 py-2 text-right">
+                              <NumberInput
+                                decimals={0}
+                                placeholder="0"
+                                value={d.lebihanPcs || undefined}
+                                onChange={(val) => handleLebihanChange(d.varianId, val)}
+                                disabled={isPending}
+                                className="text-right h-8 w-28 ml-auto font-medium"
+                              />
+                            </td>
+                            <td className="px-4 py-2.5 text-right font-semibold text-dark dark:text-white">
+                              {rencana} pcs
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            )}
+          </div>
+        )}
 
-        <div className="mt-4 flex justify-end gap-6 border-t border-stroke pt-4 dark:border-dark-3">
+        {(errors.details?.message || errors.details?.root?.message) && (
+          <p className="mt-3 text-xs font-medium text-red-500">
+            {errors.details?.message || errors.details?.root?.message}
+          </p>
+        )}
+
+        <div className="mt-6 flex justify-end gap-6 border-t border-stroke pt-4 dark:border-dark-3">
           <div className="text-right">
             <span className="text-sm text-dark-5 dark:text-dark-6">Total Target</span>
-            <p className="text-lg font-bold text-dark dark:text-white">{totalTarget} pcs</p>
+            <p className="text-lg font-bold text-dark dark:text-white">{totalTarget.toLocaleString("id-ID")} pcs</p>
           </div>
           <div className="text-right">
             <span className="text-sm text-dark-5 dark:text-dark-6">Total Rencana Cutting</span>
-            <p className="text-lg font-bold text-dark dark:text-white">{totalRencana} pcs</p>
+            <p className="text-lg font-bold text-dark dark:text-white">{totalRencana.toLocaleString("id-ID")} pcs</p>
           </div>
         </div>
       </div>
