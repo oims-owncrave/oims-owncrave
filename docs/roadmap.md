@@ -200,16 +200,17 @@ loading indicator yang hilang di banyak navigasi. Detail: `app-gtf4` (epic, PARE
 - [x] `app-gtf4.5` — Audit 14 kolom teks vs master (6 FK users, 2 pgEnum, 1 FK PO, 5 tetap teks) ✅ **DONE**, dokumen `docs/insight-bisnis/audit-kolom-teks-vs-master.md` (commit `44be143`)
 - [x] `app-7u06` — **Row highlight** (`getRowLoading`) di 18 tabel dengan icon mata ✅ **DONE** (Antigravity eksekusi + Claude review 18 Sep: fix AuditLogTable kode mati + WoQcTable tombol terlewat)
 - [x] `app-bvre` — Row loading overlay desktop disamakan mobile ✅ **DONE** (Antigravity eksekusi Opsi A, direvisi Claude ke Opsi B setelah screenshot Abu: overlay `<td absolute inset-0>` — data tetap redup + spinner tengah, bukan colSpan yang buang data)
-- [ ] `app-gtf4.1` — Sambungkan pengirim/penerima jahit ke master (P1) — **blocked**: nunggu jawaban klien soal istilah "Konveksi" (vendor vs penjahit satu/dua master) + daftar staf ke menu Pengguna (masih 1 baris). Insight: `docs/insight-bisnis/istilah-vendor-penjahit-konveksi.md`
-- [ ] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1). Klien sudah jawab 18 Sep: ukuran ditentukan di BOM (`berlakuUkuran`, sudah ada), BUKAN field baru di master bahan — nama bahan tinggal dibersihkan dari "(M,L,XL,...)". Sisa blocker: angka `66cm` yang salah ketik (Vision GMC No5) masih perlu dipastikan klien
+- [ ] `app-gtf4.1` — Sambungkan pengirim/penerima jahit ke master (P1) — ✅ **tidak blocked lagi**, semua keputusan lengkap (klien 21 Sep). **Task 1 (migration + schema.ts) sudah dieksekusi Claude via MCP.** Plan+prompt siap, GH #21. ⏳ Antigravity mulai Task 2
+- [ ] `app-glx1` — `barangKeluar.tujuan` → FK notNull ke PO (P2). Klien: barang keluar SELALU untuk PO. **Task 1 sudah dieksekusi Claude via MCP.** Plan+prompt siap, GH #20. ⏳ Antigravity mulai Task 2
+- [ ] `app-gtf4.4` — Ukuran/spesifikasi bahan jadi kolom sendiri (P1). Ukuran ditentukan di BOM (`berlakuUkuran`), BUKAN field baru di master bahan — nama bahan tinggal dibersihkan. **Sisa blocker:** angka resleting 30/32/34 inch belum terjawab (pertanyaan awal ambigu, susulan sudah disiapkan)
 - [ ] `app-gtf4.2` — jenisKerusakan & bagianProduk → master jenisCacat (P2), belum digali
 - [ ] `app-gtf4.3` — Kategori/Brand/Jenis produk → master (P2) — butuh keputusan produk
 - [ ] `app-gy84` — Potret ulang 2 gambar tutorial T2 yang basi (P2), belum disentuh
 
-Sisa blocker Gelombang H: `app-gtf4.1` nunggu jawaban klien (istilah Konveksi +
-daftar staf ke menu Pengguna), `app-gtf4.4` nunggu koreksi angka `66cm`,
-`app-gtf4.3` nunggu keputusan produk. `app-gy84` bisa jalan kapan saja (cuma
-perlu screenshot ulang, bukan koding).
+Sisa blocker Gelombang H: `app-gtf4.4` nunggu koreksi angka resleting, `app-gtf4.3`
+nunggu keputusan produk, `app-itl4` nunggu klarifikasi Lebihan Pcs level produk jadi.
+Pertanyaan susulan untuk ketiganya sudah disiapkan di `docs/pertanyaan-klien-18sep.md`.
+`app-gy84` bisa jalan kapan saja (cuma perlu screenshot ulang, bukan koding).
 
 ### 🔜 GELOMBANG I — Sederhanakan sidebar: gabung menu jadi tab (18 Sep 2026)
 
@@ -260,6 +261,7 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-21** — Planning batch integritas data: 2 issue di-plan+prompt setelah jawaban klien lengkap (app-gtf4.1 sambung pengirim/penerima ke master GH #21, app-glx1 barangKeluar→PO GH #20). **DB migration kedua issue sudah dieksekusi Claude via MCP** (dev `fzkszkhjswtcugrqjzgx`): 4 kolom teks dibuang, 5 kolom FK baru + 1 CHECK + 3 index. `schema.ts` ter-update, menyisakan 13 typecheck error yang SENGAJA — itu peta kerja Antigravity (9 untuk gtf4.1, 4 untuk glx1), nol kejutan di luar file target. Keputusan kunci: pengirim/penerima = staf internal (bukan penjahit), tempat jahit 1 daftar tapi bentuk kolom tetap 2 (ikut pola `penugasanJahit`, siap kalau nanti pakai CV), dan hanya 3 dari 6 kolom jadi FK — 3 sisanya orang pihak vendor, sengaja tetap teks. Dari 9 pertanyaan klien: 7 terjawab tuntas, 2 (angka resleting, Lebihan Pcs) kena salah paham dan disusun ulang.
 - **2026-09-18 (5)** — Epic app-z4wp dibuat: gabung menu master data jadi tab (4 anak, lihat Gelombang I). app-z4wp.1 (Data Bahan) di-plan lengkap + GH #19, siap eksekusi Antigravity. app-z4wp.2-4 dicatat cakupannya, belum di-plan detail. Bonus fix: app-g23s — regex `\D` di 3 fungsi generate kode (lokasi/vendor/penjahit) kehilangan backslash lewat postgres.js sql tagged template, fix `\\D`, diverifikasi via node script langsung.
 - **2026-09-18 (4)** — app-bvre selesai + direvisi: Antigravity eksekusi Opsi A (colSpan) sesuai plan, Abu screenshot hasilnya dan nilai kurang (data hilang total, bukan "buram+spinner"). Claude revisi ke Opsi B: `<TableCell className="absolute inset-0">` — `<tr>` sudah `position:relative` jadi otomatis containing block, overlay melebar ke seluruh row tanpa hitung lebar kolom manual. Kekhawatiran sticky/pinned column (alasan awal tolak Opsi B) ternyata tak relevan — dicek ulang, nol tabel pakai sticky aktif. Terverifikasi visual `/produksi/permintaan-bahan`. 1 file `table.tsx`, otomatis berlaku 16+ tabel.
 - **2026-09-18 (3)** — app-bvre di-plan: row loading overlay desktop tak konsisten dengan mobile (cuma kolom No. jadi spinner kecil, bukan overlay 1 spinner di tengah baris). Opsi A dipilih Abu: `<TableCell colSpan>` menggantikan seluruh baris saat loading (kolom No. ikut hilang), reuse rumus colSpan yang sudah ada di file yang sama. 1 file (`table.tsx`), otomatis berlaku ke 16+ tabel. GH #18, plan+prompt siap eksekusi Antigravity.

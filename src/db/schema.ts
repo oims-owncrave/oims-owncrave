@@ -563,13 +563,14 @@ export const barangMasukDetail = pgTable(
 export const barangKeluar = pgTable("barang_keluar", {
   id: uuid("id").primaryKey().defaultRandom(),
   nomorDokumen: text("nomor_dokumen").notNull().unique(), // BK-YYYYMM-NNNN
-  tujuan: text("tujuan"), // e.g. "Cutting PO-001"
+  // Bahan keluar SELALU untuk PO (klien 21 Sep) — PB opsional, jadi PO disimpan sendiri.
+  poId: uuid("po_id").notNull().references(() => poProduksi.id),
   permintaanBahanId: uuid("permintaan_bahan_id").references(() => permintaanBahan.id), // link ke PB (Tahap 2)
   tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
   catatan: text("catatan"),
   createdBy: uuid("created_by").notNull().references(() => users.id),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+}, (t) => [index("bk_po_idx").on(t.poId)]);
 
 export const barangKeluarDetail = pgTable(
   "barang_keluar_detail",
@@ -967,7 +968,9 @@ export const bundling = pgTable(
     woId: uuid("wo_id").notNull().references(() => workOrderCutting.id),
     varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
     jumlahPcs: integer("jumlah_pcs").notNull(),
-    tujuanPenjahit: text("tujuan_penjahit"), // text dulu — master vendor di Tahap 3
+    // DB CHECK bundling_tujuan_tunggal: vendor & penjahit tidak boleh dua-duanya terisi
+    vendorId: uuid("vendor_id").references(() => vendor.id),
+    penjahitId: uuid("penjahit_id").references(() => penjahit.id),
     keterangan: text("keterangan"),
     status: bundelStatusEnum("status").notNull().default("draft"),
     createdBy: uuid("created_by").notNull().references(() => users.id),
@@ -975,7 +978,11 @@ export const bundling = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
-  (t) => [index("bundling_wo_idx").on(t.woId)]
+  (t) => [
+    index("bundling_wo_idx").on(t.woId),
+    index("bundling_vendor_idx").on(t.vendorId),
+    index("bundling_penjahit_idx").on(t.penjahitId),
+  ]
 );
 
 // ─── Tahap 3 — Master Vendor, Lokasi, Penjahit, Tarif ─────────────────────────
@@ -1172,8 +1179,8 @@ export const pengirimanJahit = pgTable(
     tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
     lokasiAsalId: uuid("lokasi_asal_id").references(() => lokasiProduksi.id),
     lokasiTujuanId: uuid("lokasi_tujuan_id").references(() => lokasiProduksi.id),
-    pengirim: text("pengirim"),
-    penerima: text("penerima"),
+    pengirimId: uuid("pengirim_id").references(() => users.id), // staf kita yang mengantar
+    penerima: text("penerima"), // orang di pihak VENDOR — sengaja teks, kita tak punya masternya
     kendaraan: text("kendaraan"),
     kurir: text("kurir"),
     buktiFotoUrl: text("bukti_foto_url"),
@@ -1228,7 +1235,7 @@ export const penerimaanBundelVendor = pgTable(
     nomorDokumen: text("nomor_dokumen").notNull().unique(), // STB-JHT-YYYYMM-NNNN
     pengirimanId: uuid("pengiriman_id").notNull().references(() => pengirimanJahit.id),
     tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
-    penerima: text("penerima").notNull(),
+    penerima: text("penerima").notNull(), // orang di pihak VENDOR — sengaja teks
     lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
     fotoUrl: text("foto_url"),
     catatan: text("catatan"),
@@ -1311,11 +1318,11 @@ export const penerimaanHasilJahit = pgTable(
     penugasanId: uuid("penugasan_id").notNull().references(() => penugasanJahit.id),
     returId: uuid("retur_id").references(() => returJahit.id),
     tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
-    penerima: text("penerima").notNull(),
+    penerimaId: uuid("penerima_id").references(() => users.id), // staf gudang kita
     lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
     // info pengiriman hasil dari sisi vendor (PRD §17) — kolom, bukan tabel terpisah
     tanggalKirimVendor: timestamp("tanggal_kirim_vendor", { withTimezone: true }),
-    pengirimVendor: text("pengirim_vendor"),
+    pengirimVendor: text("pengirim_vendor"), // orang di pihak VENDOR — sengaja teks
     kurirResi: text("kurir_resi"),
     buktiUrl: text("bukti_url"),
     catatan: text("catatan"),
