@@ -22,6 +22,27 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   return profile ?? null;
 });
 
+/**
+ * Data pelengkap yang hanya boleh dilihat sebagian role (mis. isi dropdown pada
+ * modal "Tambah"). Kalau role yang sedang login tidak berhak, kembalikan
+ * `fallback` alih-alih melempar — supaya halaman DAFTAR tetap terbuka untuk
+ * yang hanya boleh membaca.
+ *
+ * Hanya menelan penolakan akses. Error lain (DB mati, query salah) tetap
+ * dilempar — menelan semuanya akan menyembunyikan kerusakan nyata.
+ */
+export async function opsional<T>(p: Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await p;
+  } catch (e) {
+    const pesan = e instanceof Error ? e.message : "";
+    if (pesan === "Akses ditolak" || pesan === "Unauthenticated" || pesan === "Akun dinonaktifkan") {
+      return fallback;
+    }
+    throw e;
+  }
+}
+
 export async function requireRole(
   allowedRoles: Array<(typeof users.$inferSelect)["role"]>,
 ): Promise<CurrentUser> {

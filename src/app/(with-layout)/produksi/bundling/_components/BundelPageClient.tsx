@@ -51,6 +51,10 @@ export function BundelPageClient({
   const [, startNavigate] = useTransition();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  // Dropdown sumber bundel dijaga WRITE_ROLES di server. Kosong = role ini hanya
+  // boleh membaca, jadi tombol Buat disembunyikan — kalau tidak, modalnya terbuka
+  // tanpa satu pun pilihan dan user mengira aplikasinya rusak.
+  const bolehBuat = woOptions.length > 0;
   const [cancelId, setCancelId] = useState<string | null>(null);
   const { data } = useBundelList();
   const { create, setStatus } = useBundelMutation();
@@ -193,9 +197,11 @@ export function BundelPageClient({
             <ColumnToggle table={table} className="shrink-0" />
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={() => setModalOpen(true)} className="hidden sm:inline-flex">
-              + Buat Bundel
-            </Button>
+            {bolehBuat && (
+              <Button onClick={() => setModalOpen(true)} className="hidden sm:inline-flex">
+                + Buat Bundel
+              </Button>
+            )}
           </div>
         </TableToolbar>
         <DataTable
@@ -203,12 +209,14 @@ export function BundelPageClient({
           showRowNumber
           getRowLoading={(item) => item.id === pendingId}
           mobileFab={
-            <Button
-              onClick={() => setModalOpen(true)}
-              className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
-            >
-              <Plus size={24} />
-            </Button>
+            bolehBuat ? (
+              <Button
+                onClick={() => setModalOpen(true)}
+                className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
+              >
+                <Plus size={24} />
+              </Button>
+            ) : undefined
           }
         />
         <TablePagination table={table} pageSizeOptions={[10, 25, 50]} />
