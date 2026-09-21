@@ -48,27 +48,39 @@ Jangan "merapikan" dengan menggabungkan lebih banyak. Batas ini disengaja.
 
 ## Yang lebih mudah dari poin 2: TIDAK perlu filter tab
 
-Sudah diperiksa 21 Sep — keempat menu ini rolenya **sama persis**
-(`owner`, `admin_produksi`):
+Diperbarui 21 Sep malam (setelah `app-yok1`). Role kedua pasangan kini
+**berbeda antar pasangan**, tapi **seragam di dalam tiap pasangan** — dan itulah
+yang penting:
 
 ```
-Penerimaan QC   owner, admin_produksi
-Antrean QC      owner, admin_produksi
-Rework          owner, admin_produksi
-Re-QC           owner, admin_produksi
+Penerimaan QC   owner, admin_gudang, admin_produksi   <- pasangan 1
+Antrean QC      owner, admin_gudang, admin_produksi   <- sama
+
+Rework          owner, admin_produksi                 <- pasangan 2
+Re-QC           owner, admin_produksi                 <- sama
 ```
 
-Jadi **tidak perlu** pola penyaringan tab per role seperti di poin 2, dan
-**tidak perlu** `opsional()`. Semua tab tampil untuk siapa pun yang bisa membuka
-halamannya.
+Karena seragam di dalam tiap pasangan, **tidak perlu** pola penyaringan tab per
+role seperti di poin 2, dan **tidak perlu** `opsional()`. Kedua tab selalu
+tampil bersama untuk siapa pun yang bisa membuka halamannya.
 
-Guard halaman: pakai pola yang sudah ada di halaman QC sekarang. Kalau halaman
-lama memakai `requireRole`, **ganti** jadi:
+**Guard halaman berbeda antar pasangan** — perhatikan ini:
 ```tsx
+// /qc/penerimaan
+if (!(await bolehAkses(["owner", "admin_gudang", "admin_produksi"]))) return <AksesDitolak />;
+
+// /qc/rework
 if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
 ```
-`requireRole` di halaman melempar dan membuat halaman crash dengan overlay
-Runtime Error (diperbaiki di app-qdqu).
+
+Jangan menyalin daftar role dari satu halaman ke halaman lain.
+
+Kalau halaman lama memakai `requireRole`, ganti jadi `bolehAkses` +
+`<AksesDitolak />` seperti di atas. `requireRole` di halaman melempar dan
+membuat halaman crash dengan overlay Runtime Error (diperbaiki di app-qdqu).
+
+Rujukan hak akses: `docs/hak-akses.md` — sumber kebenaran tunggal, jangan
+menebak dari halaman sebelah.
 
 ---
 
