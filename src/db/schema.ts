@@ -766,11 +766,30 @@ export const poProduksiDetail = pgTable(
     poId: uuid("po_id").notNull().references(() => poProduksi.id),
     varianId: uuid("varian_id").notNull().references(() => varianProduk.id),
     jumlahTarget: integer("jumlah_target").notNull(), // pcs produk utuh
-    // "Lebihan" — istilah & satuan klien (bukan persen). Rencana cutting = target + lebihan.
-    // Beda dari bom_detail.toleransiPersen (susut bahan per pcs, tetap persen).
+    // "Lebihan" per varian — DISEMBUNYIKAN dari layar sejak app-1u2w, kolom sengaja
+    // dipertahankan. Klien menaruh lebihan di BAHAN (po_produksi_lebihan_bahan), bukan
+    // produk jadi. Dihidupkan lagi lewat TAMPILKAN_LEBIHAN_VARIAN di lib/produksi/konstanta.
     lebihanPcs: integer("lebihan_pcs").notNull().default(0),
   },
   (t) => [index("po_detail_po_idx").on(t.poId)]
+);
+
+// "Lebihan" bahan — istilah klien, diisi MANUAL per PO, kosong secara default.
+// Jaga-jaga barang hilang/kurang (logistik), BUKAN reject kualitas. Klien menolak
+// angka default/auto-suggest (app-itl4, klarifikasi langsung 18 Sep 2026).
+// numeric karena satuan bahan bisa desimal (0,5 meter), ikut bomDetail.kuantitas.
+export const poProduksiLebihanBahan = pgTable(
+  "po_produksi_lebihan_bahan",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    poId: uuid("po_id").notNull().references(() => poProduksi.id),
+    bahanId: uuid("bahan_id").notNull().references(() => bahan.id),
+    lebihan: numeric("lebihan", { precision: 15, scale: 3 }).notNull().default("0"),
+  },
+  (t) => [
+    index("po_lebihan_bahan_po_idx").on(t.poId),
+    uniqueIndex("po_lebihan_bahan_unik").on(t.poId, t.bahanId),
+  ]
 );
 
 export const permintaanBahan = pgTable("permintaan_bahan", {
