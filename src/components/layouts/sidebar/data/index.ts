@@ -114,13 +114,23 @@ export const NAV_DATA: NavSection[] = [
         title: "Vendor & Gudang",
         // Union dari anak-anaknya: keuangan ikut karena Biaya Jasa Jahit.
         // Kalau induk lebih sempit dari anak, anak tak pernah sempat diperiksa.
-        roles: ["owner", "admin_gudang", "admin_produksi", "keuangan"],
+        roles: ["owner", "admin_gudang", "admin_produksi"],
         icon: VendorIcon,
         items: [
           { title: "Penugasan Jahit", url: "/vendor/penugasan", roles: ["owner", "admin_gudang", "admin_produksi"] },
           { title: "Pengiriman Vendor", url: "/vendor/pengiriman", roles: ["owner", "admin_gudang", "admin_produksi"] },
           { title: "Surat Jalan", url: "/vendor/surat-jalan", roles: ["owner", "admin_gudang", "admin_produksi"] },
           { title: "Penerimaan Hasil", url: "/vendor/penerimaan", roles: ["owner", "admin_gudang", "admin_produksi"] },
+        ],
+      },
+      {
+        // Jalur pengecualian jahit + biayanya, dipisah dari alur normal di atas.
+        // Pola sama dengan Rework & Karantina di QC: yang dibuka saat ada masalah
+        // tidak perlu menemani yang dibuka tiap hari.
+        title: "Retur & Biaya",
+        roles: ["owner", "admin_gudang", "admin_produksi", "keuangan"], // union anak
+        icon: ReworkIcon,
+        items: [
           { title: "Retur & Perbaikan", url: "/vendor/retur", roles: ["owner", "admin_gudang", "admin_produksi"] },
           { title: "Selisih & Kasus", url: "/vendor/selisih", roles: ["owner", "admin_gudang", "admin_produksi"] },
           { title: "Biaya Jasa Jahit", url: "/vendor/biaya", roles: ["owner", "admin_produksi", "keuangan"] }, // READ_ROLES biaya-jasa-jahit.ts
