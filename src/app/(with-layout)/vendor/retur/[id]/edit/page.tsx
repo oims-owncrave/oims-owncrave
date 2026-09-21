@@ -1,11 +1,12 @@
 import { notFound, redirect } from "next/navigation";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { getReturDetail, listPenerimaanPunyaRusak } from "@/services/retur-jahit";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ReturForm } from "../../_components/ReturForm";
 
 export default async function ReturEditPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_gudang", "admin_produksi"]))) return <AksesDitolak />;
   const { id } = await params;
   const detail = await getReturDetail(id);
   if (!detail) notFound();

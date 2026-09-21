@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { listBkSiapTerima } from "@/services/penerimaan-cutting";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { PenerimaanForm } from "../_components/PenerimaanForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PenerimaanBaruPage() {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
 
   const bkOptions = await listBkSiapTerima();
 

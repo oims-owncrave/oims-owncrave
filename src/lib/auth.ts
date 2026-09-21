@@ -23,6 +23,22 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 });
 
 /**
+ * Seperti `requireRole`, tapi mengembalikan `false` alih-alih melempar saat role
+ * tidak berhak. Dipakai di Server Component halaman supaya bisa merender
+ * `<AksesDitolak />` — menolak itu benar, tapi user harus melihat penjelasan,
+ * bukan overlay Runtime Error.
+ *
+ * Belum login tetap dilempar: itu urusan middleware/redirect, bukan pesan.
+ */
+export async function bolehAkses(
+  allowedRoles: Array<(typeof users.$inferSelect)["role"]>,
+): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Unauthenticated");
+  return user.isActive && allowedRoles.includes(user.role);
+}
+
+/**
  * Data pelengkap yang hanya boleh dilihat sebagian role (mis. isi dropdown pada
  * modal "Tambah"). Kalau role yang sedang login tidak berhak, kembalikan
  * `fallback` alih-alih melempar — supaya halaman DAFTAR tetap terbuka untuk

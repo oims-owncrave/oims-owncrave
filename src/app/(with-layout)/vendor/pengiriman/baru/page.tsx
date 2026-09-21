@@ -1,4 +1,5 @@
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { listPenugasanBisaDikirim } from "@/services/penugasan-jahit";
 import { listLokasiProduksi } from "@/services/lokasi-produksi";
 import { listUserOptions } from "@/services/user";
@@ -10,7 +11,7 @@ export default async function PengirimanBaruPage({
 }: {
   searchParams: Promise<{ penugasan?: string }>;
 }) {
-  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_gudang", "admin_produksi"]))) return <AksesDitolak />;
   const { penugasan } = await searchParams;
   const [penugasanOptions, lokasiList, userOptions] = await Promise.all([
     listPenugasanBisaDikirim(),

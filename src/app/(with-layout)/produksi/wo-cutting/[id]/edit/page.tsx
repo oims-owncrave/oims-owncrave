@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getWoDetail, listPoSiapCutting } from "@/services/wo-cutting";
 import { listPicOptions } from "@/services/po-produksi";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { WoForm } from "../../_components/WoForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -15,7 +16,7 @@ export default async function WoEditPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
 
   const { id } = await params;
   const detail = await getWoDetail(id);

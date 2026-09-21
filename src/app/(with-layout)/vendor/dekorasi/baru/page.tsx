@@ -1,11 +1,12 @@
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { listWoBisaDekorasi, listVendorDekorasi } from "@/services/dekorasi";
 import { listLokasiProduksi } from "@/services/lokasi-produksi";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { DekorasiForm } from "../_components/DekorasiForm";
 
 export default async function DekorasiBaruPage() {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
   const [woOptions, vendorList, lokasiList] = await Promise.all([
     listWoBisaDekorasi(),
     listVendorDekorasi(),

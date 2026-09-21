@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getPoDetail, listPicOptions } from "@/services/po-produksi";
 import { listProduk } from "@/services/produk";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { PoForm } from "../../_components/PoForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -19,7 +20,7 @@ export default async function PoEditPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
 
   const { id } = await params;
   const detail = await getPoDetail(id);

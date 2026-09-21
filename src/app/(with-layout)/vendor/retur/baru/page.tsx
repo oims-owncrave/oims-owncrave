@@ -1,10 +1,11 @@
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { listPenerimaanPunyaRusak } from "@/services/retur-jahit";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ReturForm } from "../_components/ReturForm";
 
 export default async function ReturBaruPage({ searchParams }: { searchParams: Promise<{ penerimaan?: string }> }) {
-  await requireRole(["owner", "admin_gudang", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_gudang", "admin_produksi"]))) return <AksesDitolak />;
   const { penerimaan } = await searchParams;
   const penerimaanOptions = await listPenerimaanPunyaRusak();
   return (

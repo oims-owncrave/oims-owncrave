@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { listPoSiapCutting } from "@/services/wo-cutting";
 import { listPicOptions } from "@/services/po-produksi";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { WoForm } from "../_components/WoForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function WoBaruPage() {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
 
   const [poOptions, picOptions] = await Promise.all([
     listPoSiapCutting(),

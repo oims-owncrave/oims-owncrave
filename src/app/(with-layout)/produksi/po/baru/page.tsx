@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { listProduk } from "@/services/produk";
 import { listPicOptions } from "@/services/po-produksi";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { PoForm } from "../_components/PoForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PoBaruPage() {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
 
   const [produkOptions, picOptions] = await Promise.all([
     listProduk(),

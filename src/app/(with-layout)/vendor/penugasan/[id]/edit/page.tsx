@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { requireRole } from "@/lib/auth";
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { getPenugasanDetail, listPoSiapJahit } from "@/services/penugasan-jahit";
 import { listVendor } from "@/services/vendor";
 import { listPenjahit } from "@/services/penjahit";
@@ -8,7 +9,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { PenugasanForm } from "../../_components/PenugasanForm";
 
 export default async function PenugasanEditPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireRole(["owner", "admin_produksi"]);
+  if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
   const { id } = await params;
   const detail = await getPenugasanDetail(id);
   if (!detail) notFound();
