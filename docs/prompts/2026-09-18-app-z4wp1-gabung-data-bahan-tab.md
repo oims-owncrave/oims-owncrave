@@ -1,3 +1,32 @@
+
+## ⚠️ PENYEGARAN 21 Sep sore — dua hal berubah setelah prompt ini ditulis
+
+**1. Pola guard halaman sudah berganti (app-qdqu).** Untuk Server Component
+halaman, JANGAN pakai `await requireRole([...])` — itu melempar dan membuat
+halaman crash dengan overlay Runtime Error. Pakai:
+
+```tsx
+import { bolehAkses } from "@/lib/auth";
+import { AksesDitolak } from "@/components/ui/AksesDitolak";
+
+if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
+```
+
+`requireRole` tetap benar di dalam service (`src/services/*.ts`) — yang berubah
+hanya di halaman.
+
+**2. Sidebar sekarang difilter per role (app-qr6o).** Entri nav punya prop
+`roles?: UserRole[]` opsional. Saat menggabungkan 5 entri "Data Bahan" jadi 1,
+entri gabungan itu **tidak perlu** `roles` — kelima master aslinya juga tidak
+punya, jadi biarkan terlihat semua role. Jangan menambah `roles` yang lebih ketat
+dari yang dienforce service.
+
+**3. ComboSelect punya prop `clearable`** (app-46vb) untuk field opsional, dan
+sudah punya keyboard navigation. Tidak wajib dipakai di issue ini, tapi kalau ada
+field opsional, pasang.
+
+---
+
 CONTEXT:
 Saya mengerjakan OIMS Owncrave - ERP produksi garmen, Next.js 16 + React 19 + TS strict, Drizzle + Supabase.
 

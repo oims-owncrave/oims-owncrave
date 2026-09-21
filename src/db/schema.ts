@@ -662,9 +662,6 @@ export const produk = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     kode: text("kode").notNull(), // unik hanya baris aktif (partial index)
     nama: text("nama").notNull(),
-    kategori: text("kategori"),
-    brand: text("brand"),
-    jenis: text("jenis"),
     deskripsi: text("deskripsi"),
     fotoUrl: text("foto_url"),
     // butuh dekorasi apa (oims-eba.13) — none = tanpa sablon/bordir
@@ -1297,7 +1294,7 @@ export const returJahitDetail = pgTable(
       .notNull()
       .references(() => penugasanJahitDetail.id),
     jumlah: integer("jumlah").notNull(),
-    jenisKerusakan: text("jenis_kerusakan"),
+    jenisCacatId: uuid("jenis_cacat_id").references(() => jenisCacat.id),
     instruksi: text("instruksi"),
     tarifPerbaikan: numeric("tarif_perbaikan", { precision: 15, scale: 2 }).notNull().default("0"),
     penanggungBiaya: penanggungBiayaEnum("penanggung_biaya").notNull().default("vendor"),
@@ -1482,6 +1479,26 @@ export const penerimaanDekorasi = pgTable(
 
 // ─── Tahap 4A — Master QC, Kemasan, Gudang Barang Jadi ────────────────────────
 
+/** Bagian fisik produk yang diperiksa QC (kerah, lengan, saku, ...). Satu
+ * daftar untuk semua produk — keputusan Abu 21 Sep 2026. Isi awal 10 baris
+ * sebagai titik mulai; klien boleh rename/tambah lewat halaman master. */
+export const bagianProduk = pgTable(
+  "bagian_produk",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kode: text("kode").notNull(),
+    nama: text("nama").notNull(),
+    urutan: integer("urutan").notNull().default(0), // posisi tampil, bukan identitas
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("bagian_produk_kode_active_unique").on(t.kode).where(isNull(t.deletedAt)),
+  ]
+);
+
 export const jenisCacat = pgTable(
   "jenis_cacat",
   {
@@ -1642,7 +1659,7 @@ export const standarQcDetail = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     standarQcId: uuid("standar_qc_id").notNull().references(() => standarQc.id),
     tahap: text("tahap").notNull(),
-    bagianProduk: text("bagian_produk"),
+    bagianProdukId: uuid("bagian_produk_id").references(() => bagianProduk.id),
     kriteria: text("kriteria").notNull(),
     metode: text("metode"),
     tingkatKepentingan: qcTingkatEnum("tingkat_kepentingan").notNull().default("minor"),
@@ -1759,7 +1776,7 @@ export const temuanCacat = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     hasilQcDetailId: uuid("hasil_qc_detail_id").notNull().references(() => hasilQcDetail.id),
     jenisCacatId: uuid("jenis_cacat_id").notNull().references(() => jenisCacat.id),
-    bagianProduk: text("bagian_produk"),
+    bagianProdukId: uuid("bagian_produk_id").references(() => bagianProduk.id),
     keparahan: qcTingkatEnum("keparahan").notNull(),
     sumber: cacatSumberEnum("sumber").notNull().default("tidak_diketahui"),
     jumlah: integer("jumlah").notNull(),
