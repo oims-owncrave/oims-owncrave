@@ -94,7 +94,7 @@ export const NAV_DATA: NavSection[] = [
           { title: "Barang Masuk", url: "/inventory/barang-masuk" },
           { title: "Barang Keluar", url: "/inventory/barang-keluar" },
           { title: "Mutasi Stok", url: "/inventory/mutasi" },
-          { title: "Penyesuaian Stok", url: "/inventory/penyesuaian" },
+          { title: "Penyesuaian Stok", url: "/inventory/penyesuaian", roles: ["owner", "admin_gudang"] }, // requireRole penyesuaian.ts
         ],
       },
       {
@@ -139,8 +139,8 @@ export const NAV_DATA: NavSection[] = [
         roles: ["owner", "admin_produksi", "admin_gudang"],
         icon: QcIcon,
         items: [
-          { title: "Penerimaan QC", url: "/qc/penerimaan", roles: ["owner", "admin_produksi"] },
-          { title: "Antrean QC", url: "/qc/antrean", roles: ["owner", "admin_produksi"] },
+          { title: "Penerimaan QC", url: "/qc/penerimaan", roles: ["owner", "admin_gudang", "admin_produksi"] }, // READ_ROLES penerimaan-qc.ts
+          { title: "Antrean QC", url: "/qc/antrean", roles: ["owner", "admin_gudang", "admin_produksi"] }, // turunan Penerimaan QC
           { title: "Work Order QC", url: "/qc/wo", roles: ["owner", "admin_produksi"] },
           { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", roles: ["owner", "admin_produksi"] },
           { title: "Rework", url: "/qc/rework", roles: ["owner", "admin_produksi"] },

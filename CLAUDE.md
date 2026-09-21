@@ -102,6 +102,22 @@ Workflow: `bd create` SEBELUM coding, `bd close` SETELAH Abu approve hasil.
 
 Manual, zero-dependency. `public/sw.js` pakai `BUILD_VERSION` — **update BUILD_VERSION tiap meaningful deploy** (format `YYYY-MM-DD`) supaya cache lama di-purge otomatis. Gak perlu ubah `next.config.ts` untuk PWA.
 
+## Hak Akses — baca `docs/hak-akses.md` sebelum menyentuh role
+
+**Sumber kebenaran tunggal** untuk siapa boleh membuka apa: `docs/hak-akses.md`.
+Tabel peran x halaman, diturunkan dari PRD bagian 3.
+
+Sebelum menambah `roles` di sidebar, `requireRole` di service, atau guard
+halaman: cari barisnya di tabel itu. Kalau belum ada, **tambahkan dulu** —
+jangan menebak dari halaman sebelah.
+
+Urutannya selalu: **service dulu, baru menu.** Menu yang lebih ketat dari server
+menyembunyikan akses yang sah; menu yang lebih longgar menggoda lalu menolak.
+Dua-duanya pernah terjadi di proyek ini (`app-yok1`).
+
+Untuk halaman bertab yang isinya campur role: **jangan** beri guard di level
+halaman — saring tabnya saja. Polanya di `master/data-produk/`.
+
 ## Utang Teknis yang Diketahui (jangan disangka sudah beres)
 
 ### Proteksi route belum merata — menu tersembunyi BUKAN proteksi

@@ -175,7 +175,7 @@ export async function createBarangKeluar(
 }
 
 export async function listBarangKeluar() {
-  await requireRole(["owner", "admin_gudang", "keuangan", "viewer"]);
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
   return db
     .select({
       id: barangKeluar.id,
@@ -191,7 +191,7 @@ export async function listBarangKeluar() {
 }
 
 export async function getBarangKeluarDetail(id: string) {
-  await requireRole(["owner", "admin_gudang", "keuangan", "viewer"]);
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
 
   const [header] = await db
     .select({
