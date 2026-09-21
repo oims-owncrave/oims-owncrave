@@ -172,10 +172,12 @@ Itu benar dan tidak perlu diubah — yang dikunci cuma tipenya.
 5. `lokasiProduksi.pic`, `gudangBarangJadi.picNama`, `pekerjaanDekorasi.pengirim`,
    `penerimaanQc.penerima` → FK ke users + ganti Input jadi ComboSelect.
 
-**Perlu keputusan bentuk:**
-6. `barangKeluar.tujuan` → FK ke PO. Perlu dipastikan: apakah barang keluar SELALU untuk
-   PO, atau ada yang memang bukan (sampel, perbaikan)? Kalau ada, `poId` nullable + teks
-   tetap. Kalau selalu, `poId` notNull dan teks dibuang.
+**✅ Terjawab 21 Sep 2026:**
+6. `barangKeluar.tujuan` → FK ke PO, **notNull** (wajib). Ucup: *"untuk PO aja atau
+   pesanan tertentu seperti custom produksi"* — dibaca sebagai SELALU ada PO/pesanan
+   (reguler atau custom, dua-duanya tetap PO), tidak ada kasus keluar tanpa acuan
+   sama sekali. `poId` jadi wajib, kolom teks `tujuan` dibuang (bukan dipertahankan
+   seperti rencana awal).
 
 ## Yang perlu ditanyakan ke klien (gabung dengan pertanyaan Konveksi)
 

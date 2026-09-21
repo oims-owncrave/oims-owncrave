@@ -85,12 +85,21 @@ Status yang dipakai klien di kolom `Kirim`: `Di kirim`, `Sudah Sampai`, `Belum S
 5. **QC bisa dilakukan di vendor** (`vendor.qcMode = internal | vendor`). Blanko `TEMP`
    mencatat `PENERIMA :` dan `QC :` sebagai dua orang berbeda.
 
-## Yang perlu dikonfirmasi ke klien
+## ✅ Terjawab 21 Sep 2026
 
-Satu pertanyaan saja, jangan dicicil: **apakah "Konveksi" perlu dipecah jadi dua daftar
-(Vendor badan usaha + Penjahit perorangan) seperti PRD, atau cukup satu daftar dengan
-penanda jenis seperti praktik Excel mereka?**
+Ucup: *"kalo sekarang perorangan bukan perusahaan, jadi tiap setelah beres langsung
+bayar atau kadang 1-2 dulu baru bayar, staff produksi mengajukan ke finance dulu
+setelah penerimaan proses pekerjaan selesai atau DP di muka."*
 
-Jangan tanya soal pengirim/penerima — sudah terjawab di atas.
+**Keputusan: SATU daftar cukup, bukan dua.** Semua tempat jahit yang dipakai sekarang
+adalah **perorangan** — tidak ada CV/PT yang aktif. Jawaban Ucup fokus ke mekanisme
+bayar (langsung per-selesai, kadang ditumpuk 1-2 kali, staf produksi yang ajukan ke
+finance), bukan ke struktur badan usaha — karena badan usahanya memang tidak ada.
 
-Menunggu jawaban ini sebelum app-gtf4.1 dikerjakan, karena bentuk FK-nya ikut jawaban.
+Konsekuensi: master `vendor` (badan usaha) TIDAK perlu jadi tujuan utama app-gtf4.1.
+Fokus ke master `penjahit` (perorangan) saja. Data `VDR-0001 CV Jahit Cibaduyut` di DB
+dev adalah data uji karangan kita sendiri (lihat bagian atas dokumen ini) — BUKAN
+representasi kenyataan lapangan, jangan dijadikan acuan skema.
+
+**Kalau nanti Owncrave mulai pakai vendor/CV** (ekspansi kapasitas), keputusan ini
+perlu ditinjau ulang — bukan ditutup permanen.

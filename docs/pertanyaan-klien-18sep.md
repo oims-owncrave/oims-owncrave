@@ -57,6 +57,37 @@ Makasih Cup 🙏
 
 ---
 
+## 📋 Susulan siap kirim WA — 2 pertanyaan (21 Sep)
+
+7 dari 9 sudah kejawab jelas, makasih Cup 🙏 Tapi 2 nomor kemarin (4 dan 6)
+kejawabnya agak muter jadi masih kurang jelas — boleh dipastiin lagi:
+
+```
+Cup, sori nih 2 nomor kemarin (soal resleting sama lebihan) masih kurang
+jelas jawabannya, boleh dipastiin lagi ya:
+
+1. Soal resleting Vision GMC No5 — kemarin yang kejawab 24/26/28 inch, tapi
+   yang saya maksud sebenernya yang 30/32/34 inch (soalnya di data yang ini
+   incinya beda-beda tapi cm-nya ketulis sama semua, jelas typo). Ini yang
+   bener cm-nya berapa:
+   - Vision GMC No5 30 inch = ... cm?
+   - Vision GMC No5 32 inch = ... cm?
+   - Vision GMC No5 34 inch = ... cm?
+   (Kalo ngikutin pola yang kemarin: tiap naik 2 inch, cm naik 5 — jadi kira²
+   30=76cm, 32=81cm, 34=86cm. Bener gak gitu?)
+
+2. Soal "Lebihan" — kemarin yang kejawab levelnya bahan (yang suka ilang di
+   penjahit). Yang saya maksud sebenernya beda: di form bikin PO, ada kolom
+   "Lebihan Pcs" buat JUMLAH JAKET/BAJU-nya sendiri. Jadi misal target jual
+   100 jaket, terus diisi Lebihan 5, jadinya rencana potong 105 jaket (buat
+   jaga-jaga ada yang cacat pas jahit). Nah ini juga dipake, atau lebihannya
+   emang cuma di bahan aja?
+
+Makasih Cup 🙏
+```
+
+---
+
 ## 📋 Versi Sunda-Indo (kalau mau yang lebih cair)
 
 ```
@@ -111,22 +142,22 @@ Hatur nuhun Cup 🙏
 
 ---
 
-## Urutan prioritas
+## Status per 21 Sep 2026
 
-Kalau tidak bisa tanya semua sekaligus, dahulukan **1-3** — ketiganya menahan
-pekerjaan yang sudah siap jalan.
+**7 dari 9 sudah terjawab.** Sisa 2 yang masih perlu ditanya ulang (jawaban
+sebelumnya kena salah paham, lihat bagian masing-masing untuk detail):
 
-| # | Pertanyaan | Menahan | Kartu |
+| # | Pertanyaan | Status | Kartu |
 |---|---|---|---|
-| 1 | Daftar staf untuk sistem | 6 form (Pengirim/PIC/Penerima) | `app-gtf4.1` |
-| 2 | Konveksi: satu daftar atau dua? | Sambungan penjahit & vendor | `app-gtf4.1` |
-| 3 | Siapa periksa QC di lapangan | Role & pembagian akses | `app-x98y` |
-| 4 | Angka 66cm yang salah | Pembersihan nama bahan | `app-gtf4.4` |
-| 5 | Barang keluar selalu untuk PO? | Sambungan barang keluar → PO | `app-gtf4.5` |
-| 6 | Lebihan Pcs di level produk jadi | Field di form PO Produksi | `app-itl4` |
-| 7 | Urutan sablon vs jahit | Aturan validasi dekorasi | `app-x98y` |
-| 8 | Istilah: WIF atau PO Produksi? | Penamaan menu | `app-x98y` |
-| 9 | Finishing/Packing masuk QC atau Gudang? | Pengelompokan menu | `app-x98y` |
+| 1 | Daftar staf untuk sistem | ✅ Terjawab — siap dibuat 3 akun | `app-gtf4.1` |
+| 2 | Konveksi: satu daftar atau dua? | ✅ Terjawab — satu daftar cukup | `app-gtf4.1` |
+| 3 | Siapa periksa QC di lapangan | ✅ Terjawab — belum ada, admin_produksi tetap | `app-x98y` (closed) |
+| **4** | **Angka ukuran resleting (30/32/34 inch)** | ⚠️ **Perlu tanya ULANG** — pertanyaan awal ambigu | `app-gtf4.4` |
+| 5 | Barang keluar selalu untuk PO? | ✅ Terjawab — selalu, poId jadi wajib | `app-glx1` |
+| **6** | **Lebihan Pcs di level produk jadi** | ⚠️ **Perlu tanya ULANG** — jawaban sebelumnya soal bahan, bukan produk | `app-itl4` |
+| 7 | Urutan sablon vs jahit | ✅ Terjawab — dua-duanya terjadi, jangan dipaksa | `app-x98y` (closed) |
+| 8 | Istilah: WIF atau PO Produksi? | ✅ Terjawab — PO Produksi | `app-x98y` (closed) |
+| 9 | Finishing/Packing masuk QC atau Gudang? | ✅ Terjawab — tetap di QC | `app-x98y` (closed) |
 
 ---
 
@@ -197,26 +228,42 @@ itu wajar, yang penting jejaknya tercatat. Kalau ada orangnya → buat role
 
 ## 4. Ukuran resleting yang tertulis salah ⭐
 
-Ada 3 bahan resleting yang ukurannya janggal:
+### ✅ Bagian yang sudah terjawab (21 Sep)
 
-| Kode | Nama sekarang |
-|---|---|
-| BH-TR-SLG-005 | Vision GMC No5 **24Inch**/66cm |
-| BH-TR-SLG-009 | Vision GMC No5 **30Inch**/66cm |
-| BH-TR-SLG-010 | Vision GMC No5 **32Inch**/66cm |
+Ucup konfirmasi: **24Inch → 61cm** (koreksi dari 66cm yang salah). **26Inch/66cm**
+dan **28Inch/71cm** sudah benar sejak awal.
 
-Ketiganya ukuran inci-nya berbeda (24, 30, 32) tapi **sentimeternya sama semua:
-66cm**. Padahal yang benar, 24 inci ≈ 61cm, 30 inci ≈ 76cm, 32 inci ≈ 81cm.
+### ⚠️ Belum terjawab — pertanyaan awal ambigu, perlu ditanya ULANG
 
-Bandingkan dengan yang sudah benar: `BH-TR-SLG-001 28inch/71cm`.
+Pertanyaan pertama cuma nulis angka inch (24, 30, 32) tanpa tegas menyebut kode
+bahan di kalimatnya — Ucup kemungkinan menjawab urutan resleting yang ia kenal
+(24-26-28), bukan koreksi untuk 3 baris spesifik yang dimaksud. Jadi 3 baris di
+bawah **masih salah di database**, belum ada jawaban pasti:
 
-**Pertanyaannya:**
+| Kode | Nama sekarang | Janggalnya |
+|---|---|---|
+| BH-TR-SLG-009 | Vision GMC No5 **30Inch**/66cm | Beda inch dari 26, tapi cm sama |
+| BH-TR-SLG-010 | Vision GMC No5 **32Inch**/66cm | Beda inch dari 26, tapi cm sama |
+| BH-TR-SLG-011 | Vision GMC No5 **34Inch**/71cm | Beda inch dari 28, tapi cm sama |
 
-> "Untuk 3 resleting ini, yang benar ukuran berapa? Kelihatannya angka cm-nya
-> salah ketik — ketiganya tertulis 66cm padahal incinya beda-beda."
+Dari 3 data yang sudah dikonfirmasi (24/61, 26/66, 28/71), polanya rapi: tiap
+naik 2 inch, cm naik tepat 5. Kalau pola ini benar: 30→76cm, 32→81cm, 34→86cm —
+**tapi ini dugaan kami, bukan jawaban Ucup**, jangan langsung dipakai.
 
-**Catatan internal:** ini fakta produksi, tidak boleh kita tebak sendiri. Kartu:
-`app-gtf4.4`. Perbaikan nama bahan (buang ukuran dari nama) menunggu ini.
+**Pertanyaan susulan (sebut KODE, jangan cuma angka, biar tidak ambigu lagi):**
+
+> "Sori Cup, kemarin agak salah nanya jadi kejawab yang lain. Ini yang mau saya
+> pastiin — 3 resleting ini cm-nya berapa yang bener:
+> - Vision GMC No5 **30 inch** (sekarang salah tertulis 66cm)
+> - Vision GMC No5 **32 inch** (sekarang salah tertulis 66cm)
+> - Vision GMC No5 **34 inch** (sekarang salah tertulis 71cm)
+>
+> Kalau ngikutin pola yang 24/26/28 kemarin (naik 2 inch = naik 5cm), harusnya
+> 30=76cm, 32=81cm, 34=86cm — bener gitu, atau beda?"
+
+**Catatan internal:** ini fakta produksi, tidak boleh kita tebak sendiri —
+walaupun polanya kelihatan rapi. Kartu: `app-gtf4.4`. Perbaikan nama bahan
+(buang ukuran dari nama) menunggu ini kelar semua (6 baris, bukan cuma 3).
 
 ---
 
@@ -255,20 +302,21 @@ klien sudah bilang mau isi manual.
 
 ---
 
-## 7. Sablon dikerjakan sebelum atau sesudah dijahit? ⭐
+## 7. Sablon dikerjakan sebelum atau sesudah dijahit? ⭐ ✅ Terjawab
 
-**Pertanyaannya:**
+Jawaban Ucup: *"Dikerjakan biasanya sebelum Jahit tapi ada juga yang setelah barang
+jadi di bordir atau di sablon."* — dua-duanya terjadi, tidak bisa dipatok satu urutan.
 
-> "Untuk produk yang ada sablon/bordirnya — sablon itu selalu dikerjakan **sebelum**
-> kain dijahit, atau pernah ada yang disablon setelah jadi baju?"
+**Keputusan: sistem TETAP tidak boleh memvalidasi urutan wajib** (dikonfirmasi kode:
+`src/services/dekorasi.ts` tidak ada validasi urutan cutting-dekorasi-jahit, cuma
+filter `dekorasiProses <> 'none'`). Tidak ada perubahan kode — cukup jangan
+menambahkan validasi ketat di kemudian hari untuk kasus ini.
 
-**Catatan internal:** sistem sekarang membiarkan urutannya bebas (tidak dipaksa).
-Kalau di lapangan sablon SELALU duluan, sebaiknya dikunci supaya tidak salah
-input. Kartu: `app-x98y`.
+Kartu: `app-x98y` (closed).
 
 ---
 
-## 8. Istilah: "WIF" atau "PO Produksi"?
+## 8. Istilah: "WIF" atau "PO Produksi"? ✅ Terjawab
 
 Di gambar skema yang klien kirim, tertulis **"WIF"** (*Buat WIF / Order Produksi*).
 Di aplikasi kami pakai istilah **"PO Produksi"**.
@@ -278,26 +326,21 @@ Di aplikasi kami pakai istilah **"PO Produksi"**.
 > "Kamu sehari-hari nyebutnya apa — WIF atau PO Produksi? Saya ikut istilah yang
 > biasa kamu pake aja biar gak bingung."
 
-**Catatan internal:** murah diperbaiki (ganti label menu). Sejalan dengan pola
-proyek: istilah aplikasi ikut bahasa klien. Kartu: `app-x98y`.
+Jawaban: **"Po produksi"**. Istilah aplikasi sudah tepat, tidak perlu ganti label
+menu. Kartu: `app-x98y` (closed).
 
 ---
 
-## 9. Finishing & Packing — bagian QC atau Gudang?
+## 9. Finishing & Packing — bagian QC atau Gudang? ✅ Terjawab
 
-Di aplikasi, menu **Finishing**, **Packing**, dan **Stok Barang Jadi** ada di dalam
-grup *Quality Control*.
+Jawaban Ucup: *"kita disini finishing itu proses qc dan itu sebelum ke Gudang, kalo
+Gudang menerima jaket yg sudah di qc+packing (finishing) setelah selesai baru ke
+Gudang penerimaan produk finishnya."*
 
-Tapi di gambar skema klien, urutannya: QC → **Penerimaan Gudang** → Stok Jaket Jadi
-(tiga kotak terpisah).
-
-**Pertanyaannya:**
-
-> "Finishing sama Packing itu menurut kamu masuk bagian **QC**, atau bagian
-> **gudang**? Saya mau naro menunya sesuai cara kamu mandang aja."
-
-**Catatan internal:** app vibe-coding klien juga menaruh Finishing/Packing di luar
-grup QC — dua sumber terpisah sama-sama begitu. Kartu: `app-x98y`.
+**Keputusan: Finishing/Packing memang SATU RANGKAIAN dengan QC**, terjadi sebelum
+barang masuk ke Gudang. Struktur menu sekarang (Finishing/Packing/Stok Barang Jadi
+di dalam grup Quality Control) sudah **cocok** dengan cara Ucup memandangnya — tidak
+perlu dipindah ke luar grup QC. Kartu: `app-x98y` (closed).
 
 ---
 
