@@ -1,12 +1,5 @@
-import { listSatuan } from "@/services/satuan";
-import { SatuanPageClient } from "./_components/SatuanPageClient";
-import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Master Satuan | OIMS Owncrave",
-};
-
-export default async function MasterSatuanPage() {
-  const data = await listSatuan();
-  return <SatuanPageClient initialData={data} />;
+export default function MasterSatuanPage() {
+  redirect("/master/data-bahan?tab=satuan");
 }

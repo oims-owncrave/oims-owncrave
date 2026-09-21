@@ -1,7 +1,5 @@
-import { listKategori } from '@/services/kategori';
-import { KategoriPageClient } from './_components/KategoriPageClient';
+import { redirect } from "next/navigation";
 
-export default async function MasterKategoriPage() {
-  const data = await listKategori();
-  return <KategoriPageClient initialData={data} />;
+export default function MasterKategoriPage() {
+  redirect("/master/data-bahan?tab=kategori");
 }

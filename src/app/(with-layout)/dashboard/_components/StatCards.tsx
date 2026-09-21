@@ -40,7 +40,7 @@ export function StatCards({ stats }: Props) {
       value: stats.totalBahanAktif.toString(),
       icon: Package,
       color: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300",
-      href: "/master/bahan",
+      href: "/master/data-bahan?tab=bahan",
     },
     {
       label: "Total Nilai Persediaan",

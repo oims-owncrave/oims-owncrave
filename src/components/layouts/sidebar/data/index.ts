@@ -72,16 +72,13 @@ export const NAV_DATA: NavSection[] = [
         // Lihat CLAUDE.md § Utang Teknis.
         icon: MasterIcon,
         items: [
-          { title: "Kategori", url: "/master/kategori", heading: "Data Bahan" },
-          { title: "Satuan", url: "/master/satuan" },
-          { title: "Warna", url: "/master/warna" },
-          { title: "Bahan", url: "/master/bahan" },
-          { title: "Supplier", url: "/master/supplier" },
+          { title: "Data Bahan", url: "/master/data-bahan", heading: "Data Bahan" },
           { title: "Produk", url: "/produksi/produk", heading: "Data Produk" },
           { title: "BOM", url: "/produksi/bom", roles: ["owner", "admin_produksi"] }, // READ_ROLES bom.ts
           { title: "Kemasan", url: "/master/kemasan" },
           { title: "Gudang Barang Jadi", url: "/master/gudang-jadi" },
-          { title: "Vendor", url: "/vendor/daftar", heading: "Data Mitra" },
+          { title: "Supplier", url: "/master/supplier", heading: "Data Mitra" }, // penjual bahan — beda dari vendor/penjahit yang menyediakan jasa
+          { title: "Vendor", url: "/vendor/daftar" },
           { title: "Penjahit", url: "/vendor/penjahit" },
           { title: "Lokasi Produksi", url: "/vendor/lokasi" },
           { title: "Tarif Jasa Jahit", url: "/vendor/tarif", roles: ["owner", "admin_produksi"] }, // READ_ROLES tarif-jasa-jahit.ts
