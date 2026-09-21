@@ -10,6 +10,7 @@ import type { PoDetailData } from "@/services/po-produksi";
 import { PO_STATUS_BADGE, PO_JENIS_LABEL, PO_PRIORITAS_LABEL } from "../../_components/po-status";
 import { EstimasiSection } from "./EstimasiSection";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { TAMPILKAN_LEBIHAN_VARIAN } from "@/lib/produksi/konstanta";
 
 interface Props {
   poId: string;
@@ -130,8 +131,12 @@ export function PoDetailClient({ poId, initialData }: Props) {
                 <th className="px-5 py-3 font-medium">SKU</th>
                 <th className="px-5 py-3 font-medium">Warna / Ukuran</th>
                 <th className="px-5 py-3 font-medium text-right">Target</th>
-                <th className="px-5 py-3 font-medium text-right">Lebihan</th>
-                <th className="px-5 py-3 font-medium text-right">Rencana Cutting</th>
+                {TAMPILKAN_LEBIHAN_VARIAN && (
+                  <>
+                    <th className="px-5 py-3 font-medium text-right">Lebihan</th>
+                    <th className="px-5 py-3 font-medium text-right">Rencana Cutting</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -141,17 +146,25 @@ export function PoDetailClient({ poId, initialData }: Props) {
                   <td className="px-5 py-3 font-medium text-dark dark:text-white">{d.sku}</td>
                   <td className="px-5 py-3 text-dark dark:text-white">{d.warnaNama} / {d.ukuran}</td>
                   <td className="px-5 py-3 text-right text-dark dark:text-white">{d.jumlahTarget} pcs</td>
-                  <td className="px-5 py-3 text-right text-dark dark:text-white">{d.lebihanPcs} pcs</td>
-                  <td className="px-5 py-3 text-right text-dark dark:text-white">
-                    {d.jumlahTarget + d.lebihanPcs} pcs
-                  </td>
+                  {TAMPILKAN_LEBIHAN_VARIAN && (
+                    <>
+                      <td className="px-5 py-3 text-right text-dark dark:text-white">{d.lebihanPcs} pcs</td>
+                      <td className="px-5 py-3 text-right text-dark dark:text-white">
+                        {d.jumlahTarget + d.lebihanPcs} pcs
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
               <tr className="border-t border-stroke bg-gray-50 font-semibold dark:border-dark-3 dark:bg-dark-2">
                 <td className="px-5 py-3" colSpan={3}>Total</td>
                 <td className="px-5 py-3 text-right text-dark dark:text-white">{totalTarget} pcs</td>
-                <td className="px-5 py-3" />
-                <td className="px-5 py-3 text-right text-dark dark:text-white">{totalRencana} pcs</td>
+                {TAMPILKAN_LEBIHAN_VARIAN && (
+                  <>
+                    <td className="px-5 py-3" />
+                    <td className="px-5 py-3 text-right text-dark dark:text-white">{totalRencana} pcs</td>
+                  </>
+                )}
               </tr>
             </tbody>
           </table>

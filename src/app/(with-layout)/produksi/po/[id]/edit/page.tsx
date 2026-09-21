@@ -63,6 +63,7 @@ export default async function PoEditPage({
             jumlahTarget: d.jumlahTarget,
             lebihanPcs: d.lebihanPcs,
           })),
+          lebihanBahan: detail.lebihanBahan ?? [],
         }}
       />
     </div>

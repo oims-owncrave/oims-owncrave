@@ -9,11 +9,13 @@ import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
-import { poSchema, type PoInput, PO_JENIS } from "@/lib/schemas/po-produksi";
+import { poSchema, type PoInput, type PoFormInput, PO_JENIS } from "@/lib/schemas/po-produksi";
 import { usePoMutation } from "@/hooks/usePoProduksi";
 import { useProdukDetail } from "@/hooks/useVarianProduk";
 import type { PicOption } from "@/services/po-produksi";
 import { MatrixTargetInput } from "./MatrixTargetInput";
+import { KebutuhanBahanPreview } from "./KebutuhanBahanPreview";
+import { TAMPILKAN_LEBIHAN_VARIAN } from "@/lib/produksi/konstanta";
 
 type ProdukOption = { id: string; kode: string; nama: string; isActive: boolean };
 
@@ -47,7 +49,7 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
     watch,
     setValue,
     formState: { errors },
-  } = useForm<PoInput>({
+  } = useForm<PoFormInput, unknown, PoInput>({
     resolver: zodResolver(poSchema),
     defaultValues: defaultValues ?? {
       produkId: "",
@@ -59,10 +61,12 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
       penanggungJawab: "",
       catatan: "",
       details: [],
+      lebihanBahan: [],
     },
   });
 
   const details = watch("details") || [];
+  const lebihanBahan = watch("lebihanBahan") || [];
   const produkId = watch("produkId");
 
   // Varian dari produk terpilih (fetch client-side saat produk dipilih)
@@ -107,6 +111,22 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
     setValue("details", next, { shouldValidate: true, shouldDirty: true });
   };
 
+  const handleLebihanBahanChange = (bahanId: string, val: number | undefined) => {
+    const current = watch("lebihanBahan") || [];
+    const numVal = Number(val) || 0;
+    const idx = current.findIndex((l) => l.bahanId === bahanId);
+    if (numVal <= 0) {
+      const next = current.filter((l) => l.bahanId !== bahanId);
+      setValue("lebihanBahan", next, { shouldValidate: true, shouldDirty: true });
+    } else if (idx >= 0) {
+      const next = current.map((l, i) => (i === idx ? { ...l, lebihan: numVal } : l));
+      setValue("lebihanBahan", next, { shouldValidate: true, shouldDirty: true });
+    } else {
+      const next = [...current, { bahanId, lebihan: numVal }];
+      setValue("lebihanBahan", next, { shouldValidate: true, shouldDirty: true });
+    }
+  };
+
   const produkChoices = produkOptions.filter((p) => p.isActive || p.id === produkId);
 
   const totalTarget = details.reduce((s, d) => s + (Number(d.jumlahTarget) || 0), 0);
@@ -138,8 +158,9 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
             value={produkId || null}
             onChange={(v) => {
               setValue("produkId", (v as string) ?? "", { shouldValidate: true });
-              // reset baris varian saat ganti produk — varian terikat produk
+              // reset baris varian dan lebihan bahan saat ganti produk — terikat produk
               setValue("details", [], { shouldValidate: true });
+              setValue("lebihanBahan", [], { shouldValidate: true });
             }}
             error={errors.produkId}
             disabled={isEditing}
@@ -226,8 +247,16 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
               disabled={isPending}
             />
 
+            <KebutuhanBahanPreview
+              produkId={produkId}
+              details={details}
+              lebihanBahan={lebihanBahan}
+              onLebihanChange={handleLebihanBahanChange}
+              disabled={isPending}
+            />
+
             {/* Lebihan Pcs (Opsional) */}
-            {details.length > 0 && (
+            {TAMPILKAN_LEBIHAN_VARIAN && details.length > 0 && (
               <div className="border-t border-stroke pt-5 dark:border-dark-3">
                 <div className="mb-3">
                   <h4 className="text-sm font-semibold text-dark dark:text-white">
@@ -307,10 +336,12 @@ export function PoForm({ produkOptions, picOptions, editId, defaultValues }: Pro
             <span className="text-sm text-dark-5 dark:text-dark-6">Total Target</span>
             <p className="text-lg font-bold text-dark dark:text-white">{totalTarget.toLocaleString("id-ID")} pcs</p>
           </div>
-          <div className="text-right">
-            <span className="text-sm text-dark-5 dark:text-dark-6">Total Rencana Cutting</span>
-            <p className="text-lg font-bold text-dark dark:text-white">{totalRencana.toLocaleString("id-ID")} pcs</p>
-          </div>
+          {TAMPILKAN_LEBIHAN_VARIAN && (
+            <div className="text-right">
+              <span className="text-sm text-dark-5 dark:text-dark-6">Total Rencana Cutting</span>
+              <p className="text-lg font-bold text-dark dark:text-white">{totalRencana.toLocaleString("id-ID")} pcs</p>
+            </div>
+          )}
         </div>
       </div>
 

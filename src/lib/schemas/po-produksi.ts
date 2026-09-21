@@ -23,6 +23,11 @@ export const poDetailSchema = z.object({
     .min(0, "Minimal 0"),
 });
 
+export const poLebihanBahanSchema = z.object({
+  bahanId: z.string().uuid(),
+  lebihan: z.number().min(0, "Minimal 0"),
+});
+
 export const poSchema = z.object({
   produkId: z.string().min(1, "Pilih produk"),
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
@@ -33,6 +38,8 @@ export const poSchema = z.object({
   penanggungJawab: z.string().optional(),
   catatan: z.string().optional(),
   details: z.array(poDetailSchema).min(1, "Minimal 1 varian"),
+  lebihanBahan: z.array(poLebihanBahanSchema).default([]),
 });
 
 export type PoInput = z.infer<typeof poSchema>;
+export type PoFormInput = z.input<typeof poSchema>;

@@ -1,12 +1,13 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { toastStyles } from "@/lib/utils";
 import {
   listPo,
   getPoDetail,
   getEstimasiBahan,
+  previewEstimasiBahan,
   createPo,
   updatePo,
   submitPo,
@@ -14,6 +15,7 @@ import {
   cancelPo,
   softDeletePo,
 } from "@/services/po-produksi";
+import type { PreviewEstimasiInput } from "@/lib/produksi/estimasi";
 import type { PoInput } from "@/lib/schemas/po-produksi";
 
 const KEY = ["po-produksi"];
@@ -30,6 +32,15 @@ export function useEstimasiBahan(poId: string) {
   return useQuery({
     queryKey: [...KEY, poId, "estimasi"],
     queryFn: () => getEstimasiBahan(poId),
+  });
+}
+
+export function usePreviewEstimasi(input: PreviewEstimasiInput | null) {
+  return useQuery({
+    queryKey: [...KEY, "preview", input],
+    queryFn: () => previewEstimasiBahan(input!),
+    enabled: !!input && !!input.produkId && input.details.length > 0,
+    placeholderData: keepPreviousData,
   });
 }
 

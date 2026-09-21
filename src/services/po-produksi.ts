@@ -5,6 +5,7 @@ import { db } from "@/db";
 import {
   poProduksi,
   poProduksiDetail,
+  poProduksiLebihanBahan,
   produk,
   varianProduk,
   warna,
@@ -17,7 +18,13 @@ import {
   auditLog,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
-import { cocokkanUkuranBerlaku } from "@/lib/bom-ukuran";
+import {
+  hitungEstimasi,
+  type EstimasiRow,
+  type PcsPerUkuran,
+  type EstimasiResult,
+  type PreviewEstimasiInput,
+} from "@/lib/produksi/estimasi";
 import type { PoInput } from "@/lib/schemas/po-produksi";
 
 const READ_ROLES = [
@@ -159,7 +166,22 @@ export async function getPoDetail(id: string) {
     .where(eq(poProduksiDetail.poId, id))
     .orderBy(varianProduk.sku);
 
-  return { ...header, details };
+  const lebihanBahan = await db
+    .select({
+      bahanId: poProduksiLebihanBahan.bahanId,
+      lebihan: poProduksiLebihanBahan.lebihan,
+    })
+    .from(poProduksiLebihanBahan)
+    .where(eq(poProduksiLebihanBahan.poId, id));
+
+  return {
+    ...header,
+    details,
+    lebihanBahan: lebihanBahan.map((l) => ({
+      bahanId: l.bahanId,
+      lebihan: Number(l.lebihan),
+    })),
+  };
 }
 
 export type PoDetailData = NonNullable<Awaited<ReturnType<typeof getPoDetail>>>;
@@ -204,7 +226,24 @@ export async function createPo(input: PoInput): PoResult {
           .returning();
 
         await tx.insert(poProduksiDetail).values(detailValues(header.id, input));
-        await writeAudit(tx, "CREATE", header.id, null, { ...header, details: input.details }, user.id);
+        const lebihanRows = (input.lebihanBahan ?? []).filter((l) => l.lebihan > 0);
+        if (lebihanRows.length) {
+          await tx.insert(poProduksiLebihanBahan).values(
+            lebihanRows.map((l) => ({
+              poId: header.id,
+              bahanId: l.bahanId,
+              lebihan: String(l.lebihan),
+            })),
+          );
+        }
+        await writeAudit(
+          tx,
+          "CREATE",
+          header.id,
+          null,
+          { ...header, details: input.details, lebihanBahan: input.lebihanBahan },
+          user.id,
+        );
         return { data: header };
       });
     } catch (e) {
@@ -241,7 +280,26 @@ export async function updatePo(id: string, input: PoInput): PoResult {
     await tx.delete(poProduksiDetail).where(eq(poProduksiDetail.poId, id));
     await tx.insert(poProduksiDetail).values(detailValues(id, input));
 
-    await writeAudit(tx, "UPDATE", id, before, { ...header, details: input.details }, user.id);
+    await tx.delete(poProduksiLebihanBahan).where(eq(poProduksiLebihanBahan.poId, id));
+    const lebihanRows = (input.lebihanBahan ?? []).filter((l) => l.lebihan > 0);
+    if (lebihanRows.length) {
+      await tx.insert(poProduksiLebihanBahan).values(
+        lebihanRows.map((l) => ({
+          poId: id,
+          bahanId: l.bahanId,
+          lebihan: String(l.lebihan),
+        })),
+      );
+    }
+
+    await writeAudit(
+      tx,
+      "UPDATE",
+      id,
+      before,
+      { ...header, details: input.details, lebihanBahan: input.lebihanBahan },
+      user.id,
+    );
     return { data: header };
   });
 }
@@ -367,23 +425,6 @@ export type PicOption = Awaited<ReturnType<typeof listPicOptions>>[number];
 
 // ─── Estimasi Kebutuhan Bahan (oims-5yr.5) ────────────────────────────────────
 
-export type EstimasiRow = {
-  bahanId: string;
-  bahanKode: string;
-  bahanNama: string;
-  bahanUkuran?: string | null;
-  satuanSingkatan: string;
-  kebutuhanStandar: number;
-  totalKebutuhan: number;
-  stokTersedia: number;
-  kekurangan: number;
-  status: "tersedia" | "sebagian" | "tidak_tersedia";
-};
-
-export type EstimasiResult =
-  | { error: string }
-  | { bomNomor: string; bomVersi: number; rows: EstimasiRow[] };
-
 export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
   await requireRole([...READ_ROLES]);
 
@@ -423,74 +464,72 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
     .innerJoin(varianProduk, eq(poProduksiDetail.varianId, varianProduk.id))
     .where(eq(poProduksiDetail.poId, poId));
 
-  const bomRows = await db
+  const lebihanRows = await db
     .select({
-      bahanId: bomDetail.bahanId,
-      bahanKode: bahan.kode,
-      bahanNama: bahan.nama,
-      bahanUkuran: bahan.ukuran,
-      satuanSingkatan: satuan.singkatan,
-      kuantitas: bomDetail.kuantitas,
-      toleransiPersen: bomDetail.toleransiPersen,
-      berlakuUkuran: bomDetail.berlakuUkuran,
+      bahanId: poProduksiLebihanBahan.bahanId,
+      lebihan: poProduksiLebihanBahan.lebihan,
     })
-    .from(bomDetail)
-    .innerJoin(bahan, eq(bomDetail.bahanId, bahan.id))
-    .innerJoin(satuan, eq(bahan.satuanId, satuan.id))
-    .where(eq(bomDetail.bomId, bomRow.id));
+    .from(poProduksiLebihanBahan)
+    .where(eq(poProduksiLebihanBahan.poId, poId));
 
-  const bahanIds = [...new Set(bomRows.map((r) => r.bahanId))];
-  const stokRows = bahanIds.length
-    ? await db.select().from(stok).where(inArray(stok.bahanId, bahanIds))
-    : [];
-  const stokMap = new Map(stokRows.map((s) => [s.bahanId, Number(s.kuantitas)]));
+  const lebihanMap = new Map(
+    lebihanRows.map((l) => [l.bahanId, Number(l.lebihan)]),
+  );
 
-  // pcs efektif per varian = target + lebihan (pcs, istilah klien) = total rencana cutting
-  const pcsEfektif = details.map((d) => ({
-    ukuran: d.varianUkuran.toUpperCase(),
+  const pcsPerUkuran: PcsPerUkuran[] = details.map((d) => ({
+    ukuran: d.varianUkuran,
     pcs: d.jumlahTarget + d.lebihanPcs,
   }));
 
-  const agg = new Map<string, EstimasiRow>();
-  for (const r of bomRows) {
-    const ukuranBerlaku = cocokkanUkuranBerlaku(r.berlakuUkuran);
-    const applicable = ukuranBerlaku
-      ? pcsEfektif.filter((p) => ukuranBerlaku.includes(p.ukuran))
-      : pcsEfektif;
-    const pcs = applicable.reduce((s, p) => s + p.pcs, 0);
-    const standar = pcs * Number(r.kuantitas);
-    const total = standar * (1 + Number(r.toleransiPersen) / 100);
+  const rows = await hitungEstimasi(db, bomRow.id, pcsPerUkuran, lebihanMap);
 
-    const prev = agg.get(r.bahanId);
-    if (prev) {
-      prev.kebutuhanStandar += standar;
-      prev.totalKebutuhan += total;
-    } else {
-      agg.set(r.bahanId, {
-        bahanId: r.bahanId,
-        bahanKode: r.bahanKode,
-        bahanNama: r.bahanNama,
-        bahanUkuran: r.bahanUkuran,
-        satuanSingkatan: r.satuanSingkatan,
-        kebutuhanStandar: standar,
-        totalKebutuhan: total,
-        stokTersedia: stokMap.get(r.bahanId) ?? 0,
-        kekurangan: 0,
-        status: "tersedia",
-      });
-    }
+  return { bomNomor: bomRow.nomorDokumen, bomVersi: bomRow.versi, rows };
+}
+
+export async function previewEstimasiBahan(
+  input: PreviewEstimasiInput,
+): Promise<EstimasiResult> {
+  await requireRole([...READ_ROLES]);
+
+  if (!input.produkId || !input.details?.length) {
+    return { error: "Produk belum punya BOM aktif — buat & aktifkan BOM dulu" };
   }
 
-  const rows = [...agg.values()].map((row) => {
-    const kekurangan = Math.max(0, row.totalKebutuhan - row.stokTersedia);
-    const status: EstimasiRow["status"] =
-      row.stokTersedia >= row.totalKebutuhan
-        ? "tersedia"
-        : row.stokTersedia > 0
-          ? "sebagian"
-          : "tidak_tersedia";
-    return { ...row, kekurangan, status };
-  });
+  const [bomRow] = await db
+    .select({ id: bom.id, nomorDokumen: bom.nomorDokumen, versi: bom.versi })
+    .from(bom)
+    .where(
+      and(
+        eq(bom.produkId, input.produkId),
+        eq(bom.status, "aktif"),
+        isNull(bom.deletedAt),
+      ),
+    )
+    .limit(1);
+
+  if (!bomRow) {
+    return { error: "Produk belum punya BOM aktif — buat & aktifkan BOM dulu" };
+  }
+
+  const varianIds = input.details.map((d) => d.varianId);
+  const varianRows = varianIds.length
+    ? await db
+        .select({ id: varianProduk.id, ukuran: varianProduk.ukuran })
+        .from(varianProduk)
+        .where(inArray(varianProduk.id, varianIds))
+    : [];
+  const varianMap = new Map(varianRows.map((v) => [v.id, v.ukuran]));
+
+  const pcsPerUkuran: PcsPerUkuran[] = input.details.map((d) => ({
+    ukuran: varianMap.get(d.varianId) ?? "",
+    pcs: Number(d.jumlahTarget) || 0,
+  }));
+
+  const lebihanMap = new Map(
+    (input.lebihanBahan ?? []).map((l) => [l.bahanId, Number(l.lebihan) || 0]),
+  );
+
+  const rows = await hitungEstimasi(db, bomRow.id, pcsPerUkuran, lebihanMap);
 
   return { bomNomor: bomRow.nomorDokumen, bomVersi: bomRow.versi, rows };
 }

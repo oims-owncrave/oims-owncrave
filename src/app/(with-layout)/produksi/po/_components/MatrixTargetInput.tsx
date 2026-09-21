@@ -100,7 +100,7 @@ export function MatrixTargetInput({ varian, values, onChange, disabled }: Props)
                           value={values[v.id]}
                           onChange={(val) => onChange(v.id, val)}
                           disabled={disabled}
-                          className="h-9 w-full min-w-[75px] text-right font-medium"
+                          className="h-9 w-full min-w-[75px] text-center font-medium"
                         />
                       ) : (
                         <div
