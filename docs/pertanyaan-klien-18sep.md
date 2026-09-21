@@ -142,22 +142,23 @@ Hatur nuhun Cup 🙏
 
 ---
 
-## Status per 21 Sep 2026
+## Status per 21 Sep 2026 (sore)
 
-**7 dari 9 sudah terjawab.** Sisa 2 yang masih perlu ditanya ulang (jawaban
-sebelumnya kena salah paham, lihat bagian masing-masing untuk detail):
+**7 dari 9 terjawab. 2 susulan sudah DIKIRIM 21 Sep sore — menunggu jawaban.**
+Ditambah 1 pertanyaan baru (no. 10) yang lahir saat mengerjakan `app-gtf4.1`.
 
 | # | Pertanyaan | Status | Kartu |
 |---|---|---|---|
 | 1 | Daftar staf untuk sistem | ✅ Terjawab — siap dibuat 3 akun | `app-gtf4.1` |
 | 2 | Konveksi: satu daftar atau dua? | ✅ Terjawab — satu daftar cukup | `app-gtf4.1` |
 | 3 | Siapa periksa QC di lapangan | ✅ Terjawab — belum ada, admin_produksi tetap | `app-x98y` (closed) |
-| **4** | **Angka ukuran resleting (30/32/34 inch)** | ⚠️ **Perlu tanya ULANG** — pertanyaan awal ambigu | `app-gtf4.4` |
+| **4** | **Angka ukuran resleting (30/32/34 inch)** | 📤 **Sudah dikirim 21 Sep sore** — menunggu jawaban | `app-gtf4.4` |
 | 5 | Barang keluar selalu untuk PO? | ✅ Terjawab — selalu, poId jadi wajib | `app-glx1` |
-| **6** | **Lebihan Pcs di level produk jadi** | ⚠️ **Perlu tanya ULANG** — jawaban sebelumnya soal bahan, bukan produk | `app-itl4` |
+| **6** | **Lebihan Pcs di level produk jadi** | 📤 **Sudah dikirim 21 Sep sore** — menunggu jawaban | `app-itl4` |
 | 7 | Urutan sablon vs jahit | ✅ Terjawab — dua-duanya terjadi, jangan dipaksa | `app-x98y` (closed) |
 | 8 | Istilah: WIF atau PO Produksi? | ✅ Terjawab — PO Produksi | `app-x98y` (closed) |
 | 9 | Finishing/Packing masuk QC atau Gudang? | ✅ Terjawab — tetap di QC | `app-x98y` (closed) |
+| **10** | **Nama penerima di konveksi dipakai untuk apa?** | 📤 **Sudah dikirim 21 Sep sore** — tidak memblokir apa pun | `app-gtf4.1` |
 
 ---
 
@@ -341,6 +342,80 @@ Gudang penerimaan produk finishnya."*
 barang masuk ke Gudang. Struktur menu sekarang (Finishing/Packing/Stok Barang Jadi
 di dalam grup Quality Control) sudah **cocok** dengan cara Ucup memandangnya — tidak
 perlu dipindah ke luar grup QC. Kartu: `app-x98y` (closed).
+
+---
+
+## 10. Nama penerima di konveksi — dipakai untuk apa? 📤 Dikirim 21 Sep sore
+
+**Tidak memblokir apa pun.** `app-gtf4.1` tetap jalan tanpa jawaban ini — tiga
+kolom yang jadi FK (staf kita) sudah pasti benar. Yang ditanya hanya tiga kolom
+sisanya (orang di pihak vendor), dan itu bisa dikerjakan belakangan.
+
+### Teks yang dikirim
+
+```
+Cup, satu lagi nih — soal surat jalan pas ngirim barang ke konveksi.
+
+Di form itu ada kolom buat nulis nama orang yang nerima barang di
+tempat konveksi (bukan orang kita, tapi orang di pihak konveksinya).
+Sekarang masih ketik manual.
+
+Nah pertanyaannya: nama itu sebenernya dipake buat apa?
+
+a) Cuma buat bukti barangnya udah nyampe di konveksi mana —
+   nama orangnya gak penting-penting amat
+
+b) Penting nama orangnya, soalnya kalo ada barang kurang/ilang
+   nanti nanyanya ke orang itu
+
+c) Orangnya ganti-ganti terus, siapa aja yang lagi ada di tempat,
+   jadi cuma formalitas buat tanda tangan surat jalan
+
+Kalo (a), kolom namanya bisa saya ganti jadi pilih konveksinya aja —
+soalnya di formnya udah ada pilihan mau kirim ke konveksi mana.
+
+Kalo (b), saya bikinin daftar orang per konveksi, tapi nanti kamu
+perlu daftarin dulu siapa aja orangnya di tiap konveksi.
+
+Kalo (c), biarin ketik manual aja kayak sekarang.
+
+Makasih Cup 🙏
+```
+
+### Catatan internal
+
+Lahir dari pertanyaan Abu 21 Sep: *"bukannya kita memang sudah ada master data
+vendor ya? kenapa tidak pakai itu?"*
+
+Jawabannya: master `vendor` menyimpan **perusahaan**, bukan orang di dalamnya.
+Terbukti dari data dev — `CV Jahit Cibaduyut` (pemilik H. Asep Saepudin) dan
+`Konveksi Soreang Jaya` (pemilik Ibu Nurhayati). Satu nama pemilik per vendor,
+bukan daftar karyawan. Yang menerima barang di lapangan belum tentu pemiliknya.
+
+Analoginya: kita punya daftar nama **toko** langganan, tapi yang menandatangani
+tanda terima adalah **kasir yang sedang piket**.
+
+Tiga kolom yang terdampak (semuanya `text`, sengaja bukan FK):
+
+| Tabel | Kolom |
+|---|---|
+| `pengirimanJahit` | `penerima` |
+| `penerimaanHasilJahit` | `pengirimVendor` |
+| `penerimaanBundelVendor` | `penerima` |
+
+Konsekuensi tiap jawaban:
+
+| Jawaban | Tindakan | Beban |
+|---|---|---|
+| (a) | Ganti kolom nama → FK ke `vendor`, atau **hapus** kolomnya (form sudah menyimpan vendor tujuan, jadi mubazir) | ringan, malah mengurangi |
+| (b) | Tabel + halaman master baru: kontak per vendor | berat — klien harus mendata karyawan tiap konveksi |
+| (c) | Biarkan `text` seperti sekarang | nol |
+
+Opsi (b) sengaja disebutkan konsekuensinya di teks WA ("nanti kamu perlu
+daftarin dulu") — tanpa itu orang cenderung memilih yang paling lengkap tanpa
+sadar itu jadi beban input buat dirinya sendiri.
+
+Dugaan: (a) atau (c). Dua-duanya berarti tidak ada kerjaan tambahan.
 
 ---
 
