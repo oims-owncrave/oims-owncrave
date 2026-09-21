@@ -31,6 +31,7 @@ const fmtDate = (d: Date) =>
 
 interface Props {
   data: LaporanMasukItem[];
+  isLoading?: boolean;
   totalKuantitas: number;
   totalNilai: number;
   from: string;
@@ -41,6 +42,7 @@ interface Props {
 
 export function LaporanBarangMasukTable({
   data,
+  isLoading,
   totalKuantitas,
   totalNilai,
   from,
@@ -96,6 +98,7 @@ export function LaporanBarangMasukTable({
   ];
 
   const table = useTable({
+    isLoading,
     data,
     columns,
     defaultPageSize: 10,

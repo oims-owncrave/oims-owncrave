@@ -118,7 +118,7 @@ const NAV_SLOTS: NavSlot[] = [
   { label: "Master", baseRoute: "/master", icon: MasterIcon, type: "parent", navItemTitle: "Master Data" },
   { label: "Persediaan", baseRoute: "/inventory", icon: BoxIcon, type: "parent", navItemTitle: "Persediaan" },
   { label: "Produksi", baseRoute: "/produksi", icon: ScissorsIcon, type: "parent", navItemTitle: "Produksi" },
-  { label: "Laporan", baseRoute: "/laporan", icon: ChartIcon, type: "parent", navItemTitle: "Laporan" },
+  { label: "Laporan", baseRoute: "/laporan", icon: ChartIcon, type: "leaf", url: "/laporan" },
 ];
 
 function findNavItem(title: string, userRole: UserRole): NavItem | undefined {

@@ -25,6 +25,7 @@ const rupiah = (n: number) =>
 
 interface Props {
   data: LaporanStokItem[];
+  isLoading?: boolean;
   totalNilai: number;
   kategoriId: string;
   onKategoriChange: (v: string) => void;
@@ -33,6 +34,7 @@ interface Props {
 
 export function LaporanStokTable({
   data,
+  isLoading,
   totalNilai,
   kategoriId,
   onKategoriChange,
@@ -88,6 +90,7 @@ export function LaporanStokTable({
   ];
 
   const table = useTable({
+    isLoading,
     data,
     columns,
     defaultPageSize: 10,

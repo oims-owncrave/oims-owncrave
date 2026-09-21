@@ -47,7 +47,7 @@ export function StatCards({ stats }: Props) {
       value: rupiah(stats.totalNilaiStok),
       icon: DollarSign,
       color: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-300",
-      href: "/laporan/nilai-persediaan",
+      href: "/laporan?tab=nilai-persediaan",
     },
     {
       label: "Stok Kritis",

@@ -16,7 +16,7 @@ export function TopBahanKeluar({ data }: Props) {
           Top 10 Bahan Paling Banyak Keluar
         </h3>
         <Link
-          href="/laporan/barang-keluar"
+          href="/laporan?tab=barang-keluar"
           className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
           Laporan <ArrowRight size={14} />

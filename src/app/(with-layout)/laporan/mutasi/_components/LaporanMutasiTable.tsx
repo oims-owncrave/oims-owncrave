@@ -47,6 +47,7 @@ const TIPE_CONFIG = {
 
 interface Props {
   data: MutasiRow[];
+  isLoading?: boolean;
   from: string;
   to: string;
   bahanId: string;
@@ -58,6 +59,7 @@ interface Props {
 
 export function LaporanMutasiTable({
   data,
+  isLoading,
   from,
   to,
   bahanId,
@@ -128,6 +130,7 @@ export function LaporanMutasiTable({
   ];
 
   const table = useTable({
+    isLoading,
     data,
     columns,
     defaultPageSize: 10,

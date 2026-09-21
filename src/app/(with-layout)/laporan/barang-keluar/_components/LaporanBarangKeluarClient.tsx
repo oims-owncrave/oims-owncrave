@@ -6,7 +6,7 @@ import { useLaporanBarangKeluar } from "@/hooks/useLaporan";
 import type { LaporanKeluarItem } from "@/services/laporan";
 
 interface Props {
-  initialData: {
+  initialData?: {
     items: LaporanKeluarItem[];
     totalKuantitas: number;
     totalNilai: number;
@@ -17,15 +17,16 @@ export function LaporanBarangKeluarClient({ initialData }: Props) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  const { data } = useLaporanBarangKeluar(from || undefined, to || undefined);
+  const { data, isLoading } = useLaporanBarangKeluar(from || undefined, to || undefined);
 
-  const items = data?.items ?? initialData.items;
-  const totalKuantitas = data?.totalKuantitas ?? initialData.totalKuantitas;
-  const totalNilai = data?.totalNilai ?? initialData.totalNilai;
+  const items = data?.items ?? initialData?.items ?? [];
+  const totalKuantitas = data?.totalKuantitas ?? initialData?.totalKuantitas ?? 0;
+  const totalNilai = data?.totalNilai ?? initialData?.totalNilai ?? 0;
 
   return (
     <div className="space-y-6">
       <LaporanBarangKeluarTable
+        isLoading={isLoading}
         data={items}
         totalKuantitas={totalKuantitas}
         totalNilai={totalNilai}

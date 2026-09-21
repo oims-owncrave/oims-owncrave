@@ -23,11 +23,13 @@ const rupiah = (n: number) =>
 
 interface Props {
   data: LaporanNilaiPersediaanKategori[];
+  isLoading?: boolean;
   totalOverall: number;
 }
 
 export function LaporanNilaiPersediaanTable({
   data,
+  isLoading,
   totalOverall,
 }: Props) {
   const columns: ColumnDef<LaporanNilaiPersediaanKategori>[] = [
@@ -62,6 +64,7 @@ export function LaporanNilaiPersediaanTable({
   ];
 
   const table = useTable({
+    isLoading,
     data,
     columns,
     defaultPageSize: 10,

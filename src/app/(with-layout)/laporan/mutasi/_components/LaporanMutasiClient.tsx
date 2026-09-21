@@ -6,7 +6,7 @@ import { useLaporanMutasi } from "@/hooks/useLaporan";
 import type { MutasiRow } from "@/services/mutasi";
 
 interface Props {
-  initialData: {
+  initialData?: {
     rows: MutasiRow[];
   };
   bahanOptions: { id: string; kode: string; nama: string }[];
@@ -17,17 +17,18 @@ export function LaporanMutasiClient({ initialData, bahanOptions }: Props) {
   const [to, setTo] = useState("");
   const [bahanId, setBahanId] = useState("");
 
-  const { data } = useLaporanMutasi(
+  const { data, isLoading } = useLaporanMutasi(
     from || undefined,
     to || undefined,
     bahanId || undefined,
   );
 
-  const rows = data?.rows ?? initialData.rows;
+  const rows = data?.rows ?? initialData?.rows ?? [];
 
   return (
     <div className="space-y-6">
       <LaporanMutasiTable
+        isLoading={isLoading}
         data={rows}
         from={from}
         to={to}
