@@ -7,20 +7,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronUp, MenuIcon } from "./icons";
-import { NAV_DATA } from "./data";
+import { navUntukRole, type UserRole } from "./data";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
 
-export function Sidebar({ userRole }: { userRole: string }) {
+export function Sidebar({ userRole }: { userRole: UserRole }) {
   const pathname = usePathname();
   const { setIsOpen, isOpen, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const collapsed = !isOpen;
 
-  // Filter sections based on role — ownerOnly sections hidden for non-owners
-  const visibleSections = NAV_DATA.filter(
-    (section) => !section.ownerOnly || userRole === "owner",
-  );
+  // Filter sections based on role
+  const visibleSections = navUntukRole(userRole);
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));

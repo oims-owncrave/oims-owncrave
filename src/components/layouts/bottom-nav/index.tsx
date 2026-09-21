@@ -4,11 +4,11 @@ import React, { useState, useCallback, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { MenuSheet } from "./menu-sheet";
-import { NAV_DATA } from "@/components/layouts/sidebar/data";
-import type { NavItem } from "@/components/layouts/sidebar/data";
+import { navUntukRole } from "@/components/layouts/sidebar/data";
+import type { NavItem, UserRole } from "@/components/layouts/sidebar/data";
 
 type BottomNavProps = {
-  userRole: string;
+  userRole: UserRole;
 };
 
 function SpinnerIcon({ className }: { className?: string }) {
@@ -121,8 +121,8 @@ const NAV_SLOTS: NavSlot[] = [
   { label: "Laporan", baseRoute: "/laporan", icon: ChartIcon, type: "parent", navItemTitle: "Laporan" },
 ];
 
-function findNavItem(title: string): NavItem | undefined {
-  for (const section of NAV_DATA) {
+function findNavItem(title: string, userRole: UserRole): NavItem | undefined {
+  for (const section of navUntukRole(userRole)) {
     const found = section.items.find((item) => item.title === title);
     if (found) return found;
   }
@@ -161,14 +161,14 @@ export function BottomNav({ userRole }: BottomNavProps) {
         handleCloseSheet();
         navigate(slot.url);
       } else {
-        const item = findNavItem(slot.navItemTitle);
+        const item = findNavItem(slot.navItemTitle, userRole);
         if (item) {
           setMenuOpen(false);
           setActiveSheetItem(item);
         }
       }
     },
-    [handleCloseSheet, navigate]
+    [handleCloseSheet, navigate, userRole]
   );
 
   const handleMenuClick = useCallback(() => {

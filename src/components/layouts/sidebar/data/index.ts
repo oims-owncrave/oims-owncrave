@@ -12,7 +12,14 @@ import {
   SistemIcon,
 } from "../icons";
 
-export type NavSubItem = {
+import type { users } from "@/db/schema";
+
+export type UserRole = (typeof users.$inferSelect)["role"];
+
+/** Role yang boleh melihat entri ini. Tidak diisi = semua role. */
+type RoleGuard = { roles?: UserRole[] };
+
+export type NavSubItem = RoleGuard & {
   title: string;
   url: string;
   /** Belum tersedia (tahap berikutnya) — tampil abu-abu, tidak bisa diklik. */
@@ -21,7 +28,7 @@ export type NavSubItem = {
   heading?: string;
 };
 
-export type NavItem = {
+export type NavItem = RoleGuard & {
   title: string;
   url?: string;
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" }>;
@@ -29,7 +36,7 @@ export type NavItem = {
   disabled?: boolean;
 };
 
-export type NavSection = {
+export type NavSection = RoleGuard & {
   label: string;
   ownerOnly?: boolean;
   items: NavItem[];
@@ -58,6 +65,11 @@ export const NAV_DATA: NavSection[] = [
     items: [
       {
         title: "Master Data",
+        // Sebagian besar master (Kategori, Satuan, Warna, Supplier, Produk, Kemasan,
+        // Vendor, Penjahit, Lokasi, Jenis Cacat) BELUM punya requireRole di service-nya
+        // — terbuka untuk semua yang login. Menu sengaja tidak menyembunyikannya:
+        // menyembunyikan tanpa guard server hanya ilusi (URL tetap jalan).
+        // Lihat CLAUDE.md § Utang Teknis.
         icon: MasterIcon,
         items: [
           { title: "Kategori", url: "/master/kategori", heading: "Data Bahan" },
@@ -66,14 +78,14 @@ export const NAV_DATA: NavSection[] = [
           { title: "Bahan", url: "/master/bahan" },
           { title: "Supplier", url: "/master/supplier" },
           { title: "Produk", url: "/produksi/produk", heading: "Data Produk" },
-          { title: "BOM", url: "/produksi/bom" },
+          { title: "BOM", url: "/produksi/bom", roles: ["owner", "admin_produksi"] }, // READ_ROLES bom.ts
           { title: "Kemasan", url: "/master/kemasan" },
           { title: "Gudang Barang Jadi", url: "/master/gudang-jadi" },
           { title: "Vendor", url: "/vendor/daftar", heading: "Data Mitra" },
           { title: "Penjahit", url: "/vendor/penjahit" },
           { title: "Lokasi Produksi", url: "/vendor/lokasi" },
-          { title: "Tarif Jasa Jahit", url: "/vendor/tarif" },
-          { title: "Standar QC", url: "/qc/standar", heading: "Data QC" },
+          { title: "Tarif Jasa Jahit", url: "/vendor/tarif", roles: ["owner", "admin_produksi"] }, // READ_ROLES tarif-jasa-jahit.ts
+          { title: "Standar QC", url: "/qc/standar", heading: "Data QC", roles: ["owner", "admin_produksi"] }, // READ_ROLES standar-qc.ts
           { title: "Jenis Cacat", url: "/master/jenis-cacat" },
         ],
       },
@@ -84,6 +96,9 @@ export const NAV_DATA: NavSection[] = [
     items: [
       {
         title: "Persediaan",
+        // Server mengizinkan semua role membaca stok/mutasi/barang-masuk-keluar
+        // (requireRole inline di stok.ts, mutasi.ts, barang-masuk.ts, barang-keluar.ts).
+        // Menu mengikuti server — tidak lebih ketat, tidak lebih longgar.
         icon: InventoryIcon,
         items: [
           { title: "Stok Bahan", url: "/inventory/stok" },
@@ -95,6 +110,7 @@ export const NAV_DATA: NavSection[] = [
       },
       {
         title: "Produksi",
+        roles: ["owner", "admin_produksi"], // READ_ROLES po-produksi.ts, permintaan-bahan.ts
         icon: ProduksiIcon,
         items: [
           { title: "PO Produksi", url: "/produksi/po" },
@@ -105,19 +121,23 @@ export const NAV_DATA: NavSection[] = [
       },
       {
         title: "Vendor & Gudang",
+        // Union dari anak-anaknya: keuangan ikut karena Biaya Jasa Jahit.
+        // Kalau induk lebih sempit dari anak, anak tak pernah sempat diperiksa.
+        roles: ["owner", "admin_gudang", "admin_produksi", "keuangan"],
         icon: VendorIcon,
         items: [
-          { title: "Penugasan Jahit", url: "/vendor/penugasan" },
-          { title: "Pengiriman Vendor", url: "/vendor/pengiriman" },
-          { title: "Surat Jalan", url: "/vendor/surat-jalan" },
-          { title: "Penerimaan Hasil", url: "/vendor/penerimaan" },
-          { title: "Retur & Perbaikan", url: "/vendor/retur" },
-          { title: "Selisih & Kasus", url: "/vendor/selisih" },
-          { title: "Biaya Jasa Jahit", url: "/vendor/biaya" },
+          { title: "Penugasan Jahit", url: "/vendor/penugasan", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Pengiriman Vendor", url: "/vendor/pengiriman", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Surat Jalan", url: "/vendor/surat-jalan", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Penerimaan Hasil", url: "/vendor/penerimaan", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Retur & Perbaikan", url: "/vendor/retur", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Selisih & Kasus", url: "/vendor/selisih", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Biaya Jasa Jahit", url: "/vendor/biaya", roles: ["owner", "admin_produksi", "keuangan"] }, // READ_ROLES biaya-jasa-jahit.ts
         ],
       },
       {
         title: "Sablon & Bordir",
+        roles: ["owner", "admin_produksi"], // READ_ROLES dekorasi.ts
         icon: DekorasiIcon,
         items: [
           { title: "Pekerjaan Dekorasi", url: "/vendor/dekorasi" },
@@ -126,18 +146,20 @@ export const NAV_DATA: NavSection[] = [
       },
       {
         title: "Quality Control",
+        // Union: admin_gudang ikut karena Packing & Stok Barang Jadi.
+        roles: ["owner", "admin_produksi", "admin_gudang"],
         icon: QcIcon,
         items: [
-          { title: "Penerimaan QC", url: "/qc/penerimaan" },
-          { title: "Antrean QC", url: "/qc/antrean" },
-          { title: "Work Order QC", url: "/qc/wo" },
-          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan" },
-          { title: "Rework", url: "/qc/rework" },
-          { title: "Re-QC", url: "/qc/re-qc" },
-          { title: "Karantina Reject", url: "/qc/reject" },
-          { title: "Finishing", url: "/qc/finishing" },
-          { title: "Packing", url: "/qc/packing" },
-          { title: "Stok Barang Jadi", url: "/qc/stok-jadi" },
+          { title: "Penerimaan QC", url: "/qc/penerimaan", roles: ["owner", "admin_produksi"] },
+          { title: "Antrean QC", url: "/qc/antrean", roles: ["owner", "admin_produksi"] },
+          { title: "Work Order QC", url: "/qc/wo", roles: ["owner", "admin_produksi"] },
+          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", roles: ["owner", "admin_produksi"] },
+          { title: "Rework", url: "/qc/rework", roles: ["owner", "admin_produksi"] },
+          { title: "Re-QC", url: "/qc/re-qc", roles: ["owner", "admin_produksi"] },
+          { title: "Karantina Reject", url: "/qc/reject", roles: ["owner", "admin_produksi"] },
+          { title: "Finishing", url: "/qc/finishing", roles: ["owner", "admin_produksi"] },
+          { title: "Packing", url: "/qc/packing", roles: ["owner", "admin_produksi", "admin_gudang"] }, // READ_ROLES packing.ts
+          { title: "Stok Barang Jadi", url: "/qc/stok-jadi", roles: ["owner", "admin_produksi", "admin_gudang"] }, // READ_ROLES barang-jadi.ts
         ],
       },
     ],
@@ -147,6 +169,7 @@ export const NAV_DATA: NavSection[] = [
     items: [
       {
         title: "Monitoring",
+        roles: ["owner", "admin_produksi"], // WIP produksi & WIP jahit = layar produksi
         icon: MonitoringIcon,
         items: [
           { title: "WIP Produksi", url: "/produksi/wip" },
@@ -155,6 +178,7 @@ export const NAV_DATA: NavSection[] = [
       },
       {
         title: "Laporan",
+        // laporan.ts mengizinkan semua role (requireRole inline) — termasuk keuangan & viewer.
         icon: LaporanIcon,
         items: [
           { title: "Barang Masuk", url: "/laporan/barang-masuk" },
@@ -221,3 +245,5 @@ export function getPageTitle(pathname: string): string {
 
   return "OIMS";
 }
+
+export { navUntukRole } from "./filter";

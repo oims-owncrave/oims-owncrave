@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TriangleAlert } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
@@ -51,6 +52,8 @@ export function TemplateFormModal({ open, onClose, initialData, produkList }: Pr
   } = useForm<TemplateInput>({ resolver: zodResolver(templateSchema), defaultValues: EMPTY });
 
   const isActive = watch("isActive");
+  const produkId = watch("produkId");
+  const produkDipilih = produkList.find((p) => p.id === produkId);
 
   useEffect(() => {
     if (!open) return;
@@ -82,13 +85,24 @@ export function TemplateFormModal({ open, onClose, initialData, produkList }: Pr
         <h2 className="mb-4 text-xl font-bold text-dark dark:text-white">{isEditing ? "Edit Template" : "Tambah Template Dekorasi"}</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Select
-            label="Produk"
-            options={[{ value: "", label: "— Pilih produk —" }, ...produkList.filter((p) => p.isActive).map((p) => ({ value: p.id, label: `${p.kode} — ${p.nama}` }))]}
-            {...register("produkId")}
-            error={errors.produkId?.message}
-            disabled={isPending}
-          />
+          <div>
+            <Select
+              label="Produk"
+              options={[{ value: "", label: "— Pilih produk —" }, ...produkList.filter((p) => p.isActive).map((p) => ({ value: p.id, label: `${p.kode} — ${p.nama}` }))]}
+              {...register("produkId")}
+              error={errors.produkId?.message}
+              disabled={isPending}
+            />
+            {produkDipilih?.dekorasiProses === "none" && (
+              <p className="mt-1.5 flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-500">
+                <TriangleAlert size={14} className="mt-px shrink-0" />
+                <span>
+                  Produk ini belum disetel butuh dekorasi, jadi template ini belum bisa dipakai.
+                  Ubah dulu Proses Dekorasi di Master Produk.
+                </span>
+              </p>
+            )}
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Select label="Jenis" options={DEKORASI_JENIS.map((j) => ({ value: j, label: DEKORASI_JENIS_LABEL[j] }))} {...register("jenis")} disabled={isPending} />
             <Select label="Posisi" options={DEKORASI_POSISI.map((p) => ({ value: p, label: DEKORASI_POSISI_LABEL[p] }))} {...register("posisi")} disabled={isPending} />

@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { NAV_DATA } from "@/components/layouts/sidebar/data";
-import type { NavItem, NavSubItem } from "@/components/layouts/sidebar/data";
+import { navUntukRole } from "@/components/layouts/sidebar/data";
+import type { NavItem, NavSubItem, UserRole } from "@/components/layouts/sidebar/data";
 import { cn } from "@/lib/utils";
 
 type MenuSheetProps = {
   open: boolean;
   onClose: () => void;
-  userRole: string;
+  userRole: UserRole;
   scopedItem?: NavItem;
 };
 
@@ -52,9 +52,7 @@ export function MenuSheet({ open, onClose, userRole, scopedItem }: MenuSheetProp
   const isMounted = useRef(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-  const sections = NAV_DATA.filter(
-    (s) => !s.ownerOnly || userRole === "owner"
-  );
+  const sections = navUntukRole(userRole);
 
   // Auto-expand active item when opened in full mode
   useEffect(() => {

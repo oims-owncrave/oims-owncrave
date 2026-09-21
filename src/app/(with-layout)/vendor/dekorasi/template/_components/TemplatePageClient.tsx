@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cn, formatRupiah } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, TriangleAlert } from "lucide-react";
 import { useTemplateList, useTemplateMutation } from "@/hooks/useDekorasi";
 import type { TemplateListRow } from "@/services/dekorasi";
 import type { Produk } from "@/db/schema";
@@ -43,7 +43,22 @@ export function TemplatePageClient({ initialData, produkList }: Props) {
 
   const columns: ColumnDef<TemplateListRow>[] = [
     { key: "produkNama", label: "Produk", renderCell: (item) => `${item.produkKode} — ${item.produkNama}` },
-    { key: "dekorasiProses", label: "Setelan Produk", renderCell: (item) => DEKORASI_PROSES_LABEL[item.dekorasiProses] },
+    {
+      key: "dekorasiProses",
+      label: "Setelan Produk",
+      renderCell: (item) => {
+        const label = DEKORASI_PROSES_LABEL[item.dekorasiProses];
+        if (item.dekorasiProses === "none") {
+          return (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+              <TriangleAlert size={12} className="shrink-0" />
+              {label}
+            </span>
+          );
+        }
+        return label;
+      },
+    },
     { key: "jenis", label: "Jenis", renderCell: (item) => DEKORASI_JENIS_LABEL[item.jenis] },
     { key: "posisi", label: "Posisi", renderCell: (item) => DEKORASI_POSISI_LABEL[item.posisi] },
     { key: "deskripsi", label: "Deskripsi", renderCell: (item) => item.deskripsi ?? "—" },

@@ -4,10 +4,11 @@ import { useLayoutEffect, type PropsWithChildren, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layouts/header";
 import { BottomNav } from "@/components/layouts/bottom-nav";
+import type { UserRole } from "@/components/layouts/sidebar/data";
 
 type MainContentProps = PropsWithChildren<{
   userInfo: ReactNode;
-  userRole: string;
+  userRole: UserRole;
   userName: string;
 }>;
 
