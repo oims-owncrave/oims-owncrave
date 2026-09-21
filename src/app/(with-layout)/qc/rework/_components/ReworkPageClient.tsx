@@ -27,6 +27,7 @@ interface Props {
   returData: ReturQcVendorRow[];
   userOptions: UserOpt[];
   cacatOptions: JenisCacat[];
+  hideHeader?: boolean;
 }
 
 const STATUS_CLASS: Record<string, string> = {
@@ -52,6 +53,7 @@ export function ReworkPageClient({
   returData,
   userOptions,
   cacatOptions,
+  hideHeader = false,
 }: Props) {
   const [tab, setTab] = useState<"antrean" | "internal" | "vendor">("antrean");
   const [modal, setModal] = useState<"internal" | "vendor" | null>(null);
@@ -69,10 +71,12 @@ export function ReworkPageClient({
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Rework"
-        breadcrumb={[{ label: "Quality Control" }, { label: "Rework" }]}
-      />
+      {!hideHeader && (
+        <PageHeader
+          title="Rework"
+          breadcrumb={[{ label: "Quality Control" }, { label: "Rework" }]}
+        />
+      )}
 
       <div className="flex flex-wrap gap-2">
         {(

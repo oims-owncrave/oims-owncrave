@@ -140,11 +140,9 @@ export const NAV_DATA: NavSection[] = [
         icon: QcIcon,
         items: [
           { title: "Penerimaan QC", url: "/qc/penerimaan", roles: ["owner", "admin_gudang", "admin_produksi"] }, // READ_ROLES penerimaan-qc.ts
-          { title: "Antrean QC", url: "/qc/antrean", roles: ["owner", "admin_gudang", "admin_produksi"] }, // turunan Penerimaan QC
           { title: "Work Order QC", url: "/qc/wo", roles: ["owner", "admin_produksi"] },
           { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", roles: ["owner", "admin_produksi"] },
           { title: "Rework", url: "/qc/rework", roles: ["owner", "admin_produksi"] },
-          { title: "Re-QC", url: "/qc/re-qc", roles: ["owner", "admin_produksi"] },
           { title: "Karantina Reject", url: "/qc/reject", roles: ["owner", "admin_produksi"] },
           { title: "Finishing", url: "/qc/finishing", roles: ["owner", "admin_produksi"] },
           { title: "Packing", url: "/qc/packing", roles: ["owner", "admin_produksi", "admin_gudang"] }, // READ_ROLES packing.ts

@@ -16,6 +16,7 @@ interface Props {
   sumber: SumberReQcRow[];
   riwayat: ReQcRow[];
   userOptions: UserOpt[];
+  hideHeader?: boolean;
 }
 
 const HASIL_OPTIONS = [
@@ -45,7 +46,12 @@ type Baris = {
   jumlah: number;
 };
 
-export function ReQcPageClient({ sumber, riwayat, userOptions }: Props) {
+export function ReQcPageClient({
+  sumber,
+  riwayat,
+  userOptions,
+  hideHeader = false,
+}: Props) {
   const { data: sumberLive } = useSumberReQc();
   const { data: riwayatLive } = useReQcList();
   const { create } = useReQcMutation();
@@ -99,7 +105,7 @@ export function ReQcPageClient({ sumber, riwayat, userOptions }: Props) {
   const totalPcs = details.reduce((n, d) => n + d.jumlah, 0);
 
   async function simpan() {
-    if (!sumberKey || details.length === 0) return;
+    if (!sumberKey || details.length === 0 || adaKelebihan) return;
     const [jalur, sumberId] = sumberKey.split(":");
     const awal = terpilih[0];
 
@@ -125,10 +131,12 @@ export function ReQcPageClient({ sumber, riwayat, userOptions }: Props) {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Re-QC"
-        breadcrumb={[{ label: "Quality Control" }, { label: "Re-QC" }]}
-      />
+      {!hideHeader && (
+        <PageHeader
+          title="Re-QC"
+          breadcrumb={[{ label: "Quality Control" }, { label: "Re-QC" }]}
+        />
+      )}
 
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <h3 className="mb-4 font-semibold text-dark dark:text-white">

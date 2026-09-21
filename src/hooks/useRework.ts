@@ -32,11 +32,12 @@ export function useReturQcVendorList() {
 
 export function useReworkMutation() {
   const qc = useQueryClient();
-  // dua jalur berbagi kapasitas — invalidate keduanya + kandidat
+  // dua jalur berbagi kapasitas — invalidate keduanya + kandidat + sumber Re-QC
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: SIAP });
     qc.invalidateQueries({ queryKey: RWK });
     qc.invalidateQueries({ queryKey: RTN });
+    qc.invalidateQueries({ queryKey: ["sumber-re-qc"] });
   };
 
   const createInternal = useMutation({
