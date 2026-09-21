@@ -2,7 +2,6 @@
 
 import { createContext, useContext } from "react"
 import { cn } from "@/lib/utils"
-import { Spinner } from "@/components/ui/Spinner"
 
 export const TableActionsVariantContext = createContext<"row" | "menu">("row")
 
@@ -57,7 +56,7 @@ export function TableActions<TData>({ item, actions, variant: variantProp, class
                 isDisabled && "opacity-40 cursor-not-allowed"
               )}
             >
-              {isLoading ? <Spinner size={16} /> : action.icon}
+              {action.icon}
               <span>{action.title}</span>
             </button>
           )
@@ -84,7 +83,7 @@ export function TableActions<TData>({ item, actions, variant: variantProp, class
               isDisabled && "opacity-40 cursor-not-allowed",
             )}
           >
-            {isLoading ? <Spinner size={16} /> : action.icon}
+            {action.icon}
           </button>
         )
       })}

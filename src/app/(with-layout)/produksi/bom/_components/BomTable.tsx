@@ -37,15 +37,16 @@ const STATUS_BADGE: Record<BomListRow["status"], { label: string; className: str
 
 export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () => void }) {
   const router = useRouter();
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [isNavigating, startNavigate] = useTransition();
   const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [activateId, setActivateId] = useState<string | null>(null);
   const { activate, deactivate, newVersion, remove } = useBomMutation();
 
-  // rowId yang sedang dituju — dipakai DataTable buat tandai baris itu sedang dimuat.
-  const go = (path: string, rowId?: string) => {
-    if (rowId) setLoadingRowId(rowId);
+  const goNew = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (path: string, rowId: string) => {
+    setLoadingRowId(rowId);
     startNavigate(() => router.push(path));
   };
   // Transition selesai (navigasi berhasil ATAU dibatalkan) — lepas kuncian baris.
@@ -57,7 +58,7 @@ export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () 
     const view: TableAction<BomListRow> = {
       icon: <Eye size={16} />,
       title: "Detail",
-      onClick: () => go(`/produksi/bom/${item.id}`, item.id),
+      onClick: () => goRow(`/produksi/bom/${item.id}`, item.id),
       variant: "default",
     };
     const copy: TableAction<BomListRow> = {
@@ -73,7 +74,7 @@ export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () 
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: () => go(`/produksi/bom/${item.id}/edit`, item.id),
+          onClick: () => goRow(`/produksi/bom/${item.id}/edit`, item.id),
           variant: "default",
         },
         {
@@ -167,7 +168,7 @@ export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () 
             <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
               <Upload size={16} className="mr-2" /> Import
             </Button>
-            <Button onClick={() => go("/produksi/bom/baru")} className="hidden sm:inline-flex">
+            <Button onClick={() => goNew("/produksi/bom/baru")} loading={isPendingNew} className="hidden sm:inline-flex">
               + Buat BOM
             </Button>
           </div>
@@ -178,7 +179,8 @@ export function BomTable({ data, onImport }: { data: BomListRow[]; onImport: () 
           getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => go("/produksi/bom/baru")}
+              onClick={() => goNew("/produksi/bom/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

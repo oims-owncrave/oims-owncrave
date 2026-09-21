@@ -48,7 +48,6 @@ export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
       title: "Varian",
       onClick: (item) => goRow(item.id, `/produksi/produk/${item.id}`),
       variant: "default",
-      loading: (item) => pendingId === item.id,
     },
     {
       // Resep = BOM. Sudah ada -> buka BOM-nya; belum -> form BOM dengan produk terpilih.
@@ -63,7 +62,6 @@ export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
             : `/produksi/bom/baru?produk=${item.id}`,
         ),
       variant: "default",
-      loading: (item) => pendingId === item.id,
     },
     {
       icon: <Pencil size={16} />,

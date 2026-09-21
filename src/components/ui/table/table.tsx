@@ -342,7 +342,11 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                       )}
                       {showRowNumber && (
                         <span className="text-xs font-semibold text-dark-5 dark:text-dark-6">
-                          #{table.pageStartIndex + rowIndex}
+                          {isRowLoading ? (
+                            <Spinner size={12} className="inline-block" />
+                          ) : (
+                            `#${table.pageStartIndex + rowIndex}`
+                          )}
                         </span>
                       )}
                       {title && (
@@ -472,6 +476,16 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                   const isExpanded = table.isRowExpanded(rowId)
                   const isSelected = table.selectedRowIds.has(rowId)
                   const isRowLoading = getRowLoading?.(item) ?? false
+                  let hasRenderedLoadingOverlay = false
+                  const renderLoadingOverlay = () => {
+                    if (!isRowLoading || hasRenderedLoadingOverlay) return null
+                    hasRenderedLoadingOverlay = true
+                    return (
+                      <div className="absolute inset-0 z-10 flex items-center justify-center border-0 bg-white/60 dark:bg-gray-dark/60 pointer-events-auto">
+                        <Spinner size={20} />
+                      </div>
+                    )
+                  }
                   return (
                     <Fragment key={rowId}>
                       <TableRow
@@ -483,13 +497,9 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         aria-busy={isRowLoading}
                         onClick={() => !isRowLoading && renderExpandedRow && table.toggleRowExpansion(rowId)}
                       >
-                        {isRowLoading && (
-                          <TableCell className="absolute inset-0 z-10 flex items-center justify-center border-0 !opacity-100 bg-white/60 dark:bg-gray-dark/60">
-                            <Spinner size={20} />
-                          </TableCell>
-                        )}
                         {enableSelection && (
                           <TableCell className="w-10 px-4" onClick={(e) => { e.stopPropagation(); table.toggleRowSelection(rowId) }}>
+                            {renderLoadingOverlay()}
                             <Checkbox
                               checked={isSelected}
                               onChange={() => table.toggleRowSelection(rowId)}
@@ -499,10 +509,11 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                         )}
                         {showRowNumber && (
                           <TableCell className="w-14 px-4 text-center text-dark-5 dark:text-dark-6">
+                            {renderLoadingOverlay()}
                             {table.pageStartIndex + rowIndex}
                           </TableCell>
                         )}
-                        {visibleColumns.map((col) => {
+                        {visibleColumns.map((col, colIdx) => {
                           const isPinned = table.isPinned(col.key)
                           const isLeft = col.sticky === "left" || isPinned
                           const isRight = col.sticky === "right"
@@ -518,6 +529,7 @@ export function DataTable<TData>({ table, children, renderExpandedRow, className
                               )}
                               style={stickyStyle(col, isPinned)}
                             >
+                              {colIdx === 0 && renderLoadingOverlay()}
                               {col.renderCell
                                 ? col.renderCell(item, { rowIndex, isExpanded, isSelected })
                                 : String((item as Record<string, unknown>)[col.key] ?? "")}

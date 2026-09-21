@@ -33,12 +33,14 @@ const STATUS_CLASS: Record<string, string> = {
 export function StandarQcTable({ data }: Props) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [isNav, startNav] = useTransition();
   const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const { versiBaru, activate, deactivate, remove } = useStandarQcMutation();
 
-  const go = (path: string, rowId?: string) => {
-    if (rowId) setLoadingRowId(rowId);
+  const goNew = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (path: string, rowId: string) => {
+    setLoadingRowId(rowId);
     startNav(() => router.push(path));
   };
 
@@ -52,7 +54,7 @@ export function StandarQcTable({ data }: Props) {
       {
         icon: <Eye size={16} />,
         title: "Lihat",
-        onClick: (r) => go(`/qc/standar/${r.id}`, r.id),
+        onClick: (r) => goRow(`/qc/standar/${r.id}`, r.id),
         variant: "default",
       },
     ];
@@ -62,7 +64,7 @@ export function StandarQcTable({ data }: Props) {
         {
           icon: <Pencil size={16} />,
           title: "Edit",
-          onClick: (r) => go(`/qc/standar/${r.id}/edit`, r.id),
+          onClick: (r) => goRow(`/qc/standar/${r.id}/edit`, r.id),
           variant: "default",
         },
         {
@@ -170,8 +172,8 @@ export function StandarQcTable({ data }: Props) {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              loading={isNav}
-              onClick={() => go("/qc/standar/baru")}
+              loading={isPendingNew}
+              onClick={() => goNew("/qc/standar/baru")}
               className="hidden sm:inline-flex"
             >
               + Tambah Standar
@@ -184,7 +186,8 @@ export function StandarQcTable({ data }: Props) {
           getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => go("/qc/standar/baru")}
+              onClick={() => goNew("/qc/standar/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

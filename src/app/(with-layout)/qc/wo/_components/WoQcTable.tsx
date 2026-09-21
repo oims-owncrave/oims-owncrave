@@ -34,12 +34,14 @@ const STATUS_CLASS: Record<string, string> = {
 export function WoQcTable({ data }: Props) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [isNav, startNav] = useTransition();
   const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const { setStatus, remove } = useWoQcMutation();
 
-  const go = (path: string, rowId?: string) => {
-    if (rowId) setLoadingRowId(rowId);
+  const goNew = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (path: string, rowId: string) => {
+    setLoadingRowId(rowId);
     startNav(() => router.push(path));
   };
 
@@ -52,9 +54,8 @@ export function WoQcTable({ data }: Props) {
       {
         icon: <Eye size={16} />,
         title: "Lihat",
-        onClick: (r) => go(`/qc/wo/${r.id}`, r.id),
+        onClick: (r) => goRow(`/qc/wo/${r.id}`, r.id),
         variant: "default",
-        loading: (it) => loadingRowId === it.id,
       },
     ];
 
@@ -80,9 +81,8 @@ export function WoQcTable({ data }: Props) {
         {
           icon: <ClipboardCheck size={16} />,
           title: "Catat hasil QC",
-          onClick: (r) => go(`/qc/pemeriksaan/baru?wo=${r.id}`, r.id),
+          onClick: (r) => goRow(`/qc/pemeriksaan/baru?wo=${r.id}`, r.id),
           variant: "default",
-          loading: (it) => loadingRowId === it.id,
         },
         {
           icon: <CheckCircle size={16} />,
@@ -173,8 +173,8 @@ export function WoQcTable({ data }: Props) {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              loading={isNav}
-              onClick={() => go("/qc/wo/baru")}
+              loading={isPendingNew}
+              onClick={() => goNew("/qc/wo/baru")}
               className="hidden sm:inline-flex"
             >
               + Buat Work Order
@@ -187,7 +187,8 @@ export function WoQcTable({ data }: Props) {
           getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => go("/qc/wo/baru")}
+              onClick={() => goNew("/qc/wo/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />

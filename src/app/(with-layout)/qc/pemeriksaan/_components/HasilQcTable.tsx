@@ -33,12 +33,14 @@ const STATUS_CLASS: Record<string, string> = {
 export function HasilQcTable({ data }: Props) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isPendingNew, startTransitionNew] = useTransition();
   const [isNav, startNav] = useTransition();
   const [loadingRowId, setLoadingRowId] = useState<string | null>(null);
   const { verifikasi, remove } = useHasilQcMutation();
 
-  const go = (path: string, rowId?: string) => {
-    if (rowId) setLoadingRowId(rowId);
+  const goNew = (path: string) => startTransitionNew(() => router.push(path));
+  const goRow = (path: string, rowId: string) => {
+    setLoadingRowId(rowId);
     startNav(() => router.push(path));
   };
 
@@ -51,7 +53,7 @@ export function HasilQcTable({ data }: Props) {
       {
         icon: <Eye size={16} />,
         title: "Lihat & catat cacat",
-        onClick: (r) => go(`/qc/pemeriksaan/${r.id}`, r.id),
+        onClick: (r) => goRow(`/qc/pemeriksaan/${r.id}`, r.id),
         variant: "default",
       },
     ];
@@ -151,8 +153,8 @@ export function HasilQcTable({ data }: Props) {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              loading={isNav}
-              onClick={() => go("/qc/pemeriksaan/baru")}
+              loading={isPendingNew}
+              onClick={() => goNew("/qc/pemeriksaan/baru")}
               className="hidden sm:inline-flex"
             >
               + Catat Hasil QC
@@ -165,7 +167,8 @@ export function HasilQcTable({ data }: Props) {
           getRowLoading={(item) => item.id === loadingRowId}
           mobileFab={
             <Button
-              onClick={() => go("/qc/pemeriksaan/baru")}
+              onClick={() => goNew("/qc/pemeriksaan/baru")}
+              loading={isPendingNew}
               className="rounded-full h-14 w-14 shadow-lg p-0 flex items-center justify-center"
             >
               <Plus size={24} />
