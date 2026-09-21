@@ -3,6 +3,7 @@ import { getStandarQcDetail } from "@/services/standar-qc";
 import { listProduk } from "@/services/produk";
 import { listKategori } from "@/services/kategori";
 import { listJenisCacat } from "@/services/jenis-cacat";
+import { listBagianProduk } from "@/services/bagian-produk";
 import { StandarQcForm } from "../../_components/StandarQcForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -12,11 +13,12 @@ export default async function StandarQcEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [data, produkList, kategoriList, cacatList] = await Promise.all([
+  const [data, produkList, kategoriList, cacatList, bagianProdukList] = await Promise.all([
     getStandarQcDetail(id),
     listProduk(),
     listKategori(),
     listJenisCacat(),
+    listBagianProduk(),
   ]);
   if (!data) notFound();
 
@@ -34,6 +36,7 @@ export default async function StandarQcEditPage({
         produkOptions={produkList}
         kategoriOptions={kategoriList}
         cacatOptions={cacatList}
+        bagianProdukOptions={bagianProdukList}
         editId={id}
         defaultValues={{
           nama: data.header.nama,
@@ -43,7 +46,7 @@ export default async function StandarQcEditPage({
           catatan: data.header.catatan ?? "",
           details: data.details.map((d) => ({
             tahap: d.tahap,
-            bagianProduk: d.bagianProduk ?? "",
+            bagianProdukId: d.bagianProdukId ?? null,
             kriteria: d.kriteria,
             metode: d.metode ?? "",
             tingkatKepentingan: d.tingkatKepentingan,

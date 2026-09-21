@@ -87,6 +87,7 @@ export const NAV_DATA: NavSection[] = [
           { title: "Tarif Jasa Jahit", url: "/vendor/tarif", roles: ["owner", "admin_produksi"] }, // READ_ROLES tarif-jasa-jahit.ts
           { title: "Standar QC", url: "/qc/standar", heading: "Data QC", roles: ["owner", "admin_produksi"] }, // READ_ROLES standar-qc.ts
           { title: "Jenis Cacat", url: "/master/jenis-cacat" },
+          { title: "Bagian Produk", url: "/master/bagian-produk", roles: ["owner", "admin_produksi"] }, // halaman dijaga bolehAkses dengan daftar yang sama
         ],
       },
     ],

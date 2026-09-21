@@ -23,6 +23,7 @@ interface Props {
   header: Data["header"];
   details: Data["details"];
   cacatOptions: JenisCacat[];
+  bagianProdukOptions?: { id: string; kode: string; nama: string; urutan?: number; isActive?: boolean }[];
 }
 
 const STATUS_CLASS: Record<string, string> = {
@@ -40,7 +41,12 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-export function HasilQcDetailView({ header, details, cacatOptions }: Props) {
+export function HasilQcDetailView({
+  header,
+  details,
+  cacatOptions,
+  bagianProdukOptions,
+}: Props) {
   const [modalFor, setModalFor] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const router = useRouter();
@@ -218,7 +224,7 @@ export function HasilQcDetailView({ header, details, cacatOptions }: Props) {
                     <td className="px-4 py-3">
                       {t.jenisCacatKode} — {t.jenisCacatNama}
                     </td>
-                    <td className="px-4 py-3">{t.bagianProduk || "—"}</td>
+                    <td className="px-4 py-3">{t.bagianProdukNama || "—"}</td>
                     <td className="px-4 py-3">
                       <span
                         className={cn(
@@ -278,6 +284,7 @@ export function HasilQcDetailView({ header, details, cacatOptions }: Props) {
             : 0
         }
         cacatOptions={cacatOptions}
+        bagianProdukOptions={bagianProdukOptions}
       />
 
       <ConfirmDialog

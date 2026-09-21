@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { bolehAkses } from "@/lib/auth";
 import { AksesDitolak } from "@/components/ui/AksesDitolak";
 import { getReturDetail, listPenerimaanPunyaRusak } from "@/services/retur-jahit";
+import { listJenisCacat } from "@/services/jenis-cacat";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ReturForm } from "../../_components/ReturForm";
 
@@ -12,7 +13,10 @@ export default async function ReturEditPage({ params }: { params: Promise<{ id: 
   if (!detail) notFound();
   if (detail.status !== "draft") redirect(`/vendor/retur/${id}`);
 
-  const opts = await listPenerimaanPunyaRusak();
+  const [opts, jenisCacatOptions] = await Promise.all([
+    listPenerimaanPunyaRusak(),
+    listJenisCacat(),
+  ]);
   const penerimaanOptions = opts.some((o) => o.id === detail.penerimaanAsalId)
     ? opts
     : [{ id: detail.penerimaanAsalId!, nomorDokumen: detail.penerimaanAsalNomor ?? "", penugasanId: detail.penugasanId, penugasanNomor: detail.penugasanNomor, pihakNama: detail.pihakNama, tanggalJam: detail.tanggalRetur }, ...opts];
@@ -26,6 +30,7 @@ export default async function ReturEditPage({ params }: { params: Promise<{ id: 
       />
       <ReturForm
         penerimaanOptions={penerimaanOptions}
+        jenisCacatOptions={jenisCacatOptions}
         initialPenerimaanId={detail.penerimaanAsalId ?? ""}
         editId={id}
         defaultValues={{
@@ -38,7 +43,7 @@ export default async function ReturEditPage({ params }: { params: Promise<{ id: 
           details: detail.details.map((d) => ({
             penugasanDetailId: d.penugasanDetailId,
             jumlah: d.jumlah,
-            jenisKerusakan: d.jenisKerusakan ?? "",
+            jenisCacatId: d.jenisCacatId ?? "",
             instruksi: d.instruksi ?? "",
             tarifPerbaikan: Number(d.tarifPerbaikan),
             penanggungBiaya: d.penanggungBiaya,

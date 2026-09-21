@@ -117,7 +117,7 @@ export function ReturDetailClient({ id, initialData }: Props) {
                   <td className="py-2 pr-3">{x.sku} <span className="text-xs text-dark-5">{x.warnaNama}/{x.ukuran}</span></td>
                   <td className="py-2 pr-3 text-right">{x.jumlah}</td>
                   <td className="py-2 pr-3 text-right">{x.sudahKembali}</td>
-                  <td className="py-2 pr-3">{x.jenisKerusakan ?? "—"}</td>
+                  <td className="py-2 pr-3">{x.jenisCacatNama ?? "—"}</td>
                   <td className="py-2 pr-3">{x.instruksi ?? "—"}</td>
                   <td className="py-2 pr-3 whitespace-nowrap">
                     {PENANGGUNG_LABEL[x.penanggungBiaya].split(" (")[0]}

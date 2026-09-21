@@ -3,7 +3,7 @@ import { qcTingkatValues } from "./jenis-cacat";
 
 export const standarQcDetailSchema = z.object({
   tahap: z.string().min(1, "Tahap wajib diisi").max(100),
-  bagianProduk: z.string().max(100).optional().nullable(),
+  bagianProdukId: z.string().uuid().optional().nullable().or(z.literal("")),
   kriteria: z.string().min(1, "Kriteria wajib diisi").max(500),
   metode: z.string().max(255).optional().nullable(),
   tingkatKepentingan: z.enum(qcTingkatValues),

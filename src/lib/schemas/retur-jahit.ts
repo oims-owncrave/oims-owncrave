@@ -19,7 +19,7 @@ export const PENANGGUNG_LABEL: Record<"vendor" | "owncrave", string> = {
 export const returDetailSchema = z.object({
   penugasanDetailId: z.string().min(1),
   jumlah: z.number({ message: "Jumlah wajib diisi" }).int().min(0),
-  jenisKerusakan: z.string().optional(),
+  jenisCacatId: z.string().uuid().optional().or(z.literal("")),
   instruksi: z.string().optional(),
   tarifPerbaikan: z.number({ message: "Wajib angka" }).min(0),
   penanggungBiaya: z.enum(["vendor", "owncrave"]),

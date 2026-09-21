@@ -5,6 +5,7 @@ import { db } from "@/db";
 import {
   standarQc,
   standarQcDetail,
+  bagianProduk,
   produk,
   kategori,
   jenisCacat,
@@ -111,7 +112,8 @@ export async function getStandarQcDetail(id: string) {
     .select({
       id: standarQcDetail.id,
       tahap: standarQcDetail.tahap,
-      bagianProduk: standarQcDetail.bagianProduk,
+      bagianProdukId: standarQcDetail.bagianProdukId,
+      bagianProdukNama: bagianProduk.nama,
       kriteria: standarQcDetail.kriteria,
       metode: standarQcDetail.metode,
       tingkatKepentingan: standarQcDetail.tingkatKepentingan,
@@ -123,6 +125,7 @@ export async function getStandarQcDetail(id: string) {
       urutan: standarQcDetail.urutan,
     })
     .from(standarQcDetail)
+    .leftJoin(bagianProduk, eq(standarQcDetail.bagianProdukId, bagianProduk.id))
     .leftJoin(jenisCacat, eq(standarQcDetail.jenisCacatId, jenisCacat.id))
     .where(eq(standarQcDetail.standarQcId, id))
     .orderBy(standarQcDetail.urutan);
@@ -159,7 +162,7 @@ async function insertDetails(tx: Tx, standarQcId: string, details: StandarQcInpu
     await tx.insert(standarQcDetail).values({
       standarQcId,
       tahap: d.tahap,
-      bagianProduk: d.bagianProduk || null,
+      bagianProdukId: d.bagianProdukId || null,
       kriteria: d.kriteria,
       metode: d.metode || null,
       tingkatKepentingan: d.tingkatKepentingan,
@@ -304,7 +307,7 @@ export async function createVersiBaruStandarQc(id: string): Promise<Result> {
           await tx.insert(standarQcDetail).values({
             standarQcId: header.id,
             tahap: d.tahap,
-            bagianProduk: d.bagianProduk,
+            bagianProdukId: d.bagianProdukId,
             kriteria: d.kriteria,
             metode: d.metode,
             tingkatKepentingan: d.tingkatKepentingan,

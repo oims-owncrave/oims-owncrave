@@ -17,6 +17,7 @@ import type { PenerimaanPunyaRusak } from "@/services/retur-jahit";
 
 interface Props {
   penerimaanOptions: PenerimaanPunyaRusak[];
+  jenisCacatOptions?: { id: string; kode: string; nama: string; isActive?: boolean }[];
   initialPenerimaanId?: string;
   editId?: string;
   defaultValues?: ReturInput;
@@ -27,7 +28,13 @@ const KOSONG: never[] = [];
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
-export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId, defaultValues }: Props) {
+export function ReturForm({
+  penerimaanOptions,
+  jenisCacatOptions = [],
+  initialPenerimaanId = "",
+  editId,
+  defaultValues,
+}: Props) {
   const router = useRouter();
   const { create, update } = useReturMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -73,7 +80,7 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
           // tarifPerbaikan 0, bukan undefined: penanggung default vendor membuat kolomnya
           // disabled, jadi nilainya tidak pernah terisi sendiri dan zod menolak diam-diam
           // (form tidak pindah halaman, tanpa pesan apa pun).
-          return cur ?? { penugasanDetailId: k.penugasanDetailId, jumlah: cap, jenisKerusakan: "", instruksi: "", tarifPerbaikan: 0, penanggungBiaya: "vendor" as const, fotoUrl: "" };
+          return cur ?? { penugasanDetailId: k.penugasanDetailId, jumlah: cap, jenisCacatId: "", instruksi: "", tarifPerbaikan: 0, penanggungBiaya: "vendor" as const, fotoUrl: "" };
         })
         .filter((x): x is NonNullable<typeof x> => x !== null),
     );
@@ -154,8 +161,19 @@ export function ReturForm({ penerimaanOptions, initialPenerimaanId = "", editId,
             placeholder="0" label="Jumlah" value={watch(`details.${i}.jumlah`)}
   onChange={(v) =>
     setValue(`details.${i}.jumlah`, v as number, { shouldValidate: true })
-  } error={errors.details?.[i]?.jumlah?.message} />
-                    <Input label="Jenis Kerusakan" placeholder="Misal: jahitan lepas" {...register(`details.${i}.jenisKerusakan`)} />
+  }
+  error={errors.details?.[i]?.jumlah?.message}
+/>
+                    <ComboSelect
+                      label="Jenis Kerusakan"
+                      placeholder="Pilih jenis cacat"
+                      clearable
+                      options={jenisCacatOptions
+                        .filter((j) => (j.isActive ?? true) || j.id === details[i]?.jenisCacatId)
+                        .map((j) => ({ label: `${j.kode} — ${j.nama}`, value: j.id }))}
+                      value={details[i]?.jenisCacatId || null}
+                      onChange={(v) => setValue(`details.${i}.jenisCacatId`, (v as string) ?? "")}
+                    />
                     <Select label="Penanggung Biaya" options={(["vendor", "owncrave"] as const).map((p) => ({ value: p, label: PENANGGUNG_LABEL[p] }))} {...register(`details.${i}.penanggungBiaya`)} />
                     <NumberInput
             decimals={0}

@@ -97,7 +97,7 @@ export function StandarQcDetailView({ header, details }: Props) {
                 <tr key={d.id} className="border-t border-stroke dark:border-dark-3">
                   <td className="px-4 py-3 text-gray-500">{i + 1}</td>
                   <td className="px-4 py-3">{d.tahap}</td>
-                  <td className="px-4 py-3">{d.bagianProduk || "—"}</td>
+                  <td className="px-4 py-3">{d.bagianProdukNama || "—"}</td>
                   <td className="px-4 py-3">{d.kriteria}</td>
                   <td className="px-4 py-3">{d.metode || "—"}</td>
                   <td className="px-4 py-3">

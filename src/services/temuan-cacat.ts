@@ -7,6 +7,7 @@ import {
   hasilQcDetail,
   hasilQc,
   jenisCacat,
+  bagianProduk,
   standarQcDetail,
   workOrderQc,
   varianProduk,
@@ -49,7 +50,8 @@ export async function listTemuanByHasilQc(hasilQcId: string) {
       hasilQcDetailId: temuanCacat.hasilQcDetailId,
       jenisCacatNama: jenisCacat.nama,
       jenisCacatKode: jenisCacat.kode,
-      bagianProduk: temuanCacat.bagianProduk,
+      bagianProdukId: temuanCacat.bagianProdukId,
+      bagianProdukNama: bagianProduk.nama,
       keparahan: temuanCacat.keparahan,
       sumber: temuanCacat.sumber,
       jumlah: temuanCacat.jumlah,
@@ -63,6 +65,7 @@ export async function listTemuanByHasilQc(hasilQcId: string) {
     .from(temuanCacat)
     .innerJoin(hasilQcDetail, eq(temuanCacat.hasilQcDetailId, hasilQcDetail.id))
     .innerJoin(jenisCacat, eq(temuanCacat.jenisCacatId, jenisCacat.id))
+    .leftJoin(bagianProduk, eq(temuanCacat.bagianProdukId, bagianProduk.id))
     .innerJoin(varianProduk, eq(hasilQcDetail.varianId, varianProduk.id))
     .innerJoin(produk, eq(varianProduk.produkId, produk.id))
     .where(eq(hasilQcDetail.hasilQcId, hasilQcId))
@@ -168,7 +171,7 @@ export async function createTemuanCacat(input: TemuanCacatInput): Promise<Result
       .values({
         hasilQcDetailId: input.hasilQcDetailId,
         jenisCacatId: input.jenisCacatId,
-        bagianProduk: input.bagianProduk || null,
+        bagianProdukId: input.bagianProdukId || null,
         keparahan: input.keparahan,
         sumber: input.sumber,
         jumlah: input.jumlah,

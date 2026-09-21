@@ -16,6 +16,7 @@ import {
   warna,
   vendor,
   penjahit,
+  jenisCacat,
   auditLog,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
@@ -127,7 +128,9 @@ export async function getReturDetail(id: string) {
       warnaNama: warna.nama,
       ukuran: varianProduk.ukuran,
       jumlah: returJahitDetail.jumlah,
-      jenisKerusakan: returJahitDetail.jenisKerusakan,
+      jenisCacatId: returJahitDetail.jenisCacatId,
+      jenisCacatNama: jenisCacat.nama,
+      jenisCacatKode: jenisCacat.kode,
       instruksi: returJahitDetail.instruksi,
       tarifPerbaikan: returJahitDetail.tarifPerbaikan,
       penanggungBiaya: returJahitDetail.penanggungBiaya,
@@ -144,6 +147,7 @@ export async function getReturDetail(id: string) {
     .innerJoin(bundling, eq(penugasanJahitDetail.bundlingId, bundling.id))
     .innerJoin(varianProduk, eq(bundling.varianId, varianProduk.id))
     .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+    .leftJoin(jenisCacat, eq(returJahitDetail.jenisCacatId, jenisCacat.id))
     .where(eq(returJahitDetail.returId, id))
     .orderBy(bundling.nomorDokumen);
 
@@ -201,7 +205,7 @@ function detailValues(returId: string, input: ReturInput) {
       returId,
       penugasanDetailId: d.penugasanDetailId,
       jumlah: d.jumlah,
-      jenisKerusakan: d.jenisKerusakan?.trim() || null,
+      jenisCacatId: d.jenisCacatId || null,
       instruksi: d.instruksi?.trim() || null,
       tarifPerbaikan: String(d.tarifPerbaikan),
       penanggungBiaya: d.penanggungBiaya,

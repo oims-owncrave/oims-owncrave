@@ -1,14 +1,16 @@
 import { listProduk } from "@/services/produk";
 import { listKategori } from "@/services/kategori";
 import { listJenisCacat } from "@/services/jenis-cacat";
+import { listBagianProduk } from "@/services/bagian-produk";
 import { StandarQcForm } from "../_components/StandarQcForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export default async function StandarQcBaruPage() {
-  const [produkList, kategoriList, cacatList] = await Promise.all([
+  const [produkList, kategoriList, cacatList, bagianProdukList] = await Promise.all([
     listProduk(),
     listKategori(),
     listJenisCacat(),
+    listBagianProduk(),
   ]);
 
   return (
@@ -25,6 +27,7 @@ export default async function StandarQcBaruPage() {
         produkOptions={produkList}
         kategoriOptions={kategoriList}
         cacatOptions={cacatList}
+        bagianProdukOptions={bagianProdukList}
       />
     </div>
   );

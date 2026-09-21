@@ -25,6 +25,7 @@ interface Props {
   /** sisa produk bermasalah yang belum dicatat cacatnya */
   sisa: number;
   cacatOptions: JenisCacat[];
+  bagianProdukOptions?: { id: string; kode: string; nama: string; urutan?: number; isActive?: boolean }[];
 }
 
 const TINGKAT_OPTIONS = toOptions(QC_TINGKAT_LABEL);
@@ -37,6 +38,7 @@ export function TemuanCacatModal({
   hasilQcDetailId,
   sisa,
   cacatOptions,
+  bagianProdukOptions = [],
 }: Props) {
   const { create } = useTemuanCacatMutation(hasilQcId);
   const isPending = create.isPending;
@@ -53,6 +55,7 @@ export function TemuanCacatModal({
   });
 
   const jenisCacatId = watch("jenisCacatId");
+  const bagianProdukId = watch("bagianProdukId");
 
   const cacatChoices = useMemo(
     () =>
@@ -62,12 +65,20 @@ export function TemuanCacatModal({
     [cacatOptions, jenisCacatId],
   );
 
+  const bagianChoices = useMemo(
+    () =>
+      bagianProdukOptions
+        .filter((b) => (b.isActive ?? true) || b.id === bagianProdukId)
+        .map((b) => ({ value: b.id, label: `${b.kode} — ${b.nama}` })),
+    [bagianProdukOptions, bagianProdukId],
+  );
+
   useEffect(() => {
     if (!open || !hasilQcDetailId) return;
     reset({
       hasilQcDetailId,
       jenisCacatId: "",
-      bagianProduk: "",
+      bagianProdukId: "",
       keparahan: "minor",
       sumber: "tidak_diketahui",
       jumlah: 1,
@@ -147,11 +158,17 @@ export function TemuanCacatModal({
               }
               disabled={isPending}
             />
-            <Input
+            <ComboSelect
               label="Bagian Produk"
-              placeholder="Misal: Kerah"
-              {...register("bagianProduk")}
+              options={bagianChoices}
+              value={bagianProdukId || null}
+              onChange={(v) =>
+                setValue("bagianProdukId", (v as string) || "", { shouldValidate: true })
+              }
+              placeholder="Pilih bagian produk"
+              clearable
               disabled={isPending}
+              error={errors.bagianProdukId}
             />
           </div>
 

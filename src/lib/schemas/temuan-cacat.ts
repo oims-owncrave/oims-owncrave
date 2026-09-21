@@ -4,7 +4,7 @@ import { qcTingkatValues, cacatSumberValues } from "./jenis-cacat";
 export const temuanCacatSchema = z.object({
   hasilQcDetailId: z.string().uuid(),
   jenisCacatId: z.string().uuid({ message: "Jenis cacat wajib dipilih" }),
-  bagianProduk: z.string().max(100).optional().nullable(),
+  bagianProdukId: z.string().uuid().optional().nullable().or(z.literal("")),
   keparahan: z.enum(qcTingkatValues),
   sumber: z.enum(cacatSumberValues),
   jumlah: z.coerce.number().int().min(1, "Jumlah minimal 1"),

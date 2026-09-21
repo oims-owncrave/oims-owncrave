@@ -24,6 +24,7 @@ interface Props {
   produkOptions: Opt[];
   kategoriOptions: Opt[];
   cacatOptions: Opt[];
+  bagianProdukOptions?: { id: string; kode: string; nama: string; urutan?: number; isActive?: boolean }[];
   editId?: string;
   defaultValues?: StandarQcFormValues;
 }
@@ -32,7 +33,7 @@ const TINGKAT_OPTIONS = toOptions(QC_TINGKAT_LABEL);
 
 const EMPTY_ROW = {
   tahap: "",
-  bagianProduk: "",
+  bagianProdukId: null,
   kriteria: "",
   metode: "",
   tingkatKepentingan: "minor" as const,
@@ -47,6 +48,7 @@ export function StandarQcForm({
   produkOptions,
   kategoriOptions,
   cacatOptions,
+  bagianProdukOptions = [],
   editId,
   defaultValues,
 }: Props) {
@@ -202,10 +204,15 @@ export function StandarQcForm({
                   {...register(`details.${i}.tahap`)}
                   disabled={isPending}
                 />
-                <Input
+                <ComboSelect
                   label="Bagian Produk"
-                  placeholder="Misal: Kerah"
-                  {...register(`details.${i}.bagianProduk`)}
+                  placeholder="Pilih bagian produk"
+                  clearable
+                  options={bagianProdukOptions
+                    .filter((b) => (b.isActive ?? true) || b.id === watch(`details.${i}.bagianProdukId`))
+                    .map((b) => ({ label: `${b.kode} — ${b.nama}`, value: b.id }))}
+                  value={watch(`details.${i}.bagianProdukId`) || null}
+                  onChange={(v) => setValue(`details.${i}.bagianProdukId`, (v as string) ?? "")}
                   disabled={isPending}
                 />
               </div>
