@@ -47,11 +47,8 @@ export function ProdukDetailClient({ produkId, initialData }: Props) {
       />
 
       <div className="rounded-[10px] border border-stroke bg-white p-5 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           <InfoItem label="Kode" value={produk.kode} />
-          <InfoItem label="Kategori" value={produk.kategori} />
-          <InfoItem label="Brand" value={produk.brand} />
-          <InfoItem label="Jenis" value={produk.jenis} />
           <InfoItem label="Status" value={produk.isActive ? "Aktif" : "Nonaktif"} />
           <InfoItem label="Jumlah Varian" value={String(varian.length)} />
         </div>

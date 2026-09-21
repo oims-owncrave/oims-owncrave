@@ -83,21 +83,6 @@ export function ProdukTable({ data, onEdit, onAdd, onImport }: Props) {
     { key: "kode", label: "Kode" },
     { key: "nama", label: "Nama Produk" },
     {
-      key: "kategori",
-      label: "Kategori",
-      renderCell: (item) => item.kategori ?? "—",
-    },
-    {
-      key: "brand",
-      label: "Brand",
-      renderCell: (item) => item.brand ?? "—",
-    },
-    {
-      key: "jenis",
-      label: "Jenis",
-      renderCell: (item) => item.jenis ?? "—",
-    },
-    {
       key: "isActive",
       label: "Status",
       renderCell: (item) => (

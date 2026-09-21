@@ -15,17 +15,11 @@ interface Props {
   open: boolean;
   onClose: () => void;
   initialData?: Produk | null;
-  saranKategori?: string[];
-  saranBrand?: string[];
-  saranJenis?: string[];
 }
 
 const EMPTY: ProdukInput = {
   kode: "",
   nama: "",
-  kategori: "",
-  brand: "",
-  jenis: "",
   deskripsi: "",
   dekorasiProses: "none",
   isActive: true,
@@ -35,9 +29,6 @@ export function ProdukFormModal({
   open,
   onClose,
   initialData,
-  saranKategori = [],
-  saranBrand = [],
-  saranJenis = [],
 }: Props) {
   const { create, update } = useProdukMutation();
   const isEditing = !!initialData;
@@ -63,9 +54,6 @@ export function ProdukFormModal({
         reset({
           kode: initialData.kode,
           nama: initialData.nama,
-          kategori: initialData.kategori ?? "",
-          brand: initialData.brand ?? "",
-          jenis: initialData.jenis ?? "",
           deskripsi: initialData.deskripsi ?? "",
           dekorasiProses: initialData.dekorasiProses,
           isActive: initialData.isActive,
@@ -110,33 +98,6 @@ export function ProdukFormModal({
               placeholder="Misal: Nordic Jacket"
               error={errors.nama?.message}
               {...register("nama")}
-              disabled={isPending}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Input
-              label="Kategori"
-              placeholder="Misal: Jaket"
-              error={errors.kategori?.message}
-              suggestions={saranKategori}
-              {...register("kategori")}
-              disabled={isPending}
-            />
-            <Input
-              label="Brand"
-              placeholder="Misal: Owncrave"
-              error={errors.brand?.message}
-              suggestions={saranBrand}
-              {...register("brand")}
-              disabled={isPending}
-            />
-            <Input
-              label="Jenis"
-              placeholder="Misal: Outerwear"
-              error={errors.jenis?.message}
-              suggestions={saranJenis}
-              {...register("jenis")}
               disabled={isPending}
             />
           </div>

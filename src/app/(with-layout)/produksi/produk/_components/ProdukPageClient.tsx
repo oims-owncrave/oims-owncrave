@@ -23,11 +23,6 @@ export function ProdukPageClient({ initialData }: Props) {
 
   const items = data ?? initialData;
 
-  // Saran Kategori/Brand/Jenis diambil dari nilai yang sudah dipakai — dropdown yang
-  // tetap menerima ketikan baru, supaya klien bisa menambah tanpa ubah kode.
-  const saran = (k: "kategori" | "brand" | "jenis") =>
-    [...new Set(items.map((p) => p[k]).filter((v): v is string => !!v?.trim()))].sort();
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -46,9 +41,6 @@ export function ProdukPageClient({ initialData }: Props) {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         initialData={editItem}
-        saranKategori={saran("kategori")}
-        saranBrand={saran("brand")}
-        saranJenis={saran("jenis")}
       />
 
       <ImportExcelModal
