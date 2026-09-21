@@ -1,7 +1,5 @@
-import { listStandarQc } from "@/services/standar-qc";
-import { StandarQcPageClient } from "./_components/StandarQcPageClient";
+import { redirect } from "next/navigation";
 
-export default async function StandarQcPage() {
-  const data = await listStandarQc();
-  return <StandarQcPageClient initialData={data} />;
+export default function StandarQcPage() {
+  redirect("/master/data-qc?tab=standar");
 }

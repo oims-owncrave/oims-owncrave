@@ -34,7 +34,7 @@ export function StandarQcDetailView({ header, details }: Props) {
         title={header.nomorDokumen}
         breadcrumb={[
           { label: "Master" },
-          { label: "Standar QC", href: "/qc/standar" },
+          { label: "Standar QC", href: "/master/data-qc?tab=standar" },
           { label: header.nomorDokumen },
         ]}
       />

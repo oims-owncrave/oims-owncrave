@@ -1,7 +1,5 @@
-import { listProduk } from "@/services/produk";
-import { ProdukPageClient } from "./_components/ProdukPageClient";
+import { redirect } from "next/navigation";
 
-export default async function MasterProdukPage() {
-  const data = await listProduk();
-  return <ProdukPageClient initialData={data} />;
+export default function MasterProdukPage() {
+  redirect("/master/data-produk?tab=produk");
 }

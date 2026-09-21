@@ -19,7 +19,7 @@ export default async function StandarQcBaruPage() {
         title="Tambah Standar QC"
         breadcrumb={[
           { label: "Master" },
-          { label: "Standar QC", href: "/qc/standar" },
+          { label: "Standar QC", href: "/master/data-qc?tab=standar" },
           { label: "Tambah" },
         ]}
       />

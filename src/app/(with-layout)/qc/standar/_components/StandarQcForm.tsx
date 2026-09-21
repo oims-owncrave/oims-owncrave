@@ -98,7 +98,7 @@ export function StandarQcForm({
     const res = isEditing
       ? await update.mutateAsync({ id: editId, input: data })
       : await create.mutateAsync(data);
-    if (!res.error) router.push("/qc/standar");
+    if (!res.error) router.push("/master/data-qc?tab=standar");
   }
 
   return (
@@ -285,7 +285,7 @@ export function StandarQcForm({
           type="button"
           variant="outline"
           loading={isCancelling}
-          onClick={() => startCancel(() => router.push("/qc/standar"))}
+          onClick={() => startCancel(() => router.push("/master/data-qc?tab=standar"))}
           disabled={isPending}
         >
           Batal

@@ -72,19 +72,10 @@ export const NAV_DATA: NavSection[] = [
         // Lihat CLAUDE.md § Utang Teknis.
         icon: MasterIcon,
         items: [
-          { title: "Data Bahan", url: "/master/data-bahan", heading: "Data Bahan" },
-          { title: "Produk", url: "/produksi/produk", heading: "Data Produk" },
-          { title: "BOM", url: "/produksi/bom", roles: ["owner", "admin_produksi"] }, // READ_ROLES bom.ts
-          { title: "Kemasan", url: "/master/kemasan" },
-          { title: "Gudang Barang Jadi", url: "/master/gudang-jadi" },
-          { title: "Supplier", url: "/master/supplier", heading: "Data Mitra" }, // penjual bahan — beda dari vendor/penjahit yang menyediakan jasa
-          { title: "Vendor", url: "/vendor/daftar" },
-          { title: "Penjahit", url: "/vendor/penjahit" },
-          { title: "Lokasi Produksi", url: "/vendor/lokasi" },
-          { title: "Tarif Jasa Jahit", url: "/vendor/tarif", roles: ["owner", "admin_produksi"] }, // READ_ROLES tarif-jasa-jahit.ts
-          { title: "Standar QC", url: "/qc/standar", heading: "Data QC", roles: ["owner", "admin_produksi"] }, // READ_ROLES standar-qc.ts
-          { title: "Jenis Cacat", url: "/master/jenis-cacat" },
-          { title: "Bagian Produk", url: "/master/bagian-produk", roles: ["owner", "admin_produksi"] }, // halaman dijaga bolehAkses dengan daftar yang sama
+          { title: "Data Bahan", url: "/master/data-bahan" },
+          { title: "Data Produk", url: "/master/data-produk" },
+          { title: "Data Mitra", url: "/master/data-mitra" },
+          { title: "Data QC", url: "/master/data-qc" },
         ],
       },
     ],

@@ -1,7 +1,5 @@
-import { listVendor } from "@/services/vendor";
-import { VendorPageClient } from "./_components/VendorPageClient";
+import { redirect } from "next/navigation";
 
-export default async function VendorDaftarPage() {
-  const data = await listVendor();
-  return <VendorPageClient initialData={data} />;
+export default function VendorDaftarPage() {
+  redirect("/master/data-mitra?tab=vendor");
 }

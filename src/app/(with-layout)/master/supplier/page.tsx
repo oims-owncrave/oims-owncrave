@@ -1,12 +1,5 @@
-import { listSupplier } from "@/services/supplier";
-import { SupplierPageClient } from "./_components/SupplierPageClient";
-import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Master Supplier | OIMS Owncrave",
-};
-
-export default async function MasterSupplierPage() {
-  const data = await listSupplier();
-  return <SupplierPageClient initialData={data} />;
+export default function MasterSupplierPage() {
+  redirect("/master/data-mitra?tab=supplier");
 }

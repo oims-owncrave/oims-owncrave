@@ -35,7 +35,7 @@ export default async function BomBaruPage({
         title="Buat BOM"
         breadcrumb={[
           { label: "Produksi" },
-          { label: "BOM", href: "/produksi/bom" },
+          { label: "BOM", href: "/master/data-produk?tab=bom" },
           { label: "Baru" },
         ]}
       />

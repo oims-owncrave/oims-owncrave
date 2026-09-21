@@ -35,7 +35,7 @@ export default async function BomEditPage({
         title={`Edit ${detail.nomorDokumen}`}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "BOM", href: "/produksi/bom" },
+          { label: "BOM", href: "/master/data-produk?tab=bom" },
           { label: detail.nomorDokumen, href: `/produksi/bom/${id}` },
           { label: "Edit" },
         ]}

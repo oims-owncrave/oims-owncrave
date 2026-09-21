@@ -1,7 +1,5 @@
-import { listBom } from "@/services/bom";
-import { BomPageClient } from "./_components/BomPageClient";
+import { redirect } from "next/navigation";
 
-export default async function BomPage() {
-  const data = await listBom();
-  return <BomPageClient initialData={data} />;
+export default function BomPage() {
+  redirect("/master/data-produk?tab=bom");
 }

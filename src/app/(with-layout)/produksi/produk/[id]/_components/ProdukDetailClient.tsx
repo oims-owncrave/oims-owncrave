@@ -41,7 +41,7 @@ export function ProdukDetailClient({ produkId, initialData }: Props) {
         title={produk.nama}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "Produk", href: "/produksi/produk" },
+          { label: "Produk", href: "/master/data-produk?tab=produk" },
           { label: produk.kode },
         ]}
       />

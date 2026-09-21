@@ -95,7 +95,7 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
     const res = isEditing
       ? await update.mutateAsync({ id: editId, input: data })
       : await create.mutateAsync(data);
-    if (!res.error) router.push("/produksi/bom");
+    if (!res.error) router.push("/master/data-produk?tab=bom");
   }
 
   const isPending = create.isPending || update.isPending;
@@ -286,7 +286,7 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
           type="button"
           variant="outline"
           loading={isCancelling}
-          onClick={() => startCancel(() => router.push("/produksi/bom"))}
+          onClick={() => startCancel(() => router.push("/master/data-produk?tab=bom"))}
         >
           Batal
         </Button>

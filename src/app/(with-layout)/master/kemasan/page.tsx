@@ -1,7 +1,5 @@
-import { listKemasan } from "@/services/kemasan";
-import { KemasanPageClient } from "./_components/KemasanPageClient";
+import { redirect } from "next/navigation";
 
-export default async function MasterKemasanPage() {
-  const data = await listKemasan();
-  return <KemasanPageClient initialData={data} />;
+export default function MasterKemasanPage() {
+  redirect("/master/data-produk?tab=kemasan");
 }

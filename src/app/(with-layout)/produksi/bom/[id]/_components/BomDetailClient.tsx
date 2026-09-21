@@ -56,7 +56,7 @@ export function BomDetailClient({ bomId, initialData }: Props) {
         title={detail.nomorDokumen}
         breadcrumb={[
           { label: "Produksi" },
-          { label: "BOM", href: "/produksi/bom" },
+          { label: "BOM", href: "/master/data-produk?tab=bom" },
           { label: detail.nomorDokumen },
         ]}
       />
@@ -173,7 +173,7 @@ export function BomDetailClient({ bomId, initialData }: Props) {
         message="BOM draft ini akan dihapus."
         confirmLabel="Hapus"
         onConfirm={() => {
-          remove.mutate(bomId, { onSuccess: (res) => { if (!res.error) router.push("/produksi/bom"); } });
+          remove.mutate(bomId, { onSuccess: (res) => { if (!res.error) router.push("/master/data-produk?tab=bom"); } });
           setDeleteOpen(false);
         }}
         onCancel={() => setDeleteOpen(false)}

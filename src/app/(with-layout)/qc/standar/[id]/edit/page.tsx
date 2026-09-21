@@ -28,7 +28,7 @@ export default async function StandarQcEditPage({
         title={`Edit ${data.header.nomorDokumen}`}
         breadcrumb={[
           { label: "Master" },
-          { label: "Standar QC", href: "/qc/standar" },
+          { label: "Standar QC", href: "/master/data-qc?tab=standar" },
           { label: "Edit" },
         ]}
       />

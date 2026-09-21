@@ -1,7 +1,5 @@
-import { listJenisCacat } from "@/services/jenis-cacat";
-import { JenisCacatPageClient } from "./_components/JenisCacatPageClient";
+import { redirect } from "next/navigation";
 
-export default async function MasterJenisCacatPage() {
-  const data = await listJenisCacat();
-  return <JenisCacatPageClient initialData={data} />;
+export default function MasterJenisCacatPage() {
+  redirect("/master/data-qc?tab=jenis-cacat");
 }
