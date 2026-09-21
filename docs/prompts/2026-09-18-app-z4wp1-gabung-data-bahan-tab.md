@@ -1,25 +1,32 @@
 
 ## ⚠️ PENYEGARAN 21 Sep sore — dua hal berubah setelah prompt ini ditulis
 
-**1. Pola guard halaman sudah berganti (app-qdqu).** Untuk Server Component
-halaman, JANGAN pakai `await requireRole([...])` — itu melempar dan membuat
-halaman crash dengan overlay Runtime Error. Pakai:
+**1. Halaman gabungan `/master/data-bahan` JANGAN diberi guard role.**
 
+Kelima service-nya (kategori, satuan, warna, bahan, supplier) tidak punya
+`requireRole` sama sekali, dan kelima halaman lamanya juga tidak. Menambahkan
+guard di halaman gabungan berarti menu jadi lebih ketat daripada yang
+dienforce server — persis ketimpangan yang baru saja diperbaiki di issue lain.
+Biarkan terbuka, sama seperti sekarang.
+
+Kalau nanti ADA halaman lain yang perlu guard, polanya sudah berganti (app-qdqu):
 ```tsx
 import { bolehAkses } from "@/lib/auth";
 import { AksesDitolak } from "@/components/ui/AksesDitolak";
 
-if (!(await bolehAkses(["owner", "admin_produksi"]))) return <AksesDitolak />;
+if (!(await bolehAkses([...]))) return <AksesDitolak />;
 ```
-
-`requireRole` tetap benar di dalam service (`src/services/*.ts`) — yang berubah
-hanya di halaman.
+JANGAN `await requireRole([...])` di halaman — itu melempar dan membuat halaman
+crash dengan overlay Runtime Error. `requireRole` tetap benar di dalam service.
 
 **2. Sidebar sekarang difilter per role (app-qr6o).** Entri nav punya prop
-`roles?: UserRole[]` opsional. Saat menggabungkan 5 entri "Data Bahan" jadi 1,
-entri gabungan itu **tidak perlu** `roles` — kelima master aslinya juga tidak
-punya, jadi biarkan terlihat semua role. Jangan menambah `roles` yang lebih ketat
-dari yang dienforce service.
+`roles?: UserRole[]` opsional. Entri gabungan "Data Bahan" **tidak perlu**
+`roles` — kelima entri aslinya juga tidak punya. Yang penting: entri gabungan
+harus tetap membawa `heading: "Data Bahan"` supaya pengelompokan di sidebar
+tidak hilang.
+
+Perhatikan entri lain di grup yang sama sekarang SUDAH punya `roles` (Tarif Jasa
+Jahit, Standar QC, Bagian Produk, BOM). Jangan ikut mengubahnya.
 
 **3. ComboSelect punya prop `clearable`** (app-46vb) untuk field opsional, dan
 sudah punya keyboard navigation. Tidak wajib dipakai di issue ini, tapi kalau ada

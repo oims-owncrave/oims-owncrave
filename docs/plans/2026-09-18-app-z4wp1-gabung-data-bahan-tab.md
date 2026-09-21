@@ -49,7 +49,7 @@ jadi 1 import generik — beda skema per tipe data.
 
 ```
 src/app/(with-layout)/master/data-bahan/
-  page.tsx                          # Server Component: fetch 5 data source, requireRole
+  page.tsx                          # Server Component: fetch 5 data source (TANPA guard role — lihat catatan penyegaran di prompt)
   _components/
     DataBahanPageClient.tsx         # 1 PageHeader + tab bar + 5 kombinasi Table+Modal
 ```
