@@ -29,6 +29,7 @@ export function usePackingMutation() {
     qc.invalidateQueries({ queryKey: SIAP });
     qc.invalidateQueries({ queryKey: LIST });
     qc.invalidateQueries({ queryKey: ["packing-siap-gudang"] });
+    qc.invalidateQueries({ queryKey: ["finishing"] });
   };
 
   const create = useMutation({

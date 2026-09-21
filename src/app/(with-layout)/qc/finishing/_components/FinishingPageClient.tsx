@@ -21,6 +21,7 @@ interface Props {
   listData: FinishingRow[];
   userOptions: UserOpt[];
   bahanOptions: BahanOpt[];
+  hideHeader?: boolean;
 }
 
 const STATUS_CLASS: Record<string, string> = {
@@ -30,7 +31,13 @@ const STATUS_CLASS: Record<string, string> = {
   dibatalkan: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
 };
 
-export function FinishingPageClient({ baris, listData, userOptions, bahanOptions }: Props) {
+export function FinishingPageClient({
+  baris,
+  listData,
+  userOptions,
+  bahanOptions,
+  hideHeader = false,
+}: Props) {
   const { data: barisLive } = useBarisSiapFinishing();
   const { data: listLive } = useFinishingList();
   const { create, pakaiBahan, setStatus } = useFinishingMutation();
@@ -98,10 +105,12 @@ export function FinishingPageClient({ baris, listData, userOptions, bahanOptions
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Finishing"
-        breadcrumb={[{ label: "Quality Control" }, { label: "Finishing" }]}
-      />
+      {!hideHeader && (
+        <PageHeader
+          title="Finishing"
+          breadcrumb={[{ label: "Quality Control" }, { label: "Finishing" }]}
+        />
+      )}
 
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <h3 className="mb-1 font-semibold text-dark dark:text-white">

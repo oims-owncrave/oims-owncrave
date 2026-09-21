@@ -22,6 +22,7 @@ interface Props {
   kemasanOptions: KemasanRow[];
   gudangOptions: GudangBarangJadi[];
   userOptions: UserOpt[];
+  hideHeader?: boolean;
 }
 
 const STATUS_CLASS: Record<string, string> = {
@@ -37,6 +38,7 @@ export function PackingPageClient({
   kemasanOptions,
   gudangOptions,
   userOptions,
+  hideHeader = false,
 }: Props) {
   const { data: barisLive } = useBarisSiapPacking();
   const { data: listLive } = usePackingList();
@@ -99,10 +101,12 @@ export function PackingPageClient({
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Packing"
-        breadcrumb={[{ label: "Quality Control" }, { label: "Packing" }]}
-      />
+      {!hideHeader && (
+        <PageHeader
+          title="Packing"
+          breadcrumb={[{ label: "Quality Control" }, { label: "Packing" }]}
+        />
+      )}
 
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <h3 className="mb-4 font-semibold text-dark dark:text-white">

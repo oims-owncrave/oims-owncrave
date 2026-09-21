@@ -135,18 +135,30 @@ export const NAV_DATA: NavSection[] = [
       },
       {
         title: "Quality Control",
-        // Union: admin_gudang ikut karena Packing & Stok Barang Jadi.
+        roles: ["owner", "admin_gudang", "admin_produksi"],
+        icon: QcIcon,
+        items: [
+          { title: "Penerimaan QC", url: "/qc/penerimaan", roles: ["owner", "admin_gudang", "admin_produksi"] },
+          { title: "Work Order QC", url: "/qc/wo", roles: ["owner", "admin_produksi"] },
+          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", roles: ["owner", "admin_produksi"] },
+        ],
+      },
+      {
+        title: "Rework & Karantina",
+        roles: ["owner", "admin_produksi"],
+        icon: QcIcon,
+        items: [
+          { title: "Rework", url: "/qc/rework", roles: ["owner", "admin_produksi"] },
+          { title: "Karantina Reject", url: "/qc/reject", roles: ["owner", "admin_produksi"] },
+        ],
+      },
+      {
+        title: "Finishing & Gudang",
         roles: ["owner", "admin_produksi", "admin_gudang"],
         icon: QcIcon,
         items: [
-          { title: "Penerimaan QC", url: "/qc/penerimaan", roles: ["owner", "admin_gudang", "admin_produksi"] }, // READ_ROLES penerimaan-qc.ts
-          { title: "Work Order QC", url: "/qc/wo", roles: ["owner", "admin_produksi"] },
-          { title: "Pemeriksaan QC", url: "/qc/pemeriksaan", roles: ["owner", "admin_produksi"] },
-          { title: "Rework", url: "/qc/rework", roles: ["owner", "admin_produksi"] },
-          { title: "Karantina Reject", url: "/qc/reject", roles: ["owner", "admin_produksi"] },
-          { title: "Finishing", url: "/qc/finishing", roles: ["owner", "admin_produksi"] },
-          { title: "Packing", url: "/qc/packing", roles: ["owner", "admin_produksi", "admin_gudang"] }, // READ_ROLES packing.ts
-          { title: "Stok Barang Jadi", url: "/qc/stok-jadi", roles: ["owner", "admin_produksi", "admin_gudang"] }, // READ_ROLES barang-jadi.ts
+          { title: "Finishing", url: "/qc/finishing", roles: ["owner", "admin_produksi", "admin_gudang"] },
+          { title: "Stok Barang Jadi", url: "/qc/stok-jadi", roles: ["owner", "admin_produksi", "admin_gudang"] },
         ],
       },
     ],
