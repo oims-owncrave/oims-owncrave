@@ -1040,6 +1040,30 @@ export const vendor = pgTable(
   (t) => [uniqueIndex("vendor_kode_active_unique").on(t.kode).where(isNull(t.deletedAt))]
 );
 
+// Orang DI DALAM vendor yang menerima/mengantar barang di lapangan — beda dari
+// vendor.kontak yang cuma satu PIC utama. Klien memilih ini supaya bisa ditanyai
+// kalau barang kurang/hilang (jawaban no. 10, 22 Sep 2026).
+export const kontakVendor = pgTable(
+  "kontak_vendor",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    vendorId: uuid("vendor_id").notNull().references(() => vendor.id),
+    nama: text("nama").notNull(),
+    jabatan: text("jabatan"),
+    telepon: text("telepon"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("kontak_vendor_vendor_idx").on(t.vendorId),
+    uniqueIndex("kontak_vendor_nama_active_unique")
+      .on(t.vendorId, t.nama)
+      .where(isNull(t.deletedAt)),
+  ]
+);
+
 export const lokasiProduksi = pgTable(
   "lokasi_produksi",
   {
@@ -1200,7 +1224,10 @@ export const pengirimanJahit = pgTable(
     lokasiAsalId: uuid("lokasi_asal_id").references(() => lokasiProduksi.id),
     lokasiTujuanId: uuid("lokasi_tujuan_id").references(() => lokasiProduksi.id),
     pengirimId: uuid("pengirim_id").references(() => users.id), // staf kita yang mengantar
-    penerima: text("penerima"), // orang di pihak VENDOR — sengaja teks, kita tak punya masternya
+    // FK ke kontak vendor + snapshot nama. Snapshot WAJIB: nama di surat jalan lama
+    // harus tetap terbaca walau kontaknya dinonaktifkan/diganti (app-nkw.1).
+    kontakVendorId: uuid("kontak_vendor_id").references(() => kontakVendor.id),
+    penerima: text("penerima"), // snapshot nama saat transaksi
     kendaraan: text("kendaraan"),
     kurir: text("kurir"),
     buktiFotoUrl: text("bukti_foto_url"),
@@ -1255,7 +1282,8 @@ export const penerimaanBundelVendor = pgTable(
     nomorDokumen: text("nomor_dokumen").notNull().unique(), // STB-JHT-YYYYMM-NNNN
     pengirimanId: uuid("pengiriman_id").notNull().references(() => pengirimanJahit.id),
     tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
-    penerima: text("penerima").notNull(), // orang di pihak VENDOR — sengaja teks
+    kontakVendorId: uuid("kontak_vendor_id").references(() => kontakVendor.id),
+    penerima: text("penerima").notNull(), // snapshot nama saat transaksi (app-nkw.1)
     lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
     fotoUrl: text("foto_url"),
     catatan: text("catatan"),
@@ -1342,7 +1370,8 @@ export const penerimaanHasilJahit = pgTable(
     lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
     // info pengiriman hasil dari sisi vendor (PRD §17) — kolom, bukan tabel terpisah
     tanggalKirimVendor: timestamp("tanggal_kirim_vendor", { withTimezone: true }),
-    pengirimVendor: text("pengirim_vendor"), // orang di pihak VENDOR — sengaja teks
+    kontakVendorId: uuid("kontak_vendor_id").references(() => kontakVendor.id),
+    pengirimVendor: text("pengirim_vendor"), // snapshot nama saat transaksi (app-nkw.1)
     kurirResi: text("kurir_resi"),
     buktiUrl: text("bukti_url"),
     catatan: text("catatan"),
@@ -1489,7 +1518,10 @@ export const penerimaanDekorasi = pgTable(
     nomorDokumen: text("nomor_dokumen").notNull().unique(), // RCD-DEK-YYYYMM-NNNN
     pekerjaanId: uuid("pekerjaan_id").notNull().references(() => pekerjaanDekorasi.id),
     tanggalJam: timestamp("tanggal_jam", { withTimezone: true }).notNull(),
-    penerima: text("penerima").notNull(),
+    // Barang datang KEMBALI dari vendor, jadi yang menerima STAF KITA — bukan orang
+    // vendor. FK ke users + snapshot nama (app-nkw.1).
+    penerimaId: uuid("penerima_id").references(() => users.id),
+    penerima: text("penerima").notNull(), // snapshot nama saat transaksi
     jumlahSelesai: integer("jumlah_selesai").notNull().default(0),
     jumlahRusak: integer("jumlah_rusak").notNull().default(0),
     catatan: text("catatan"),
@@ -1610,7 +1642,9 @@ export const penerimaanQc = pgTable(
     vendorId: uuid("vendor_id").references(() => vendor.id),
     tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
     lokasiId: uuid("lokasi_id").references(() => lokasiProduksi.id),
-    penerima: text("penerima").notNull(),
+    // Petugas QC KITA yang menerima — FK ke users + snapshot nama (app-nkw.1)
+    penerimaId: uuid("penerima_id").references(() => users.id),
+    penerima: text("penerima").notNull(), // snapshot nama saat transaksi
     prioritas: qcPrioritasEnum("prioritas").notNull().default("normal"),
     targetSelesai: timestamp("target_selesai", { withTimezone: true }),
     catatan: text("catatan"),
@@ -2223,8 +2257,11 @@ export const transferBarangJadi = pgTable("transfer_barang_jadi", {
   gudangAsalId: uuid("gudang_asal_id").notNull().references(() => gudangBarangJadi.id),
   gudangTujuanId: uuid("gudang_tujuan_id").notNull().references(() => gudangBarangJadi.id),
   tanggal: timestamp("tanggal", { withTimezone: true }).notNull(),
-  pengirim: text("pengirim"),
-  penerima: text("penerima"),
+  // Transfer antar gudang KITA — dua-duanya staf kita. FK ke users + snapshot (app-nkw.1)
+  pengirimId: uuid("pengirim_id").references(() => users.id),
+  pengirim: text("pengirim"), // snapshot nama saat transaksi
+  penerimaId: uuid("penerima_id").references(() => users.id),
+  penerima: text("penerima"), // snapshot nama saat transaksi
   status: transferFgStatusEnum("status").notNull().default("draft"),
   catatan: text("catatan"),
   createdBy: uuid("created_by").notNull().references(() => users.id),
