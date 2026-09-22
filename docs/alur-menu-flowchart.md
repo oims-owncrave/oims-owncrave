@@ -37,11 +37,10 @@ flowchart TD
         V1 --> V2 --> V3 --> V4
     end
 
-    subgraph RB["↩️ RETUR & BIAYA — grup menu sendiri"]
+    subgraph RB["↩️ RETUR & BIAYA — + Biaya Jasa Jahit"]
         V5{Ada masalah?}
         V6[Retur & Perbaikan]
         V7[Selisih & Kasus]
-        V8[Biaya Jasa Jahit]
         V5 -->|ya, kualitas| V6
         V5 -->|ya, kuantitas| V7
     end
@@ -49,26 +48,26 @@ flowchart TD
     V4 --> V5
     V6 --> V4
 
-    subgraph S["🎨 SABLON & BORDIR — admin_produksi"]
+    subgraph S["🎨 SABLON & BORDIR — admin_produksi, opsional"]
         S1[Pekerjaan Dekorasi]
         S2[Template Dekorasi]
         S2 -.pakai template.-> S1
     end
 
-    subgraph Q["✅ QUALITY CONTROL — admin_produksi (belum ada role QC khusus)"]
-        Q1["Penerimaan QC<br/><i>+ tab Antrean QC</i>"]
+    subgraph Q["✅ QUALITY CONTROL — admin_produksi"]
+        Q1["Penerimaan QC<br/>+ tab Antrean QC"]
         Q3[Work Order QC]
         Q4[Pemeriksaan QC]
         Q5{Lolos grade?}
         Q1 --> Q3 --> Q4 --> Q5
     end
 
-    subgraph RK["🔁 REWORK & KARANTINA — grup menu sendiri"]
-        Q6["Rework<br/><i>+ tab Re-QC</i>"]
+    subgraph RK["🔁 REWORK & KARANTINA — admin_produksi"]
+        Q6["Rework<br/>+ tab Re-QC"]
         Q8[Karantina Reject]
     end
 
-    subgraph FG["📦 FINISHING & GUDANG — grup menu sendiri"]
+    subgraph FG["📦 FINISHING & GUDANG — + admin_gudang"]
         Q9[Finishing]
         Q11[Stok Barang Jadi]
         Q9 --> Q11
