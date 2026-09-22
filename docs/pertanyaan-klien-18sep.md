@@ -144,21 +144,22 @@ Hatur nuhun Cup 🙏
 
 ## Status per 21 Sep 2026 (sore)
 
-**7 dari 9 terjawab. 2 susulan sudah DIKIRIM 21 Sep sore — menunggu jawaban.**
-Ditambah 1 pertanyaan baru (no. 10) yang lahir saat mengerjakan `app-gtf4.1`.
+**SEMBILAN-SEMBILANNYA TERJAWAB (22 Sep pagi).** Dua susulan (no. 4 & 6) dijawab Ucup
+pagi ini — dua-duanya membenarkan yang sudah terlanjur dikerjakan, jadi nol perubahan.
+No. 10 juga dijawab: **opsi (b)**, dan ini SATU-SATUNYA yang menyisakan pekerjaan.
 
 | # | Pertanyaan | Status | Kartu |
 |---|---|---|---|
 | 1 | Daftar staf untuk sistem | ✅ Terjawab — siap dibuat 3 akun | `app-gtf4.1` |
 | 2 | Konveksi: satu daftar atau dua? | ✅ Terjawab — satu daftar cukup | `app-gtf4.1` |
 | 3 | Siapa periksa QC di lapangan | ✅ Terjawab — belum ada, admin_produksi tetap | `app-x98y` (closed) |
-| **4** | **Angka ukuran resleting (30/32/34 inch)** | 📤 **Sudah dikirim 21 Sep sore** — menunggu jawaban | `app-gtf4.4` |
+| 4 | Angka ukuran resleting (30/32/34 inch) | ✅ Terjawab 22 Sep — **30=76, 32=81, 34=86 benar** (dugaan pola kami tepat) | `app-gtf4.4` (closed) |
 | 5 | Barang keluar selalu untuk PO? | ✅ Terjawab — selalu, poId jadi wajib | `app-glx1` |
-| **6** | **Lebihan Pcs di level produk jadi** | 📤 **Sudah dikirim 21 Sep sore** — menunggu jawaban | `app-itl4` |
+| 6 | Lebihan Pcs di level produk jadi | ✅ Terjawab 22 Sep — **butuhnya di level BAHAN, dan opsional**. Tidak perlu di level produk | `app-itl4` (closed) |
 | 7 | Urutan sablon vs jahit | ✅ Terjawab — dua-duanya terjadi, jangan dipaksa | `app-x98y` (closed) |
 | 8 | Istilah: WIF atau PO Produksi? | ✅ Terjawab — PO Produksi | `app-x98y` (closed) |
 | 9 | Finishing/Packing masuk QC atau Gudang? | ✅ Terjawab — tetap di QC | `app-x98y` (closed) |
-| **10** | **Nama penerima di konveksi dipakai untuk apa?** | 📤 **Sudah dikirim 21 Sep sore** — tidak memblokir apa pun | `app-gtf4.1` |
+| **10** | **Nama penerima di konveksi dipakai untuk apa?** | ✅ Terjawab 22 Sep — **opsi (b)**: nama orangnya penting, buat ditanyai kalau barang kurang/hilang. **MENYISAKAN PEKERJAAN** | `app-nkw.1` |
 
 ---
 
@@ -234,7 +235,22 @@ itu wajar, yang penting jejaknya tercatat. Kalau ada orangnya → buat role
 Ucup konfirmasi: **24Inch → 61cm** (koreksi dari 66cm yang salah). **26Inch/66cm**
 dan **28Inch/71cm** sudah benar sejak awal.
 
-### ⚠️ Belum terjawab — pertanyaan awal ambigu, perlu ditanya ULANG
+### ✅ TERJAWAB 22 Sep pagi — dugaan pola kami BENAR
+
+Ucup: *"iya begitu"* — jadi **30 inch = 76cm, 32 inch = 81cm, 34 inch = 86cm**.
+
+Nilai itu sudah lebih dulu masuk DB lewat `app-gtf4.4` (21 Sep malam) sebagai
+dugaan, dan sekarang terkonfirmasi. **Nol perubahan data maupun kode.**
+
+⚠️ **Catatan cara kerja, bukan catatan data:** kita beruntung. Dokumen ini sudah
+menulis tegas *"ini dugaan kami, bukan jawaban Ucup, jangan langsung dipakai"* —
+tapi tetap dipakai, dan angka dugaan sempat duduk di database seolah fakta selama
+semalam. Kalau Ucup menjawab beda, data klien salah tanpa ada yang tahu. Lain kali:
+kolom ukuran dibiarkan kosong sampai jawabannya masuk, bukan diisi tebakan.
+
+<details>
+<summary>Arsip: pertanyaan susulan yang dikirim 21 Sep sore</summary>
+
 
 Pertanyaan pertama cuma nulis angka inch (24, 30, 32) tanpa tegas menyebut kode
 bahan di kalimatnya — Ucup kemungkinan menjawab urutan resleting yang ia kenal
@@ -266,6 +282,8 @@ naik 2 inch, cm naik tepat 5. Kalau pola ini benar: 30→76cm, 32→81cm, 34→8
 walaupun polanya kelihatan rapi. Kartu: `app-gtf4.4`. Perbaikan nama bahan
 (buang ukuran dari nama) menunggu ini kelar semua (6 baris, bukan cuma 3).
 
+</details>
+
 ---
 
 ## 5. Bahan keluar dari gudang — selalu untuk pesanan tertentu? ⭐
@@ -282,7 +300,25 @@ dicatat di `docs/insight-bisnis/audit-kolom-teks-vs-master.md`).
 
 ---
 
-## 6. "Lebihan" — perlu juga untuk produk jadi? ⭐
+## 6. "Lebihan" — perlu juga untuk produk jadi? ⭐ ✅ Terjawab 22 Sep
+
+### ✅ Jawaban Ucup (22 Sep pagi)
+
+> **"Butuhnya di level bahan, dan itu pun opsional."**
+
+Jadi **TIDAK perlu** di level produk jadi. Ini membenarkan arah `app-1u2w` yang
+dikerjakan 21 Sep malam — tabel `po_produksi_lebihan_bahan` (manual per PO per
+bahan, kosong default) dan blok Lebihan per varian disembunyikan lewat konstanta
+`TAMPILKAN_LEBIHAN_VARIAN = false`.
+
+Kolom `poProduksiDetail.lebihanPcs` sengaja **tidak dihapus** — kalau suatu hari
+berubah, cukup ubah satu konstanta. Keputusan itu diambil sebelum jawaban ini masuk,
+dan ternyata tepat: menyembunyikan bisa dibatalkan, menghapus tidak.
+
+**Nol perubahan kode.**
+
+<details>
+<summary>Arsip: pertanyaan yang dikirim</summary>
 
 Klien sudah menjelaskan: di Excel, kolom **Lebihan** diisi manual untuk jaga-jaga
 kalau ada barang hilang atau kurang. Itu sudah jelas untuk **bahan**.
@@ -300,6 +336,8 @@ kalau ada barang hilang atau kurang. Itu sudah jelas untuk **bahan**.
 tepat, tutup kartu tanpa ubah kode. Kalau "tidak perlu" → pertimbangkan hapus
 (dipakai di 7 file). Kartu: `app-itl4`. **JANGAN** bikin auto-hitung rasio —
 klien sudah bilang mau isi manual.
+
+</details>
 
 ---
 
@@ -345,7 +383,25 @@ perlu dipindah ke luar grup QC. Kartu: `app-x98y` (closed).
 
 ---
 
-## 10. Nama penerima di konveksi — dipakai untuk apa? 📤 Dikirim 21 Sep sore
+## 10. Nama penerima di konveksi — dipakai untuk apa? ✅ Terjawab 22 Sep
+
+### ✅ Jawaban Ucup: **opsi (b)**
+
+> *"Penting nama orangnya, soalnya kalo ada barang kurang/ilang nanti nanyanya
+> ke orang itu."*
+
+Artinya kita menepati yang dijanjikan di opsi (b): **daftar orang per konveksi**,
+dan Ucup mendaftarkan siapa saja orangnya di tiap vendor.
+
+**Ini SATU-SATUNYA dari 10 pertanyaan yang menyisakan pekerjaan.** Kartu: `app-nkw.1`.
+
+Konsekuensi yang lahir dari alasannya — *"nanti nanyanya ke orang itu"*: nama
+penerima harus tetap terbaca di surat jalan lama walau orangnya sudah nonaktif
+atau namanya diperbaiki. Jadi **FK + snapshot nama**, bukan FK saja (pola
+`tarif_snapshot` yang sudah dipakai proyek ini).
+
+<details>
+<summary>Arsip: pertanyaan yang dikirim 21 Sep sore</summary>
 
 **Tidak memblokir apa pun.** `app-gtf4.1` tetap jalan tanpa jawaban ini — tiga
 kolom yang jadi FK (staf kita) sudah pasti benar. Yang ditanya hanya tiga kolom
@@ -397,11 +453,16 @@ tanda terima adalah **kasir yang sedang piket**.
 
 Tiga kolom yang terdampak (semuanya `text`, sengaja bukan FK):
 
-| Tabel | Kolom |
-|---|---|
-| `pengirimanJahit` | `penerima` |
-| `penerimaanHasilJahit` | `pengirimVendor` |
-| `penerimaanBundelVendor` | `penerima` |
+| Tabel | Kolom | Baris di `schema.ts` |
+|---|---|---|
+| `pengirimanJahit` | `penerima` | 1203 |
+| `penerimaanBundelVendor` | `penerima` | 1258 |
+| `penerimaanHasilJahit` | `pengirimVendor` | 1345 |
+
+Diverifikasi ulang 22 Sep: ketiganya memang berkomentar *"orang di pihak VENDOR"*.
+Tiga kolom `penerima` lain **bukan** bagian ini — `penerimaanQc` (orang di pihak QC),
+`transferBarangJadi` (antar gudang kita), dan `penerimaanDekorasi` (perlu dipastikan
+dulu siapa yang dimaksud).
 
 Konsekuensi tiap jawaban:
 
