@@ -63,7 +63,9 @@ export async function listTransferFg() {
       status: transferBarangJadi.status,
       gudangAsalNama: asal.nama,
       gudangTujuanId: transferBarangJadi.gudangTujuanId,
+      pengirimId: transferBarangJadi.pengirimId,
       pengirim: transferBarangJadi.pengirim,
+      penerimaId: transferBarangJadi.penerimaId,
       penerima: transferBarangJadi.penerima,
       totalPcs: sql<number>`(
         SELECT COALESCE(SUM(d.jumlah), 0)::int
@@ -152,7 +154,9 @@ export async function createTransferFg(input: TransferFgInput): Promise<Transfer
             gudangAsalId: input.gudangAsalId,
             gudangTujuanId: input.gudangTujuanId,
             tanggal: new Date(input.tanggal),
+            pengirimId: input.pengirimId || null,
             pengirim: input.pengirim || null,
+            penerimaId: input.penerimaId || null,
             penerima: input.penerima || null,
             catatan: input.catatan || null,
             createdBy: user.id,

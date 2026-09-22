@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { pengirimanSchema, type PengirimanInput } from "@/lib/schemas/pengiriman-jahit";
 import { usePengirimanMutation, useDetailBelumDikirim } from "@/hooks/usePengirimanJahit";
+import { useKontakByVendor } from "@/hooks/useKontakVendor";
 import type { PenugasanBisaDikirim } from "@/services/penugasan-jahit";
 import type { LokasiRow } from "../../lokasi/_components/LokasiTable";
 
@@ -55,6 +56,7 @@ export function PengirimanForm({
       lokasiAsalId: lokasiList.find((l) => l.jenis === "workshop_internal" && l.isActive)?.id ?? null,
       lokasiTujuanId: penugasanOptions.find((p) => p.id === initialPenugasanId)?.lokasiTujuanId ?? null,
       pengirimId: "",
+      kontakVendorId: "",
       penerima: "",
       kendaraan: "",
       kurir: "",
@@ -67,6 +69,8 @@ export function PengirimanForm({
   const { append, remove, replace } = useFieldArray({ control, name: "details" });
   const details = watch("details");
   const penugasanId = watch("penugasanId");
+  const selectedVendorId = penugasanOptions.find((p) => p.id === penugasanId)?.vendorId;
+  const { data: kontakOptions = [] } = useKontakByVendor(selectedVendorId);
   const { data: kandidat = KOSONG } = useDetailBelumDikirim(penugasanId);
 
   // default: semua bundel yang belum dikirim ikut (kasus umum kirim sekaligus)
@@ -109,6 +113,8 @@ export function PengirimanForm({
               const id = (v as string) ?? "";
               setValue("penugasanId", id, { shouldValidate: true });
               setValue("lokasiTujuanId", penugasanOptions.find((p) => p.id === id)?.lokasiTujuanId ?? null);
+              setValue("kontakVendorId", "");
+              setValue("penerima", "");
               replace([]);
             }}
             error={errors.penugasanId}
@@ -127,7 +133,30 @@ export function PengirimanForm({
             onChange={(v) => setValue("pengirimId", (v as string) ?? "", { shouldValidate: true })}
             error={errors.pengirimId}
           />
-          <Input label="Penerima (rencana)" placeholder="Nama di vendor" {...register("penerima")} />
+          {kontakOptions.length > 0 ? (
+            <ComboSelect
+              label="Penerima (orang konveksi)"
+              placeholder="Pilih kontak vendor..."
+              clearable
+              options={kontakOptions.map((k) => ({
+                label: k.jabatan ? `${k.nama} — ${k.jabatan}` : k.nama,
+                value: k.id,
+              }))}
+              value={watch("kontakVendorId") || null}
+              onChange={(v) => {
+                const id = (v as string) ?? "";
+                setValue("kontakVendorId", id);
+                const k = kontakOptions.find((x) => x.id === id);
+                setValue("penerima", k?.nama ?? "");
+              }}
+            />
+          ) : null}
+          <Input
+            label={kontakOptions.length > 0 ? "Nama Penerima (snapshot)" : "Penerima (rencana)"}
+            placeholder="Nama di vendor"
+            {...register("penerima")}
+            error={errors.penerima?.message}
+          />
           <Input label="Kendaraan" placeholder="Opsional" {...register("kendaraan")} />
           <Input label="Kurir / Ekspedisi" placeholder="Opsional" {...register("kurir")} />
           <Input label="URL Bukti Foto" placeholder="Opsional — tautan foto" {...register("buktiFotoUrl")} />

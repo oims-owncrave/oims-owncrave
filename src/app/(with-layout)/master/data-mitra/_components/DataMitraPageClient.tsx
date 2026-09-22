@@ -12,6 +12,7 @@ import { VendorTable } from "@/app/(with-layout)/vendor/daftar/_components/Vendo
 import { PenjahitTable, type PenjahitRow } from "@/app/(with-layout)/vendor/penjahit/_components/PenjahitTable";
 import { LokasiTable, type LokasiRow } from "@/app/(with-layout)/vendor/lokasi/_components/LokasiTable";
 import { TarifTable, type TarifRow } from "@/app/(with-layout)/vendor/tarif/_components/TarifTable";
+import { KontakVendorTable } from "./KontakVendorTable";
 
 // Form Modal components
 import { SupplierFormModal } from "@/app/(with-layout)/master/supplier/_components/SupplierFormModal";
@@ -20,6 +21,7 @@ import { PenjahitFormModal } from "@/app/(with-layout)/vendor/penjahit/_componen
 import { LokasiFormModal } from "@/app/(with-layout)/vendor/lokasi/_components/LokasiFormModal";
 import { TarifFormModal } from "@/app/(with-layout)/vendor/tarif/_components/TarifFormModal";
 import { VersiBaruModal } from "@/app/(with-layout)/vendor/tarif/_components/VersiBaruModal";
+import { KontakVendorFormModal } from "./KontakVendorFormModal";
 
 // Query hooks
 import { useSupplierList } from "@/hooks/useSupplier";
@@ -27,6 +29,8 @@ import { useVendorList } from "@/hooks/useVendor";
 import { usePenjahitList } from "@/hooks/usePenjahit";
 import { useLokasiProduksiList } from "@/hooks/useLokasiProduksi";
 import { useTarifJasaJahitList } from "@/hooks/useTarifJasaJahit";
+import { useKontakVendorList } from "@/hooks/useKontakVendor";
+import type { KontakVendorRow } from "@/services/kontak-vendor";
 
 // Batch import actions
 import { importSupplierBatch } from "@/services/import";
@@ -34,7 +38,7 @@ import { importSupplierBatch } from "@/services/import";
 import type { Supplier, Vendor, Produk } from "@/db/schema";
 import type { UserRole } from "@/components/layouts/sidebar/data";
 
-type Tab = "supplier" | "vendor" | "penjahit" | "lokasi" | "tarif";
+type Tab = "supplier" | "vendor" | "penjahit" | "lokasi" | "tarif" | "kontak";
 
 interface TabItem {
   key: Tab;
@@ -49,6 +53,7 @@ interface Props {
   initialPenjahit: PenjahitRow[];
   initialLokasi: LokasiRow[];
   initialTarif: TarifRow[];
+  initialKontak: KontakVendorRow[];
   produkList: Produk[];
   initialTab?: string;
   role: UserRole;
@@ -60,6 +65,7 @@ export function DataMitraPageClient({
   initialPenjahit,
   initialLokasi,
   initialTarif,
+  initialKontak,
   produkList,
   initialTab,
   role,
@@ -72,12 +78,14 @@ export function DataMitraPageClient({
   const { data: penjahitData } = usePenjahitList();
   const { data: lokasiData } = useLokasiProduksiList();
   const { data: tarifData } = useTarifJasaJahitList();
+  const { data: kontakData } = useKontakVendorList();
 
   const supplierItems = supplierData ?? initialSupplier;
   const vendorItems = vendorData ?? initialVendor;
   const penjahitItems = penjahitData ?? initialPenjahit;
   const lokasiItems = lokasiData ?? initialLokasi;
   const tarifItems = tarifData ?? initialTarif;
+  const kontakItems = kontakData ?? initialKontak;
 
   // Filter tabs by role
   const tabs = useMemo(() => {
@@ -87,9 +95,10 @@ export function DataMitraPageClient({
       { key: "penjahit", label: "Penjahit", count: penjahitItems.length },
       { key: "lokasi", label: "Lokasi Produksi", count: lokasiItems.length },
       { key: "tarif", label: "Tarif Jasa Jahit", count: tarifItems.length, roles: ["owner", "admin_produksi"] },
+      { key: "kontak", label: "Kontak Vendor", count: kontakItems.length },
     ];
     return all.filter((t) => !t.roles || t.roles.includes(role));
-  }, [role, supplierItems.length, vendorItems.length, penjahitItems.length, lokasiItems.length, tarifItems.length]);
+  }, [role, supplierItems.length, vendorItems.length, penjahitItems.length, lokasiItems.length, tarifItems.length, kontakItems.length]);
 
   const allowedKeys = useMemo(() => tabs.map((t) => t.key), [tabs]);
   const fallbackTab = tabs[0]?.key ?? "supplier";
@@ -152,6 +161,10 @@ export function DataMitraPageClient({
   const [tarifModalOpen, setTarifModalOpen] = useState(false);
   const [tarifEditItem, setTarifEditItem] = useState<TarifRow | null>(null);
   const [versiItem, setVersiItem] = useState<TarifRow | null>(null);
+
+  // Tab 6: Kontak Vendor state
+  const [kontakModalOpen, setKontakModalOpen] = useState(false);
+  const [kontakEditItem, setKontakEditItem] = useState<KontakVendorRow | null>(null);
 
   return (
     <div className="space-y-6">
@@ -259,6 +272,20 @@ export function DataMitraPageClient({
         </div>
       )}
 
+      {tab === "kontak" && (
+        <KontakVendorTable
+          data={kontakItems}
+          onAdd={() => {
+            setKontakEditItem(null);
+            setKontakModalOpen(true);
+          }}
+          onEdit={(item) => {
+            setKontakEditItem(item);
+            setKontakModalOpen(true);
+          }}
+        />
+      )}
+
       {/* Tab 1: Supplier Modals */}
       <SupplierFormModal
         open={supplierModalOpen}
@@ -322,6 +349,14 @@ export function DataMitraPageClient({
       <VersiBaruModal
         item={versiItem}
         onClose={() => setVersiItem(null)}
+      />
+
+      {/* Tab 6: Kontak Vendor Modal */}
+      <KontakVendorFormModal
+        open={kontakModalOpen}
+        onClose={() => setKontakModalOpen(false)}
+        initialData={kontakEditItem}
+        vendorList={vendorItems}
       />
     </div>
   );

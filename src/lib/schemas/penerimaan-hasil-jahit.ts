@@ -15,6 +15,7 @@ export const penerimaanHasilSchema = z
     penerimaId: z.string().uuid("Penerima wajib dipilih").optional().or(z.literal("")),
     lokasiId: z.string().nullable(),
     tanggalKirimVendor: z.string().optional(),
+    kontakVendorId: z.string().uuid().optional().or(z.literal("")).nullable(),
     pengirimVendor: z.string().optional(),
     kurirResi: z.string().optional(),
     buktiUrl: z.string().optional(),

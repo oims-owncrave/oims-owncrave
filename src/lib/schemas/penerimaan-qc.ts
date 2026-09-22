@@ -25,6 +25,7 @@ export const penerimaanQcFormSchema = z.object({
   penerimaanHasilJahitId: z.string().uuid({ message: "Penerimaan hasil jahit wajib dipilih" }),
   tanggal: z.string().min(1, "Tanggal wajib diisi"),
   lokasiId: z.string().uuid().optional().nullable(),
+  penerimaId: z.string().uuid().optional().or(z.literal("")).nullable(),
   penerima: z.string().min(1, "Penerima wajib diisi").max(100),
   prioritas: z.enum(qcPrioritasValues),
   targetSelesai: z.string().optional().nullable(),

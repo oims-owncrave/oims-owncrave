@@ -497,6 +497,7 @@ export async function listPenugasanBisaDikirim() {
       poNomor: poProduksi.nomorDokumen,
       produkNama: produk.nama,
       pihakNama,
+      vendorId: penugasanJahit.vendorId,
       lokasiTujuanId: penugasanJahit.lokasiTujuanId,
     })
     .from(penugasanJahit)

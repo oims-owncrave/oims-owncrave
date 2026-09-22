@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
+import { ComboSelect } from "@/components/ui/ComboSelect";
 import {
   serahTerimaSchema,
   type SerahTerimaInput,
@@ -14,6 +15,7 @@ import {
   KONDISI_BUNDEL_LABEL,
 } from "@/lib/schemas/pengiriman-jahit";
 import { usePengirimanMutation } from "@/hooks/usePengirimanJahit";
+import { useKontakByVendor } from "@/hooks/useKontakVendor";
 import type { PengirimanDetailData } from "@/services/pengiriman-jahit";
 import type { LokasiRow } from "../../../lokasi/_components/LokasiTable";
 
@@ -33,6 +35,7 @@ const nowLocalISO = () => {
 /** Serah terima bundel di vendor (PRD §12) — kondisi per bundel, sekali per pengiriman. */
 export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Props) {
   const { serahTerima } = usePengirimanMutation();
+  const { data: kontakOptions = [] } = useKontakByVendor(pengiriman.vendorId);
 
   const {
     register,
@@ -44,7 +47,15 @@ export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Prop
     formState: { errors },
   } = useForm<SerahTerimaInput>({
     resolver: zodResolver(serahTerimaSchema),
-    defaultValues: { tanggalJam: nowLocalISO(), penerima: "", lokasiId: null, fotoUrl: "", catatan: "", details: [] },
+    defaultValues: {
+      tanggalJam: nowLocalISO(),
+      kontakVendorId: pengiriman.kontakVendorId ?? "",
+      penerima: "",
+      lokasiId: null,
+      fotoUrl: "",
+      catatan: "",
+      details: [],
+    },
   });
   const { fields } = useFieldArray({ control, name: "details" });
   const details = watch("details");
@@ -53,6 +64,7 @@ export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Prop
     if (!open) return;
     reset({
       tanggalJam: nowLocalISO(),
+      kontakVendorId: pengiriman.kontakVendorId ?? "",
       penerima: pengiriman.penerima ?? "",
       lokasiId: pengiriman.lokasiTujuanId,
       fotoUrl: "",
@@ -85,7 +97,6 @@ export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Prop
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <Input type="datetime-local" label="Tanggal & Jam Terima" required {...register("tanggalJam")} error={errors.tanggalJam?.message} />
-            <Input label="Nama Penerima" required placeholder="Siapa yang menerima di vendor" {...register("penerima")} error={errors.penerima?.message} />
             <Select
               label="Lokasi Terima"
               options={[
@@ -93,6 +104,31 @@ export function SerahTerimaModal({ open, onClose, pengiriman, lokasiList }: Prop
                 ...lokasiList.filter((l) => l.isActive).map((l) => ({ value: l.id, label: `${l.kode} — ${l.nama}` })),
               ]}
               {...register("lokasiId", { setValueAs: nullable })}
+            />
+            {kontakOptions.length > 0 && (
+              <ComboSelect
+                label="Penerima (orang konveksi)"
+                placeholder="Pilih kontak vendor..."
+                clearable
+                options={kontakOptions.map((k) => ({
+                  label: k.jabatan ? `${k.nama} — ${k.jabatan}` : k.nama,
+                  value: k.id,
+                }))}
+                value={watch("kontakVendorId") || null}
+                onChange={(v) => {
+                  const id = (v as string) ?? "";
+                  setValue("kontakVendorId", id);
+                  const k = kontakOptions.find((x) => x.id === id);
+                  setValue("penerima", k?.nama ?? "");
+                }}
+              />
+            )}
+            <Input
+              label="Nama Penerima"
+              required
+              placeholder="Siapa yang menerima di vendor"
+              {...register("penerima")}
+              error={errors.penerima?.message}
             />
             <Input label="URL Foto / Tanda Tangan" placeholder="Opsional" {...register("fotoUrl")} />
           </div>

@@ -8,10 +8,12 @@ import { cn, formatRupiah, formatTanggal } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
+import { ComboSelect } from "@/components/ui/ComboSelect";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Printer } from "lucide-react";
 import { usePekerjaanDekorasiDetail, usePekerjaanDekorasiMutation } from "@/hooks/useDekorasi";
+import { useUserOptions } from "@/hooks/useUser";
 import type { PekerjaanDekorasiDetailData } from "@/services/dekorasi";
 import {
   penerimaanDekorasiSchema,
@@ -48,6 +50,7 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
   const [confirm, setConfirm] = useState<"kirim" | "batal" | null>(null);
   const { data } = usePekerjaanDekorasiDetail(id);
   const { kirim, batal, terima } = usePekerjaanDekorasiMutation();
+  const { data: userOptions = [] } = useUserOptions();
 
   const d = data ?? initialData;
   const badge = DEKORASI_STATUS_LABEL[d.status];
@@ -63,11 +66,13 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
     formState: { errors },
   } = useForm<PenerimaanDekorasiInput>({
     resolver: zodResolver(penerimaanDekorasiSchema),
-    defaultValues: { tanggalJam: nowLocalISO(), penerima: "", jumlahSelesai: undefined, jumlahRusak: undefined, catatan: "" },
+    defaultValues: { tanggalJam: nowLocalISO(), penerimaId: "", penerima: "", jumlahSelesai: undefined, jumlahRusak: undefined, catatan: "" },
   });
 
+  const penerimaId = watch("penerimaId");
+
   const bukaTerima = () => {
-    reset({ tanggalJam: nowLocalISO(), penerima: "", jumlahSelesai: sisa, jumlahRusak: undefined, catatan: "" });
+    reset({ tanggalJam: nowLocalISO(), penerimaId: "", penerima: "", jumlahSelesai: sisa, jumlahRusak: undefined, catatan: "" });
     setTerimaOpen(true);
   };
 
@@ -145,7 +150,22 @@ export function DekorasiDetailClient({ id, initialData }: Props) {
             <p className="mb-4 text-sm text-dark-5 dark:text-dark-6">{d.nomorDokumen} · sisa {sisa} pcs</p>
             <form onSubmit={handleSubmit(onTerima)} className="space-y-4">
               <Input type="datetime-local" label="Tanggal & Jam" required {...register("tanggalJam")} error={errors.tanggalJam?.message} />
-              <Input label="Penerima" required {...register("penerima")} error={errors.penerima?.message} />
+              <ComboSelect
+                label="Penerima (staf internal)"
+                placeholder="Pilih staf penerima..."
+                clearable
+                options={userOptions
+                  .filter((u) => u.isActive || u.id === penerimaId)
+                  .map((u) => ({ value: u.id, label: u.displayName }))}
+                value={penerimaId || null}
+                onChange={(v) => {
+                  const id = (v as string) ?? "";
+                  setValue("penerimaId", id);
+                  const u = userOptions.find((x) => x.id === id);
+                  setValue("penerima", u?.displayName ?? "", { shouldValidate: true });
+                }}
+              />
+              <Input label="Nama Penerima" required placeholder="Nama penerima" {...register("penerima")} error={errors.penerima?.message} />
               <div className="grid gap-4 sm:grid-cols-2">
                 <NumberInput
             decimals={0}

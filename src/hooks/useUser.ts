@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { listUsers, createUser, updateUser, deactivateUser } from "@/services/user";
+import { listUsers, listUserOptions, createUser, updateUser, deactivateUser } from "@/services/user";
 import { toast } from "sonner";
 import { toastStyles } from "@/lib/utils";
 
@@ -9,6 +9,13 @@ export function useUsers() {
   return useQuery({
     queryKey: ["users"],
     queryFn: () => listUsers(),
+  });
+}
+
+export function useUserOptions() {
+  return useQuery({
+    queryKey: ["users", "options"],
+    queryFn: () => listUserOptions(),
   });
 }
 

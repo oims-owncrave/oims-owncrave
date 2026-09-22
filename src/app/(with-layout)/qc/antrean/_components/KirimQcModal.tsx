@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
+import { ComboSelect } from "@/components/ui/ComboSelect";
+import { useUserOptions } from "@/hooks/useUser";
 import {
   penerimaanQcFormSchema,
   type PenerimaanQcInput,
@@ -50,14 +52,20 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
     [lokasiList],
   );
 
+  const { data: userOptions = [] } = useUserOptions();
+
   const {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PenerimaanQcFormValues>({
     resolver: zodResolver(penerimaanQcFormSchema),
   });
+
+  const penerimaId = watch("penerimaId");
 
   useEffect(() => {
     if (!open || !penerimaanHasilId) return;
@@ -65,6 +73,7 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
       penerimaanHasilJahitId: penerimaanHasilId,
       tanggal: today(),
       lokasiId: null,
+      penerimaId: "",
       penerima: "",
       prioritas: "normal",
       targetSelesai: "",
@@ -126,8 +135,24 @@ export function KirimQcModal({ open, onClose, penerimaanHasilId, baris }: Props)
               {...register("tanggal")}
               disabled={isPending}
             />
+            <ComboSelect
+              label="Penerima QC (petugas internal)"
+              placeholder="Pilih petugas QC..."
+              clearable
+              options={userOptions
+                .filter((u) => u.isActive || u.id === penerimaId)
+                .map((u) => ({ value: u.id, label: u.displayName }))}
+              value={penerimaId || null}
+              onChange={(v) => {
+                const id = (v as string) ?? "";
+                setValue("penerimaId", id);
+                const u = userOptions.find((x) => x.id === id);
+                setValue("penerima", u?.displayName ?? "", { shouldValidate: true });
+              }}
+              disabled={isPending}
+            />
             <Input
-              label="Penerima QC"
+              label="Nama Penerima QC"
               placeholder="Nama petugas penerima"
               error={errors.penerima?.message}
               {...register("penerima")}

@@ -6,6 +6,7 @@ import { listPenjahit } from "@/services/penjahit";
 import { listLokasiProduksi } from "@/services/lokasi-produksi";
 import { listTarifJasaJahit } from "@/services/tarif-jasa-jahit";
 import { listProduk } from "@/services/produk";
+import { listKontakVendor } from "@/services/kontak-vendor";
 import { DataMitraPageClient } from "./_components/DataMitraPageClient";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default async function DataMitraPage({
   const role = user?.role ?? "viewer";
   const { tab } = await searchParams;
 
-  const [supplierList, vendorList, penjahitList, lokasiList, tarifList, produkList] =
+  const [supplierList, vendorList, penjahitList, lokasiList, tarifList, produkList, kontakList] =
     await Promise.all([
       listSupplier(),
       listVendor(),
@@ -29,6 +30,7 @@ export default async function DataMitraPage({
       listLokasiProduksi(),
       opsional(listTarifJasaJahit(), []),
       listProduk(),
+      listKontakVendor(),
     ]);
 
   return (
@@ -38,6 +40,7 @@ export default async function DataMitraPage({
       initialPenjahit={penjahitList}
       initialLokasi={lokasiList}
       initialTarif={tarifList}
+      initialKontak={kontakList}
       produkList={produkList}
       initialTab={tab}
       role={role}

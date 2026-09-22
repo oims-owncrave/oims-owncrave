@@ -109,6 +109,7 @@ export async function getPenerimaanHasilDetail(id: string) {
       penerimaNama: users.displayName,
       lokasiNama: lokasiProduksi.nama,
       tanggalKirimVendor: penerimaanHasilJahit.tanggalKirimVendor,
+      kontakVendorId: penerimaanHasilJahit.kontakVendorId,
       pengirimVendor: penerimaanHasilJahit.pengirimVendor,
       kurirResi: penerimaanHasilJahit.kurirResi,
       buktiUrl: penerimaanHasilJahit.buktiUrl,
@@ -189,6 +190,7 @@ export async function listPenugasanBisaTerima() {
       poNomor: poProduksi.nomorDokumen,
       produkNama: produk.nama,
       pihakNama,
+      vendorId: penugasanJahit.vendorId,
       lokasiTujuanId: penugasanJahit.lokasiTujuanId,
     })
     .from(penugasanJahit)
@@ -309,6 +311,7 @@ export async function createPenerimaanHasil(input: PenerimaanHasilInput): Promis
             penerimaId: input.penerimaId || null,
             lokasiId: input.lokasiId || null,
             tanggalKirimVendor: input.tanggalKirimVendor ? new Date(input.tanggalKirimVendor) : null,
+            kontakVendorId: input.kontakVendorId || null,
             pengirimVendor: input.pengirimVendor?.trim() || null,
             kurirResi: input.kurirResi?.trim() || null,
             buktiUrl: input.buktiUrl?.trim() || null,

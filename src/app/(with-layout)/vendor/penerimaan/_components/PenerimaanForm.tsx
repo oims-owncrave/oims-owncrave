@@ -11,6 +11,7 @@ import { Select } from "@/components/ui/Select";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { penerimaanHasilSchema, type PenerimaanHasilInput } from "@/lib/schemas/penerimaan-hasil-jahit";
 import { usePenerimaanHasilMutation, useRekapPenugasan, useSisaRetur } from "@/hooks/usePenerimaanHasilJahit";
+import { useKontakByVendor } from "@/hooks/useKontakVendor";
 import type { PenugasanBisaTerima, ReturMenungguKembali } from "@/services/penerimaan-hasil-jahit";
 import type { LokasiRow } from "../../lokasi/_components/LokasiTable";
 
@@ -69,6 +70,7 @@ export function PenerimaanForm({
       penerimaId: "",
       lokasiId: lokasiList.find((l) => l.jenis === "workshop_internal" && l.isActive)?.id ?? null,
       tanggalKirimVendor: "",
+      kontakVendorId: "",
       pengirimVendor: "",
       kurirResi: "",
       buktiUrl: "",
@@ -82,6 +84,9 @@ export function PenerimaanForm({
   const penugasanId = watch("penugasanId");
   const returId = watch("returId");
   const modeRetur = !!returId;
+
+  const selectedVendorId = penugasanOptions.find((p) => p.id === penugasanId)?.vendorId;
+  const { data: kontakOptions = [] } = useKontakByVendor(selectedVendorId);
 
   const { data: rekap = KOSONG } = useRekapPenugasan(modeRetur ? "" : penugasanId);
   const { data: sisaRetur = KOSONG } = useSisaRetur(returId ?? "");
@@ -153,6 +158,8 @@ export function PenerimaanForm({
             value={penugasanId || null}
             onChange={(v) => {
               setValue("penugasanId", (v as string) ?? "", { shouldValidate: true });
+              setValue("kontakVendorId", "");
+              setValue("pengirimVendor", "");
               replace([]);
             }}
             error={errors.penugasanId}
@@ -176,7 +183,29 @@ export function PenerimaanForm({
             {...register("lokasiId", { setValueAs: nullable })}
           />
           <Input type="date" label="Tanggal Kirim dari Vendor" {...register("tanggalKirimVendor")} />
-          <Input label="Pengirim (vendor)" placeholder="Opsional" {...register("pengirimVendor")} />
+          {kontakOptions.length > 0 && (
+            <ComboSelect
+              label="Pengirim (vendor)"
+              placeholder="Pilih kontak vendor..."
+              clearable
+              options={kontakOptions.map((k) => ({
+                label: k.jabatan ? `${k.nama} — ${k.jabatan}` : k.nama,
+                value: k.id,
+              }))}
+              value={watch("kontakVendorId") || null}
+              onChange={(v) => {
+                const id = (v as string) ?? "";
+                setValue("kontakVendorId", id);
+                const k = kontakOptions.find((x) => x.id === id);
+                setValue("pengirimVendor", k?.nama ?? "");
+              }}
+            />
+          )}
+          <Input
+            label={kontakOptions.length > 0 ? "Nama Pengirim Vendor (snapshot)" : "Pengirim (vendor)"}
+            placeholder="Opsional"
+            {...register("pengirimVendor")}
+          />
           <Input label="Kurir / Resi" placeholder="Opsional" {...register("kurirResi")} />
           <Input label="URL Bukti" placeholder="Opsional" {...register("buktiUrl")} />
           <Input label="Catatan" placeholder="Opsional" {...register("catatan")} />

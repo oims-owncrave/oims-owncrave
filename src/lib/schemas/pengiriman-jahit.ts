@@ -53,6 +53,7 @@ export const pengirimanSchema = z.object({
   lokasiAsalId: z.string().nullable(),
   lokasiTujuanId: z.string().nullable(),
   pengirimId: z.string().uuid().optional().or(z.literal("")),
+  kontakVendorId: z.string().uuid().optional().or(z.literal("")).nullable(),
   penerima: z.string().optional(),
   kendaraan: z.string().optional(),
   kurir: z.string().optional(),
@@ -72,6 +73,7 @@ export const serahTerimaDetailSchema = z.object({
 
 export const serahTerimaSchema = z.object({
   tanggalJam: z.string().min(1, "Tanggal/jam wajib diisi"),
+  kontakVendorId: z.string().uuid().optional().or(z.literal("")).nullable(),
   penerima: z.string().min(1, "Nama penerima wajib diisi"),
   lokasiId: z.string().nullable(),
   fotoUrl: z.string().optional(),

@@ -70,6 +70,7 @@ export type PekerjaanDekorasiInput = z.infer<typeof pekerjaanDekorasiSchema>;
 export const penerimaanDekorasiSchema = z
   .object({
     tanggalJam: z.string().min(1, "Tanggal/jam wajib diisi"),
+    penerimaId: z.string().uuid().optional().or(z.literal("")).nullable(),
     penerima: z.string().min(1, "Nama penerima wajib diisi"),
     jumlahSelesai: z.number({ message: "Wajib angka" }).int().min(0),
     jumlahRusak: z.number({ message: "Wajib angka" }).int().min(0),
