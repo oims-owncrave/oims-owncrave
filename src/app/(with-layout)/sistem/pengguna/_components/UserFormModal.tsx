@@ -116,6 +116,7 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
               id="edit-newPassword"
               label="Password Baru (opsional)"
               placeholder="Kosongkan jika tidak ingin ganti"
+              autoComplete="new-password"
               error={editForm.formState.errors.newPassword?.message}
               {...editForm.register("newPassword")}
             />
@@ -160,6 +161,7 @@ export function UserFormModal({ open, onClose, editUser }: Props) {
             <PasswordInput
               id="create-password"
               label="Password"
+              autoComplete="new-password"
               error={createForm.formState.errors.password?.message}
               required
               {...createForm.register("password")}
