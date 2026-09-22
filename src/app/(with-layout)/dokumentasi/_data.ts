@@ -52,12 +52,17 @@ import { T3_VENDOR } from "./_isi-t3";
 import { T4_QC } from "./_isi-t4";
 
 /**
- * T3 tayang dengan `gambarMenyusul` — teksnya sudah ditulis dari alur sungguhan
- * dan berguna dibaca, gambarnya menyusul. T4 belum tayang karena alurnya belum
- * pernah dijalankan utuh (Tahap 4 belum smoke test), jadi teksnya belum terbukti.
+ * Semua tahap tayang teks-saja (22 Sep 2026, keputusan Abu).
  *
- * Setelah dipotret: buang `gambarMenyusul` dari tutorial yang bersangkutan.
+ * Gambar t1-t3 memang sudah ada di public/img-panduan/, tapi dipotret sebelum
+ * menu digabung jadi tab (app-z4wp). Gambar yang menunjukkan layar lama lebih
+ * menyesatkan daripada tidak ada gambar, jadi semuanya disembunyikan sekaligus
+ * lewat `gambarMenyusul` — bukan hanya t4 yang belum pernah dipotret.
+ *
+ * Saat dipotret ulang nanti: potret SEMUA tahap sekaligus, lalu buang
+ * `gambarMenyusul` dari tutorial yang sudah benar gambarnya.
  */
-export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN, T2_PRODUKSI, T3_VENDOR];
-
-export const TUTORIAL_DRAF: Tutorial[] = [T4_QC];
+export const TUTORIAL: Tutorial[] = [T1_PERSEDIAAN, T2_PRODUKSI, T3_VENDOR, T4_QC].map((t) => ({
+  ...t,
+  gambarMenyusul: true,
+}));

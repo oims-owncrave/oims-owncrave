@@ -5,14 +5,18 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Lightbox, type GambarLightbox } from "@/components/ui/Lightbox";
 import { TAHAP_LABEL, type Tutorial } from "../_data";
+import { PetaAlur } from "./PetaAlur";
 
 /** "A. Mencatat bahan masuk" -> "a-mencatat-bahan-masuk" (id anchor bagian) */
 function idBagian(slug: string, judul: string) {
   return `${slug}--${judul.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
 }
 
+/** Entri pertama sidebar: peta alur, bukan tutorial — dibaca sebelum langkah rinci. */
+const SLUG_PETA = "peta-alur";
+
 export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
-  const [aktif, setAktif] = useState<string | null>(tutorial[0]?.slug ?? null);
+  const [aktif, setAktif] = useState<string | null>(SLUG_PETA);
   const [lompatKe, setLompatKe] = useState<string | null>(null);
   const dipilih = tutorial.find((t) => t.slug === aktif);
 
@@ -68,6 +72,19 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
           dari layar; overscroll-contain menahan scrollnya supaya tidak
           merembet ke halaman saat sudah mentok. */}
       <nav className="space-y-4 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+        <button
+          type="button"
+          onClick={() => setAktif(SLUG_PETA)}
+          className={cn(
+            "w-full rounded-lg px-3 py-2 text-left text-sm transition-colors",
+            aktif === SLUG_PETA
+              ? "bg-primary/10 font-medium text-primary"
+              : "text-dark-5 hover:bg-gray-1 dark:text-dark-6 dark:hover:bg-dark-2",
+          )}
+        >
+          Peta Alur Produksi
+        </button>
+
         {perTahap.map(({ tahap, isi }) =>
           isi.length ? (
             <div key={tahap}>
@@ -139,7 +156,7 @@ export function DokumentasiClient({ tutorial }: { tutorial: Tutorial[] }) {
         )}
       </nav>
 
-      {dipilih && <IsiTutorial t={dipilih} />}
+      {aktif === SLUG_PETA ? <PetaAlur /> : dipilih && <IsiTutorial t={dipilih} />}
     </div>
   );
 }
@@ -183,13 +200,6 @@ function IsiTutorial({ t }: { t: Tutorial }) {
       <Kartu>
         <h3 className="text-lg font-bold text-dark dark:text-white">{t.judul}</h3>
         <p className="mt-1 text-sm text-dark-5 dark:text-dark-6">{t.ringkas}</p>
-
-        {t.gambarMenyusul && (
-          <p className="mt-3 rounded-[10px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-200">
-            Gambar panduan untuk tahap ini masih dibuat. Langkahnya sudah lengkap dan
-            bisa diikuti.
-          </p>
-        )}
 
         {t.gambaranUmum?.length ? (
           <div className="mt-4 rounded-lg bg-gray-1 p-4 dark:bg-dark-2">
