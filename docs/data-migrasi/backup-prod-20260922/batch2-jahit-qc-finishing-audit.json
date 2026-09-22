@@ -1,0 +1,1463 @@
+{
+ "penugasan_jahit": [
+  {
+   "id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "nomor_dokumen": "ASG-JHT-202609-0001",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "tanggal": "2026-09-03T00:00:00+00:00",
+   "vendor_id": "4e43966e-d12f-40e5-9305-dce22a2db5af",
+   "penjahit_id": null,
+   "lokasi_tujuan_id": null,
+   "jenis_pekerjaan": "jahit_penuh",
+   "rencana_kirim": null,
+   "target_selesai": "2026-09-20T00:00:00+00:00",
+   "prioritas": "normal",
+   "status": "aktif",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-03T03:10:09.29775+00:00",
+   "updated_at": "2026-09-03T03:15:23.223+00:00",
+   "deleted_at": null
+  }
+ ],
+ "penugasan_jahit_detail": [
+  {
+   "id": "219a7eb5-f66e-466c-923e-69a0b8a74e09",
+   "penugasan_id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "bundling_id": "f761aa04-74c7-4d08-a322-ce2fbb5e0c1a",
+   "jumlah_pcs": 40,
+   "tarif_snapshot": 30000,
+   "dasar_tarif": "per_pcs"
+  },
+  {
+   "id": "ef437609-bcea-4e72-b7d1-048954097abc",
+   "penugasan_id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "bundling_id": "3c7b575b-db36-4f3b-8329-2cbe219e6ff8",
+   "jumlah_pcs": 40,
+   "tarif_snapshot": 30000,
+   "dasar_tarif": "per_pcs"
+  },
+  {
+   "id": "0998739e-62d6-427c-bfc1-fdfbea9cb024",
+   "penugasan_id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "bundling_id": "ffc531c5-36f9-410c-81b9-65c0ece5534b",
+   "jumlah_pcs": 20,
+   "tarif_snapshot": 30000,
+   "dasar_tarif": "per_pcs"
+  }
+ ],
+ "pengiriman_jahit": [
+  {
+   "id": "53b2d210-d5c5-4ee2-ab2c-0b102150b65c",
+   "nomor_dokumen": "SHP-JHT-202609-0001",
+   "penugasan_id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "tanggal_jam": "2026-09-03T03:14:00+00:00",
+   "lokasi_asal_id": null,
+   "lokasi_tujuan_id": null,
+   "pengirim": null,
+   "penerima": null,
+   "kendaraan": null,
+   "kurir": null,
+   "bukti_foto_url": null,
+   "status": "dikirim",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "cancelled_by": null,
+   "cancelled_at": null,
+   "alasan_batal": null,
+   "created_at": "2026-09-03T03:15:22.848967+00:00",
+   "updated_at": "2026-09-03T03:15:22.848967+00:00",
+   "deleted_at": null,
+   "kontak_vendor_id": null
+  }
+ ],
+ "pengiriman_jahit_detail": [
+  {
+   "id": "06086b0a-eba1-470f-acad-32a11b2b91bb",
+   "pengiriman_id": "53b2d210-d5c5-4ee2-ab2c-0b102150b65c",
+   "penugasan_detail_id": "219a7eb5-f66e-466c-923e-69a0b8a74e09",
+   "kelengkapan_panel": true,
+   "aksesoris": null,
+   "catatan": null
+  },
+  {
+   "id": "f2719bf5-8c27-4b99-a896-ed7d8baee68b",
+   "pengiriman_id": "53b2d210-d5c5-4ee2-ab2c-0b102150b65c",
+   "penugasan_detail_id": "ef437609-bcea-4e72-b7d1-048954097abc",
+   "kelengkapan_panel": true,
+   "aksesoris": null,
+   "catatan": null
+  },
+  {
+   "id": "c016b6c8-f51c-4a22-9e65-1fc48df78baf",
+   "pengiriman_id": "53b2d210-d5c5-4ee2-ab2c-0b102150b65c",
+   "penugasan_detail_id": "0998739e-62d6-427c-bfc1-fdfbea9cb024",
+   "kelengkapan_panel": true,
+   "aksesoris": null,
+   "catatan": null
+  }
+ ],
+ "surat_jalan_jahit": [
+  {
+   "id": "e7b23522-439b-4b48-992d-5159a7048cff",
+   "nomor_dokumen": "SJ-JHT-202609-0001",
+   "pengiriman_id": "53b2d210-d5c5-4ee2-ab2c-0b102150b65c",
+   "jumlah_cetak": 0,
+   "dicetak_terakhir_at": null,
+   "created_at": "2026-09-03T03:15:22.848967+00:00",
+   "pekerjaan_dekorasi_id": null
+  }
+ ],
+ "penerimaan_hasil_jahit": [
+  {
+   "id": "64bca51d-8068-45a0-af39-702d0ce9f28e",
+   "nomor_dokumen": "RCV-JHT-202609-0001",
+   "penugasan_id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "retur_id": null,
+   "tanggal_jam": "2026-09-03T03:26:00+00:00",
+   "penerima": "Petugas Gudang",
+   "lokasi_id": null,
+   "tanggal_kirim_vendor": null,
+   "pengirim_vendor": null,
+   "kurir_resi": null,
+   "bukti_url": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-03T03:27:19.376456+00:00",
+   "updated_at": "2026-09-03T03:27:19.376456+00:00",
+   "deleted_at": null,
+   "kontak_vendor_id": null
+  }
+ ],
+ "penerimaan_hasil_jahit_detail": [
+  {
+   "id": "fd9f856b-3b9e-413f-a2da-941a96a6024f",
+   "penerimaan_id": "64bca51d-8068-45a0-af39-702d0ce9f28e",
+   "penugasan_detail_id": "219a7eb5-f66e-466c-923e-69a0b8a74e09",
+   "jumlah_baik": 30,
+   "jumlah_rusak": 5,
+   "catatan": null
+  }
+ ],
+ "penerimaan_qc": [
+  {
+   "id": "55661bee-7d6a-4ebd-a536-720128610507",
+   "nomor_dokumen": "IN-QC-202609-0001",
+   "penerimaan_hasil_jahit_id": "64bca51d-8068-45a0-af39-702d0ce9f28e",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "vendor_id": "4e43966e-d12f-40e5-9305-dce22a2db5af",
+   "tanggal": "2026-09-15T00:00:00+00:00",
+   "lokasi_id": null,
+   "penerima": "Petugas QC Smoke",
+   "prioritas": "normal",
+   "target_selesai": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T04:37:26.973968+00:00",
+   "updated_at": "2026-09-15T04:37:26.973968+00:00",
+   "deleted_at": null,
+   "penerima_id": null
+  }
+ ],
+ "penerimaan_qc_detail": [
+  {
+   "id": "fe39807e-3552-4b9a-9349-8890aba62877",
+   "penerimaan_qc_id": "55661bee-7d6a-4ebd-a536-720128610507",
+   "penerimaan_hasil_detail_id": "fd9f856b-3b9e-413f-a2da-941a96a6024f",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_pcs": 25,
+   "catatan": null
+  }
+ ],
+ "work_order_qc": [
+  {
+   "id": "ec6a75d6-ddd4-4718-979b-9f984cd22a27",
+   "nomor_dokumen": "WO-QC-202609-0001",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "tanggal": "2026-09-15T00:00:00+00:00",
+   "target_selesai": null,
+   "pic_id": null,
+   "supervisor_id": null,
+   "metode": "seratus_persen",
+   "standar_qc_id": "07d8b787-2d50-48e7-919d-61764669f2aa",
+   "standar_versi": 2,
+   "populasi": 25,
+   "jumlah_sampel": 25,
+   "batas_diterima": null,
+   "batas_ditolak": null,
+   "alasan_sampling": null,
+   "status": "berjalan",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T04:40:04.300471+00:00",
+   "updated_at": "2026-09-15T04:40:28.686+00:00",
+   "deleted_at": null
+  }
+ ],
+ "work_order_qc_detail": [
+  {
+   "id": "140e974d-1e05-4517-979c-d2bfd0e050d0",
+   "work_order_qc_id": "ec6a75d6-ddd4-4718-979b-9f984cd22a27",
+   "penerimaan_qc_detail_id": "fe39807e-3552-4b9a-9349-8890aba62877",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_pcs": 25
+  }
+ ],
+ "hasil_qc": [
+  {
+   "id": "9de2571f-f573-48b6-9f89-7bd302673e97",
+   "nomor_dokumen": "QC-202609-0001",
+   "work_order_qc_id": "ec6a75d6-ddd4-4718-979b-9f984cd22a27",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "vendor_id": null,
+   "tanggal": "2026-09-15T00:00:00+00:00",
+   "petugas_id": null,
+   "status": "draft",
+   "verifikator_id": null,
+   "verified_at": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T04:44:02.927124+00:00",
+   "updated_at": "2026-09-15T04:44:02.927124+00:00",
+   "deleted_at": null
+  }
+ ],
+ "hasil_qc_detail": [
+  {
+   "id": "64ff29b2-680a-444d-84b0-afdc102d730e",
+   "hasil_qc_id": "9de2571f-f573-48b6-9f89-7bd302673e97",
+   "work_order_qc_detail_id": "140e974d-1e05-4517-979c-d2bfd0e050d0",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_diperiksa": 25,
+   "grade_a": 17,
+   "grade_b": 3,
+   "grade_c": 0,
+   "perbaikan": 3,
+   "reject": 2,
+   "catatan": null
+  }
+ ],
+ "temuan_cacat": [
+  {
+   "id": "cf76eab3-db23-41c9-b155-e4d2329c16a7",
+   "hasil_qc_detail_id": "64ff29b2-680a-444d-84b0-afdc102d730e",
+   "jenis_cacat_id": "961eab99-05aa-4c75-b370-4509df842197",
+   "keparahan": "major",
+   "sumber": "vendor",
+   "jumlah": 5,
+   "penyebab_awal": null,
+   "penanggung_jawab": null,
+   "foto_url": null,
+   "tindakan": "Jahit ulang bagian yang loncat",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T04:49:06.709194+00:00",
+   "bagian_produk_id": null
+  }
+ ],
+ "finishing": [
+  {
+   "id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "nomor_dokumen": "FIN-202609-0001",
+   "po_id": null,
+   "tanggal_masuk": "2026-09-15T00:00:00+00:00",
+   "target_selesai": null,
+   "pic_id": null,
+   "lokasi_id": null,
+   "status": "selesai",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T06:15:26.974513+00:00",
+   "updated_at": "2026-09-15T06:16:56.599+00:00",
+   "deleted_at": null
+  }
+ ],
+ "finishing_detail": [
+  {
+   "id": "43f217c8-fddf-4c7a-bb05-1f98b2d234bd",
+   "finishing_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "hasil_qc_detail_id": "64ff29b2-680a-444d-84b0-afdc102d730e",
+   "re_qc_detail_id": null,
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "jumlah": 20,
+   "proses": {},
+   "catatan": null
+  },
+  {
+   "id": "5aee2285-c7c0-4a3f-b28f-61629d2b954e",
+   "finishing_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "hasil_qc_detail_id": null,
+   "re_qc_detail_id": "d4831bc0-d6fb-4f8d-9eeb-67ead42201cb",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "jumlah": 2,
+   "proses": {},
+   "catatan": null
+  }
+ ],
+ "finishing_pemakaian": [
+  {
+   "id": "5174f6f0-05a7-4a81-b826-c4b17c62b84a",
+   "finishing_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "bahan_id": "28abf112-2379-4feb-9611-8896b15274b0",
+   "jumlah": 22,
+   "harga_satuan": 0,
+   "catatan": null,
+   "created_at": "2026-09-15T06:16:28.288504+00:00"
+  }
+ ],
+ "packing": [
+  {
+   "id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "nomor_dokumen": "PKG-202609-0001",
+   "po_id": null,
+   "finishing_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "tanggal": "2026-09-15T00:00:00+00:00",
+   "pic_id": null,
+   "lokasi_id": null,
+   "checklist": {
+    "sku_benar": true,
+    "warna_benar": true,
+    "ukuran_benar": true,
+    "jumlah_sesuai": true,
+    "barcode_sesuai": true,
+    "kemasan_bersih": true,
+    "produk_dilipat": true,
+    "kemasan_tertutup": true,
+    "barcode_terpindai": true,
+    "hangtag_terpasang": true
+   },
+   "status": "selesai",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T06:18:36.577586+00:00",
+   "updated_at": "2026-09-15T06:20:04.07+00:00",
+   "deleted_at": null
+  }
+ ],
+ "packing_detail": [
+  {
+   "id": "75614b50-98f4-467b-9bfd-c68da9679bde",
+   "packing_id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "finishing_detail_id": "43f217c8-fddf-4c7a-bb05-1f98b2d234bd",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "jumlah": 20,
+   "kemasan_id": "2f331495-fab6-4e8d-9063-0af42ce339b0",
+   "batch": "B-2609-01",
+   "gudang_tujuan_id": "6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77",
+   "barcode": null
+  },
+  {
+   "id": "15a6a00d-5d22-4ae2-b4e3-8ee4b30cf9bd",
+   "packing_id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "finishing_detail_id": "5aee2285-c7c0-4a3f-b28f-61629d2b954e",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "jumlah": 2,
+   "kemasan_id": "2f331495-fab6-4e8d-9063-0af42ce339b0",
+   "batch": "B-2609-01",
+   "gudang_tujuan_id": "6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77",
+   "barcode": null
+  }
+ ],
+ "barang_jadi": [
+  {
+   "id": "c3508693-c08d-40e7-8eda-2e210c5446c7",
+   "nomor_dokumen": "FG-202609-0001",
+   "po_id": null,
+   "packing_id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "tanggal_masuk": "2026-09-15T00:00:00+00:00",
+   "gudang_tujuan_id": "6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77",
+   "penyerah": null,
+   "penerima_id": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T06:21:13.996727+00:00",
+   "updated_at": "2026-09-15T06:21:13.996727+00:00",
+   "deleted_at": null
+  }
+ ],
+ "barang_jadi_detail": [
+  {
+   "id": "94bb5b4e-800f-42e9-a101-3e31af8e8f6d",
+   "barang_jadi_id": "c3508693-c08d-40e7-8eda-2e210c5446c7",
+   "packing_detail_id": "75614b50-98f4-467b-9bfd-c68da9679bde",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "jumlah": 20,
+   "hpp_sementara": null,
+   "batch": "B-2609-01",
+   "rak": null,
+   "barcode": null
+  },
+  {
+   "id": "3965240b-dd5d-4ccf-aa64-32bb291a22f3",
+   "barang_jadi_id": "c3508693-c08d-40e7-8eda-2e210c5446c7",
+   "packing_detail_id": "15a6a00d-5d22-4ae2-b4e3-8ee4b30cf9bd",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "jumlah": 2,
+   "hpp_sementara": null,
+   "batch": "B-2609-01",
+   "rak": null,
+   "barcode": null
+  }
+ ],
+ "stok_barang_jadi": [
+  {
+   "id": "e1fe8f40-75ba-48f4-9beb-28c8c5c5b6a9",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "grade": "a",
+   "gudang_id": "6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77",
+   "batch": "B-2609-01",
+   "kuantitas": 22,
+   "stok_ditahan": 0,
+   "stok_rusak": 0,
+   "stok_reservasi": 0,
+   "hpp_rata_rata": 0,
+   "created_at": "2026-09-15T06:21:13.996727+00:00",
+   "updated_at": "2026-09-15T06:21:14.646+00:00"
+  }
+ ],
+ "mutasi_barang_jadi": [
+  {
+   "id": "94632376-dd58-4363-86ce-f8fab61eee7d",
+   "stok_barang_jadi_id": "e1fe8f40-75ba-48f4-9beb-28c8c5c5b6a9",
+   "jenis": "hasil_produksi",
+   "jumlah": 20,
+   "referensi_tipe": "barang_jadi",
+   "referensi_id": "c3508693-c08d-40e7-8eda-2e210c5446c7",
+   "tanggal": "2026-09-15T06:21:13.996727+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T06:21:13.996727+00:00"
+  },
+  {
+   "id": "101ff2de-e271-4763-bb00-fece45195b2d",
+   "stok_barang_jadi_id": "e1fe8f40-75ba-48f4-9beb-28c8c5c5b6a9",
+   "jenis": "hasil_produksi",
+   "jumlah": 2,
+   "referensi_tipe": "barang_jadi",
+   "referensi_id": "c3508693-c08d-40e7-8eda-2e210c5446c7",
+   "tanggal": "2026-09-15T06:21:13.996727+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-15T06:21:13.996727+00:00"
+  }
+ ],
+ "audit_log": [
+  {
+   "id": "7cfd80fe-f08a-46ec-b794-592b4dc03f9c",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"0cc241b2-f6d7-444d-bb1c-94f9b04fa029\",\"nomorDokumen\":\"BM-202608-0001\",\"supplierId\":\"5a35867d-64e5-4d39-bf5b-6f0ebbf89b2e\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-08T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-08T05:34:08.638Z\",\"updatedAt\":\"2026-08-08T05:34:08.638Z\"},\"detail\":[{\"bahanId\":\"aa6d2528-3e8c-45ec-a7d5-713041e1aebe\",\"kuantitas\":100,\"hargaSatuan\":19500},{\"bahanId\":\"87ea410c-af6a-444c-9ff7-fd4caf8be0d6\",\"kuantitas\":100,\"hargaSatuan\":19500},{\"bahanId\":\"6a8babb5-b90c-4d51-a830-c77a605e84d1\",\"kuantitas\":200,\"hargaSatuan\":19500}]}",
+   "ip_address": null,
+   "created_at": "2026-08-08T05:34:08.63842+00:00"
+  },
+  {
+   "id": "c503ad03-ea9e-469e-af47-cda2c42885e4",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "kategori",
+   "record_id": "bd6a4d0c-e84f-41f7-8906-b056fc63fb18",
+   "data_before": null,
+   "data_after": "{\"id\":\"bd6a4d0c-e84f-41f7-8906-b056fc63fb18\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:04.114Z\",\"updatedAt\":\"2026-08-08T15:23:04.114Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-08T15:23:04.114149+00:00"
+  },
+  {
+   "id": "51558e13-7dee-4096-b975-56a463e550ad",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "DELETE",
+   "tabel": "kategori",
+   "record_id": "bd6a4d0c-e84f-41f7-8906-b056fc63fb18",
+   "data_before": "{\"id\":\"bd6a4d0c-e84f-41f7-8906-b056fc63fb18\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:04.114Z\",\"updatedAt\":\"2026-08-08T15:23:04.114Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"bd6a4d0c-e84f-41f7-8906-b056fc63fb18\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:04.114Z\",\"updatedAt\":\"2026-08-08T15:23:04.114Z\",\"deletedAt\":\"2026-08-08T15:23:10.210Z\"}",
+   "ip_address": null,
+   "created_at": "2026-08-08T15:23:10.340063+00:00"
+  },
+  {
+   "id": "ecf322df-4971-4f97-8967-769c718bacba",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "kategori",
+   "record_id": "d27c241a-3456-4efa-90d5-ef33a434c103",
+   "data_before": null,
+   "data_after": "{\"id\":\"d27c241a-3456-4efa-90d5-ef33a434c103\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:29.546Z\",\"updatedAt\":\"2026-08-08T15:23:29.546Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-08T15:23:29.546352+00:00"
+  },
+  {
+   "id": "9ee506f0-7b60-4b2c-ba4d-8fcde538eefd",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "DELETE",
+   "tabel": "kategori",
+   "record_id": "d27c241a-3456-4efa-90d5-ef33a434c103",
+   "data_before": "{\"id\":\"d27c241a-3456-4efa-90d5-ef33a434c103\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:29.546Z\",\"updatedAt\":\"2026-08-08T15:23:29.546Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"d27c241a-3456-4efa-90d5-ef33a434c103\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:29.546Z\",\"updatedAt\":\"2026-08-08T15:23:29.546Z\",\"deletedAt\":\"2026-08-08T15:23:39.015Z\"}",
+   "ip_address": null,
+   "created_at": "2026-08-08T15:23:39.133098+00:00"
+  },
+  {
+   "id": "09736fd5-3c9c-4be6-a1e2-bda73408ac85",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "kategori",
+   "record_id": "f9c96c3f-cca6-453c-b258-e52b651e241f",
+   "data_before": null,
+   "data_after": "{\"id\":\"f9c96c3f-cca6-453c-b258-e52b651e241f\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:52.687Z\",\"updatedAt\":\"2026-08-08T15:23:52.687Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-08T15:23:52.687007+00:00"
+  },
+  {
+   "id": "25f1638f-3524-47d2-bb4c-758bf16d0c1d",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "DELETE",
+   "tabel": "kategori",
+   "record_id": "f9c96c3f-cca6-453c-b258-e52b651e241f",
+   "data_before": "{\"id\":\"f9c96c3f-cca6-453c-b258-e52b651e241f\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:52.687Z\",\"updatedAt\":\"2026-08-08T15:23:52.687Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"f9c96c3f-cca6-453c-b258-e52b651e241f\",\"kode\":\"CTH\",\"nama\":\"Contoh\",\"isActive\":true,\"createdAt\":\"2026-08-08T15:23:52.687Z\",\"updatedAt\":\"2026-08-08T15:23:52.687Z\",\"deletedAt\":\"2026-08-08T15:24:03.806Z\"}",
+   "ip_address": null,
+   "created_at": "2026-08-08T15:24:03.926115+00:00"
+  },
+  {
+   "id": "4a343f9c-97d7-4e71-bf07-cd17483499d0",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "users",
+   "record_id": "f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff",
+   "data_before": "{\"id\":\"f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff\",\"email\":\"gudang@owncrave.local\",\"displayName\":\"Orang Gudang 1\",\"role\":\"admin_gudang\",\"isActive\":true,\"createdAt\":\"2026-08-04T02:08:58.151Z\",\"updatedAt\":\"2026-08-04T08:20:25.067Z\"}",
+   "data_after": "{\"id\":\"f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff\",\"email\":\"gudang@owncrave.local\",\"displayName\":\"Orang Gudang 1\",\"role\":\"admin_gudang\",\"isActive\":true,\"createdAt\":\"2026-08-04T02:08:58.151Z\",\"updatedAt\":\"2026-08-10T23:57:56.543Z\"}",
+   "ip_address": null,
+   "created_at": "2026-08-10T23:57:57.942071+00:00"
+  },
+  {
+   "id": "61b7d834-3360-43e3-830c-bb032d80f8c1",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "satuan",
+   "record_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+   "data_before": null,
+   "data_after": "{\"id\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"nama\":\"Picis\",\"singkatan\":\"Pcs\",\"isActive\":true,\"createdAt\":\"2026-08-12T02:44:53.136Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-12T02:44:53.588828+00:00"
+  },
+  {
+   "id": "6bfae86b-2160-446c-bc42-e60770543a4a",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "warna",
+   "record_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+   "data_before": null,
+   "data_after": "{\"id\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"kode\":\"Htm\",\"nama\":\"Hitam\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:25:30.324Z\",\"updatedAt\":\"2026-08-14T03:25:30.324Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:25:30.779104+00:00"
+  },
+  {
+   "id": "a328c170-673b-4870-8254-45f71fbee134",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "16211f78-106c-4811-b27b-f41ddd70de10",
+   "data_before": null,
+   "data_after": "{\"id\":\"16211f78-106c-4811-b27b-f41ddd70de10\",\"kode\":\"BH-TR-SLG-001\",\"nama\":\"Coil DSJK no 5 28 inch/71 cm (M)\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:29:04.712Z\",\"updatedAt\":\"2026-08-14T03:29:04.712Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:29:06.012766+00:00"
+  },
+  {
+   "id": "4a78ca76-0683-4033-aaaf-2e787bec9bdb",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "1e77bdbd-e8de-43ef-86e9-2de815a9d04a",
+   "data_before": null,
+   "data_after": "{\"id\":\"1e77bdbd-e8de-43ef-86e9-2de815a9d04a\",\"kode\":\"BH-TR-SLG-002\",\"nama\":\"Coil DJSK no 5 30inch/75cm (L,XL)\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:32:05.785Z\",\"updatedAt\":\"2026-08-14T03:32:05.785Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:32:07.070266+00:00"
+  },
+  {
+   "id": "c5419cbf-46d6-4995-a698-a042f284abc3",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "af19cc9c-dbd2-4f9c-97da-9cbdf453d130",
+   "data_before": null,
+   "data_after": "{\"id\":\"af19cc9c-dbd2-4f9c-97da-9cbdf453d130\",\"kode\":\"BH-TR-SLG-003\",\"nama\":\"Coil DJSK no5 32inch/81cm (2XL,3XL)\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:34:25.337Z\",\"updatedAt\":\"2026-08-14T03:34:25.337Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:34:26.695364+00:00"
+  },
+  {
+   "id": "4b29c748-73bb-4753-ab4a-6570f22897eb",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "1f280e64-4d39-4d64-a327-d50033bb3129",
+   "data_before": null,
+   "data_after": "{\"id\":\"1f280e64-4d39-4d64-a327-d50033bb3129\",\"kode\":\"BH-TR-SLG-004\",\"nama\":\"Roll DS nylon 5 1,2Kg\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"d782323e-c9c7-4c94-b989-e930f6351cff\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:36:00.977Z\",\"updatedAt\":\"2026-08-14T03:36:00.977Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:36:02.286033+00:00"
+  },
+  {
+   "id": "e80e97f6-b74f-48cc-9869-2a50b8677967",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "7c572972-af67-49e8-ba36-4b8b91822e2f",
+   "data_before": null,
+   "data_after": "{\"id\":\"7c572972-af67-49e8-ba36-4b8b91822e2f\",\"kode\":\"BH-TR-SLG-005\",\"nama\":\"Vision GMC No5 24Inch/66cm (S,M)\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:37:38.197Z\",\"updatedAt\":\"2026-08-14T03:37:38.197Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:37:39.49367+00:00"
+  },
+  {
+   "id": "486a04cb-c842-42ce-b890-0cb5df415863",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "94fab36e-6084-40a5-8d8b-54c0028f836a",
+   "data_before": null,
+   "data_after": "{\"id\":\"94fab36e-6084-40a5-8d8b-54c0028f836a\",\"kode\":\"BH-TR-SLG-006\",\"nama\":\"Vision GMC No5 26Inch/66cm (L,XL)\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:39:33.383Z\",\"updatedAt\":\"2026-08-14T03:39:33.383Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:39:34.665441+00:00"
+  },
+  {
+   "id": "0bc9f2ab-32ef-4a6c-8f77-13067ca40634",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "44758bd1-8a1b-4376-88c0-ac33b54a8fda",
+   "data_before": null,
+   "data_after": "{\"id\":\"44758bd1-8a1b-4376-88c0-ac33b54a8fda\",\"kode\":\"BH-TR-SLG-007\",\"nama\":\"Vision GMC No5 28Inch/71cm (XXL)\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:41:09.230Z\",\"updatedAt\":\"2026-08-14T03:41:09.230Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:41:10.584614+00:00"
+  },
+  {
+   "id": "9aa61669-a1f5-4e90-8ed9-f0184625ffd4",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "6ba7b924-fd52-4848-9461-b1efba56ce95",
+   "data_before": null,
+   "data_after": "{\"id\":\"6ba7b924-fd52-4848-9461-b1efba56ce95\",\"kode\":\"BH-KP-RTG-001\",\"nama\":\"YKK Depan cnda 5 Lock\",\"kategoriId\":\"a7e0f643-6403-4e57-818a-0d12846e9c22\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:42:20.871Z\",\"updatedAt\":\"2026-08-14T03:42:20.871Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:42:22.221861+00:00"
+  },
+  {
+   "id": "f7a4a34e-439f-41b0-8e38-3ceda8cc57d0",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "07f19984-2f33-4a91-b07b-4b23e896db1d",
+   "data_before": null,
+   "data_after": "{\"id\":\"07f19984-2f33-4a91-b07b-4b23e896db1d\",\"kode\":\"BH-KP-RTG-002\",\"nama\":\"YKK Cebol cnda 5\",\"kategoriId\":\"a7e0f643-6403-4e57-818a-0d12846e9c22\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:43:24.391Z\",\"updatedAt\":\"2026-08-14T03:43:24.391Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:43:25.677939+00:00"
+  },
+  {
+   "id": "2a5eb1d6-f06b-4c7e-9203-407bd90d41ac",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "dc917360-baf4-49a0-a125-8b81edc0d7b9",
+   "data_before": null,
+   "data_after": "{\"id\":\"dc917360-baf4-49a0-a125-8b81edc0d7b9\",\"kode\":\"BH-KP-RTG-003\",\"nama\":\"YKK Depan Vision 5 Lock\",\"kategoriId\":\"a7e0f643-6403-4e57-818a-0d12846e9c22\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:44:52.531Z\",\"updatedAt\":\"2026-08-14T03:44:52.531Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:44:53.824529+00:00"
+  },
+  {
+   "id": "d42fe716-3b13-4956-8a56-5f9096b0ba0e",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "daa78633-1e56-4dd7-91f6-e3eee61c89f3",
+   "data_before": null,
+   "data_after": "{\"id\":\"daa78633-1e56-4dd7-91f6-e3eee61c89f3\",\"kode\":\"BH-AKSS-001\",\"nama\":\"Velcro 1inch/2,5cm\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"d782323e-c9c7-4c94-b989-e930f6351cff\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:46:34.213Z\",\"updatedAt\":\"2026-08-14T03:46:34.213Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:46:35.526017+00:00"
+  },
+  {
+   "id": "f1b51937-00e1-49c2-8035-5eb02b11e4c4",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "warna",
+   "record_id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+   "data_before": null,
+   "data_after": "{\"id\":\"d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1\",\"kode\":\"Pth\",\"nama\":\"Putih\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:48:01.420Z\",\"updatedAt\":\"2026-08-14T03:48:01.420Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:48:01.869471+00:00"
+  },
+  {
+   "id": "e398f7d4-0ad7-4c7d-b575-3951aa2ca73e",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "warna",
+   "record_id": "ba5aeef6-ca69-41a0-8763-ac7274ce8f1b",
+   "data_before": null,
+   "data_after": "{\"id\":\"ba5aeef6-ca69-41a0-8763-ac7274ce8f1b\",\"kode\":\"Bng\",\"nama\":\"Bening\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:48:25.335Z\",\"updatedAt\":\"2026-08-14T03:48:25.335Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:48:25.766879+00:00"
+  },
+  {
+   "id": "86dbe516-b837-417c-b585-ea91502ac149",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "aa285295-d45a-4480-88ce-8ced4b2c8ea9",
+   "data_before": null,
+   "data_after": "{\"id\":\"aa285295-d45a-4480-88ce-8ced4b2c8ea9\",\"kode\":\"BH-AKSS-002\",\"nama\":\"Karet Elastis SR Biru 1inch/2,5cm\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"d782323e-c9c7-4c94-b989-e930f6351cff\",\"warnaId\":\"d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:50:07.843Z\",\"updatedAt\":\"2026-08-14T03:50:07.843Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:50:09.178708+00:00"
+  },
+  {
+   "id": "64614c40-bdf4-423f-b6ec-d1ff93920677",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "624adf50-cf0f-4c51-8feb-ff5a9cdc0e51",
+   "data_before": null,
+   "data_after": "{\"id\":\"624adf50-cf0f-4c51-8feb-ff5a9cdc0e51\",\"kode\":\"BH-AKSS-003\",\"nama\":\"Stop Resleting\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:54:50.454Z\",\"updatedAt\":\"2026-08-14T03:54:50.454Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:54:51.754861+00:00"
+  },
+  {
+   "id": "f3adb049-b262-45e3-91c3-775e769199a3",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7",
+   "data_before": null,
+   "data_after": "{\"id\":\"ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7\",\"kode\":\"BH-TR-SLG-008\",\"nama\":\"Puller Rope Hitam\",\"kategoriId\":\"93e1be85-4301-43dc-bfe0-f728aa22d0be\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:55:55.882Z\",\"updatedAt\":\"2026-08-14T03:55:55.882Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:55:57.227627+00:00"
+  },
+  {
+   "id": "e95e0bdf-0a55-490b-a9fc-236d81543975",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "28abf112-2379-4feb-9611-8896b15274b0",
+   "data_before": null,
+   "data_after": "{\"id\":\"28abf112-2379-4feb-9611-8896b15274b0\",\"kode\":\"BH-AKSS-004\",\"nama\":\"Taliqur/Karet String \",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"d782323e-c9c7-4c94-b989-e930f6351cff\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:56:42.453Z\",\"updatedAt\":\"2026-08-14T03:56:42.453Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:56:43.790385+00:00"
+  },
+  {
+   "id": "935330ef-e4f9-4ced-a79d-812ac285dd54",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "feb08757-1000-49f5-84b7-42ba8ad95ffe",
+   "data_before": null,
+   "data_after": "{\"id\":\"feb08757-1000-49f5-84b7-42ba8ad95ffe\",\"kode\":\"BH-AKSS-005\",\"nama\":\"Stopper Botol Bening\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"ba5aeef6-ca69-41a0-8763-ac7274ce8f1b\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:57:59.852Z\",\"updatedAt\":\"2026-08-14T03:57:59.852Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:58:01.189544+00:00"
+  },
+  {
+   "id": "e23e49d6-575d-4609-a446-78498bfc41ec",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "31df62d4-692c-4a55-89b3-3721e64c70c0",
+   "data_before": null,
+   "data_after": "{\"id\":\"31df62d4-692c-4a55-89b3-3721e64c70c0\",\"kode\":\"BH-AKSS-006\",\"nama\":\"Kain Keras 25N\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"d782323e-c9c7-4c94-b989-e930f6351cff\",\"warnaId\":\"d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T03:58:51.541Z\",\"updatedAt\":\"2026-08-14T03:58:51.541Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T03:58:52.835941+00:00"
+  },
+  {
+   "id": "4fa11613-5a51-4526-8d82-4951331b1efc",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "65623e36-a7b8-46d5-b929-4428b3f5c66e",
+   "data_before": null,
+   "data_after": "{\"id\":\"65623e36-a7b8-46d5-b929-4428b3f5c66e\",\"kode\":\"BH-AKSS-007\",\"nama\":\"Mata Itik ST 350 N\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"68f3861a-b459-46c3-ac08-ff5a6a2198e4\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:01:01.894Z\",\"updatedAt\":\"2026-08-14T04:01:01.894Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:01:03.237583+00:00"
+  },
+  {
+   "id": "d3468986-ae2c-413c-80fa-d7af33ce9eab",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "acd5cd8c-4f54-4a43-b440-2e6022814d1e",
+   "data_before": null,
+   "data_after": "{\"id\":\"acd5cd8c-4f54-4a43-b440-2e6022814d1e\",\"kode\":\"BH-AKSS-008\",\"nama\":\"ST Ring Mata Itik 350 N\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"68f3861a-b459-46c3-ac08-ff5a6a2198e4\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:02:04.554Z\",\"updatedAt\":\"2026-08-14T04:02:04.554Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:02:05.858459+00:00"
+  },
+  {
+   "id": "3f4b66e9-0f51-460e-a17f-3a60a34060bc",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "users",
+   "record_id": "954e10bf-77bb-4e6a-8daf-bcd1f9454241",
+   "data_before": null,
+   "data_after": "{\"id\":\"954e10bf-77bb-4e6a-8daf-bcd1f9454241\",\"email\":\"qc1@owncrave.local\",\"displayName\":\"Petugas QC 1\",\"role\":\"viewer\",\"isActive\":true,\"createdAt\":\"2026-09-21T09:03:13.098Z\",\"updatedAt\":\"2026-09-21T09:03:13.098Z\"}",
+   "ip_address": null,
+   "created_at": "2026-09-21T09:03:13.552637+00:00"
+  },
+  {
+   "id": "c500af1d-6e48-4c74-bfac-af008f9003ac",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "19a87d26-9d21-4f36-b515-6746eecd2789",
+   "data_before": null,
+   "data_after": "{\"id\":\"19a87d26-9d21-4f36-b515-6746eecd2789\",\"kode\":\"BH-AKSS-009\",\"nama\":\"Label Size Chart (M,L,XL,XXL,3XL)\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:03:56.661Z\",\"updatedAt\":\"2026-08-14T04:03:56.661Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:03:57.956411+00:00"
+  },
+  {
+   "id": "2cd4e2ef-1855-4cc7-add8-5a8ea5fa3484",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "24a9abe2-0f92-43fc-b6f4-4b27d522d428",
+   "data_before": null,
+   "data_after": "{\"id\":\"24a9abe2-0f92-43fc-b6f4-4b27d522d428\",\"kode\":\"BH-AKSS-010\",\"nama\":\"Kancing Cetek 15mm plastik\",\"kategoriId\":\"cb1266a2-b8dc-4f7a-8956-66494d0edf1b\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:06:08.375Z\",\"updatedAt\":\"2026-08-14T04:06:08.375Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:06:09.897119+00:00"
+  },
+  {
+   "id": "4cf1d8ef-8580-4bce-b71b-1c97c12d0401",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "af27d8ac-f494-48c9-8622-e0c7946ecf08",
+   "data_before": null,
+   "data_after": "{\"id\":\"af27d8ac-f494-48c9-8622-e0c7946ecf08\",\"kode\":\"BH-FNSG-001\",\"nama\":\"Stiker Size Chart\",\"kategoriId\":\"b2a7db8c-a379-452e-80cc-99b20eb724d7\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:07:18.330Z\",\"updatedAt\":\"2026-08-14T04:07:18.330Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:07:19.63166+00:00"
+  },
+  {
+   "id": "83d8f545-c3f5-420c-a682-18d767911a1d",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "8216453c-bdd5-4483-8236-5e15a8d2cc31",
+   "data_before": null,
+   "data_after": "{\"id\":\"8216453c-bdd5-4483-8236-5e15a8d2cc31\",\"kode\":\"BH-FNSG-002\",\"nama\":\"Tali Hantag\",\"kategoriId\":\"b2a7db8c-a379-452e-80cc-99b20eb724d7\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"3f69c9ea-0f63-4ee3-9412-dd4395ca2bde\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:08:13.387Z\",\"updatedAt\":\"2026-08-14T04:08:13.387Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:08:14.683471+00:00"
+  },
+  {
+   "id": "3bd9c2c2-be93-4f69-b2df-1e540f529902",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "e351250b-6d6e-45dd-9553-3f921814dd8b",
+   "data_before": null,
+   "data_after": "{\"id\":\"e351250b-6d6e-45dd-9553-3f921814dd8b\",\"kode\":\"BH-FNSG-003\",\"nama\":\"Hantag\",\"kategoriId\":\"b2a7db8c-a379-452e-80cc-99b20eb724d7\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:08:41.908Z\",\"updatedAt\":\"2026-08-14T04:08:41.908Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:08:43.204564+00:00"
+  },
+  {
+   "id": "8bbfa08b-adb9-4f3e-af76-219e6f9775be",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bahan",
+   "record_id": "8f5a15c2-6f56-4adc-9fb6-e09f5a5511e5",
+   "data_before": null,
+   "data_after": "{\"id\":\"8f5a15c2-6f56-4adc-9fb6-e09f5a5511e5\",\"kode\":\"BH-FNSG-004\",\"nama\":\"Plastik Bening 35x40 (07)\",\"kategoriId\":\"b2a7db8c-a379-452e-80cc-99b20eb724d7\",\"satuanId\":\"326c6cb0-45c5-4944-810e-d998eac5a761\",\"warnaId\":\"ba5aeef6-ca69-41a0-8763-ac7274ce8f1b\",\"stokMinimum\":\"0.000\",\"hargaRataRata\":\"0.00\",\"isActive\":true,\"createdAt\":\"2026-08-14T04:09:24.971Z\",\"updatedAt\":\"2026-08-14T04:09:24.971Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:09:26.265436+00:00"
+  },
+  {
+   "id": "f745584d-8295-4833-8212-da88a666d18d",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "5c912f35-7529-4916-9cc8-65ec87093581",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"5c912f35-7529-4916-9cc8-65ec87093581\",\"nomorDokumen\":\"BM-202608-0002\",\"supplierId\":\"d7072247-a621-4a8a-a918-5b74ffb9ca01\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-13T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-14T04:22:57.987Z\",\"updatedAt\":\"2026-08-14T04:22:57.987Z\"},\"detail\":[{\"bahanId\":\"1e77bdbd-e8de-43ef-86e9-2de815a9d04a\",\"kuantitas\":300,\"hargaSatuan\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:22:57.987091+00:00"
+  },
+  {
+   "id": "3f22e0b2-2204-4793-b5da-38a25a474ed5",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "9e2cba06-fe87-4f53-8ae7-ad02900a0591",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"9e2cba06-fe87-4f53-8ae7-ad02900a0591\",\"nomorDokumen\":\"BM-202608-0003\",\"supplierId\":\"d7072247-a621-4a8a-a918-5b74ffb9ca01\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-14T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-14T04:25:52.640Z\",\"updatedAt\":\"2026-08-14T04:25:52.640Z\"},\"detail\":[{\"bahanId\":\"af19cc9c-dbd2-4f9c-97da-9cbdf453d130\",\"kuantitas\":120,\"hargaSatuan\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:25:52.640687+00:00"
+  },
+  {
+   "id": "ae802739-a1c1-4b25-8e07-9e35e710bc54",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "f4e242a3-854a-48a2-8bbb-684264eacd38",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"f4e242a3-854a-48a2-8bbb-684264eacd38\",\"nomorDokumen\":\"BM-202608-0004\",\"supplierId\":\"d7072247-a621-4a8a-a918-5b74ffb9ca01\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-14T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-14T04:29:58.056Z\",\"updatedAt\":\"2026-08-14T04:29:58.056Z\"},\"detail\":[{\"bahanId\":\"1f280e64-4d39-4d64-a327-d50033bb3129\",\"kuantitas\":273,\"hargaSatuan\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:29:58.056661+00:00"
+  },
+  {
+   "id": "dd800b99-6fa9-453d-8a3d-90403dfcb452",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "302436c5-43ba-4a75-9869-5ddf2d5b14f2",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"302436c5-43ba-4a75-9869-5ddf2d5b14f2\",\"nomorDokumen\":\"BM-202608-0005\",\"supplierId\":\"d7072247-a621-4a8a-a918-5b74ffb9ca01\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-14T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-14T04:31:34.772Z\",\"updatedAt\":\"2026-08-14T04:31:34.772Z\"},\"detail\":[{\"bahanId\":\"ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7\",\"kuantitas\":2000,\"hargaSatuan\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:31:34.772885+00:00"
+  },
+  {
+   "id": "1e073bfa-7742-4039-a256-0a99508bc6a7",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "f1fefb03-90a3-4bc2-82ea-f912ad70fe99",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"f1fefb03-90a3-4bc2-82ea-f912ad70fe99\",\"nomorDokumen\":\"BM-202608-0006\",\"supplierId\":\"d7072247-a621-4a8a-a918-5b74ffb9ca01\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-14T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-14T04:33:15.007Z\",\"updatedAt\":\"2026-08-14T04:33:15.007Z\"},\"detail\":[{\"bahanId\":\"28abf112-2379-4feb-9611-8896b15274b0\",\"kuantitas\":1000,\"hargaSatuan\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:33:15.00794+00:00"
+  },
+  {
+   "id": "0783fc40-e49b-4c7b-9fb7-395e75d32962",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_masuk",
+   "record_id": "6dec107f-4f4a-4585-9e3a-b23140830ce4",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"6dec107f-4f4a-4585-9e3a-b23140830ce4\",\"nomorDokumen\":\"BM-202608-0007\",\"supplierId\":\"d7072247-a621-4a8a-a918-5b74ffb9ca01\",\"nomorInvoice\":null,\"tanggal\":\"2026-08-14T00:00:00.000Z\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-08-14T04:34:01.006Z\",\"updatedAt\":\"2026-08-14T04:34:01.006Z\"},\"detail\":[{\"bahanId\":\"feb08757-1000-49f5-84b7-42ba8ad95ffe\",\"kuantitas\":1500,\"hargaSatuan\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-08-14T04:34:01.006362+00:00"
+  },
+  {
+   "id": "e0978ee9-89c6-45d3-94e6-9b86ee083d85",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "vendor",
+   "record_id": "4e43966e-d12f-40e5-9305-dce22a2db5af",
+   "data_before": null,
+   "data_after": "{\"id\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"kode\":\"VDR-0001\",\"nama\":\"CV Jahit Makmur\",\"pemilik\":null,\"kontak\":null,\"telepon\":null,\"email\":null,\"alamat\":null,\"kota\":null,\"kapasitasHarian\":0,\"jenisPekerjaan\":[],\"kapabilitas\":[\"jahit\",\"sablon\"],\"bankNama\":null,\"bankNomorRekening\":null,\"bankAtasNama\":null,\"terminHari\":0,\"leadTimeHari\":0,\"qcMode\":\"internal\",\"qcOfficer\":null,\"catatan\":null,\"isActive\":true,\"createdAt\":\"2026-09-03T03:03:59.938Z\",\"updatedAt\":\"2026-09-03T03:03:59.938Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:04:00.040771+00:00"
+  },
+  {
+   "id": "57682cf5-510a-4c68-88be-fd82f0af43a7",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "tarif_jasa_jahit",
+   "record_id": "4c1a9359-95f0-4c3a-a4c1-726b782dddff",
+   "data_before": null,
+   "data_after": "{\"id\":\"4c1a9359-95f0-4c3a-a4c1-726b782dddff\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"25000.00\",\"tanggalBerlaku\":\"2026-09-03T00:00:00.000Z\",\"versi\":1,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-03T03:05:56.568Z\",\"updatedAt\":\"2026-09-03T03:05:56.568Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:05:56.568916+00:00"
+  },
+  {
+   "id": "7b9fd5f3-e7e0-428f-a7f9-62ffa47048af",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "tarif_jasa_jahit",
+   "record_id": "4c1a9359-95f0-4c3a-a4c1-726b782dddff",
+   "data_before": "{\"id\":\"4c1a9359-95f0-4c3a-a4c1-726b782dddff\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"25000.00\",\"tanggalBerlaku\":\"2026-09-03T00:00:00.000Z\",\"versi\":1,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-03T03:05:56.568Z\",\"updatedAt\":\"2026-09-03T03:05:56.568Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"4c1a9359-95f0-4c3a-a4c1-726b782dddff\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"25000.00\",\"tanggalBerlaku\":\"2026-09-03T00:00:00.000Z\",\"versi\":1,\"status\":\"aktif\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-03T03:06:16.773Z\",\"createdAt\":\"2026-09-03T03:05:56.568Z\",\"updatedAt\":\"2026-09-03T03:06:16.773Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:06:16.617425+00:00"
+  },
+  {
+   "id": "794a8496-41ad-4562-a32a-7a7ebb92ca4a",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "tarif_jasa_jahit",
+   "record_id": "c4ec0110-807c-4c75-92de-29fa1cf82f56",
+   "data_before": "{\"id\":\"4c1a9359-95f0-4c3a-a4c1-726b782dddff\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"25000.00\",\"tanggalBerlaku\":\"2026-09-03T00:00:00.000Z\",\"versi\":1,\"status\":\"aktif\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-03T03:06:16.773Z\",\"createdAt\":\"2026-09-03T03:05:56.568Z\",\"updatedAt\":\"2026-09-03T03:06:16.773Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"c4ec0110-807c-4c75-92de-29fa1cf82f56\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"30000.00\",\"tanggalBerlaku\":\"2026-09-03T03:07:29.358Z\",\"versi\":2,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-03T03:07:29.345Z\",\"updatedAt\":\"2026-09-03T03:07:29.345Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:07:29.345994+00:00"
+  },
+  {
+   "id": "d8dcaab7-7995-430e-ab56-12f98c82ad8a",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "tarif_jasa_jahit",
+   "record_id": "c4ec0110-807c-4c75-92de-29fa1cf82f56",
+   "data_before": "{\"id\":\"c4ec0110-807c-4c75-92de-29fa1cf82f56\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"30000.00\",\"tanggalBerlaku\":\"2026-09-03T03:07:29.358Z\",\"versi\":2,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-03T03:07:29.345Z\",\"updatedAt\":\"2026-09-03T03:07:29.345Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"c4ec0110-807c-4c75-92de-29fa1cf82f56\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"varianId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"dasarTarif\":\"per_pcs\",\"nominal\":\"30000.00\",\"tanggalBerlaku\":\"2026-09-03T03:07:29.358Z\",\"versi\":2,\"status\":\"aktif\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-03T03:08:17.517Z\",\"createdAt\":\"2026-09-03T03:07:29.345Z\",\"updatedAt\":\"2026-09-03T03:08:17.517Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:08:17.516028+00:00"
+  },
+  {
+   "id": "eecc333e-3354-4380-bad3-6dbf4806c1ec",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "penugasan_jahit",
+   "record_id": "3ac24e84-590f-4b5b-8274-9ddea19b1b21",
+   "data_before": null,
+   "data_after": "{\"id\":\"3ac24e84-590f-4b5b-8274-9ddea19b1b21\",\"nomorDokumen\":\"ASG-JHT-202609-0001\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-03T00:00:00.000Z\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"penjahitId\":null,\"lokasiTujuanId\":null,\"jenisPekerjaan\":\"jahit_penuh\",\"rencanaKirim\":null,\"targetSelesai\":\"2026-09-20T00:00:00.000Z\",\"prioritas\":\"normal\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-03T03:10:09.297Z\",\"updatedAt\":\"2026-09-03T03:10:09.297Z\",\"deletedAt\":null,\"details\":[{\"bundlingId\":\"f761aa04-74c7-4d08-a322-ce2fbb5e0c1a\",\"tarif\":30000,\"dasarTarif\":\"per_pcs\"},{\"bundlingId\":\"3c7b575b-db36-4f3b-8329-2cbe219e6ff8\",\"tarif\":30000,\"dasarTarif\":\"per_pcs\"},{\"bundlingId\":\"ffc531c5-36f9-410c-81b9-65c0ece5534b\",\"tarif\":30000,\"dasarTarif\":\"per_pcs\"}]}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:10:09.29775+00:00"
+  },
+  {
+   "id": "12585112-8663-40c1-aa88-791d3dbdf557",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "pengiriman_jahit",
+   "record_id": "53b2d210-d5c5-4ee2-ab2c-0b102150b65c",
+   "data_before": null,
+   "data_after": "{\"id\":\"53b2d210-d5c5-4ee2-ab2c-0b102150b65c\",\"nomorDokumen\":\"SHP-JHT-202609-0001\",\"penugasanId\":\"3ac24e84-590f-4b5b-8274-9ddea19b1b21\",\"tanggalJam\":\"2026-09-03T03:14:00.000Z\",\"lokasiAsalId\":null,\"lokasiTujuanId\":null,\"pengirim\":null,\"penerima\":null,\"kendaraan\":null,\"kurir\":null,\"buktiFotoUrl\":null,\"status\":\"dikirim\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"cancelledBy\":null,\"cancelledAt\":null,\"alasanBatal\":null,\"createdAt\":\"2026-09-03T03:15:22.848Z\",\"updatedAt\":\"2026-09-03T03:15:22.848Z\",\"deletedAt\":null,\"sjNomor\":\"SJ-JHT-202609-0001\",\"details\":[{\"penugasanDetailId\":\"219a7eb5-f66e-466c-923e-69a0b8a74e09\",\"kelengkapanPanel\":true,\"aksesoris\":\"\",\"catatan\":\"\"},{\"penugasanDetailId\":\"ef437609-bcea-4e72-b7d1-048954097abc\",\"kelengkapanPanel\":true,\"aksesoris\":\"\",\"catatan\":\"\"},{\"penugasanDetailId\":\"0998739e-62d6-427c-bfc1-fdfbea9cb024\",\"kelengkapanPanel\":true,\"aksesoris\":\"\",\"catatan\":\"\"}]}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:15:22.848967+00:00"
+  },
+  {
+   "id": "35f0b428-3b2f-493a-9e0b-b25eefa9f067",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "penerimaan_hasil_jahit",
+   "record_id": "64bca51d-8068-45a0-af39-702d0ce9f28e",
+   "data_before": null,
+   "data_after": "{\"id\":\"64bca51d-8068-45a0-af39-702d0ce9f28e\",\"nomorDokumen\":\"RCV-JHT-202609-0001\",\"penugasanId\":\"3ac24e84-590f-4b5b-8274-9ddea19b1b21\",\"returId\":null,\"tanggalJam\":\"2026-09-03T03:26:00.000Z\",\"penerima\":\"Petugas Gudang\",\"lokasiId\":null,\"tanggalKirimVendor\":null,\"pengirimVendor\":null,\"kurirResi\":null,\"buktiUrl\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-03T03:27:19.376Z\",\"updatedAt\":\"2026-09-03T03:27:19.376Z\",\"deletedAt\":null,\"details\":[{\"penugasanDetailId\":\"219a7eb5-f66e-466c-923e-69a0b8a74e09\",\"jumlahBaik\":30,\"jumlahRusak\":5,\"catatan\":\"\"}]}",
+   "ip_address": null,
+   "created_at": "2026-09-03T03:27:19.376456+00:00"
+  },
+  {
+   "id": "5b1226d8-276d-4c06-8ae9-9885e37e335c",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "po_produksi",
+   "record_id": "58b61ace-cba9-4fa2-84cf-793a23492d22",
+   "data_before": null,
+   "data_after": "{\"id\":\"58b61ace-cba9-4fa2-84cf-793a23492d22\",\"nomorDokumen\":\"PO-2026-0001\",\"tanggal\":\"2026-09-14T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":\"2026-09-30T00:00:00.000Z\",\"prioritas\":\"normal\",\"jenis\":\"restock\",\"status\":\"draft\",\"penanggungJawab\":\"f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-14T00:34:48.408Z\",\"updatedAt\":\"2026-09-14T00:34:48.408Z\",\"deletedAt\":null,\"details\":[{\"varianId\":\"63b78f31-ad02-4f01-a624-7191ffe80628\",\"jumlahTarget\":1,\"toleransiPersen\":0},{\"varianId\":\"ac7c9f71-a9a2-4b51-a817-c2551a26c230\",\"jumlahTarget\":1,\"toleransiPersen\":0},{\"varianId\":\"031822be-6031-4735-8816-7f3fa9cbed88\",\"jumlahTarget\":1,\"toleransiPersen\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-09-14T00:34:48.408402+00:00"
+  },
+  {
+   "id": "a560498d-954f-49d2-82a1-c448517722f7",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "bom",
+   "record_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+   "data_before": null,
+   "data_after": "{\"id\":\"a9355fde-111e-4300-bd5c-ed373030147e\",\"nomorDokumen\":\"BOM-202609-0001\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"versi\":1,\"status\":\"draft\",\"tanggalBerlaku\":null,\"catatan\":\"rr\",\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-14T00:36:49.171Z\",\"updatedAt\":\"2026-09-14T00:36:49.171Z\",\"deletedAt\":null,\"details\":[{\"bahanId\":\"624adf50-cf0f-4c51-8feb-ff5a9cdc0e51\",\"kuantitas\":1,\"toleransiPersen\":0,\"berlakuUkuran\":\"\",\"keterangan\":\"\"},{\"bahanId\":\"aa285295-d45a-4480-88ce-8ced4b2c8ea9\",\"kuantitas\":1,\"toleransiPersen\":0,\"berlakuUkuran\":\"\",\"keterangan\":\"\"},{\"bahanId\":\"feb08757-1000-49f5-84b7-42ba8ad95ffe\",\"kuantitas\":1,\"toleransiPersen\":0,\"berlakuUkuran\":\"L\",\"keterangan\":\"\"},{\"bahanId\":\"31df62d4-692c-4a55-89b3-3721e64c70c0\",\"kuantitas\":1,\"toleransiPersen\":0,\"berlakuUkuran\":\"M\",\"keterangan\":\"\"},{\"bahanId\":\"a47a7782-7c75-4c81-a7df-fba2cb593b4a\",\"kuantitas\":1,\"toleransiPersen\":0,\"berlakuUkuran\":\"\",\"keterangan\":\"\"},{\"bahanId\":\"6a8babb5-b90c-4d51-a830-c77a605e84d1\",\"kuantitas\":2,\"toleransiPersen\":0,\"berlakuUkuran\":\"\",\"keterangan\":\"\"}]}",
+   "ip_address": null,
+   "created_at": "2026-09-14T00:36:49.171487+00:00"
+  },
+  {
+   "id": "652b12da-4824-40e8-942b-795413280dff",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "jenis_cacat",
+   "record_id": "961eab99-05aa-4c75-b370-4509df842197",
+   "data_before": null,
+   "data_after": "{\"id\":\"961eab99-05aa-4c75-b370-4509df842197\",\"kode\":\"JHT-01\",\"nama\":\"Jahitan loncat\",\"kategori\":\"jahit\",\"keparahan\":\"major\",\"sumber\":\"vendor\",\"dapatDiperbaiki\":true,\"tindakanDefault\":\"Jahit ulang bagian yang loncat\",\"isActive\":true,\"createdAt\":\"2026-09-15T04:14:00.281Z\",\"updatedAt\":\"2026-09-15T04:14:00.281Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:14:00.352687+00:00"
+  },
+  {
+   "id": "51feff97-92e8-42a7-9889-b4f01615d5a9",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "jenis_cacat",
+   "record_id": "c4b9827d-1cac-401b-8e42-c13338a84849",
+   "data_before": null,
+   "data_after": "{\"id\":\"c4b9827d-1cac-401b-8e42-c13338a84849\",\"kode\":\"FIN-01\",\"nama\":\"Noda sisa kapur\",\"kategori\":\"jahit\",\"keparahan\":\"minor\",\"sumber\":\"tidak_diketahui\",\"dapatDiperbaiki\":true,\"tindakanDefault\":null,\"isActive\":true,\"createdAt\":\"2026-09-15T04:14:27.314Z\",\"updatedAt\":\"2026-09-15T04:14:27.314Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:14:27.368389+00:00"
+  },
+  {
+   "id": "ebd48302-f4b8-479f-834b-6b0fe9b8d34e",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "DELETE",
+   "tabel": "jenis_cacat",
+   "record_id": "c4b9827d-1cac-401b-8e42-c13338a84849",
+   "data_before": "{\"id\":\"c4b9827d-1cac-401b-8e42-c13338a84849\",\"kode\":\"FIN-01\",\"nama\":\"Noda sisa kapur\",\"kategori\":\"jahit\",\"keparahan\":\"minor\",\"sumber\":\"tidak_diketahui\",\"dapatDiperbaiki\":true,\"tindakanDefault\":null,\"isActive\":true,\"createdAt\":\"2026-09-15T04:14:27.314Z\",\"updatedAt\":\"2026-09-15T04:14:27.314Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"c4b9827d-1cac-401b-8e42-c13338a84849\",\"kode\":\"FIN-01\",\"nama\":\"Noda sisa kapur\",\"kategori\":\"jahit\",\"keparahan\":\"minor\",\"sumber\":\"tidak_diketahui\",\"dapatDiperbaiki\":true,\"tindakanDefault\":null,\"isActive\":true,\"createdAt\":\"2026-09-15T04:14:27.314Z\",\"updatedAt\":\"2026-09-15T04:14:27.314Z\",\"deletedAt\":\"2026-09-15T04:15:18.280Z\"}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:15:18.380761+00:00"
+  },
+  {
+   "id": "7f0a6fb6-2261-40f4-bbaa-6169521f5a7f",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "jenis_cacat",
+   "record_id": "a89808e8-e001-47d2-9def-5db9f52ea7e1",
+   "data_before": null,
+   "data_after": "{\"id\":\"a89808e8-e001-47d2-9def-5db9f52ea7e1\",\"kode\":\"FIN-01\",\"nama\":\"Noda sisa kapur (buat ulang)\",\"kategori\":\"jahit\",\"keparahan\":\"minor\",\"sumber\":\"tidak_diketahui\",\"dapatDiperbaiki\":true,\"tindakanDefault\":null,\"isActive\":true,\"createdAt\":\"2026-09-15T04:18:18.873Z\",\"updatedAt\":\"2026-09-15T04:18:18.873Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:18:18.927804+00:00"
+  },
+  {
+   "id": "a77baa7a-9a5a-4ca0-9beb-1c082a51d847",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "kemasan",
+   "record_id": "2f331495-fab6-4e8d-9063-0af42ce339b0",
+   "data_before": null,
+   "data_after": "{\"id\":\"2f331495-fab6-4e8d-9063-0af42ce339b0\",\"kode\":\"PB-30\",\"nama\":\"Polybag 30x40\",\"jenis\":\"polybag\",\"ukuran\":\"30x40 cm\",\"bahanKemasan\":null,\"supplierId\":null,\"biaya\":\"1500.50\",\"stokMinimum\":\"100.00\",\"isActive\":true,\"createdAt\":\"2026-09-15T04:20:36.962Z\",\"updatedAt\":\"2026-09-15T04:20:36.962Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:20:37.044406+00:00"
+  },
+  {
+   "id": "410fdacd-c50b-45d8-8d21-3822ad6421b6",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "gudang_barang_jadi",
+   "record_id": "86264864-197a-4c34-8e04-4d290e7cbc77",
+   "data_before": null,
+   "data_after": "{\"id\":\"86264864-197a-4c34-8e04-4d290e7cbc77\",\"kode\":\"GD-01\",\"nama\":\"Gudang Utama\",\"jenis\":\"gudang_utama\",\"alamat\":null,\"picNama\":\"Budi\",\"isDefault\":true,\"isActive\":true,\"createdAt\":\"2026-09-15T04:22:09.293Z\",\"updatedAt\":\"2026-09-15T04:22:09.293Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:22:09.293892+00:00"
+  },
+  {
+   "id": "ac9af016-4cb7-4d1a-82c6-870ab49764c9",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "gudang_barang_jadi",
+   "record_id": "6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77",
+   "data_before": null,
+   "data_after": "{\"id\":\"6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77\",\"kode\":\"GD-02\",\"nama\":\"Toko Offline\",\"jenis\":\"toko_offline\",\"alamat\":null,\"picNama\":null,\"isDefault\":true,\"isActive\":true,\"createdAt\":\"2026-09-15T04:22:29.286Z\",\"updatedAt\":\"2026-09-15T04:22:29.286Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:22:29.286893+00:00"
+  },
+  {
+   "id": "ce2ff782-03f4-4e8f-b6bb-f0038fb62d14",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "standar_qc",
+   "record_id": "b95a8eda-61f0-4742-a0fc-4cf7a058c8fc",
+   "data_before": null,
+   "data_after": "{\"id\":\"b95a8eda-61f0-4742-a0fc-4cf7a058c8fc\",\"nomorDokumen\":\"STD-QC-202609-0001\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":1,\"tanggalBerlaku\":\"2026-09-15T00:00:00.000Z\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T04:26:41.141Z\",\"updatedAt\":\"2026-09-15T04:26:41.141Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:26:41.141071+00:00"
+  },
+  {
+   "id": "2725d765-4d6b-4f85-8197-5dddbb9b0919",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "standar_qc",
+   "record_id": "b95a8eda-61f0-4742-a0fc-4cf7a058c8fc",
+   "data_before": "{\"id\":\"b95a8eda-61f0-4742-a0fc-4cf7a058c8fc\",\"nomorDokumen\":\"STD-QC-202609-0001\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":1,\"tanggalBerlaku\":\"2026-09-15T00:00:00.000Z\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T04:26:41.141Z\",\"updatedAt\":\"2026-09-15T04:26:41.141Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"b95a8eda-61f0-4742-a0fc-4cf7a058c8fc\",\"nomorDokumen\":\"STD-QC-202609-0001\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":1,\"tanggalBerlaku\":\"2026-09-15T00:00:00.000Z\",\"status\":\"aktif\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-15T04:26:58.544Z\",\"createdAt\":\"2026-09-15T04:26:41.141Z\",\"updatedAt\":\"2026-09-15T04:26:58.544Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:26:58.451074+00:00"
+  },
+  {
+   "id": "a9ab1666-64bf-4012-a074-d3a059c96881",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "standar_qc",
+   "record_id": "07d8b787-2d50-48e7-919d-61764669f2aa",
+   "data_before": "{\"id\":\"b95a8eda-61f0-4742-a0fc-4cf7a058c8fc\",\"nomorDokumen\":\"STD-QC-202609-0001\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":1,\"tanggalBerlaku\":\"2026-09-15T00:00:00.000Z\",\"status\":\"aktif\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-15T04:26:58.544Z\",\"createdAt\":\"2026-09-15T04:26:41.141Z\",\"updatedAt\":\"2026-09-15T04:26:58.544Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"07d8b787-2d50-48e7-919d-61764669f2aa\",\"nomorDokumen\":\"STD-QC-202609-0002\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":2,\"tanggalBerlaku\":\"2026-09-15T04:27:11.856Z\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T04:27:11.714Z\",\"updatedAt\":\"2026-09-15T04:27:11.714Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:27:11.714609+00:00"
+  },
+  {
+   "id": "8e8f2f02-bbaf-4662-8a2f-21a4eb783f3c",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "standar_qc",
+   "record_id": "07d8b787-2d50-48e7-919d-61764669f2aa",
+   "data_before": "{\"id\":\"07d8b787-2d50-48e7-919d-61764669f2aa\",\"nomorDokumen\":\"STD-QC-202609-0002\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":2,\"tanggalBerlaku\":\"2026-09-15T04:27:11.856Z\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T04:27:11.714Z\",\"updatedAt\":\"2026-09-15T04:27:11.714Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"07d8b787-2d50-48e7-919d-61764669f2aa\",\"nomorDokumen\":\"STD-QC-202609-0002\",\"nama\":\"Standar QC Smoke Test\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"kategoriId\":null,\"versi\":2,\"tanggalBerlaku\":\"2026-09-15T04:27:11.856Z\",\"status\":\"aktif\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-15T04:27:24.837Z\",\"createdAt\":\"2026-09-15T04:27:11.714Z\",\"updatedAt\":\"2026-09-15T04:27:24.837Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:27:24.721415+00:00"
+  },
+  {
+   "id": "d11cb14a-25c7-4818-8ed5-c64bfdb8e948",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "penerimaan_qc",
+   "record_id": "55661bee-7d6a-4ebd-a536-720128610507",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"55661bee-7d6a-4ebd-a536-720128610507\",\"nomorDokumen\":\"IN-QC-202609-0001\",\"penerimaanHasilJahitId\":\"64bca51d-8068-45a0-af39-702d0ce9f28e\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"vendorId\":\"4e43966e-d12f-40e5-9305-dce22a2db5af\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"lokasiId\":null,\"penerima\":\"Petugas QC Smoke\",\"prioritas\":\"normal\",\"targetSelesai\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T04:37:26.973Z\",\"updatedAt\":\"2026-09-15T04:37:26.973Z\",\"deletedAt\":null},\"details\":[{\"penerimaanHasilDetailId\":\"fd9f856b-3b9e-413f-a2da-941a96a6024f\",\"varianId\":\"ac7c9f71-a9a2-4b51-a817-c2551a26c230\",\"jumlahPcs\":25,\"catatan\":null}]}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:37:26.973968+00:00"
+  },
+  {
+   "id": "3ce5fa68-16df-462b-9a56-a35ea787dacb",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "work_order_qc",
+   "record_id": "ec6a75d6-ddd4-4718-979b-9f984cd22a27",
+   "data_before": null,
+   "data_after": "{\"id\":\"ec6a75d6-ddd4-4718-979b-9f984cd22a27\",\"nomorDokumen\":\"WO-QC-202609-0001\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"supervisorId\":null,\"metode\":\"seratus_persen\",\"standarQcId\":\"07d8b787-2d50-48e7-919d-61764669f2aa\",\"standarVersi\":2,\"populasi\":25,\"jumlahSampel\":25,\"batasDiterima\":null,\"batasDitolak\":null,\"alasanSampling\":null,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T04:40:04.300Z\",\"updatedAt\":\"2026-09-15T04:40:04.300Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:40:04.300471+00:00"
+  },
+  {
+   "id": "bf75a7db-b0fb-40b7-b05f-97c364dae7c5",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "work_order_qc",
+   "record_id": "ec6a75d6-ddd4-4718-979b-9f984cd22a27",
+   "data_before": "{\"id\":\"ec6a75d6-ddd4-4718-979b-9f984cd22a27\",\"nomorDokumen\":\"WO-QC-202609-0001\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"supervisorId\":null,\"metode\":\"seratus_persen\",\"standarQcId\":\"07d8b787-2d50-48e7-919d-61764669f2aa\",\"standarVersi\":2,\"populasi\":25,\"jumlahSampel\":25,\"batasDiterima\":null,\"batasDitolak\":null,\"alasanSampling\":null,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T04:40:04.300Z\",\"updatedAt\":\"2026-09-15T04:40:04.300Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"ec6a75d6-ddd4-4718-979b-9f984cd22a27\",\"nomorDokumen\":\"WO-QC-202609-0001\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"supervisorId\":null,\"metode\":\"seratus_persen\",\"standarQcId\":\"07d8b787-2d50-48e7-919d-61764669f2aa\",\"standarVersi\":2,\"populasi\":25,\"jumlahSampel\":25,\"batasDiterima\":null,\"batasDitolak\":null,\"alasanSampling\":null,\"status\":\"berjalan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T04:40:04.300Z\",\"updatedAt\":\"2026-09-15T04:40:28.686Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:40:28.732069+00:00"
+  },
+  {
+   "id": "c821535f-45e3-4862-adb9-d5e32f5a2b9f",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "hasil_qc",
+   "record_id": "9de2571f-f573-48b6-9f89-7bd302673e97",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"nomorDokumen\":\"QC-202609-0001\",\"workOrderQcId\":\"ec6a75d6-ddd4-4718-979b-9f984cd22a27\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"vendorId\":null,\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"petugasId\":null,\"status\":\"draft\",\"verifikatorId\":null,\"verifiedAt\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T04:44:02.927Z\",\"updatedAt\":\"2026-09-15T04:44:02.927Z\",\"deletedAt\":null},\"details\":[{\"workOrderQcDetailId\":\"140e974d-1e05-4517-979c-d2bfd0e050d0\",\"varianId\":\"ac7c9f71-a9a2-4b51-a817-c2551a26c230\",\"jumlahDiperiksa\":25,\"gradeA\":17,\"gradeB\":3,\"gradeC\":0,\"perbaikan\":3,\"reject\":2,\"catatan\":null}]}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:44:02.927124+00:00"
+  },
+  {
+   "id": "1e2d888b-91b9-4b66-ad4d-ba5e30afc560",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "temuan_cacat",
+   "record_id": "cf76eab3-db23-41c9-b155-e4d2329c16a7",
+   "data_before": null,
+   "data_after": "{\"id\":\"cf76eab3-db23-41c9-b155-e4d2329c16a7\",\"hasilQcDetailId\":\"64ff29b2-680a-444d-84b0-afdc102d730e\",\"jenisCacatId\":\"961eab99-05aa-4c75-b370-4509df842197\",\"bagianProduk\":null,\"keparahan\":\"major\",\"sumber\":\"vendor\",\"jumlah\":5,\"penyebabAwal\":null,\"penanggungJawab\":null,\"fotoUrl\":null,\"tindakan\":\"Jahit ulang bagian yang loncat\",\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T04:49:06.709Z\"}",
+   "ip_address": null,
+   "created_at": "2026-09-15T04:49:06.709194+00:00"
+  },
+  {
+   "id": "1fca475b-108f-4c58-89ed-78b6a14e6341",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "perbaikan_internal",
+   "record_id": "6ba418d3-b2a9-431b-9a4b-113c310c560b",
+   "data_before": null,
+   "data_after": "{\"id\":\"6ba418d3-b2a9-431b-9a4b-113c310c560b\",\"nomorDokumen\":\"RWK-INT-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"targetSelesai\":null,\"estimasiBiaya\":\"0.00\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:07:45.232Z\",\"updatedAt\":\"2026-09-15T06:07:45.232Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:07:45.232247+00:00"
+  },
+  {
+   "id": "a23a7f7f-4346-451d-8b62-648c1d0fd1df",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "retur_qc_vendor",
+   "record_id": "12fce693-0f0d-48fe-a580-c32e255facb0",
+   "data_before": null,
+   "data_after": "{\"id\":\"12fce693-0f0d-48fe-a580-c32e255facb0\",\"nomorDokumen\":\"RTN-QC-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"penugasanJahitId\":null,\"vendorId\":null,\"tanggalKirim\":\"2026-09-15T00:00:00.000Z\",\"targetKembali\":null,\"penanggungBiaya\":\"vendor\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:08:10.174Z\",\"updatedAt\":\"2026-09-15T06:08:10.174Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:08:10.17411+00:00"
+  },
+  {
+   "id": "a1bbb801-1b77-46cd-86fa-80199ef7a573",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "perbaikan_internal",
+   "record_id": "6ba418d3-b2a9-431b-9a4b-113c310c560b",
+   "data_before": "{\"id\":\"6ba418d3-b2a9-431b-9a4b-113c310c560b\",\"nomorDokumen\":\"RWK-INT-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"targetSelesai\":null,\"estimasiBiaya\":\"0.00\",\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:07:45.232Z\",\"updatedAt\":\"2026-09-15T06:07:45.232Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"6ba418d3-b2a9-431b-9a4b-113c310c560b\",\"nomorDokumen\":\"RWK-INT-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"targetSelesai\":null,\"estimasiBiaya\":\"0.00\",\"status\":\"dikerjakan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:07:45.232Z\",\"updatedAt\":\"2026-09-15T06:09:15.010Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:09:15.093972+00:00"
+  },
+  {
+   "id": "7362bcac-bc88-4f64-9124-919fe6d677b2",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "perbaikan_internal",
+   "record_id": "6ba418d3-b2a9-431b-9a4b-113c310c560b",
+   "data_before": "{\"id\":\"6ba418d3-b2a9-431b-9a4b-113c310c560b\",\"nomorDokumen\":\"RWK-INT-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"targetSelesai\":null,\"estimasiBiaya\":\"0.00\",\"status\":\"dikerjakan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:07:45.232Z\",\"updatedAt\":\"2026-09-15T06:09:15.010Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"6ba418d3-b2a9-431b-9a4b-113c310c560b\",\"nomorDokumen\":\"RWK-INT-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"targetSelesai\":null,\"estimasiBiaya\":\"0.00\",\"status\":\"selesai\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:07:45.232Z\",\"updatedAt\":\"2026-09-15T06:09:30.979Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:09:31.060064+00:00"
+  },
+  {
+   "id": "02e42c5a-8cd6-42fe-8103-ed2fa7a23dc5",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "re_qc",
+   "record_id": "b64ec7fe-b870-47cc-968d-0e8f6ed0fb1b",
+   "data_before": null,
+   "data_after": "{\"header\":{\"id\":\"b64ec7fe-b870-47cc-968d-0e8f6ed0fb1b\",\"nomorDokumen\":\"RE-QC-202609-0001\",\"hasilQcAwalId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"perbaikanInternalId\":\"6ba418d3-b2a9-431b-9a4b-113c310c560b\",\"returQcVendorId\":null,\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"petugasId\":null,\"putaran\":1,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:11:14.342Z\",\"updatedAt\":\"2026-09-15T06:11:14.342Z\",\"deletedAt\":null},\"details\":[{\"hasilQcDetailId\":\"64ff29b2-680a-444d-84b0-afdc102d730e\",\"varianId\":\"ac7c9f71-a9a2-4b51-a817-c2551a26c230\",\"jumlah\":2,\"cacatSebelumnyaId\":null,\"hasilPerbaikan\":null,\"hasilReQc\":\"lolos\",\"gradeAkhir\":\"a\",\"catatan\":null}]}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:11:14.342801+00:00"
+  },
+  {
+   "id": "d21ace5b-ab14-421a-b465-6f8b7bd0a744",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "karantina_reject",
+   "record_id": "50cc7c74-85ff-400f-824f-f3f98fce68d8",
+   "data_before": null,
+   "data_after": "{\"id\":\"50cc7c74-85ff-400f-824f-f3f98fce68d8\",\"nomorDokumen\":\"RJT-202609-0001\",\"hasilQcId\":\"9de2571f-f573-48b6-9f89-7bd302673e97\",\"reQcId\":null,\"poId\":\"184811cb-b013-4b08-81d7-ab4b052b15c2\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"lokasiSimpan\":\"Rak Karantina A\",\"picId\":null,\"status\":\"dikarantina\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:12:45.392Z\",\"updatedAt\":\"2026-09-15T06:12:45.392Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:12:45.392369+00:00"
+  },
+  {
+   "id": "ae80e463-1fd1-4cb1-b3d9-76d272a71f40",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "tindakan_reject",
+   "record_id": "b8988679-5f54-4615-97a3-1d0436ac4ace",
+   "data_before": null,
+   "data_after": "{\"id\":\"b8988679-5f54-4615-97a3-1d0436ac4ace\",\"karantinaRejectDetailId\":\"f102a827-e078-4646-b749-e0bf93b6f269\",\"tindakan\":\"perbaiki_jadi_grade_b\",\"jumlah\":2,\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"status\":\"pending\",\"approvedBy\":null,\"approvedAt\":null,\"catatan\":null,\"buktiUrl\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:13:40.073Z\",\"updatedAt\":\"2026-09-15T06:13:40.073Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:13:40.073784+00:00"
+  },
+  {
+   "id": "4f56a52e-17cd-4617-9ed5-98732ece524f",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "tindakan_reject",
+   "record_id": "b8988679-5f54-4615-97a3-1d0436ac4ace",
+   "data_before": "{\"id\":\"b8988679-5f54-4615-97a3-1d0436ac4ace\",\"karantinaRejectDetailId\":\"f102a827-e078-4646-b749-e0bf93b6f269\",\"tindakan\":\"perbaiki_jadi_grade_b\",\"jumlah\":2,\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"status\":\"pending\",\"approvedBy\":null,\"approvedAt\":null,\"catatan\":null,\"buktiUrl\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:13:40.073Z\",\"updatedAt\":\"2026-09-15T06:13:40.073Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"b8988679-5f54-4615-97a3-1d0436ac4ace\",\"karantinaRejectDetailId\":\"f102a827-e078-4646-b749-e0bf93b6f269\",\"tindakan\":\"perbaiki_jadi_grade_b\",\"jumlah\":2,\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"status\":\"approved\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-15T06:14:04.369Z\",\"catatan\":null,\"buktiUrl\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:13:40.073Z\",\"updatedAt\":\"2026-09-15T06:14:04.369Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:14:04.347678+00:00"
+  },
+  {
+   "id": "38cb5fd3-0212-4397-b45f-36b4f6e1d420",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "finishing",
+   "record_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "data_before": null,
+   "data_after": "{\"id\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"nomorDokumen\":\"FIN-202609-0001\",\"poId\":null,\"tanggalMasuk\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"lokasiId\":null,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:15:26.974Z\",\"updatedAt\":\"2026-09-15T06:15:26.974Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:15:26.974513+00:00"
+  },
+  {
+   "id": "1db7ac0b-b914-46b3-af74-ae5248ace059",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "finishing",
+   "record_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "data_before": "{\"id\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"nomorDokumen\":\"FIN-202609-0001\",\"poId\":null,\"tanggalMasuk\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"lokasiId\":null,\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:15:26.974Z\",\"updatedAt\":\"2026-09-15T06:15:26.974Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"nomorDokumen\":\"FIN-202609-0001\",\"poId\":null,\"tanggalMasuk\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"lokasiId\":null,\"status\":\"berjalan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:15:26.974Z\",\"updatedAt\":\"2026-09-15T06:15:43.842Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:15:43.898599+00:00"
+  },
+  {
+   "id": "55ea5cee-0c83-4b03-b275-23dfd2935d46",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "finishing_pemakaian",
+   "record_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "data_before": null,
+   "data_after": "{\"bahanId\":\"28abf112-2379-4feb-9611-8896b15274b0\",\"jumlah\":22}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:16:28.288504+00:00"
+  },
+  {
+   "id": "5f1e1188-6c03-4b05-9eab-58c15f61cd29",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "finishing",
+   "record_id": "afc5a0ee-233d-4ea7-9a43-393ca0e71492",
+   "data_before": "{\"id\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"nomorDokumen\":\"FIN-202609-0001\",\"poId\":null,\"tanggalMasuk\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"lokasiId\":null,\"status\":\"berjalan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:15:26.974Z\",\"updatedAt\":\"2026-09-15T06:15:43.842Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"nomorDokumen\":\"FIN-202609-0001\",\"poId\":null,\"tanggalMasuk\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":null,\"picId\":null,\"lokasiId\":null,\"status\":\"selesai\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:15:26.974Z\",\"updatedAt\":\"2026-09-15T06:16:56.599Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:16:56.655396+00:00"
+  },
+  {
+   "id": "53c2642b-03cd-4fd4-aba1-a8b471d7ab1c",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "packing",
+   "record_id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "data_before": null,
+   "data_after": "{\"id\":\"69ca3108-56eb-4abc-851c-ea11f0bde5d0\",\"nomorDokumen\":\"PKG-202609-0001\",\"poId\":null,\"finishingId\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"lokasiId\":null,\"checklist\":{},\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:18:36.577Z\",\"updatedAt\":\"2026-09-15T06:18:36.577Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:18:36.577586+00:00"
+  },
+  {
+   "id": "33ce06dc-ccdf-4234-bce2-324a71a96d66",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "packing",
+   "record_id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "data_before": "{\"id\":\"69ca3108-56eb-4abc-851c-ea11f0bde5d0\",\"nomorDokumen\":\"PKG-202609-0001\",\"poId\":null,\"finishingId\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"lokasiId\":null,\"checklist\":{},\"status\":\"draft\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:18:36.577Z\",\"updatedAt\":\"2026-09-15T06:18:36.577Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"69ca3108-56eb-4abc-851c-ea11f0bde5d0\",\"nomorDokumen\":\"PKG-202609-0001\",\"poId\":null,\"finishingId\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"lokasiId\":null,\"checklist\":{},\"status\":\"berjalan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:18:36.577Z\",\"updatedAt\":\"2026-09-15T06:18:53.807Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:18:53.86962+00:00"
+  },
+  {
+   "id": "c437871a-8298-4976-b362-9c61aa6a96c7",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "UPDATE",
+   "tabel": "packing",
+   "record_id": "69ca3108-56eb-4abc-851c-ea11f0bde5d0",
+   "data_before": "{\"id\":\"69ca3108-56eb-4abc-851c-ea11f0bde5d0\",\"nomorDokumen\":\"PKG-202609-0001\",\"poId\":null,\"finishingId\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"lokasiId\":null,\"checklist\":{\"sku_benar\":true,\"warna_benar\":true,\"ukuran_benar\":true,\"jumlah_sesuai\":true,\"barcode_sesuai\":true,\"kemasan_bersih\":true,\"produk_dilipat\":true,\"kemasan_tertutup\":true,\"barcode_terpindai\":true,\"hangtag_terpasang\":true},\"status\":\"berjalan\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:18:36.577Z\",\"updatedAt\":\"2026-09-15T06:19:56.725Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"69ca3108-56eb-4abc-851c-ea11f0bde5d0\",\"nomorDokumen\":\"PKG-202609-0001\",\"poId\":null,\"finishingId\":\"afc5a0ee-233d-4ea7-9a43-393ca0e71492\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"picId\":null,\"lokasiId\":null,\"checklist\":{\"sku_benar\":true,\"warna_benar\":true,\"ukuran_benar\":true,\"jumlah_sesuai\":true,\"barcode_sesuai\":true,\"kemasan_bersih\":true,\"produk_dilipat\":true,\"kemasan_tertutup\":true,\"barcode_terpindai\":true,\"hangtag_terpasang\":true},\"status\":\"selesai\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:18:36.577Z\",\"updatedAt\":\"2026-09-15T06:20:04.070Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:20:04.14402+00:00"
+  },
+  {
+   "id": "e53d671d-1ff0-4add-8d0d-3d950a1660d7",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "barang_jadi",
+   "record_id": "c3508693-c08d-40e7-8eda-2e210c5446c7",
+   "data_before": null,
+   "data_after": "{\"id\":\"c3508693-c08d-40e7-8eda-2e210c5446c7\",\"nomorDokumen\":\"FG-202609-0001\",\"poId\":null,\"packingId\":\"69ca3108-56eb-4abc-851c-ea11f0bde5d0\",\"tanggalMasuk\":\"2026-09-15T00:00:00.000Z\",\"gudangTujuanId\":\"6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77\",\"penyerah\":null,\"penerimaId\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"createdAt\":\"2026-09-15T06:21:13.996Z\",\"updatedAt\":\"2026-09-15T06:21:13.996Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T06:21:13.996727+00:00"
+  },
+  {
+   "id": "71e34602-1ade-47e8-8ee9-057476e0c442",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "po_produksi",
+   "record_id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "data_before": null,
+   "data_after": "{\"id\":\"e0272a15-258d-4d11-80b1-588c5a156c1a\",\"nomorDokumen\":\"PO-2026-0002\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":null,\"targetSelesai\":null,\"prioritas\":\"normal\",\"jenis\":\"reguler\",\"status\":\"draft\",\"penanggungJawab\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T12:16:45.360Z\",\"updatedAt\":\"2026-09-15T12:16:45.360Z\",\"deletedAt\":null,\"details\":[{\"varianId\":\"63b78f31-ad02-4f01-a624-7191ffe80628\",\"jumlahTarget\":10,\"toleransiPersen\":0},{\"varianId\":\"ac7c9f71-a9a2-4b51-a817-c2551a26c230\",\"jumlahTarget\":10,\"toleransiPersen\":0},{\"varianId\":\"031822be-6031-4735-8816-7f3fa9cbed88\",\"jumlahTarget\":10,\"toleransiPersen\":0}]}",
+   "ip_address": null,
+   "created_at": "2026-09-15T12:16:45.360389+00:00"
+  },
+  {
+   "id": "62ccbf64-8b51-4135-972f-51e643040e20",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "SUBMIT",
+   "tabel": "po_produksi",
+   "record_id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "data_before": "{\"id\":\"e0272a15-258d-4d11-80b1-588c5a156c1a\",\"nomorDokumen\":\"PO-2026-0002\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":null,\"targetSelesai\":null,\"prioritas\":\"normal\",\"jenis\":\"reguler\",\"status\":\"draft\",\"penanggungJawab\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T12:16:45.360Z\",\"updatedAt\":\"2026-09-15T12:16:45.360Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"e0272a15-258d-4d11-80b1-588c5a156c1a\",\"nomorDokumen\":\"PO-2026-0002\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":null,\"targetSelesai\":null,\"prioritas\":\"normal\",\"jenis\":\"reguler\",\"status\":\"menunggu_persetujuan\",\"penanggungJawab\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T12:16:45.360Z\",\"updatedAt\":\"2026-09-15T12:17:26.216Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T12:17:26.320755+00:00"
+  },
+  {
+   "id": "9e15e244-526b-456b-a8f1-d7b294e88c20",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "bom",
+   "record_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+   "data_before": "{\"id\":\"a9355fde-111e-4300-bd5c-ed373030147e\",\"nomorDokumen\":\"BOM-202609-0001\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"versi\":1,\"status\":\"draft\",\"tanggalBerlaku\":null,\"catatan\":\"rr\",\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-14T00:36:49.171Z\",\"updatedAt\":\"2026-09-14T00:36:49.171Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"a9355fde-111e-4300-bd5c-ed373030147e\",\"nomorDokumen\":\"BOM-202609-0001\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"versi\":1,\"status\":\"aktif\",\"tanggalBerlaku\":\"2026-09-15T12:22:08.292Z\",\"catatan\":\"rr\",\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-15T12:22:08.292Z\",\"createdAt\":\"2026-09-14T00:36:49.171Z\",\"updatedAt\":\"2026-09-15T12:22:08.292Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T12:22:08.214481+00:00"
+  },
+  {
+   "id": "1b102d31-0269-4bff-afb5-0c8ee5370d33",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "APPROVE",
+   "tabel": "po_produksi",
+   "record_id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "data_before": "{\"id\":\"e0272a15-258d-4d11-80b1-588c5a156c1a\",\"nomorDokumen\":\"PO-2026-0002\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":null,\"targetSelesai\":null,\"prioritas\":\"normal\",\"jenis\":\"reguler\",\"status\":\"menunggu_persetujuan\",\"penanggungJawab\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-15T12:16:45.360Z\",\"updatedAt\":\"2026-09-15T12:17:26.216Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"e0272a15-258d-4d11-80b1-588c5a156c1a\",\"nomorDokumen\":\"PO-2026-0002\",\"tanggal\":\"2026-09-15T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":\"a9355fde-111e-4300-bd5c-ed373030147e\",\"tanggalMulai\":null,\"targetSelesai\":null,\"prioritas\":\"normal\",\"jenis\":\"reguler\",\"status\":\"disetujui\",\"penanggungJawab\":null,\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedAt\":\"2026-09-15T12:23:40.763Z\",\"createdAt\":\"2026-09-15T12:16:45.360Z\",\"updatedAt\":\"2026-09-15T12:23:40.763Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T12:23:40.853395+00:00"
+  },
+  {
+   "id": "b2471706-9049-4f40-861a-9d165ada9e55",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "SUBMIT",
+   "tabel": "po_produksi",
+   "record_id": "58b61ace-cba9-4fa2-84cf-793a23492d22",
+   "data_before": "{\"id\":\"58b61ace-cba9-4fa2-84cf-793a23492d22\",\"nomorDokumen\":\"PO-2026-0001\",\"tanggal\":\"2026-09-14T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":\"2026-09-30T00:00:00.000Z\",\"prioritas\":\"normal\",\"jenis\":\"restock\",\"status\":\"draft\",\"penanggungJawab\":\"f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-14T00:34:48.408Z\",\"updatedAt\":\"2026-09-14T00:34:48.408Z\",\"deletedAt\":null}",
+   "data_after": "{\"id\":\"58b61ace-cba9-4fa2-84cf-793a23492d22\",\"nomorDokumen\":\"PO-2026-0001\",\"tanggal\":\"2026-09-14T00:00:00.000Z\",\"produkId\":\"e030d827-6986-452b-96fc-b5b9e02eda60\",\"bomId\":null,\"tanggalMulai\":\"2026-09-15T00:00:00.000Z\",\"targetSelesai\":\"2026-09-30T00:00:00.000Z\",\"prioritas\":\"normal\",\"jenis\":\"restock\",\"status\":\"menunggu_persetujuan\",\"penanggungJawab\":\"f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff\",\"catatan\":null,\"createdBy\":\"fbb667ca-b788-491c-8106-66652848202a\",\"approvedBy\":null,\"approvedAt\":null,\"createdAt\":\"2026-09-14T00:34:48.408Z\",\"updatedAt\":\"2026-09-15T13:03:06.947Z\",\"deletedAt\":null}",
+   "ip_address": null,
+   "created_at": "2026-09-15T13:03:07.06431+00:00"
+  },
+  {
+   "id": "ac0d4590-11ab-448b-9f25-fb1bef2acd63",
+   "user_id": "fbb667ca-b788-491c-8106-66652848202a",
+   "aksi": "CREATE",
+   "tabel": "users",
+   "record_id": "8020c6c1-b927-490e-8fa1-b1800d9990b7",
+   "data_before": null,
+   "data_after": "{\"id\":\"8020c6c1-b927-490e-8fa1-b1800d9990b7\",\"email\":\"produksi1@owncrave.local\",\"displayName\":\"Staff Produksi 1\",\"role\":\"admin_produksi\",\"isActive\":true,\"createdAt\":\"2026-09-21T09:02:53.762Z\",\"updatedAt\":\"2026-09-21T09:02:53.762Z\"}",
+   "ip_address": null,
+   "created_at": "2026-09-21T09:02:54.219118+00:00"
+  }
+ ]
+}

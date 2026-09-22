@@ -1,0 +1,1935 @@
+{
+ "meta": {
+  "diambil": "2026-09-22",
+  "tujuan": "backup pra-reset app-05i4",
+  "batch": 1
+ },
+ "mutasi_stok": [
+  {
+   "id": "72d09b50-2b9e-4e27-a940-44c1499f3399",
+   "bahan_id": "aa6d2528-3e8c-45ec-a7d5-713041e1aebe",
+   "tipe": "masuk",
+   "kuantitas": 100.0,
+   "barang_masuk_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-08T05:34:08.63842+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "14329738-d59c-4102-a280-96b204aa888b",
+   "bahan_id": "87ea410c-af6a-444c-9ff7-fd4caf8be0d6",
+   "tipe": "masuk",
+   "kuantitas": 100.0,
+   "barang_masuk_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-08T05:34:08.63842+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "b75b1186-a5be-4852-a54b-69e90778cdab",
+   "bahan_id": "6a8babb5-b90c-4d51-a830-c77a605e84d1",
+   "tipe": "masuk",
+   "kuantitas": 200.0,
+   "barang_masuk_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-08T05:34:08.63842+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "6e0a9935-f02f-4405-88c4-3ae60d80f79f",
+   "bahan_id": "1e77bdbd-e8de-43ef-86e9-2de815a9d04a",
+   "tipe": "masuk",
+   "kuantitas": 300.0,
+   "barang_masuk_id": "5c912f35-7529-4916-9cc8-65ec87093581",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-14T04:22:57.987091+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "9a0b4d2f-63b2-4d88-94bd-10f36fb0a75d",
+   "bahan_id": "af19cc9c-dbd2-4f9c-97da-9cbdf453d130",
+   "tipe": "masuk",
+   "kuantitas": 120.0,
+   "barang_masuk_id": "9e2cba06-fe87-4f53-8ae7-ad02900a0591",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-14T04:25:52.640687+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "e461bced-6ade-4c12-ba85-584175f518ff",
+   "bahan_id": "1f280e64-4d39-4d64-a327-d50033bb3129",
+   "tipe": "masuk",
+   "kuantitas": 273.0,
+   "barang_masuk_id": "f4e242a3-854a-48a2-8bbb-684264eacd38",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-14T04:29:58.056661+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "bea88536-3248-4131-903c-ff1445162d23",
+   "bahan_id": "ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7",
+   "tipe": "masuk",
+   "kuantitas": 2000.0,
+   "barang_masuk_id": "302436c5-43ba-4a75-9869-5ddf2d5b14f2",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-14T04:31:34.772885+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "ffd92ad9-426f-4c1b-a907-27e6105fb5b6",
+   "bahan_id": "28abf112-2379-4feb-9611-8896b15274b0",
+   "tipe": "masuk",
+   "kuantitas": 1000.0,
+   "barang_masuk_id": "f1fefb03-90a3-4bc2-82ea-f912ad70fe99",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-14T04:33:15.00794+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "e1f73cbc-0d4e-4c3e-b7de-5b28e799723e",
+   "bahan_id": "feb08757-1000-49f5-84b7-42ba8ad95ffe",
+   "tipe": "masuk",
+   "kuantitas": 1500.0,
+   "barang_masuk_id": "6dec107f-4f4a-4585-9e3a-b23140830ce4",
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-08-14T04:34:01.006362+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  },
+  {
+   "id": "33dcd507-cb8a-4e95-b00a-2441b88b3781",
+   "bahan_id": "28abf112-2379-4feb-9611-8896b15274b0",
+   "tipe": "keluar",
+   "kuantitas": -22.0,
+   "barang_masuk_id": null,
+   "barang_keluar_id": null,
+   "penyesuaian_id": null,
+   "created_at": "2026-09-15T06:16:28.288504+00:00",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "sisa_bahan_id": null
+  }
+ ],
+ "stok": [
+  {
+   "id": "b7a39b97-c23b-47db-b99f-d193a367f59b",
+   "bahan_id": "aa6d2528-3e8c-45ec-a7d5-713041e1aebe",
+   "kuantitas": 100.0,
+   "updated_at": "2026-08-08T14:22:45.603062+00:00"
+  },
+  {
+   "id": "ec0c6b02-22ee-47dd-8cd0-51729ba30c92",
+   "bahan_id": "87ea410c-af6a-444c-9ff7-fd4caf8be0d6",
+   "kuantitas": 100.0,
+   "updated_at": "2026-08-08T14:22:45.603062+00:00"
+  },
+  {
+   "id": "c94c34eb-384d-44af-99dd-7abde9ee59be",
+   "bahan_id": "6a8babb5-b90c-4d51-a830-c77a605e84d1",
+   "kuantitas": 200.0,
+   "updated_at": "2026-08-08T14:22:45.603062+00:00"
+  },
+  {
+   "id": "8ade26c4-1fb5-4edb-a309-5b48c2f7ff73",
+   "bahan_id": "16211f78-106c-4811-b27b-f41ddd70de10",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:29:04.712962+00:00"
+  },
+  {
+   "id": "0c55ac32-756a-41c7-b835-d0b225332023",
+   "bahan_id": "7c572972-af67-49e8-ba36-4b8b91822e2f",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:37:38.197401+00:00"
+  },
+  {
+   "id": "528def7f-397b-48b7-8817-1d3f8f30e5bb",
+   "bahan_id": "94fab36e-6084-40a5-8d8b-54c0028f836a",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:39:33.38309+00:00"
+  },
+  {
+   "id": "38547b52-80a0-4deb-b7d3-d039ef129ba5",
+   "bahan_id": "44758bd1-8a1b-4376-88c0-ac33b54a8fda",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:41:09.230372+00:00"
+  },
+  {
+   "id": "ce06fa6b-541a-4c4d-ad88-4eba1c9c63f6",
+   "bahan_id": "6ba7b924-fd52-4848-9461-b1efba56ce95",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:42:20.871127+00:00"
+  },
+  {
+   "id": "bad56c42-bd9b-4ed9-89da-1c8448c1f8b2",
+   "bahan_id": "07f19984-2f33-4a91-b07b-4b23e896db1d",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:43:24.391735+00:00"
+  },
+  {
+   "id": "cdafc176-0778-4e5d-a80a-d7daad1ccbff",
+   "bahan_id": "dc917360-baf4-49a0-a125-8b81edc0d7b9",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:44:52.531377+00:00"
+  },
+  {
+   "id": "dd2d049f-821f-48a0-b47a-7d40ff477fc6",
+   "bahan_id": "daa78633-1e56-4dd7-91f6-e3eee61c89f3",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:46:34.21339+00:00"
+  },
+  {
+   "id": "064d1cc8-ffea-4588-8dd1-6c8e3602cc26",
+   "bahan_id": "aa285295-d45a-4480-88ce-8ced4b2c8ea9",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:50:07.843366+00:00"
+  },
+  {
+   "id": "ffdfb46f-b476-4ccf-ba12-413745654d09",
+   "bahan_id": "624adf50-cf0f-4c51-8feb-ff5a9cdc0e51",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:54:50.454028+00:00"
+  },
+  {
+   "id": "8f1406c7-fc2f-412a-8aa0-ab9b3d949a3f",
+   "bahan_id": "31df62d4-692c-4a55-89b3-3721e64c70c0",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T03:58:51.541433+00:00"
+  },
+  {
+   "id": "b815ac6a-2ead-4920-a156-4a330912b5c0",
+   "bahan_id": "65623e36-a7b8-46d5-b929-4428b3f5c66e",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:01:01.894737+00:00"
+  },
+  {
+   "id": "6fb3b715-5945-43e9-812c-bf2694e1ffa6",
+   "bahan_id": "acd5cd8c-4f54-4a43-b440-2e6022814d1e",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:02:04.554153+00:00"
+  },
+  {
+   "id": "8e814315-9efc-404b-b4a2-3602776f4cd5",
+   "bahan_id": "19a87d26-9d21-4f36-b515-6746eecd2789",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:03:56.66162+00:00"
+  },
+  {
+   "id": "d64a9b39-086f-44a8-ac16-2ea350416803",
+   "bahan_id": "24a9abe2-0f92-43fc-b6f4-4b27d522d428",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:06:08.375108+00:00"
+  },
+  {
+   "id": "0f1ed159-9bc5-4296-861a-3e2880dedd19",
+   "bahan_id": "af27d8ac-f494-48c9-8622-e0c7946ecf08",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:07:18.330829+00:00"
+  },
+  {
+   "id": "a225a97b-9659-4f42-901d-76e5b226a76a",
+   "bahan_id": "8216453c-bdd5-4483-8236-5e15a8d2cc31",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:08:13.387678+00:00"
+  },
+  {
+   "id": "ec2954b9-c2c4-497c-bd6b-6bb529cefafa",
+   "bahan_id": "e351250b-6d6e-45dd-9553-3f921814dd8b",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:08:41.908419+00:00"
+  },
+  {
+   "id": "3f49cffd-9d0d-4ad6-b66f-f5745de8596c",
+   "bahan_id": "8f5a15c2-6f56-4adc-9fb6-e09f5a5511e5",
+   "kuantitas": 0.0,
+   "updated_at": "2026-08-14T04:09:24.97147+00:00"
+  },
+  {
+   "id": "5ed952a8-a16e-47a4-b7a8-5321b1b419ad",
+   "bahan_id": "1e77bdbd-e8de-43ef-86e9-2de815a9d04a",
+   "kuantitas": 300.0,
+   "updated_at": "2026-08-14T04:23:01.172+00:00"
+  },
+  {
+   "id": "e7c4b3e7-437f-4e25-9fc9-315cc8307166",
+   "bahan_id": "af19cc9c-dbd2-4f9c-97da-9cbdf453d130",
+   "kuantitas": 120.0,
+   "updated_at": "2026-08-14T04:25:55.777+00:00"
+  },
+  {
+   "id": "89796fa4-d3cc-4093-b183-075febee01be",
+   "bahan_id": "1f280e64-4d39-4d64-a327-d50033bb3129",
+   "kuantitas": 273.0,
+   "updated_at": "2026-08-14T04:30:01.297+00:00"
+  },
+  {
+   "id": "8002c61d-4145-473e-b5c9-363bf73eb58c",
+   "bahan_id": "ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7",
+   "kuantitas": 2000.0,
+   "updated_at": "2026-08-14T04:31:38.019+00:00"
+  },
+  {
+   "id": "e288573c-2872-4b1d-89ec-45d021de4714",
+   "bahan_id": "feb08757-1000-49f5-84b7-42ba8ad95ffe",
+   "kuantitas": 1500.0,
+   "updated_at": "2026-08-14T04:34:04.254+00:00"
+  },
+  {
+   "id": "008ed291-efb0-43c9-81c8-65e10c4569f2",
+   "bahan_id": "28abf112-2379-4feb-9611-8896b15274b0",
+   "kuantitas": 978.0,
+   "updated_at": "2026-09-15T06:16:28.584+00:00"
+  }
+ ],
+ "barang_masuk": [
+  {
+   "id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "nomor_dokumen": "BM-202608-0001",
+   "supplier_id": "5a35867d-64e5-4d39-bf5b-6f0ebbf89b2e",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-08T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-08T05:34:08.63842+00:00",
+   "updated_at": "2026-08-08T05:34:08.63842+00:00"
+  },
+  {
+   "id": "5c912f35-7529-4916-9cc8-65ec87093581",
+   "nomor_dokumen": "BM-202608-0002",
+   "supplier_id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-13T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-14T04:22:57.987091+00:00",
+   "updated_at": "2026-08-14T04:22:57.987091+00:00"
+  },
+  {
+   "id": "9e2cba06-fe87-4f53-8ae7-ad02900a0591",
+   "nomor_dokumen": "BM-202608-0003",
+   "supplier_id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-14T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-14T04:25:52.640687+00:00",
+   "updated_at": "2026-08-14T04:25:52.640687+00:00"
+  },
+  {
+   "id": "f4e242a3-854a-48a2-8bbb-684264eacd38",
+   "nomor_dokumen": "BM-202608-0004",
+   "supplier_id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-14T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-14T04:29:58.056661+00:00",
+   "updated_at": "2026-08-14T04:29:58.056661+00:00"
+  },
+  {
+   "id": "302436c5-43ba-4a75-9869-5ddf2d5b14f2",
+   "nomor_dokumen": "BM-202608-0005",
+   "supplier_id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-14T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-14T04:31:34.772885+00:00",
+   "updated_at": "2026-08-14T04:31:34.772885+00:00"
+  },
+  {
+   "id": "f1fefb03-90a3-4bc2-82ea-f912ad70fe99",
+   "nomor_dokumen": "BM-202608-0006",
+   "supplier_id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-14T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-14T04:33:15.00794+00:00",
+   "updated_at": "2026-08-14T04:33:15.00794+00:00"
+  },
+  {
+   "id": "6dec107f-4f4a-4585-9e3a-b23140830ce4",
+   "nomor_dokumen": "BM-202608-0007",
+   "supplier_id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+   "nomor_invoice": null,
+   "tanggal": "2026-08-14T00:00:00+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-08-14T04:34:01.006362+00:00",
+   "updated_at": "2026-08-14T04:34:01.006362+00:00"
+  }
+ ],
+ "barang_masuk_detail": [
+  {
+   "id": "9f93ffef-4595-465a-82ee-c810960ddf81",
+   "barang_masuk_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "bahan_id": "aa6d2528-3e8c-45ec-a7d5-713041e1aebe",
+   "kuantitas": 100.0,
+   "harga_satuan": 19500.0,
+   "subtotal": 1950000.0
+  },
+  {
+   "id": "78d9187f-22e7-44a4-9a39-0dd00cd21cdd",
+   "barang_masuk_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "bahan_id": "87ea410c-af6a-444c-9ff7-fd4caf8be0d6",
+   "kuantitas": 100.0,
+   "harga_satuan": 19500.0,
+   "subtotal": 1950000.0
+  },
+  {
+   "id": "b66bcd26-f682-4eed-81e9-314e10083746",
+   "barang_masuk_id": "0cc241b2-f6d7-444d-bb1c-94f9b04fa029",
+   "bahan_id": "6a8babb5-b90c-4d51-a830-c77a605e84d1",
+   "kuantitas": 200.0,
+   "harga_satuan": 19500.0,
+   "subtotal": 3900000.0
+  },
+  {
+   "id": "18c22263-245e-467a-971b-95b7757f294d",
+   "barang_masuk_id": "5c912f35-7529-4916-9cc8-65ec87093581",
+   "bahan_id": "1e77bdbd-e8de-43ef-86e9-2de815a9d04a",
+   "kuantitas": 300.0,
+   "harga_satuan": 0.0,
+   "subtotal": 0.0
+  },
+  {
+   "id": "59c37789-2a3b-4201-b797-5c32cf4b223d",
+   "barang_masuk_id": "9e2cba06-fe87-4f53-8ae7-ad02900a0591",
+   "bahan_id": "af19cc9c-dbd2-4f9c-97da-9cbdf453d130",
+   "kuantitas": 120.0,
+   "harga_satuan": 0.0,
+   "subtotal": 0.0
+  },
+  {
+   "id": "c3224dfe-cf2d-45f0-b59d-d93da213ab13",
+   "barang_masuk_id": "f4e242a3-854a-48a2-8bbb-684264eacd38",
+   "bahan_id": "1f280e64-4d39-4d64-a327-d50033bb3129",
+   "kuantitas": 273.0,
+   "harga_satuan": 0.0,
+   "subtotal": 0.0
+  },
+  {
+   "id": "39ab0095-007e-45c2-aac3-993a32c72608",
+   "barang_masuk_id": "302436c5-43ba-4a75-9869-5ddf2d5b14f2",
+   "bahan_id": "ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7",
+   "kuantitas": 2000.0,
+   "harga_satuan": 0.0,
+   "subtotal": 0.0
+  },
+  {
+   "id": "63ea6170-7fab-46ae-a5ec-22d016dc80f4",
+   "barang_masuk_id": "f1fefb03-90a3-4bc2-82ea-f912ad70fe99",
+   "bahan_id": "28abf112-2379-4feb-9611-8896b15274b0",
+   "kuantitas": 1000.0,
+   "harga_satuan": 0.0,
+   "subtotal": 0.0
+  },
+  {
+   "id": "31ab127e-c0db-448e-9818-a60f1d9924a8",
+   "barang_masuk_id": "6dec107f-4f4a-4585-9e3a-b23140830ce4",
+   "bahan_id": "feb08757-1000-49f5-84b7-42ba8ad95ffe",
+   "kuantitas": 1500.0,
+   "harga_satuan": 0.0,
+   "subtotal": 0.0
+  }
+ ],
+ "po_produksi": [
+  {
+   "id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "nomor_dokumen": "PO-202609-9001",
+   "tanggal": "2026-09-03T02:51:15.13931+00:00",
+   "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+   "bom_id": null,
+   "tanggal_mulai": null,
+   "target_selesai": "2026-10-03T02:51:15.13931+00:00",
+   "prioritas": "normal",
+   "jenis": "reguler",
+   "status": "siap_jahit",
+   "penanggung_jawab": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "approved_at": "2026-09-03T02:51:15.13931+00:00",
+   "created_at": "2026-09-03T02:51:15.13931+00:00",
+   "updated_at": "2026-09-03T02:51:15.13931+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "nomor_dokumen": "PO-2026-0002",
+   "tanggal": "2026-09-15T00:00:00+00:00",
+   "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+   "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+   "tanggal_mulai": null,
+   "target_selesai": null,
+   "prioritas": "normal",
+   "jenis": "reguler",
+   "status": "disetujui",
+   "penanggung_jawab": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "approved_at": "2026-09-15T12:23:40.763+00:00",
+   "created_at": "2026-09-15T12:16:45.360389+00:00",
+   "updated_at": "2026-09-15T12:23:40.763+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "58b61ace-cba9-4fa2-84cf-793a23492d22",
+   "nomor_dokumen": "PO-2026-0001",
+   "tanggal": "2026-09-14T00:00:00+00:00",
+   "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+   "bom_id": null,
+   "tanggal_mulai": "2026-09-15T00:00:00+00:00",
+   "target_selesai": "2026-09-30T00:00:00+00:00",
+   "prioritas": "normal",
+   "jenis": "restock",
+   "status": "menunggu_persetujuan",
+   "penanggung_jawab": "f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "approved_by": null,
+   "approved_at": null,
+   "created_at": "2026-09-14T00:34:48.408402+00:00",
+   "updated_at": "2026-09-15T13:03:06.947+00:00",
+   "deleted_at": null
+  }
+ ],
+ "po_produksi_detail": [
+  {
+   "id": "a94a2883-0ab3-4d51-a9e5-1d27dba42ca8",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_target": 60,
+   "lebihan_pcs": 3
+  },
+  {
+   "id": "4338ca5d-9823-4084-8459-1cec3f1a2aec",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "varian_id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+   "jumlah_target": 60,
+   "lebihan_pcs": 3
+  },
+  {
+   "id": "842d2680-5423-4767-977d-0704665b7b4f",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "varian_id": "031822be-6031-4735-8816-7f3fa9cbed88",
+   "jumlah_target": 40,
+   "lebihan_pcs": 2
+  },
+  {
+   "id": "01409c7b-00ad-4684-a5c7-554057e906d5",
+   "po_id": "58b61ace-cba9-4fa2-84cf-793a23492d22",
+   "varian_id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+   "jumlah_target": 1,
+   "lebihan_pcs": 0
+  },
+  {
+   "id": "732094ec-70f6-43a0-a9f3-3d22d0a98f1b",
+   "po_id": "58b61ace-cba9-4fa2-84cf-793a23492d22",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_target": 1,
+   "lebihan_pcs": 0
+  },
+  {
+   "id": "45d3340d-2d8f-419b-bf5f-c2513ea3745a",
+   "po_id": "58b61ace-cba9-4fa2-84cf-793a23492d22",
+   "varian_id": "031822be-6031-4735-8816-7f3fa9cbed88",
+   "jumlah_target": 1,
+   "lebihan_pcs": 0
+  },
+  {
+   "id": "f4b9743a-2f00-4151-bdb9-5f778de57acb",
+   "po_id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "varian_id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+   "jumlah_target": 10,
+   "lebihan_pcs": 0
+  },
+  {
+   "id": "d3da1a19-e56a-466a-9212-b44055682b0c",
+   "po_id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_target": 10,
+   "lebihan_pcs": 0
+  },
+  {
+   "id": "4a92dd5e-beb6-4dc4-bf99-ef2d92f3a508",
+   "po_id": "e0272a15-258d-4d11-80b1-588c5a156c1a",
+   "varian_id": "031822be-6031-4735-8816-7f3fa9cbed88",
+   "jumlah_target": 10,
+   "lebihan_pcs": 0
+  }
+ ],
+ "work_order_cutting": [
+  {
+   "id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "nomor_dokumen": "WO-CUT-202609-9001",
+   "po_id": "184811cb-b013-4b08-81d7-ab4b052b15c2",
+   "tanggal": "2026-09-03T02:51:15.13931+00:00",
+   "pic": null,
+   "meja_cutting": null,
+   "prioritas": "normal",
+   "status": "selesai",
+   "jumlah_layer": null,
+   "panjang_marker": null,
+   "lebar_kain": null,
+   "nomor_pola": null,
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "verified_by": null,
+   "verified_at": null,
+   "created_at": "2026-09-03T02:51:15.13931+00:00",
+   "updated_at": "2026-09-03T02:51:15.13931+00:00",
+   "deleted_at": null
+  }
+ ],
+ "work_order_cutting_detail": [
+  {
+   "id": "0e3f796c-bd9b-4503-918b-7894a2f0175b",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "target_cutting": 60
+  },
+  {
+   "id": "beb890ba-052c-430f-a211-88a040010f07",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "varian_id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+   "target_cutting": 60
+  },
+  {
+   "id": "431d1b4f-cb16-4879-a917-19b6442a62cd",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "varian_id": "031822be-6031-4735-8816-7f3fa9cbed88",
+   "target_cutting": 40
+  }
+ ],
+ "hasil_cutting": [
+  {
+   "id": "d6272de5-e4b7-4c8a-808d-5ed6523bd45b",
+   "nomor_dokumen": "CUT-202609-9001",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "tanggal": "2026-09-03T02:51:15.13931+00:00",
+   "catatan": null,
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-03T02:51:15.13931+00:00",
+   "updated_at": "2026-09-03T02:51:15.13931+00:00",
+   "deleted_at": null
+  }
+ ],
+ "hasil_cutting_detail": [
+  {
+   "id": "16a43a69-d486-4585-919c-4b2ebd35f619",
+   "hasil_id": "d6272de5-e4b7-4c8a-808d-5ed6523bd45b",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_baik": 60,
+   "jumlah_rusak": 0
+  },
+  {
+   "id": "0c04d547-cb69-4723-8850-7a7c04e45315",
+   "hasil_id": "d6272de5-e4b7-4c8a-808d-5ed6523bd45b",
+   "varian_id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+   "jumlah_baik": 60,
+   "jumlah_rusak": 0
+  },
+  {
+   "id": "22e598b2-02e4-4c4d-9641-d02e9440379b",
+   "hasil_id": "d6272de5-e4b7-4c8a-808d-5ed6523bd45b",
+   "varian_id": "031822be-6031-4735-8816-7f3fa9cbed88",
+   "jumlah_baik": 40,
+   "jumlah_rusak": 0
+  }
+ ],
+ "bundling": [
+  {
+   "id": "f761aa04-74c7-4d08-a322-ce2fbb5e0c1a",
+   "nomor_dokumen": "BND-202609-9001",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "varian_id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+   "jumlah_pcs": 40,
+   "tujuan_penjahit": null,
+   "keterangan": null,
+   "status": "sudah_dikirim",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-03T02:51:15.13931+00:00",
+   "updated_at": "2026-09-03T03:15:23.171+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "3c7b575b-db36-4f3b-8329-2cbe219e6ff8",
+   "nomor_dokumen": "BND-202609-9002",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "varian_id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+   "jumlah_pcs": 40,
+   "tujuan_penjahit": null,
+   "keterangan": null,
+   "status": "sudah_dikirim",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-03T02:51:15.13931+00:00",
+   "updated_at": "2026-09-03T03:15:23.171+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "ffc531c5-36f9-410c-81b9-65c0ece5534b",
+   "nomor_dokumen": "BND-202609-9003",
+   "wo_id": "dd0d281f-d0f6-42e9-ace4-77f7e6f53f39",
+   "varian_id": "031822be-6031-4735-8816-7f3fa9cbed88",
+   "jumlah_pcs": 20,
+   "tujuan_penjahit": null,
+   "keterangan": null,
+   "status": "sudah_dikirim",
+   "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+   "created_at": "2026-09-03T02:51:15.13931+00:00",
+   "updated_at": "2026-09-03T03:15:23.171+00:00",
+   "deleted_at": null
+  }
+ ],
+ "master_snapshot": {
+  "bahan": [
+   {
+    "id": "1f280e64-4d39-4d64-a327-d50033bb3129",
+    "kode": "BH-TR-SLG-004",
+    "nama": "Roll DS nylon 5 1,2Kg",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:36:00.977289+00:00",
+    "updated_at": "2026-08-14T04:30:00.852+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "ccdac9e9-6fc5-416c-bb89-8a34cde5aaf7",
+    "kode": "BH-TR-SLG-008",
+    "nama": "Puller Rope Hitam",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:55:55.882466+00:00",
+    "updated_at": "2026-08-14T04:31:37.573+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "28abf112-2379-4feb-9611-8896b15274b0",
+    "kode": "BH-AKSS-004",
+    "nama": "Taliqur/Karet String ",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:56:42.453908+00:00",
+    "updated_at": "2026-08-14T04:33:17.83+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "feb08757-1000-49f5-84b7-42ba8ad95ffe",
+    "kode": "BH-AKSS-005",
+    "nama": "Stopper Botol Bening",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:57:59.852979+00:00",
+    "updated_at": "2026-08-14T04:34:03.805+00:00",
+    "deleted_at": null,
+    "warna_id": "ba5aeef6-ca69-41a0-8763-ac7274ce8f1b",
+    "ukuran": null
+   },
+   {
+    "id": "daa78633-1e56-4dd7-91f6-e3eee61c89f3",
+    "kode": "BH-AKSS-001",
+    "nama": "Velcro",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:46:34.21339+00:00",
+    "updated_at": "2026-08-14T03:46:34.21339+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "1inch/2,5cm"
+   },
+   {
+    "id": "aa285295-d45a-4480-88ce-8ced4b2c8ea9",
+    "kode": "BH-AKSS-002",
+    "nama": "Karet Elastis SR Biru",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:50:07.843366+00:00",
+    "updated_at": "2026-08-14T03:50:07.843366+00:00",
+    "deleted_at": null,
+    "warna_id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+    "ukuran": "1inch/2,5cm"
+   },
+   {
+    "id": "19a87d26-9d21-4f36-b515-6746eecd2789",
+    "kode": "BH-AKSS-009",
+    "nama": "Label Size Chart (M-3XL)",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:03:56.66162+00:00",
+    "updated_at": "2026-08-14T04:03:56.66162+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "24a9abe2-0f92-43fc-b6f4-4b27d522d428",
+    "kode": "BH-AKSS-010",
+    "nama": "Kancing Cetek plastik",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:06:08.375108+00:00",
+    "updated_at": "2026-08-14T04:06:08.375108+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "15mm"
+   },
+   {
+    "id": "ca12dd72-c60e-4ead-86ce-6ed7f23a77ec",
+    "kode": "BH-KFR-001",
+    "nama": "BILABONG",
+    "kategori_id": "9daed2e5-d1ff-42de-99e3-06fbc05d759d",
+    "satuan_id": "68f3861a-b459-46c3-ac08-ff5a6a2198e4",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 48000.0,
+    "is_active": true,
+    "created_at": "2026-08-07T10:08:08.368185+00:00",
+    "updated_at": "2026-08-07T10:08:08.368185+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "a47a7782-7c75-4c81-a7df-fba2cb593b4a",
+    "kode": "BH-KUT-001",
+    "nama": "Kain Katun Merah",
+    "kategori_id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 5.0,
+    "harga_rata_rata": 11500.0,
+    "is_active": true,
+    "created_at": "2026-08-04T09:51:50.027742+00:00",
+    "updated_at": "2026-08-04T12:59:01.459+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "121d53dd-bc19-4848-b18f-11c4b99f4e03",
+    "kode": "BH-KUT-002",
+    "nama": "RJN GREEN FOREST",
+    "kategori_id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "satuan_id": "fe817e66-1d04-4a64-8238-13932cf46dce",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 19500.0,
+    "is_active": true,
+    "created_at": "2026-08-07T10:07:22.467553+00:00",
+    "updated_at": "2026-08-07T10:07:22.467553+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "6a8babb5-b90c-4d51-a830-c77a605e84d1",
+    "kode": "BH-KUT-003",
+    "nama": "RJN HITAM",
+    "kategori_id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 100.0,
+    "harga_rata_rata": 19500.0,
+    "is_active": true,
+    "created_at": "2026-08-05T04:09:56.683534+00:00",
+    "updated_at": "2026-08-08T14:22:20.606525+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "87ea410c-af6a-444c-9ff7-fd4caf8be0d6",
+    "kode": "BH-KUT-004",
+    "nama": "RJN MOCCA",
+    "kategori_id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "satuan_id": "fe817e66-1d04-4a64-8238-13932cf46dce",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 19500.0,
+    "is_active": true,
+    "created_at": "2026-08-07T10:05:24.809134+00:00",
+    "updated_at": "2026-08-08T14:22:20.606525+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "aa6d2528-3e8c-45ec-a7d5-713041e1aebe",
+    "kode": "BH-KUT-005",
+    "nama": "RJN OLIVE",
+    "kategori_id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "satuan_id": "fe817e66-1d04-4a64-8238-13932cf46dce",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 19500.0,
+    "is_active": true,
+    "created_at": "2026-08-07T10:03:42.910428+00:00",
+    "updated_at": "2026-08-08T14:22:20.606525+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "5dcfa0ad-160a-4f16-a75d-d67f424dd326",
+    "kode": "BH-KUT-006",
+    "nama": "RJN PETROL",
+    "kategori_id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "satuan_id": "fe817e66-1d04-4a64-8238-13932cf46dce",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 19500.0,
+    "is_active": true,
+    "created_at": "2026-08-07T10:06:08.733145+00:00",
+    "updated_at": "2026-08-07T10:06:08.733145+00:00",
+    "deleted_at": null,
+    "warna_id": null,
+    "ukuran": null
+   },
+   {
+    "id": "6ba7b924-fd52-4848-9461-b1efba56ce95",
+    "kode": "BH-KP-RTG-001",
+    "nama": "YKK Depan cnda 5 Lock",
+    "kategori_id": "a7e0f643-6403-4e57-818a-0d12846e9c22",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:42:20.871127+00:00",
+    "updated_at": "2026-08-14T03:42:20.871127+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "07f19984-2f33-4a91-b07b-4b23e896db1d",
+    "kode": "BH-KP-RTG-002",
+    "nama": "YKK Cebol cnda 5",
+    "kategori_id": "a7e0f643-6403-4e57-818a-0d12846e9c22",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:43:24.391735+00:00",
+    "updated_at": "2026-08-14T03:43:24.391735+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "dc917360-baf4-49a0-a125-8b81edc0d7b9",
+    "kode": "BH-KP-RTG-003",
+    "nama": "YKK Depan Vision 5 Lock",
+    "kategori_id": "a7e0f643-6403-4e57-818a-0d12846e9c22",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:44:52.531377+00:00",
+    "updated_at": "2026-08-14T03:44:52.531377+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "624adf50-cf0f-4c51-8feb-ff5a9cdc0e51",
+    "kode": "BH-AKSS-003",
+    "nama": "Stop Resleting",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:54:50.454028+00:00",
+    "updated_at": "2026-08-14T03:54:50.454028+00:00",
+    "deleted_at": null,
+    "warna_id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+    "ukuran": null
+   },
+   {
+    "id": "31df62d4-692c-4a55-89b3-3721e64c70c0",
+    "kode": "BH-AKSS-006",
+    "nama": "Kain Keras 25N",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:58:51.541433+00:00",
+    "updated_at": "2026-08-14T03:58:51.541433+00:00",
+    "deleted_at": null,
+    "warna_id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+    "ukuran": null
+   },
+   {
+    "id": "65623e36-a7b8-46d5-b929-4428b3f5c66e",
+    "kode": "BH-AKSS-007",
+    "nama": "Mata Itik ST 350 N",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "68f3861a-b459-46c3-ac08-ff5a6a2198e4",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:01:01.894737+00:00",
+    "updated_at": "2026-08-14T04:01:01.894737+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "acd5cd8c-4f54-4a43-b440-2e6022814d1e",
+    "kode": "BH-AKSS-008",
+    "nama": "ST Ring Mata Itik 350 N",
+    "kategori_id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "satuan_id": "68f3861a-b459-46c3-ac08-ff5a6a2198e4",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:02:04.554153+00:00",
+    "updated_at": "2026-08-14T04:02:04.554153+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "af27d8ac-f494-48c9-8622-e0c7946ecf08",
+    "kode": "BH-FNSG-001",
+    "nama": "Stiker Size Chart",
+    "kategori_id": "b2a7db8c-a379-452e-80cc-99b20eb724d7",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:07:18.330829+00:00",
+    "updated_at": "2026-08-14T04:07:18.330829+00:00",
+    "deleted_at": null,
+    "warna_id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+    "ukuran": null
+   },
+   {
+    "id": "8216453c-bdd5-4483-8236-5e15a8d2cc31",
+    "kode": "BH-FNSG-002",
+    "nama": "Tali Hantag",
+    "kategori_id": "b2a7db8c-a379-452e-80cc-99b20eb724d7",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:08:13.387678+00:00",
+    "updated_at": "2026-08-14T04:08:13.387678+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": null
+   },
+   {
+    "id": "e351250b-6d6e-45dd-9553-3f921814dd8b",
+    "kode": "BH-FNSG-003",
+    "nama": "Hantag",
+    "kategori_id": "b2a7db8c-a379-452e-80cc-99b20eb724d7",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:08:41.908419+00:00",
+    "updated_at": "2026-08-14T04:08:41.908419+00:00",
+    "deleted_at": null,
+    "warna_id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+    "ukuran": null
+   },
+   {
+    "id": "8f5a15c2-6f56-4adc-9fb6-e09f5a5511e5",
+    "kode": "BH-FNSG-004",
+    "nama": "Plastik Bening (07)",
+    "kategori_id": "b2a7db8c-a379-452e-80cc-99b20eb724d7",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T04:09:24.97147+00:00",
+    "updated_at": "2026-08-14T04:09:24.97147+00:00",
+    "deleted_at": null,
+    "warna_id": "ba5aeef6-ca69-41a0-8763-ac7274ce8f1b",
+    "ukuran": "35x40"
+   },
+   {
+    "id": "16211f78-106c-4811-b27b-f41ddd70de10",
+    "kode": "BH-TR-SLG-001",
+    "nama": "Coil DSJK no 5",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:29:04.712962+00:00",
+    "updated_at": "2026-08-14T03:29:04.712962+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "28inch/71cm"
+   },
+   {
+    "id": "1e77bdbd-e8de-43ef-86e9-2de815a9d04a",
+    "kode": "BH-TR-SLG-002",
+    "nama": "Coil DJSK no 5",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:32:05.785466+00:00",
+    "updated_at": "2026-08-14T04:23:00.739+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "30inch/75cm"
+   },
+   {
+    "id": "af19cc9c-dbd2-4f9c-97da-9cbdf453d130",
+    "kode": "BH-TR-SLG-003",
+    "nama": "Coil DJSK no 5",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:34:25.337366+00:00",
+    "updated_at": "2026-08-14T04:25:55.346+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "32inch/81cm"
+   },
+   {
+    "id": "7c572972-af67-49e8-ba36-4b8b91822e2f",
+    "kode": "BH-TR-SLG-005",
+    "nama": "Vision GMC No5",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:37:38.197401+00:00",
+    "updated_at": "2026-08-14T03:37:38.197401+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "24inch/61cm"
+   },
+   {
+    "id": "94fab36e-6084-40a5-8d8b-54c0028f836a",
+    "kode": "BH-TR-SLG-006",
+    "nama": "Vision GMC No5",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:39:33.38309+00:00",
+    "updated_at": "2026-08-14T03:39:33.38309+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "26inch/66cm"
+   },
+   {
+    "id": "44758bd1-8a1b-4376-88c0-ac33b54a8fda",
+    "kode": "BH-TR-SLG-007",
+    "nama": "Vision GMC No5",
+    "kategori_id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "satuan_id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "stok_minimum": 0.0,
+    "harga_rata_rata": 0.0,
+    "is_active": true,
+    "created_at": "2026-08-14T03:41:09.230372+00:00",
+    "updated_at": "2026-08-14T03:41:09.230372+00:00",
+    "deleted_at": null,
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "28inch/71cm"
+   }
+  ],
+  "supplier": [
+   {
+    "id": "d7072247-a621-4a8a-a918-5b74ffb9ca01",
+    "kode": "SUP-002",
+    "nama": "PHONIX",
+    "kontak": null,
+    "alamat": "TAMIM",
+    "is_active": true,
+    "created_at": "2026-08-05T00:53:51.077662+00:00",
+    "updated_at": "2026-08-05T00:53:51.077662+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "5a35867d-64e5-4d39-bf5b-6f0ebbf89b2e",
+    "kode": "SUP-001",
+    "nama": "PT PELITA ABADI no.57",
+    "kontak": null,
+    "alamat": "tamim",
+    "is_active": true,
+    "created_at": "2026-08-04T09:40:54.19167+00:00",
+    "updated_at": "2026-08-07T10:00:16.266+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "c7fb6870-b142-4eba-82e8-7784287af32d",
+    "kode": "SUP-003",
+    "nama": "PT PELITA no.60",
+    "kontak": null,
+    "alamat": "tamim no.60",
+    "is_active": true,
+    "created_at": "2026-08-07T10:00:58.899941+00:00",
+    "updated_at": "2026-08-07T10:00:58.899941+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "2b6e36cc-199d-4cea-9dcd-f55e78cffa41",
+    "kode": "SUP-004",
+    "nama": "Tamatex",
+    "kontak": null,
+    "alamat": "tamim",
+    "is_active": true,
+    "created_at": "2026-08-07T10:01:23.729899+00:00",
+    "updated_at": "2026-08-07T10:01:23.729899+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "8414bc8d-d585-4d60-8958-103c6b6fd4aa",
+    "kode": "SUP-005",
+    "nama": "TOPLIS",
+    "kontak": null,
+    "alamat": "Cigondewah",
+    "is_active": true,
+    "created_at": "2026-08-07T10:01:57.371926+00:00",
+    "updated_at": "2026-08-07T10:01:57.371926+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "0411b16d-69d0-4486-bf5e-55561ff40f52",
+    "kode": "SUP-006",
+    "nama": "NASIONAL",
+    "kontak": null,
+    "alamat": "cibadak",
+    "is_active": true,
+    "created_at": "2026-08-07T10:02:35.921107+00:00",
+    "updated_at": "2026-08-07T10:02:35.921107+00:00",
+    "deleted_at": null
+   }
+  ],
+  "kategori": [
+   {
+    "id": "cb1266a2-b8dc-4f7a-8956-66494d0edf1b",
+    "kode": "AKSS",
+    "nama": "AKSESORIS",
+    "is_active": true,
+    "created_at": "2026-08-07T09:49:22.357899+00:00",
+    "updated_at": "2026-08-07T09:49:22.357899+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "accc5fcd-98c0-4a3c-a99d-1208641658d7",
+    "kode": "BNNG",
+    "nama": "BENANG",
+    "is_active": true,
+    "created_at": "2026-08-07T09:49:47.593379+00:00",
+    "updated_at": "2026-08-07T09:49:47.593379+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "a7e0f643-6403-4e57-818a-0d12846e9c22",
+    "kode": "KP-RTG",
+    "nama": "KEPALA RESLETING",
+    "is_active": true,
+    "created_at": "2026-08-07T09:51:59.392425+00:00",
+    "updated_at": "2026-08-07T09:51:59.392425+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "9daed2e5-d1ff-42de-99e3-06fbc05d759d",
+    "kode": "KN-FRG",
+    "nama": "KAIN FURING",
+    "is_active": true,
+    "created_at": "2026-08-04T10:51:07.4287+00:00",
+    "updated_at": "2026-08-07T09:52:19.493+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "aa0fb5cf-d709-4a5c-ae9c-a8e74a1cc588",
+    "kode": "KN-UTM",
+    "nama": "KAIN UTAMA",
+    "is_active": true,
+    "created_at": "2026-08-04T07:14:10.463049+00:00",
+    "updated_at": "2026-08-07T09:52:36.739+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "93e1be85-4301-43dc-bfe0-f728aa22d0be",
+    "kode": "TR-SLG",
+    "nama": "TALI RESLETING",
+    "is_active": true,
+    "created_at": "2026-08-07T09:50:42.970655+00:00",
+    "updated_at": "2026-08-07T09:52:48.38+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "b45e9776-9335-4d3c-a285-aecaa4c96cda",
+    "kode": "LBL",
+    "nama": "LEBEL",
+    "is_active": true,
+    "created_at": "2026-08-07T09:55:11.01061+00:00",
+    "updated_at": "2026-08-07T09:55:11.01061+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "b2a7db8c-a379-452e-80cc-99b20eb724d7",
+    "kode": "FNSG",
+    "nama": "FINISHING",
+    "is_active": true,
+    "created_at": "2026-08-07T09:55:48.915364+00:00",
+    "updated_at": "2026-08-07T09:55:48.915364+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "bd6a4d0c-e84f-41f7-8906-b056fc63fb18",
+    "kode": "CTH",
+    "nama": "Contoh",
+    "is_active": true,
+    "created_at": "2026-08-08T15:23:04.114149+00:00",
+    "updated_at": "2026-08-08T15:23:04.114149+00:00",
+    "deleted_at": "2026-08-08T15:23:10.21+00:00"
+   },
+   {
+    "id": "d27c241a-3456-4efa-90d5-ef33a434c103",
+    "kode": "CTH",
+    "nama": "Contoh",
+    "is_active": true,
+    "created_at": "2026-08-08T15:23:29.546352+00:00",
+    "updated_at": "2026-08-08T15:23:29.546352+00:00",
+    "deleted_at": "2026-08-08T15:23:39.015+00:00"
+   },
+   {
+    "id": "f9c96c3f-cca6-453c-b258-e52b651e241f",
+    "kode": "CTH",
+    "nama": "Contoh",
+    "is_active": true,
+    "created_at": "2026-08-08T15:23:52.687007+00:00",
+    "updated_at": "2026-08-08T15:23:52.687007+00:00",
+    "deleted_at": "2026-08-08T15:24:03.806+00:00"
+   }
+  ],
+  "satuan": [
+   {
+    "id": "d782323e-c9c7-4c94-b989-e930f6351cff",
+    "nama": "Meter",
+    "singkatan": "m",
+    "is_active": true,
+    "created_at": "2026-08-04T09:16:30.787404+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "68f3861a-b459-46c3-ac08-ff5a6a2198e4",
+    "nama": "Kilogram",
+    "singkatan": "Kg",
+    "is_active": true,
+    "created_at": "2026-08-04T23:35:44.875426+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "ce31db6f-5568-4303-981f-7f8dd9dac4cf",
+    "nama": "Lusin",
+    "singkatan": "Lsn",
+    "is_active": true,
+    "created_at": "2026-08-07T09:57:32.412599+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "37e6a912-d712-42e6-be2d-d96c8a1aa862",
+    "nama": "Pack",
+    "singkatan": "Pax",
+    "is_active": true,
+    "created_at": "2026-08-07T09:57:09.960401+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "f1d5d308-a01a-4dfc-9b9f-469db41fb913",
+    "nama": "Roll",
+    "singkatan": "Rll",
+    "is_active": true,
+    "created_at": "2026-08-07T09:59:07.240625+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "fe817e66-1d04-4a64-8238-13932cf46dce",
+    "nama": "Yard",
+    "singkatan": "Yrd",
+    "is_active": true,
+    "created_at": "2026-08-07T09:59:44.021753+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "326c6cb0-45c5-4944-810e-d998eac5a761",
+    "nama": "Picis",
+    "singkatan": "Pcs",
+    "is_active": true,
+    "created_at": "2026-08-12T02:44:53.136142+00:00",
+    "deleted_at": null
+   }
+  ],
+  "warna": [
+   {
+    "id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "kode": "Htm",
+    "nama": "Hitam",
+    "is_active": true,
+    "created_at": "2026-08-14T03:25:30.324098+00:00",
+    "updated_at": "2026-08-14T03:25:30.324098+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "d626ab02-d3d6-41a4-bf4e-6b22e6c22dc1",
+    "kode": "Pth",
+    "nama": "Putih",
+    "is_active": true,
+    "created_at": "2026-08-14T03:48:01.420977+00:00",
+    "updated_at": "2026-08-14T03:48:01.420977+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "ba5aeef6-ca69-41a0-8763-ac7274ce8f1b",
+    "kode": "Bng",
+    "nama": "Bening",
+    "is_active": true,
+    "created_at": "2026-08-14T03:48:25.335255+00:00",
+    "updated_at": "2026-08-14T03:48:25.335255+00:00",
+    "deleted_at": null
+   }
+  ],
+  "produk": [
+   {
+    "id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "kode": "SMK",
+    "nama": "Smoke Test Jacket",
+    "deskripsi": null,
+    "foto_url": null,
+    "is_active": true,
+    "created_at": "2026-09-03T02:51:15.13931+00:00",
+    "updated_at": "2026-09-03T02:51:15.13931+00:00",
+    "deleted_at": null,
+    "dekorasi_proses": "sablon"
+   }
+  ],
+  "varian_produk": [
+   {
+    "id": "ac7c9f71-a9a2-4b51-a817-c2551a26c230",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "warna_id": "ba5aeef6-ca69-41a0-8763-ac7274ce8f1b",
+    "ukuran": "M",
+    "jenis_kelamin": null,
+    "sku": "SMK-Bng-M",
+    "is_active": true,
+    "created_at": "2026-09-03T02:51:15.13931+00:00",
+    "updated_at": "2026-09-03T02:51:15.13931+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "63b78f31-ad02-4f01-a624-7191ffe80628",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "warna_id": "ba5aeef6-ca69-41a0-8763-ac7274ce8f1b",
+    "ukuran": "L",
+    "jenis_kelamin": null,
+    "sku": "SMK-Bng-L",
+    "is_active": true,
+    "created_at": "2026-09-03T02:51:15.13931+00:00",
+    "updated_at": "2026-09-03T02:51:15.13931+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "031822be-6031-4735-8816-7f3fa9cbed88",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "warna_id": "3f69c9ea-0f63-4ee3-9412-dd4395ca2bde",
+    "ukuran": "M",
+    "jenis_kelamin": null,
+    "sku": "SMK-Htm-M",
+    "is_active": true,
+    "created_at": "2026-09-03T02:51:15.13931+00:00",
+    "updated_at": "2026-09-03T02:51:15.13931+00:00",
+    "deleted_at": null
+   }
+  ],
+  "vendor": [
+   {
+    "id": "4e43966e-d12f-40e5-9305-dce22a2db5af",
+    "kode": "VDR-0001",
+    "nama": "CV Jahit Makmur",
+    "pemilik": null,
+    "kontak": null,
+    "telepon": null,
+    "email": null,
+    "alamat": null,
+    "kota": null,
+    "kapasitas_harian": 0,
+    "jenis_pekerjaan": [],
+    "kapabilitas": [
+     "jahit",
+     "sablon"
+    ],
+    "bank_nama": null,
+    "bank_nomor_rekening": null,
+    "bank_atas_nama": null,
+    "termin_hari": 0,
+    "lead_time_hari": 0,
+    "qc_mode": "internal",
+    "qc_officer": null,
+    "catatan": null,
+    "is_active": true,
+    "created_at": "2026-09-03T03:03:59.938499+00:00",
+    "updated_at": "2026-09-03T03:03:59.938499+00:00",
+    "deleted_at": null
+   }
+  ],
+  "bom": [
+   {
+    "id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "nomor_dokumen": "BOM-202609-0001",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "versi": 1,
+    "status": "aktif",
+    "tanggal_berlaku": "2026-09-15T12:22:08.292+00:00",
+    "catatan": "rr",
+    "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_at": "2026-09-15T12:22:08.292+00:00",
+    "created_at": "2026-09-14T00:36:49.171487+00:00",
+    "updated_at": "2026-09-15T12:22:08.292+00:00",
+    "deleted_at": null
+   }
+  ],
+  "bom_detail": [
+   {
+    "id": "af00949c-ba87-4a87-9ce4-add67664b44b",
+    "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "bahan_id": "624adf50-cf0f-4c51-8feb-ff5a9cdc0e51",
+    "kuantitas": 1.0,
+    "toleransi_persen": 0.0,
+    "berlaku_ukuran": null,
+    "keterangan": null
+   },
+   {
+    "id": "35f26a0c-cabf-4921-aef0-5c98ae140bef",
+    "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "bahan_id": "aa285295-d45a-4480-88ce-8ced4b2c8ea9",
+    "kuantitas": 1.0,
+    "toleransi_persen": 0.0,
+    "berlaku_ukuran": null,
+    "keterangan": null
+   },
+   {
+    "id": "45a8d0b4-836e-435b-be24-5772d2ce407c",
+    "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "bahan_id": "feb08757-1000-49f5-84b7-42ba8ad95ffe",
+    "kuantitas": 1.0,
+    "toleransi_persen": 0.0,
+    "berlaku_ukuran": "L",
+    "keterangan": null
+   },
+   {
+    "id": "a03ca2a6-4c9f-431e-9cb8-8aca0ae939a8",
+    "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "bahan_id": "31df62d4-692c-4a55-89b3-3721e64c70c0",
+    "kuantitas": 1.0,
+    "toleransi_persen": 0.0,
+    "berlaku_ukuran": "M",
+    "keterangan": null
+   },
+   {
+    "id": "fa6a0916-4e72-4a44-b228-14d8c46b35b7",
+    "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "bahan_id": "a47a7782-7c75-4c81-a7df-fba2cb593b4a",
+    "kuantitas": 1.0,
+    "toleransi_persen": 0.0,
+    "berlaku_ukuran": null,
+    "keterangan": null
+   },
+   {
+    "id": "462c780a-7045-4853-83a7-9a3f8c687239",
+    "bom_id": "a9355fde-111e-4300-bd5c-ed373030147e",
+    "bahan_id": "6a8babb5-b90c-4d51-a830-c77a605e84d1",
+    "kuantitas": 2.0,
+    "toleransi_persen": 0.0,
+    "berlaku_ukuran": null,
+    "keterangan": null
+   }
+  ],
+  "users": [
+   {
+    "id": "fbb667ca-b788-491c-8106-66652848202a",
+    "email": "owner@owncrave.local",
+    "display_name": "Owner Owncrave",
+    "role": "owner",
+    "is_active": true,
+    "created_at": "2026-08-03T13:31:01.251227+00:00",
+    "updated_at": "2026-08-04T11:02:04.788+00:00"
+   },
+   {
+    "id": "f1f3cf3e-0d3e-4f83-ac86-e98e43e889ff",
+    "email": "gudang@owncrave.local",
+    "display_name": "Orang Gudang 1",
+    "role": "admin_gudang",
+    "is_active": true,
+    "created_at": "2026-08-04T02:08:58.151928+00:00",
+    "updated_at": "2026-08-10T23:57:56.543+00:00"
+   },
+   {
+    "id": "8020c6c1-b927-490e-8fa1-b1800d9990b7",
+    "email": "produksi1@owncrave.local",
+    "display_name": "Staff Produksi 1",
+    "role": "admin_produksi",
+    "is_active": true,
+    "created_at": "2026-09-21T09:02:53.762137+00:00",
+    "updated_at": "2026-09-21T09:02:53.762137+00:00"
+   },
+   {
+    "id": "954e10bf-77bb-4e6a-8daf-bcd1f9454241",
+    "email": "qc1@owncrave.local",
+    "display_name": "Petugas QC 1",
+    "role": "viewer",
+    "is_active": true,
+    "created_at": "2026-09-21T09:03:13.098433+00:00",
+    "updated_at": "2026-09-21T09:03:13.098433+00:00"
+   }
+  ],
+  "bagian_produk": [
+   {
+    "id": "ce8da800-790e-4159-9f76-1b29d95dba27",
+    "kode": "BP-01",
+    "nama": "Kerah",
+    "urutan": 10,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "b9600353-08d6-4f51-ad33-943402d1c3e1",
+    "kode": "BP-02",
+    "nama": "Bahu",
+    "urutan": 20,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "402f2b10-1ac4-400b-8225-3bca98cd983b",
+    "kode": "BP-03",
+    "nama": "Lengan",
+    "urutan": 30,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "3b6fff13-0bbd-4ea0-ad88-22a30815f9f5",
+    "kode": "BP-04",
+    "nama": "Badan",
+    "urutan": 40,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "cd0132c8-6c4b-486b-89fb-807030f6d12f",
+    "kode": "BP-05",
+    "nama": "Saku",
+    "urutan": 50,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "d5bd5cbd-1a16-4301-ac33-51f22977f948",
+    "kode": "BP-06",
+    "nama": "Resleting",
+    "urutan": 60,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "7e1566de-2462-4bc7-8eb3-0b06a1e54a71",
+    "kode": "BP-07",
+    "nama": "Kancing",
+    "urutan": 70,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "ed6318d1-7e2e-468f-bd4a-7cfe3251b352",
+    "kode": "BP-08",
+    "nama": "Jahitan Bawah",
+    "urutan": 80,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "c79fb9d4-480a-4550-8e42-52408fd47543",
+    "kode": "BP-09",
+    "nama": "Label / Tag",
+    "urutan": 90,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "7eb034c9-9ff0-460e-8b1b-af152d918bba",
+    "kode": "BP-10",
+    "nama": "Lainnya",
+    "urutan": 100,
+    "is_active": true,
+    "created_at": "2026-09-21T10:45:23.868606+00:00",
+    "updated_at": "2026-09-21T10:45:23.868606+00:00",
+    "deleted_at": null
+   }
+  ],
+  "jenis_cacat": [
+   {
+    "id": "961eab99-05aa-4c75-b370-4509df842197",
+    "kode": "JHT-01",
+    "nama": "Jahitan loncat",
+    "kategori": "jahit",
+    "keparahan": "major",
+    "sumber": "vendor",
+    "dapat_diperbaiki": true,
+    "tindakan_default": "Jahit ulang bagian yang loncat",
+    "is_active": true,
+    "created_at": "2026-09-15T04:14:00.281771+00:00",
+    "updated_at": "2026-09-15T04:14:00.281771+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "c4b9827d-1cac-401b-8e42-c13338a84849",
+    "kode": "FIN-01",
+    "nama": "Noda sisa kapur",
+    "kategori": "jahit",
+    "keparahan": "minor",
+    "sumber": "tidak_diketahui",
+    "dapat_diperbaiki": true,
+    "tindakan_default": null,
+    "is_active": true,
+    "created_at": "2026-09-15T04:14:27.314282+00:00",
+    "updated_at": "2026-09-15T04:14:27.314282+00:00",
+    "deleted_at": "2026-09-15T04:15:18.28+00:00"
+   },
+   {
+    "id": "a89808e8-e001-47d2-9def-5db9f52ea7e1",
+    "kode": "FIN-01",
+    "nama": "Noda sisa kapur (buat ulang)",
+    "kategori": "jahit",
+    "keparahan": "minor",
+    "sumber": "tidak_diketahui",
+    "dapat_diperbaiki": true,
+    "tindakan_default": null,
+    "is_active": true,
+    "created_at": "2026-09-15T04:18:18.873172+00:00",
+    "updated_at": "2026-09-15T04:18:18.873172+00:00",
+    "deleted_at": null
+   }
+  ],
+  "gudang_barang_jadi": [
+   {
+    "id": "86264864-197a-4c34-8e04-4d290e7cbc77",
+    "kode": "GD-01",
+    "nama": "Gudang Utama",
+    "jenis": "gudang_utama",
+    "alamat": null,
+    "pic_nama": "Budi",
+    "is_default": false,
+    "is_active": true,
+    "created_at": "2026-09-15T04:22:09.293892+00:00",
+    "updated_at": "2026-09-15T04:22:29.313+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "6a4f494e-d2b5-4b3e-b2c5-19dac6ec6a77",
+    "kode": "GD-02",
+    "nama": "Toko Offline",
+    "jenis": "toko_offline",
+    "alamat": null,
+    "pic_nama": null,
+    "is_default": true,
+    "is_active": true,
+    "created_at": "2026-09-15T04:22:29.286893+00:00",
+    "updated_at": "2026-09-15T04:22:29.286893+00:00",
+    "deleted_at": null
+   }
+  ],
+  "kemasan": [
+   {
+    "id": "2f331495-fab6-4e8d-9063-0af42ce339b0",
+    "kode": "PB-30",
+    "nama": "Polybag 30x40",
+    "jenis": "polybag",
+    "ukuran": "30x40 cm",
+    "bahan_kemasan": null,
+    "supplier_id": null,
+    "biaya": 1500.5,
+    "stok_minimum": 100.0,
+    "is_active": true,
+    "created_at": "2026-09-15T04:20:36.962503+00:00",
+    "updated_at": "2026-09-15T04:20:36.962503+00:00",
+    "deleted_at": null
+   }
+  ],
+  "standar_qc": [
+   {
+    "id": "b95a8eda-61f0-4742-a0fc-4cf7a058c8fc",
+    "nomor_dokumen": "STD-QC-202609-0001",
+    "nama": "Standar QC Smoke Test",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "kategori_id": null,
+    "versi": 1,
+    "tanggal_berlaku": "2026-09-15T00:00:00+00:00",
+    "status": "nonaktif",
+    "catatan": null,
+    "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_at": "2026-09-15T04:26:58.544+00:00",
+    "created_at": "2026-09-15T04:26:41.141071+00:00",
+    "updated_at": "2026-09-15T04:27:24.762+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "07d8b787-2d50-48e7-919d-61764669f2aa",
+    "nomor_dokumen": "STD-QC-202609-0002",
+    "nama": "Standar QC Smoke Test",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "kategori_id": null,
+    "versi": 2,
+    "tanggal_berlaku": "2026-09-15T04:27:11.856+00:00",
+    "status": "aktif",
+    "catatan": null,
+    "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_at": "2026-09-15T04:27:24.837+00:00",
+    "created_at": "2026-09-15T04:27:11.714609+00:00",
+    "updated_at": "2026-09-15T04:27:24.837+00:00",
+    "deleted_at": null
+   }
+  ],
+  "standar_qc_detail": [
+   {
+    "id": "a3325074-909d-454a-898f-74353041af5f",
+    "standar_qc_id": "b95a8eda-61f0-4742-a0fc-4cf7a058c8fc",
+    "tahap": "Pemeriksaan Akhir",
+    "kriteria": "Jahitan rapi, tidak ada benang menjuntai",
+    "metode": null,
+    "tingkat_kepentingan": "minor",
+    "toleransi": null,
+    "jenis_cacat_id": null,
+    "tindakan_jika_gagal": null,
+    "wajib_foto": false,
+    "urutan": 0,
+    "bagian_produk_id": null
+   },
+   {
+    "id": "f4979efd-0a87-42f4-b3f4-422b856f5470",
+    "standar_qc_id": "07d8b787-2d50-48e7-919d-61764669f2aa",
+    "tahap": "Pemeriksaan Akhir",
+    "kriteria": "Jahitan rapi, tidak ada benang menjuntai",
+    "metode": null,
+    "tingkat_kepentingan": "minor",
+    "toleransi": null,
+    "jenis_cacat_id": null,
+    "tindakan_jika_gagal": null,
+    "wajib_foto": false,
+    "urutan": 0,
+    "bagian_produk_id": null
+   }
+  ],
+  "tarif_jasa_jahit": [
+   {
+    "id": "4c1a9359-95f0-4c3a-a4c1-726b782dddff",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "varian_id": null,
+    "jenis_pekerjaan": "jahit_penuh",
+    "vendor_id": "4e43966e-d12f-40e5-9305-dce22a2db5af",
+    "penjahit_id": null,
+    "dasar_tarif": "per_pcs",
+    "nominal": 25000.0,
+    "tanggal_berlaku": "2026-09-03T00:00:00+00:00",
+    "versi": 1,
+    "status": "nonaktif",
+    "catatan": null,
+    "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_at": "2026-09-03T03:06:16.773+00:00",
+    "created_at": "2026-09-03T03:05:56.568916+00:00",
+    "updated_at": "2026-09-03T03:08:17.47+00:00",
+    "deleted_at": null
+   },
+   {
+    "id": "c4ec0110-807c-4c75-92de-29fa1cf82f56",
+    "produk_id": "e030d827-6986-452b-96fc-b5b9e02eda60",
+    "varian_id": null,
+    "jenis_pekerjaan": "jahit_penuh",
+    "vendor_id": "4e43966e-d12f-40e5-9305-dce22a2db5af",
+    "penjahit_id": null,
+    "dasar_tarif": "per_pcs",
+    "nominal": 30000.0,
+    "tanggal_berlaku": "2026-09-03T03:07:29.358+00:00",
+    "versi": 2,
+    "status": "aktif",
+    "catatan": null,
+    "created_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_by": "fbb667ca-b788-491c-8106-66652848202a",
+    "approved_at": "2026-09-03T03:08:17.517+00:00",
+    "created_at": "2026-09-03T03:07:29.345994+00:00",
+    "updated_at": "2026-09-03T03:08:17.517+00:00",
+    "deleted_at": null
+   }
+  ]
+ }
+}
