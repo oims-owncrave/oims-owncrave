@@ -8,7 +8,10 @@ export const bahanSchema = z.object({
   warnaId: z.string().uuid().optional().nullable(),
   stokMinimum: z.number().min(0, "Stok minimum tidak boleh negatif"),
   isActive: z.boolean(),
-  hargaAwal: z.number().min(0, "Harga tidak boleh negatif"),
+  // Hanya dipakai saat create (form edit menyembunyikan field ini, updateBahan
+  // tidak menyentuh harga) — wajib optional, kalau tidak validasi edit gagal
+  // diam-diam karena defaultValues form edit tak pernah mengisi field ini.
+  hargaAwal: z.number().min(0, "Harga tidak boleh negatif").optional(),
 });
 
 export type BahanInput = z.infer<typeof bahanSchema>;
