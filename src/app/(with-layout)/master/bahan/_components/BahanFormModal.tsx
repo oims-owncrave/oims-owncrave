@@ -161,7 +161,7 @@ export function BahanFormModal({
           />
 
           <Input
-            label="Ukuran"
+            label="Ket"
             placeholder="Misal: 30inch/76cm"
             error={errors.ukuran?.message}
             {...register("ukuran")}

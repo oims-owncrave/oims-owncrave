@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { ComboSelect } from "@/components/ui/ComboSelect";
 import { Pencil, Trash2, Plus, Upload } from "lucide-react";
 import { useBahanMutation } from "@/hooks/useBahan";
 import {
@@ -51,7 +52,28 @@ const rupiah = (n: number) =>
 
 export function BahanTable({ data, onEdit, onAdd, onImport }: Props) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [kategoriId, setKategoriId] = useState("");
   const { remove } = useBahanMutation();
+
+  const kategoriOpts = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const item of data) {
+      if (item.kategoriId && !seen.has(item.kategoriId)) {
+        seen.set(item.kategoriId, item.kategoriNama || "-");
+      }
+    }
+    return [
+      { label: "Semua Kategori", value: "" },
+      ...Array.from(seen, ([value, label]) => ({ label, value })).sort((a, b) =>
+        a.label.localeCompare(b.label),
+      ),
+    ];
+  }, [data]);
+
+  const filteredData = useMemo(
+    () => (kategoriId ? data.filter((item) => item.kategoriId === kategoriId) : data),
+    [data, kategoriId],
+  );
 
   const actions: TableAction<BahanItem>[] = [
     {
@@ -73,7 +95,7 @@ export function BahanTable({ data, onEdit, onAdd, onImport }: Props) {
     { key: "nama", label: "Nama Bahan" },
     {
       key: "ukuran",
-      label: "Ukuran",
+      label: "Ket",
       renderCell: (item) => item.ukuran || "—",
     },
     {
@@ -133,7 +155,7 @@ export function BahanTable({ data, onEdit, onAdd, onImport }: Props) {
   ];
 
   const table = useTable({
-    data,
+    data: filteredData,
     columns,
     defaultPageSize: 10,
     getRowId: (item) => item.id,
@@ -143,9 +165,19 @@ export function BahanTable({ data, onEdit, onAdd, onImport }: Props) {
     <>
       <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card overflow-hidden">
         <TableToolbar>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <TableSearch table={table} placeholder="Cari bahan..." className="flex-1 sm:w-64" />
-            <ColumnToggle table={table} className="shrink-0" />
+          <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-center sm:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <TableSearch table={table} placeholder="Cari bahan..." className="flex-1 sm:w-64" />
+              <ColumnToggle table={table} className="shrink-0" />
+            </div>
+            <ComboSelect
+              variant="filter"
+              placeholder="Semua Kategori"
+              options={kategoriOpts}
+              value={kategoriId || null}
+              onChange={(v) => setKategoriId((v as string) ?? "")}
+              className="w-full sm:w-44"
+            />
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={onImport} className="hidden sm:inline-flex">
