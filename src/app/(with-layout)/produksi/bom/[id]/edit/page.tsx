@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getBomDetail } from "@/services/bom";
-import { listProduk, listUkuranPerProduk } from "@/services/produk";
+import { listProduk, listUkuranPerProduk, listWarnaPerProduk } from "@/services/produk";
 import { listBahan } from "@/services/bahan";
 import { requireRole } from "@/lib/auth";
 import { BomForm } from "../../_components/BomForm";
@@ -23,10 +23,11 @@ export default async function BomEditPage({
   if (!detail) notFound();
   if (detail.status !== "draft") redirect(`/produksi/bom/${id}`);
 
-  const [produkOptions, bahanOptions, ukuranPerProduk] = await Promise.all([
+  const [produkOptions, bahanOptions, ukuranPerProduk, warnaPerProduk] = await Promise.all([
     listProduk(),
     listBahan(),
     listUkuranPerProduk(),
+    listWarnaPerProduk(),
   ]);
 
   return (
@@ -44,6 +45,7 @@ export default async function BomEditPage({
         produkOptions={produkOptions}
         bahanOptions={bahanOptions}
         ukuranPerProduk={ukuranPerProduk}
+        warnaPerProduk={warnaPerProduk}
         editId={id}
         defaultValues={{
           produkId: detail.produkId,
@@ -53,6 +55,7 @@ export default async function BomEditPage({
             kuantitas: Number(d.kuantitas),
             toleransiPersen: Number(d.toleransiPersen),
             berlakuUkuran: d.berlakuUkuran ?? "",
+            berlakuWarnaIds: d.berlakuWarnaIds ?? [],
             keterangan: d.keterangan ?? "",
           })),
         }}

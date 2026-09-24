@@ -36,6 +36,7 @@ Pembelian Bahan
 | Satuan tidak boleh campur | Satu `bahan` punya satu `satuan_id`. Transaksi stok selalu dalam satuan yang sama. Gak ada konversi implicit. |
 | Harga rata-rata bergerak | Metode weighted average. Tiap barang masuk → `bahan.harga_rata_rata` di-update = (stok lama × harga lama + qty baru × harga baru) / (stok lama + qty baru). |
 | Penyesuaian stok butuh approval | `penyesuaian_stok.status` mulai `pending`, owner yang approve. Mutasi stok hanya terbuat setelah `approved`. |
+| Baris BOM bisa berlaku per ukuran DAN warna | `bom_detail.berlakuUkuran` (teks) + `berlakuWarnaIds` (uuid[], null = semua warna) — satu bahan boleh muncul beberapa kali per produk dengan kombinasi ukuran/warna beda (mis. kain utama beda per warna). Estimasi PO menyaring pcs varian yang cocok lewat `pcsBerlaku()` (`src/lib/bom-ukuran.ts`) — keduanya harus cocok, bukan salah satu. |
 
 ---
 

@@ -2,7 +2,7 @@
 
 import { and, eq, isNull, sql, getTableColumns } from "drizzle-orm";
 import { db } from "@/db";
-import { produk, varianProduk, auditLog, bom } from "@/db/schema";
+import { produk, varianProduk, auditLog, bom, warna } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import { urutkanUkuran } from "@/lib/bom-ukuran";
 import type { ProdukInput } from "@/lib/schemas/produk";
@@ -119,6 +119,20 @@ export async function listUkuranPerProduk(): Promise<Record<string, string[]>> {
   for (const produkId of Object.keys(map)) {
     map[produkId] = urutkanUkuran(map[produkId]);
   }
+  return map;
+}
+
+/** Warna unik varian aktif per produk, dipakai buat isi pilihan MultiSelect di form BOM. */
+export async function listWarnaPerProduk(): Promise<Record<string, { id: string; nama: string }[]>> {
+  await requireRole(["owner", "admin_gudang", "admin_produksi", "keuangan", "viewer"]);
+  const rows = await db
+    .selectDistinct({ produkId: varianProduk.produkId, id: warna.id, nama: warna.nama })
+    .from(varianProduk)
+    .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+    .where(isNull(varianProduk.deletedAt))
+    .orderBy(warna.nama);
+  const map: Record<string, { id: string; nama: string }[]> = {};
+  for (const r of rows) (map[r.produkId] ??= []).push({ id: r.id, nama: r.nama });
   return map;
 }
 

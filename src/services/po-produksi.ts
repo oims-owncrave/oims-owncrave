@@ -21,7 +21,7 @@ import { requireRole } from "@/lib/auth";
 import {
   hitungEstimasi,
   type EstimasiRow,
-  type PcsPerUkuran,
+  type PcsPerVarian,
   type EstimasiResult,
   type PreviewEstimasiInput,
 } from "@/lib/produksi/estimasi";
@@ -457,6 +457,7 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
   const details = await db
     .select({
       varianUkuran: varianProduk.ukuran,
+      varianWarnaId: varianProduk.warnaId,
       jumlahTarget: poProduksiDetail.jumlahTarget,
       lebihanPcs: poProduksiDetail.lebihanPcs,
     })
@@ -476,14 +477,15 @@ export async function getEstimasiBahan(poId: string): Promise<EstimasiResult> {
     lebihanRows.map((l) => [l.bahanId, Number(l.lebihan)]),
   );
 
-  const pcsPerUkuran: PcsPerUkuran[] = details.map((d) => ({
+  const pcsPerVarian: PcsPerVarian[] = details.map((d) => ({
     ukuran: d.varianUkuran,
+    warnaId: d.varianWarnaId,
     pcs: d.jumlahTarget + d.lebihanPcs,
   }));
 
-  const rows = await hitungEstimasi(db, bomRow.id, pcsPerUkuran, lebihanMap);
+  const { rows, varianTanpaBahan } = await hitungEstimasi(db, bomRow.id, pcsPerVarian, lebihanMap);
 
-  return { bomNomor: bomRow.nomorDokumen, bomVersi: bomRow.versi, rows };
+  return { bomNomor: bomRow.nomorDokumen, bomVersi: bomRow.versi, rows, varianTanpaBahan };
 }
 
 export async function previewEstimasiBahan(
@@ -514,22 +516,22 @@ export async function previewEstimasiBahan(
   const varianIds = input.details.map((d) => d.varianId);
   const varianRows = varianIds.length
     ? await db
-        .select({ id: varianProduk.id, ukuran: varianProduk.ukuran })
+        .select({ id: varianProduk.id, ukuran: varianProduk.ukuran, warnaId: varianProduk.warnaId })
         .from(varianProduk)
         .where(inArray(varianProduk.id, varianIds))
     : [];
-  const varianMap = new Map(varianRows.map((v) => [v.id, v.ukuran]));
+  const varianMap = new Map(varianRows.map((v) => [v.id, { ukuran: v.ukuran, warnaId: v.warnaId }]));
 
-  const pcsPerUkuran: PcsPerUkuran[] = input.details.map((d) => ({
-    ukuran: varianMap.get(d.varianId) ?? "",
-    pcs: Number(d.jumlahTarget) || 0,
-  }));
+  const pcsPerVarian: PcsPerVarian[] = input.details.map((d) => {
+    const v = varianMap.get(d.varianId);
+    return { ukuran: v?.ukuran ?? "", warnaId: v?.warnaId ?? "", pcs: Number(d.jumlahTarget) || 0 };
+  });
 
   const lebihanMap = new Map(
     (input.lebihanBahan ?? []).map((l) => [l.bahanId, Number(l.lebihan) || 0]),
   );
 
-  const rows = await hitungEstimasi(db, bomRow.id, pcsPerUkuran, lebihanMap);
+  const { rows, varianTanpaBahan } = await hitungEstimasi(db, bomRow.id, pcsPerVarian, lebihanMap);
 
-  return { bomNomor: bomRow.nomorDokumen, bomVersi: bomRow.versi, rows };
+  return { bomNomor: bomRow.nomorDokumen, bomVersi: bomRow.versi, rows, varianTanpaBahan };
 }

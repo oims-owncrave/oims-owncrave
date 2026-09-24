@@ -16,6 +16,7 @@ export type ImportConfig = {
   columns: ImportColumn[];
   action: (rows: Record<string, string>[]) => Promise<ImportResult>;
   onSuccess: () => void;
+  successMessage?: (n: number) => string;
 };
 
 interface ImportExcelModalProps {
@@ -84,7 +85,10 @@ export function ImportExcelModal({
         setRowErrors(res.errors);
         toast.error(`Terdapat ${res.errors.length} baris yang bermasalah. Perbaiki file dan upload ulang.`);
       } else if (res.inserted) {
-        toast.success(`${res.inserted} data berhasil diimport`, toastStyles.primary);
+        toast.success(
+          config.successMessage?.(res.inserted) ?? `${res.inserted} data berhasil diimport`,
+          toastStyles.primary,
+        );
         handleClose();
         config.onSuccess();
       }
@@ -203,7 +207,7 @@ export function ImportExcelModal({
               <div className="max-h-40 overflow-y-auto rounded-lg border border-red-200 bg-red-50/50 p-3 space-y-1 text-xs text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300">
                 {rowErrors.map((err, idx) => (
                   <div key={idx} className="flex gap-1.5">
-                    <span className="font-semibold shrink-0">Baris {err.row}:</span>
+                    <span className="font-semibold shrink-0">Baris {err.row + 1}:</span>
                     <span>{err.message}</span>
                   </div>
                 ))}

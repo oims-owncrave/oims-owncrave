@@ -732,6 +732,7 @@ export const bomDetail = pgTable(
     kuantitas: numeric("kuantitas", { precision: 15, scale: 3 }).notNull(),
     toleransiPersen: numeric("toleransi_persen", { precision: 5, scale: 2 }).notNull().default("0"),
     berlakuUkuran: text("berlaku_ukuran"), // null = semua ukuran
+    berlakuWarnaIds: uuid("berlaku_warna_ids").array(), // null = semua warna (array — tanpa FK)
     keterangan: text("keterangan"),
   },
   (t) => [index("bom_detail_bom_idx").on(t.bomId)]

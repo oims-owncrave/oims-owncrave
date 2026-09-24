@@ -1,8 +1,8 @@
 "use server";
 
-import { and, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { bom, bomDetail, produk, bahan, satuan, auditLog } from "@/db/schema";
+import { bom, bomDetail, produk, bahan, satuan, auditLog, varianProduk, warna } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 import { generateDocNumber } from "@/lib/document-number";
 import type { BomInput } from "@/lib/schemas/bom";
@@ -97,6 +97,7 @@ export async function getBomDetail(id: string) {
       kuantitas: bomDetail.kuantitas,
       toleransiPersen: bomDetail.toleransiPersen,
       berlakuUkuran: bomDetail.berlakuUkuran,
+      berlakuWarnaIds: bomDetail.berlakuWarnaIds,
       keterangan: bomDetail.keterangan,
     })
     .from(bomDetail)
@@ -105,7 +106,22 @@ export async function getBomDetail(id: string) {
     .where(eq(bomDetail.bomId, id))
     .orderBy(bahan.nama);
 
-  return { ...header, details };
+  const ids = [...new Set(details.flatMap((d) => d.berlakuWarnaIds ?? []))];
+  const namaWarna = ids.length
+    ? new Map(
+        (await db.select({ id: warna.id, nama: warna.nama }).from(warna).where(inArray(warna.id, ids))).map(
+          (w) => [w.id, w.nama],
+        ),
+      )
+    : new Map<string, string>();
+
+  return {
+    ...header,
+    details: details.map((d) => ({
+      ...d,
+      berlakuWarnaNama: (d.berlakuWarnaIds ?? []).map((wid) => namaWarna.get(wid) ?? "?"),
+    })),
+  };
 }
 
 export type BomDetailData = NonNullable<Awaited<ReturnType<typeof getBomDetail>>>;
@@ -150,14 +166,37 @@ function detailValues(bomId: string, input: BomInput) {
     bomId,
     bahanId: d.bahanId,
     kuantitas: String(d.kuantitas),
-    toleransiPersen: String(d.toleransiPersen),
+    toleransiPersen: String(d.toleransiPersen ?? 0),
     berlakuUkuran: d.berlakuUkuran?.trim() || null,
+    berlakuWarnaIds: d.berlakuWarnaIds?.length ? d.berlakuWarnaIds : null,
     keterangan: d.keterangan?.trim() || null,
   }));
 }
 
+/** Validasi: id warna yang dipakai baris BOM harus milik varian produk ini. */
+async function cekWarnaProduk(
+  produkId: string,
+  details: BomInput["details"],
+): Promise<{ error: string } | null> {
+  const warnaDipakai = [...new Set(details.flatMap((d) => d.berlakuWarnaIds ?? []))];
+  if (!warnaDipakai.length) return null;
+
+  const sah = await db
+    .selectDistinct({ warnaId: varianProduk.warnaId })
+    .from(varianProduk)
+    .where(and(eq(varianProduk.produkId, produkId), isNull(varianProduk.deletedAt)));
+  const set = new Set(sah.map((s) => s.warnaId));
+  if (warnaDipakai.some((w) => !set.has(w))) {
+    return { error: "Warna tidak ada di varian produk ini" };
+  }
+  return null;
+}
+
 export async function createBom(input: BomInput): Promise<{ data?: typeof bom.$inferSelect; error?: string }> {
   const user = await requireRole([...WRITE_ROLES]);
+
+  const warnaError = await cekWarnaProduk(input.produkId, input.details);
+  if (warnaError) return warnaError;
 
   const MAX_RETRY = 3;
   for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
@@ -209,6 +248,9 @@ export async function updateBom(id: string, input: BomInput): Promise<{ data?: t
   if (input.produkId !== before.produkId) {
     return { error: "Produk tidak bisa diganti — buat BOM baru untuk produk lain" };
   }
+
+  const warnaError = await cekWarnaProduk(before.produkId, input.details);
+  if (warnaError) return warnaError;
 
   return db.transaction(async (tx) => {
     const [header] = await tx
@@ -337,6 +379,7 @@ export async function createNewVersion(id: string): Promise<{ data?: typeof bom.
             kuantitas: d.kuantitas,
             toleransiPersen: d.toleransiPersen,
             berlakuUkuran: d.berlakuUkuran,
+            berlakuWarnaIds: d.berlakuWarnaIds,
             keterangan: d.keterangan,
           })),
         );

@@ -8,8 +8,10 @@ export const bomDetailSchema = z.object({
   toleransiPersen: z
     .number({ message: "Toleransi wajib angka" })
     .min(0, "Minimal 0")
-    .max(100, "Maksimal 100"),
+    .max(100, "Maksimal 100")
+    .optional(), // tidak ada di form (klien tidak pakai) — kosong = 0
   berlakuUkuran: z.string().optional(), // kosong = semua ukuran
+  berlakuWarnaIds: z.array(z.string().uuid()).optional(), // kosong = semua warna
   keterangan: z.string().optional(),
 });
 

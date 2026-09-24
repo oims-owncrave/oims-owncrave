@@ -9,6 +9,7 @@ import { useBomList } from "@/hooks/useBom";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ImportExcelModal } from "@/components/ui/import/ImportExcelModal";
 import { importBomBatch } from "@/services/import";
+import { BOM_IMPORT_COLUMNS } from "@/lib/import/bom-columns";
 
 interface Props {
   initialData: BomListRow[];
@@ -34,14 +35,7 @@ export function BomPageClient({ initialData }: Props) {
         config={{
           title: "Import BOM",
           templateFilename: "template-bom",
-          columns: [
-            { key: "produk", header: "Produk (kode/nama)", example: "NJK", required: true },
-            { key: "bahan", header: "Bahan (kode/nama)", example: "BH-KTN-001", required: true },
-            { key: "kuantitas", header: "Kuantitas per Pcs", example: "1.8", required: true },
-            { key: "toleransi", header: "Toleransi (%)", example: "5", required: false },
-            { key: "ukuran", header: "Berlaku Ukuran", example: "M", required: false },
-            { key: "keterangan", header: "Keterangan", example: "Bahan utama", required: false },
-          ],
+          columns: BOM_IMPORT_COLUMNS,
           action: importBomBatch,
           onSuccess: () => {
             qc.invalidateQueries({ queryKey: ["bom"] });

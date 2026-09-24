@@ -651,6 +651,84 @@ export async function importVarianBatch(
   return { inserted: parsed.length };
 }
 
+type KonteksBom = {
+  bhnMap: Map<string, string>; // kode/nama lowercase → bahanId
+  warnaProduk: Map<string, Map<string, string>>; // produkId → (kode/nama lowercase → warnaId)
+  ukuranProduk: Map<string, Set<string>>; // produkId → ukuran varian (uppercase)
+};
+
+// "Semua" / "all" di kolom Warna/Ukuran = sama dengan dikosongkan
+const isSemua = (t: string) => ["semua", "all", "-"].includes(t.trim().toLowerCase());
+export type BarisBom = {
+  bahanId: string;
+  kuantitas: number;
+  toleransiPersen: number;
+  berlakuUkuran: string | null;
+  berlakuWarnaIds: string[] | null;
+  keterangan: string | null;
+};
+
+/** Validasi + terjemahkan satu baris Excel BOM (bahan, kuantitas, toleransi, warna, ukuran). */
+function parseBarisBom(
+  raw: Record<string, string>,
+  produkId: string,
+  produkKode: string,
+  ctx: KonteksBom,
+): { baris: BarisBom } | { error: string } {
+  const bahanId = ctx.bhnMap.get((raw.bahan ?? "").trim().toLowerCase());
+  if (!bahanId) return { error: `Bahan "${raw.bahan}" tidak ditemukan / tidak aktif` };
+
+  const kuantitas = Number(raw.kuantitas);
+  if (Number.isNaN(kuantitas) || kuantitas <= 0) {
+    return { error: `Kuantitas "${raw.kuantitas}" tidak valid (harus > 0)` };
+  }
+  const toleransi = raw.toleransi ? Number(raw.toleransi) : 0;
+  if (Number.isNaN(toleransi) || toleransi < 0 || toleransi > 100) {
+    return { error: `Toleransi "${raw.toleransi}" tidak valid (0-100)` };
+  }
+
+  // kolom Berlaku Warna — dipisah koma, tiap item dicocokkan ke kode/nama warna milik produk itu
+  const warnaTeks = (isSemua(raw.warna ?? "") ? "" : (raw.warna ?? ""))
+    .split(",")
+    .map((w) => w.trim())
+    .filter(Boolean);
+  let berlakuWarnaIds: string[] | null = null;
+  if (warnaTeks.length) {
+    const warnaProdukIni = ctx.warnaProduk.get(produkId);
+    const ids: string[] = [];
+    for (const w of warnaTeks) {
+      const id = warnaProdukIni?.get(w.toLowerCase());
+      if (!id) return { error: `Warna "${w}" tidak ada di varian produk ${produkKode}` };
+      ids.push(id);
+    }
+    berlakuWarnaIds = ids;
+  }
+
+  // kolom Ukuran — dipisah koma, harus ukuran yang ada di varian produk itu
+  const ukuranTeks = (isSemua(raw.ukuran ?? "") ? "" : (raw.ukuran ?? ""))
+    .split(",")
+    .map((u) => u.trim().toUpperCase())
+    .filter(Boolean);
+  const ukuranSah = ctx.ukuranProduk.get(produkId);
+  const salahUkuran = ukuranTeks.find((u) => !ukuranSah?.has(u));
+  if (salahUkuran) {
+    const daftar = ukuranSah ? [...ukuranSah].join(", ") : "-";
+    return { error: `Ukuran "${salahUkuran}" tidak ada di varian produk ${produkKode} (ada: ${daftar})` };
+  }
+  const berlakuUkuran = ukuranTeks.length ? ukuranTeks.join(",") : null;
+
+  return {
+    baris: {
+      bahanId,
+      kuantitas,
+      toleransiPersen: toleransi,
+      berlakuUkuran,
+      berlakuWarnaIds,
+      keterangan: (raw.keterangan ?? "").trim() || null,
+    },
+  };
+}
+
 /**
  * Import BOM. Satu baris = satu bahan; baris dengan produk sama digabung jadi satu BOM.
  * BOM masuk sebagai DRAFT — aktivasi tetap lewat aksi owner (jaga aturan satu versi aktif).
@@ -661,9 +739,14 @@ export async function importBomBatch(
   const user = await requireRole([...PRODUKSI_IMPORT_ROLES]);
   if (!rows.length) return { error: "Tidak ada data untuk diimport." };
 
-  const [prds, bhns] = await Promise.all([
+  const [prds, bhns, varianWarnaRows] = await Promise.all([
     db.select().from(produk).where(isNull(produk.deletedAt)),
     db.select().from(bahan).where(isNull(bahan.deletedAt)),
+    db
+      .select({ produkId: varianProduk.produkId, ukuran: varianProduk.ukuran, id: warna.id, kode: warna.kode, nama: warna.nama })
+      .from(varianProduk)
+      .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+      .where(isNull(varianProduk.deletedAt)),
   ]);
 
   const prdMap = new Map<string, { id: string; kode: string }>();
@@ -678,16 +761,23 @@ export async function importBomBatch(
     bhnMap.set(b.nama.toLowerCase(), b.id);
   });
 
+  // warna per produk — kode/nama → id, hanya warna yang dipakai varian produk itu
+  const warnaPerProduk = new Map<string, Map<string, string>>();
+  const ukuranPerProduk = new Map<string, Set<string>>();
+  varianWarnaRows.forEach((v) => {
+    const m = warnaPerProduk.get(v.produkId) ?? new Map<string, string>();
+    m.set(v.kode.toLowerCase(), v.id);
+    m.set(v.nama.toLowerCase(), v.id);
+    warnaPerProduk.set(v.produkId, m);
+    const u = ukuranPerProduk.get(v.produkId) ?? new Set<string>();
+    u.add(v.ukuran.toUpperCase());
+    ukuranPerProduk.set(v.produkId, u);
+  });
+
   const errors: RowError[] = [];
-  type Baris = {
-    bahanId: string;
-    kuantitas: number;
-    toleransiPersen: number;
-    berlakuUkuran: string | null;
-    keterangan: string | null;
-  };
   // produkId → baris BOM
-  const perProduk = new Map<string, { kode: string; baris: Baris[] }>();
+  const perProduk = new Map<string, { kode: string; baris: BarisBom[] }>();
+  const ctx: KonteksBom = { bhnMap, warnaProduk: warnaPerProduk, ukuranProduk: ukuranPerProduk };
 
   rows.forEach((raw, i) => {
     const rowNum = i + 1;
@@ -696,36 +786,27 @@ export async function importBomBatch(
       errors.push({ row: rowNum, message: `Produk "${raw.produk}" tidak ditemukan / tidak aktif` });
       return;
     }
-    const bahanId = bhnMap.get((raw.bahan ?? "").trim().toLowerCase());
-    if (!bahanId) {
-      errors.push({ row: rowNum, message: `Bahan "${raw.bahan}" tidak ditemukan / tidak aktif` });
-      return;
-    }
 
-    const kuantitas = Number(raw.kuantitas);
-    if (Number.isNaN(kuantitas) || kuantitas <= 0) {
-      errors.push({ row: rowNum, message: `Kuantitas "${raw.kuantitas}" tidak valid (harus > 0)` });
+    const hasil = parseBarisBom(raw, prd.id, prd.kode, ctx);
+    if ("error" in hasil) {
+      errors.push({ row: rowNum, message: hasil.error });
       return;
     }
-    const toleransi = raw.toleransi ? Number(raw.toleransi) : 0;
-    if (Number.isNaN(toleransi) || toleransi < 0 || toleransi > 100) {
-      errors.push({ row: rowNum, message: `Toleransi "${raw.toleransi}" tidak valid (0-100)` });
-      return;
-    }
+    const { baris } = hasil;
 
     const entry = perProduk.get(prd.id) ?? { kode: prd.kode, baris: [] };
-    // bahan sama di produk sama = duplikat, gabungkan manual di file
-    if (entry.baris.some((b) => b.bahanId === bahanId)) {
+    // kunci duplikat = bahan + ukuran + warna (bahan sama boleh beda ukuran/warna — form mengizinkan)
+    const kunciBaru = `${baris.bahanId}|${baris.berlakuUkuran ?? ""}|${[...(baris.berlakuWarnaIds ?? [])].sort().join(",")}`;
+    if (
+      entry.baris.some(
+        (b) =>
+          `${b.bahanId}|${b.berlakuUkuran ?? ""}|${[...(b.berlakuWarnaIds ?? [])].sort().join(",")}` === kunciBaru,
+      )
+    ) {
       errors.push({ row: rowNum, message: `Bahan "${raw.bahan}" muncul dua kali untuk produk ${prd.kode}` });
       return;
     }
-    entry.baris.push({
-      bahanId,
-      kuantitas,
-      toleransiPersen: toleransi,
-      berlakuUkuran: (raw.ukuran ?? "").trim() || null,
-      keterangan: (raw.keterangan ?? "").trim() || null,
-    });
+    entry.baris.push(baris);
     perProduk.set(prd.id, entry);
   });
 
@@ -759,6 +840,7 @@ export async function importBomBatch(
           kuantitas: String(b.kuantitas),
           toleransiPersen: String(b.toleransiPersen),
           berlakuUkuran: b.berlakuUkuran,
+          berlakuWarnaIds: b.berlakuWarnaIds,
           keterangan: b.keterangan,
         })),
       );
@@ -775,4 +857,76 @@ export async function importBomBatch(
   });
 
   return { inserted: perProduk.size };
+}
+
+/**
+ * Import ke FORM Buat BOM: validasi + terjemahkan kode ke id, TIDAK menyimpan.
+ * Baris dikembalikan untuk mengisi form; simpan tetap lewat createBom.
+ */
+export async function resolveBomImportRows(
+  produkId: string,
+  rows: Record<string, string>[],
+): Promise<{ error?: string; errors?: RowError[]; details?: BarisBom[] }> {
+  await requireRole([...PRODUKSI_IMPORT_ROLES]);
+  if (!rows.length) return { error: "Tidak ada data untuk diimport." };
+
+  const [prd, bhns, varianWarnaRows] = await Promise.all([
+    db
+      .select({ id: produk.id, kode: produk.kode })
+      .from(produk)
+      .where(and(eq(produk.id, produkId), isNull(produk.deletedAt))),
+    db.select().from(bahan).where(isNull(bahan.deletedAt)),
+    db
+      .select({ ukuran: varianProduk.ukuran, id: warna.id, kode: warna.kode, nama: warna.nama })
+      .from(varianProduk)
+      .innerJoin(warna, eq(varianProduk.warnaId, warna.id))
+      .where(and(eq(varianProduk.produkId, produkId), isNull(varianProduk.deletedAt))),
+  ]);
+  if (!prd.length) return { error: "Produk tidak ditemukan / tidak aktif" };
+  const produkKode = prd[0].kode;
+
+  const bhnMap = new Map<string, string>();
+  bhns.forEach((b) => {
+    bhnMap.set(b.kode.toLowerCase(), b.id);
+    bhnMap.set(b.nama.toLowerCase(), b.id);
+  });
+
+  const ukuranProdukIni = new Set<string>();
+  const warnaProdukIni = new Map<string, string>();
+  varianWarnaRows.forEach((w) => {
+    warnaProdukIni.set(w.kode.toLowerCase(), w.id);
+    warnaProdukIni.set(w.nama.toLowerCase(), w.id);
+    ukuranProdukIni.add(w.ukuran.toUpperCase());
+  });
+  const ctx: KonteksBom = {
+    bhnMap,
+    warnaProduk: new Map([[produkId, warnaProdukIni]]),
+    ukuranProduk: new Map([[produkId, ukuranProdukIni]]),
+  };
+
+  const errors: RowError[] = [];
+  const details: BarisBom[] = [];
+  const kunciSeen = new Set<string>();
+
+  rows.forEach((raw, i) => {
+    const rowNum = i + 1;
+    const hasil = parseBarisBom(raw, produkId, produkKode, ctx);
+    if ("error" in hasil) {
+      errors.push({ row: rowNum, message: hasil.error });
+      return;
+    }
+    const { baris } = hasil;
+
+    // kunci duplikat = bahan + ukuran + warna, dicek dalam file yang diupload saja
+    const kunci = `${baris.bahanId}|${baris.berlakuUkuran ?? ""}|${[...(baris.berlakuWarnaIds ?? [])].sort().join(",")}`;
+    if (kunciSeen.has(kunci)) {
+      errors.push({ row: rowNum, message: `Bahan "${raw.bahan}" muncul dua kali di dalam file` });
+      return;
+    }
+    kunciSeen.add(kunci);
+    details.push(baris);
+  });
+
+  if (errors.length) return { errors: errors.sort((a, b) => a.row - b.row) };
+  return { details };
 }

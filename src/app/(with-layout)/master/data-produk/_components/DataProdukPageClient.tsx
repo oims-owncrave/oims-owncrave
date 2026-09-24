@@ -25,6 +25,7 @@ import { useGudangBarangJadiList } from "@/hooks/useGudangBarangJadi";
 
 // Batch import actions
 import { importProdukBatch, importBomBatch } from "@/services/import";
+import { BOM_IMPORT_COLUMNS } from "@/lib/import/bom-columns";
 
 import type { Produk, GudangBarangJadi } from "@/db/schema";
 import type { BomListRow } from "@/services/bom";
@@ -249,14 +250,7 @@ export function DataProdukPageClient({
         config={{
           title: "Import BOM",
           templateFilename: "template-bom",
-          columns: [
-            { key: "produk", header: "Produk (kode/nama)", example: "NJK", required: true },
-            { key: "bahan", header: "Bahan (kode/nama)", example: "BH-KTN-001", required: true },
-            { key: "kuantitas", header: "Kuantitas per Pcs", example: "1.8", required: true },
-            { key: "toleransi", header: "Toleransi (%)", example: "5", required: false },
-            { key: "ukuran", header: "Berlaku Ukuran", example: "M", required: false },
-            { key: "keterangan", header: "Keterangan", example: "Bahan utama", required: false },
-          ],
+          columns: BOM_IMPORT_COLUMNS,
           action: importBomBatch,
           onSuccess: () => {
             qc.invalidateQueries({ queryKey: ["bom"] });

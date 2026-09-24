@@ -47,6 +47,8 @@ export function BomDetailClient({ bomId, initialData }: Props) {
   const { activate, deactivate, newVersion, remove } = useBomMutation();
 
   const detail = data ?? initialData;
+  // toleransi tak ada di form lagi — kolomnya hanya muncul untuk BOM lama yang masih mengisinya
+  const adaToleransi = detail.details.some((d) => Number(d.toleransiPersen) !== 0);
   const badge = STATUS_BADGE[detail.status];
   const go = (path: string) => startNavigate(() => router.push(path));
 
@@ -127,7 +129,8 @@ export function BomDetailClient({ bomId, initialData }: Props) {
                 <th className="px-5 py-3 font-medium">No.</th>
                 <th className="px-5 py-3 font-medium">Bahan</th>
                 <th className="px-5 py-3 font-medium text-right">Kuantitas</th>
-                <th className="px-5 py-3 font-medium text-right">Toleransi</th>
+                {adaToleransi && <th className="px-5 py-3 font-medium text-right">Toleransi</th>}
+                <th className="px-5 py-3 font-medium">Warna</th>
                 <th className="px-5 py-3 font-medium">Ukuran</th>
                 <th className="px-5 py-3 font-medium">Keterangan</th>
               </tr>
@@ -142,8 +145,13 @@ export function BomDetailClient({ bomId, initialData }: Props) {
                   <td className="px-5 py-3 text-right text-dark dark:text-white">
                     {Number(d.kuantitas)} {d.satuanSingkatan}
                   </td>
-                  <td className="px-5 py-3 text-right text-dark dark:text-white">
-                    {Number(d.toleransiPersen)}%
+                  {adaToleransi && (
+                    <td className="px-5 py-3 text-right text-dark dark:text-white">
+                      {Number(d.toleransiPersen)}%
+                    </td>
+                  )}
+                  <td className="px-5 py-3 text-dark dark:text-white">
+                    {d.berlakuWarnaNama.length ? d.berlakuWarnaNama.join(", ") : "Semua"}
                   </td>
                   <td className="px-5 py-3 text-dark dark:text-white">{d.berlakuUkuran ?? "Semua"}</td>
                   <td className="px-5 py-3 text-gray-600 dark:text-gray-300">{d.keterangan ?? "—"}</td>

@@ -23,3 +23,36 @@ export function cocokkanUkuranBerlaku(berlakuUkuran: string | null): string[] | 
     .filter(Boolean);
   return daftar?.length ? daftar : null;
 }
+
+export type PcsVarian = { ukuran: string; warnaId: string; pcs: number };
+
+/**
+ * Total pcs yang memakai satu baris BOM: ukuran DAN warna harus cocok.
+ * berlakuUkuran/berlakuWarnaIds kosong = berlaku semua.
+ */
+export function pcsBerlaku(
+  pcsPerVarian: PcsVarian[],
+  berlakuUkuran: string | null,
+  berlakuWarnaIds: string[] | null,
+): number {
+  const ukuran = cocokkanUkuranBerlaku(berlakuUkuran);
+  const warna = berlakuWarnaIds?.length ? berlakuWarnaIds : null;
+  return pcsPerVarian
+    .filter((p) => !ukuran || ukuran.includes(p.ukuran.toUpperCase()))
+    .filter((p) => !warna || warna.includes(p.warnaId))
+    .reduce((s, p) => s + p.pcs, 0);
+}
+
+export type FilterBaris = { berlakuUkuran: string | null; berlakuWarnaIds: string[] | null };
+
+/**
+ * Varian ber-target yang tidak cocok dengan baris BOM KHUSUS (punya filter warna/ukuran)
+ * mana pun. BOM tanpa baris khusus → [] (tak ada yang bisa "terlewat").
+ */
+export function varianTanpaBahanKhusus(pcsPerVarian: PcsVarian[], baris: FilterBaris[]): PcsVarian[] {
+  const khusus = baris.filter((b) => b.berlakuUkuran?.trim() || b.berlakuWarnaIds?.length);
+  if (!khusus.length) return [];
+  return pcsPerVarian.filter(
+    (v) => v.pcs > 0 && !khusus.some((b) => pcsBerlaku([v], b.berlakuUkuran, b.berlakuWarnaIds) > 0),
+  );
+}

@@ -1,15 +1,18 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { useTransition, useEffect, useRef } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, FileSpreadsheet } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { Button } from "@/components/ui/Button";
 import { ComboSelect } from "@/components/ui/ComboSelect";
 import { MultiSelect } from "@/components/ui/MultiSelect";
+import { ImportExcelModal } from "@/components/ui/import/ImportExcelModal";
+import { BOM_IMPORT_COLUMNS } from "@/lib/import/bom-columns";
+import { resolveBomImportRows } from "@/services/import";
 import { bomSchema, type BomInput } from "@/lib/schemas/bom";
 import { useBomMutation } from "@/hooks/useBom";
 
@@ -28,14 +31,22 @@ interface Props {
   bahanOptions: BahanOption[];
   /** ukuran varian aktif per produk, untuk isi pilihan MultiSelect kolom Ukuran */
   ukuranPerProduk: Record<string, string[]>;
+  /** warna varian aktif per produk, untuk isi pilihan MultiSelect kolom Warna */
+  warnaPerProduk: Record<string, { id: string; nama: string }[]>;
   /** Mode edit (draft only): id + defaultValues terisi */
   editId?: string;
   defaultValues?: BomInput;
 }
 
-const EMPTY_ROW = { bahanId: "", kuantitas: undefined as unknown as number, toleransiPersen: undefined as unknown as number, berlakuUkuran: "", keterangan: "" };
+const EMPTY_ROW = {
+  bahanId: "",
+  kuantitas: undefined as unknown as number,
+  berlakuUkuran: "",
+  berlakuWarnaIds: [] as string[],
+  keterangan: "",
+};
 
-export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, defaultValues }: Props) {
+export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, warnaPerProduk, editId, defaultValues }: Props) {
   const router = useRouter();
   const { create, update } = useBomMutation();
   const [isCancelling, startCancel] = useTransition();
@@ -58,27 +69,34 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
     },
   });
 
-  const { fields, append, remove } = useFieldArray({ control, name: "details" });
+  const { fields, append, remove, replace } = useFieldArray({ control, name: "details" });
+  const [importOpen, setImportOpen] = useState(false);
   const details = watch("details");
   const produkId = watch("produkId");
   const ukuranOptions = (ukuranPerProduk[produkId] ?? []).map((u) => ({ label: u, value: u }));
+  const warnaOptions = (warnaPerProduk[produkId] ?? []).map((w) => ({ label: w.nama, value: w.id }));
 
-  // Produk diganti setelah baris terisi — buang ukuran yang tak lagi berlaku,
-  // jangan biarkan baris menyimpan ukuran milik produk lain (app-ut7f).
+  // Produk diganti setelah baris terisi — buang ukuran/warna yang tak lagi berlaku,
+  // jangan biarkan baris menyimpan pilihan milik produk lain (app-ut7f).
   const produkSebelumnya = useRef(produkId);
   useEffect(() => {
     if (produkSebelumnya.current === produkId) return;
     produkSebelumnya.current = produkId;
     const berlaku = new Set(ukuranPerProduk[produkId] ?? []);
+    const warnaSah = new Set((warnaPerProduk[produkId] ?? []).map((w) => w.id));
     getValues("details")?.forEach((row, i) => {
-      if (!row.berlakuUkuran) return;
-      const sisa = row.berlakuUkuran
-        .split(",")
-        .map((u) => u.trim())
-        .filter((u) => berlaku.has(u));
-      if (sisa.length !== row.berlakuUkuran.split(",").filter(Boolean).length) {
-        setValue(`details.${i}.berlakuUkuran`, sisa.join(","));
+      if (row.berlakuUkuran) {
+        const sisa = row.berlakuUkuran
+          .split(",")
+          .map((u) => u.trim())
+          .filter((u) => berlaku.has(u));
+        if (sisa.length !== row.berlakuUkuran.split(",").filter(Boolean).length) {
+          setValue(`details.${i}.berlakuUkuran`, sisa.join(","));
+        }
       }
+      const w = row.berlakuWarnaIds ?? [];
+      const wSisa = w.filter((id) => warnaSah.has(id));
+      if (wSisa.length !== w.length) setValue(`details.${i}.berlakuWarnaIds`, wSisa);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [produkId]);
@@ -102,6 +120,7 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
   const isPending = create.isPending || update.isPending;
 
   return (
+    <>
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Header card */}
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
@@ -134,17 +153,32 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
       <div className="rounded-[10px] border border-stroke bg-white p-6 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="font-semibold text-dark dark:text-white">Kebutuhan Bahan per Pcs</h3>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={!produkId}
-            onClick={() => append(EMPTY_ROW)}
-          >
-            <Plus size={16} className="mr-1.5" />
-            Tambah Baris
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!produkId}
+              onClick={() => setImportOpen(true)}
+            >
+              <FileSpreadsheet size={16} className="mr-1.5" />
+              Import Excel
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!produkId}
+              onClick={() => append(EMPTY_ROW)}
+            >
+              <Plus size={16} className="mr-1.5" />
+              Tambah Baris
+            </Button>
+          </div>
         </div>
+        <p className="mb-3 text-xs text-dark-5 dark:text-dark-6">
+          Warna/Ukuran kosong = dipakai semua. Isi Warna untuk kain yang beda per warna produk.
+        </p>
 
         {/* BOM itu resep milik satu produk — tanpa produk, baris bahan tak punya acuan
             (ukuran diambil dari variannya). Kunci dulu daripada membiarkan terisi separuh. */}
@@ -184,7 +218,7 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.5fr)_2.5rem] md:items-start">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,2.5fr)_minmax(0,1.3fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.5fr)_2.5rem] md:items-start">
                   <ComboSelect
                     label={index === 0 ? "Bahan" : undefined}
                     disabled={!produkId}
@@ -202,31 +236,22 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
                     error={errors.details?.[index]?.bahanId}
                   />
 
-                  <NumberInput
-                    decimals={3}
-                    disabled={!produkId}
-                    placeholder="0"
-                    label={index === 0 ? "Kuantitas" : undefined}
-                    icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
-                    iconPosition="right"
-                    value={watch(`details.${index}.kuantitas`)}
-                    onChange={(v) =>
-                      setValue(`details.${index}.kuantitas`, v as number, { shouldValidate: true })
-                    }
-                    error={errors.details?.[index]?.kuantitas?.message}
-                  />
-
-                  <NumberInput
-                    decimals={1}
-                    disabled={!produkId}
-                    placeholder="0"
-                    label={index === 0 ? "Toleransi (%)" : undefined}
-                    value={watch(`details.${index}.toleransiPersen`)}
-                    onChange={(v) =>
-                      setValue(`details.${index}.toleransiPersen`, v as number, { shouldValidate: true })
-                    }
-                    error={errors.details?.[index]?.toleransiPersen?.message}
-                  />
+                  <div>
+                    {index === 0 && (
+                      <label className="mb-1.5 block text-sm font-medium text-dark dark:text-white">
+                        Warna
+                      </label>
+                    )}
+                    <MultiSelect
+                      options={warnaOptions}
+                      disabled={!produkId}
+                      placeholder={produkId ? "Semua" : "Pilih produk dulu"}
+                      value={row?.berlakuWarnaIds ?? []}
+                      onChange={(vals) =>
+                        setValue(`details.${index}.berlakuWarnaIds`, vals, { shouldValidate: true })
+                      }
+                    />
+                  </div>
 
                   <div>
                     {index === 0 && (
@@ -251,6 +276,20 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
                       </p>
                     )}
                   </div>
+
+                  <NumberInput
+                    decimals={3}
+                    disabled={!produkId}
+                    placeholder="0"
+                    label={index === 0 ? "Kuantitas" : undefined}
+                    icon={satuan ? <span className="text-xs">{satuan}</span> : undefined}
+                    iconPosition="right"
+                    value={watch(`details.${index}.kuantitas`)}
+                    onChange={(v) =>
+                      setValue(`details.${index}.kuantitas`, v as number, { shouldValidate: true })
+                    }
+                    error={errors.details?.[index]?.kuantitas?.message}
+                  />
 
                   <Input
                     label={index === 0 ? "Keterangan" : undefined}
@@ -296,5 +335,33 @@ export function BomForm({ produkOptions, bahanOptions, ukuranPerProduk, editId, 
         </Button>
       </div>
     </form>
+    <ImportExcelModal
+      open={importOpen}
+      onClose={() => setImportOpen(false)}
+      config={{
+        title: "Import Bahan BOM",
+        templateFilename: "template-bahan-bom",
+        columns: BOM_IMPORT_COLUMNS.filter((c) => c.key !== "produk"),
+        successMessage: (n) => `${n} baris masuk ke form — cek lalu Simpan`,
+        action: async (rows) => {
+          const res = await resolveBomImportRows(produkId, rows);
+          if (!res.details) return res;
+          const baru = res.details.map((d) => ({
+            bahanId: d.bahanId,
+            kuantitas: d.kuantitas,
+            toleransiPersen: d.toleransiPersen,
+            berlakuUkuran: d.berlakuUkuran ?? "",
+            berlakuWarnaIds: d.berlakuWarnaIds ?? [],
+            keterangan: d.keterangan ?? "",
+          }));
+          // baris form yang masih kosong (bahan belum dipilih) dibuang, sisanya dipertahankan
+          const terisi = getValues("details").filter((r) => r.bahanId);
+          replace([...terisi, ...baru]);
+          return { inserted: baru.length };
+        },
+        onSuccess: () => setImportOpen(false),
+      }}
+    />
+    </>
   );
 }

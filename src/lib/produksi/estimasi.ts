@@ -1,7 +1,7 @@
 import { eq, inArray } from "drizzle-orm";
 import type { db } from "@/db";
-import { bahan, bomDetail, satuan, stok } from "@/db/schema";
-import { cocokkanUkuranBerlaku } from "@/lib/bom-ukuran";
+import { bahan, bomDetail, satuan, stok, warna } from "@/db/schema";
+import { pcsBerlaku, varianTanpaBahanKhusus, type PcsVarian } from "@/lib/bom-ukuran";
 
 /**
  * Modul server-only TANPA "use server" supaya bisa menerima tx (Drizzle transaction).
@@ -21,13 +21,14 @@ export type EstimasiRow = {
   stokTersedia: number;
   kekurangan: number;
   status: "tersedia" | "sebagian" | "tidak_tersedia";
+  untuk: string[]; // label filter baris BOM, [] = semua
 };
 
-export type PcsPerUkuran = { ukuran: string; pcs: number };
+export type PcsPerVarian = PcsVarian;
 
 export type EstimasiResult =
   | { error: string }
-  | { bomNomor: string; bomVersi: number; rows: EstimasiRow[] };
+  | { bomNomor: string; bomVersi: number; rows: EstimasiRow[]; varianTanpaBahan: string[] };
 
 export type PreviewEstimasiInput = {
   produkId: string;
@@ -39,7 +40,7 @@ export type PreviewEstimasiInput = {
  * Hitung kebutuhan bahan berdasarkan BOM, target per ukuran, dan lebihan bahan per PO.
  *
  * RUMUS:
- * 1. standar = pcs * bomDetail.kuantitas
+ * 1. standar = pcs varian yang ukuran & warnanya cocok * kuantitas
  * 2. denganToleransi = standar * (1 + bomDetail.toleransiPersen / 100)
  * 3. totalKebutuhan = denganToleransi + (lebihanPerBahan.get(bahanId) ?? 0)
  *
@@ -50,9 +51,9 @@ export type PreviewEstimasiInput = {
 export async function hitungEstimasi(
   tx: Tx,
   bomId: string,
-  pcsPerUkuran: PcsPerUkuran[],
+  pcsPerVarian: PcsPerVarian[],
   lebihanPerBahan: Map<string, number>,
-): Promise<EstimasiRow[]> {
+): Promise<{ rows: EstimasiRow[]; varianTanpaBahan: string[] }> {
   const bomRows = await tx
     .select({
       bahanId: bomDetail.bahanId,
@@ -63,6 +64,7 @@ export async function hitungEstimasi(
       kuantitas: bomDetail.kuantitas,
       toleransiPersen: bomDetail.toleransiPersen,
       berlakuUkuran: bomDetail.berlakuUkuran,
+      berlakuWarnaIds: bomDetail.berlakuWarnaIds,
     })
     .from(bomDetail)
     .innerJoin(bahan, eq(bomDetail.bahanId, bahan.id))
@@ -75,25 +77,37 @@ export async function hitungEstimasi(
     : [];
   const stokMap = new Map(stokRows.map((s) => [s.bahanId, Number(s.kuantitas)]));
 
-  const pcsEfektif = pcsPerUkuran.map((p) => ({
-    ukuran: p.ukuran.toUpperCase(),
-    pcs: p.pcs,
-  }));
+  const warnaIds = [
+    ...new Set([
+      ...bomRows.flatMap((r) => r.berlakuWarnaIds ?? []),
+      ...pcsPerVarian.map((p) => p.warnaId).filter(Boolean),
+    ]),
+  ];
+  const namaWarna = new Map(
+    warnaIds.length
+      ? (
+          await tx.select({ id: warna.id, nama: warna.nama }).from(warna).where(inArray(warna.id, warnaIds))
+        ).map((w) => [w.id, w.nama])
+      : [],
+  );
+  const labelBaris = (r: (typeof bomRows)[number]) => {
+    const w = (r.berlakuWarnaIds ?? []).map((id) => namaWarna.get(id) ?? "?").join("/");
+    const u = r.berlakuUkuran?.trim() ?? "";
+    return [w, u].filter(Boolean).join(" · "); // "" = semua
+  };
 
   const agg = new Map<string, EstimasiRow>();
   for (const r of bomRows) {
-    const ukuranBerlaku = cocokkanUkuranBerlaku(r.berlakuUkuran);
-    const applicable = ukuranBerlaku
-      ? pcsEfektif.filter((p) => ukuranBerlaku.includes(p.ukuran))
-      : pcsEfektif;
-    const pcs = applicable.reduce((s, p) => s + p.pcs, 0);
+    const pcs = pcsBerlaku(pcsPerVarian, r.berlakuUkuran, r.berlakuWarnaIds);
     const standar = pcs * Number(r.kuantitas);
     const denganToleransi = standar * (1 + Number(r.toleransiPersen) / 100);
+    const label = labelBaris(r);
 
     const prev = agg.get(r.bahanId);
     if (prev) {
       prev.kebutuhanStandar += standar;
       prev.totalKebutuhan += denganToleransi;
+      if (label && !prev.untuk.includes(label)) prev.untuk.push(label);
     } else {
       agg.set(r.bahanId, {
         bahanId: r.bahanId,
@@ -107,6 +121,7 @@ export async function hitungEstimasi(
         stokTersedia: stokMap.get(r.bahanId) ?? 0,
         kekurangan: 0,
         status: "tersedia",
+        untuk: label ? [label] : [],
       });
     }
   }
@@ -123,5 +138,9 @@ export async function hitungEstimasi(
     return { ...row, totalKebutuhan, kekurangan, status };
   });
 
-  return rows;
+  const varianTanpaBahan = varianTanpaBahanKhusus(pcsPerVarian, bomRows).map(
+    (v) => `${namaWarna.get(v.warnaId) ?? "?"} ${v.ukuran}`,
+  );
+
+  return { rows, varianTanpaBahan };
 }

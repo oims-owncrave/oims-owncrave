@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { NumberInput } from "@/components/ui/NumberInput";
 import { usePreviewEstimasi } from "@/hooks/usePoProduksi";
+import { PeringatanVarian } from "./PeringatanVarian";
 
 interface Props {
   produkId: string;
@@ -116,17 +117,22 @@ export function KebutuhanBahanPreview({
       )}
 
       {preview && !("error" in preview) && (
-        <div
-          className={cn(
-            "overflow-x-auto rounded-lg border border-stroke dark:border-dark-3 transition-opacity duration-300",
-            isUpdating && "opacity-75",
-          )}
-        >
+        <>
+          <PeringatanVarian labels={preview.varianTanpaBahan} />
+          <div
+            className={cn(
+              "overflow-x-auto rounded-lg border border-stroke dark:border-dark-3 transition-opacity duration-300",
+              isUpdating && "opacity-75",
+            )}
+          >
           <table className="w-full text-left text-sm">
             <thead className="bg-gray-1 text-xs uppercase font-semibold text-dark-5 dark:bg-dark-2 dark:text-dark-6">
               <tr>
                 <th scope="col" className="px-4 py-2.5">
                   Bahan
+                </th>
+                <th scope="col" className="px-4 py-2.5 w-36">
+                  Untuk
                 </th>
                 <th scope="col" className="px-4 py-2.5 text-right w-28">
                   Kebutuhan
@@ -168,6 +174,9 @@ export function KebutuhanBahanPreview({
                       {r.bahanKode} — {r.bahanNama}
                       {r.bahanUkuran ? ` · ${r.bahanUkuran}` : ""}
                     </td>
+                    <td className="px-4 py-2.5 text-dark-5 dark:text-dark-6">
+                      {r.untuk.length ? r.untuk.join(", ") : "Semua"}
+                    </td>
                     <td className="px-4 py-2.5 text-right text-dark-5 dark:text-dark-6">
                       {fmtQty(r.kebutuhanStandar)} {r.satuanSingkatan}
                     </td>
@@ -202,7 +211,8 @@ export function KebutuhanBahanPreview({
               })}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       )}
     </div>
   );

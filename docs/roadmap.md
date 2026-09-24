@@ -304,6 +304,27 @@ ditambahkan sebagai `bd note`). `app-itl4` **ditutup & dilipat ke sini** — per
 
 Semua kerja Gelombang K ada di **satu kartu `app-1u2w`**, plan+prompt sudah siap.
 
+### ✅ GELOMBANG L — Feedback klien 24 Sep 2026 — SELESAI (subagent Sonnet + review Claude)
+
+- [x] `app-2ar3` (GH #22) — Stok Bahan: kolom **Warna** (P2, 2 file)
+- [x] `app-k575` (GH #23) — Tarif jasa jahit: buang field **Varian** dari UI (P2, 2 file; 0 tarif pakai varian, kolom DB tetap)
+- [x] `app-0vqt` (GH #24) — **BOM berlaku per warna** (P1). Migration `bom_detail.berlaku_warna_ids` sudah dijalankan Claude (dev+prod), Antigravity mulai Task 2
+- [x] `app-0mc0` (GH #25) — **Import Excel di form Buat BOM**, mengisi baris tanpa menyimpan (P2, tunggu `app-0vqt`)
+- [x] `app-0fci` (GH #26) — Estimasi PO: kolom **Untuk** + peringatan varian tanpa bahan khusus (P1; lahir dari uji `app-0vqt`: hitungan benar tapi alasannya tak terlihat)
+- Follow-up: `app-b444` (P3) — grafik WIP hitung standar bahan tanpa filter ukuran/warna
+
+**Akar keluhan PO MALABAR bukan bug hitung.** BOM cuma bisa disaring per ukuran, jadi
+klien memakai kolom Ukuran untuk membedakan kain per warna (RJN HITAM = M, RJN PETROL = L)
+dan estimasi mengikuti persis isinya. Kain utama beda per **warna** varian. Warna tidak
+diturunkan dari `bahan.warna_id` karena warna bahan ≠ warna varian pemakainya (Karet
+Elastis SR Biru tercatat Putih, dipakai semua warna). Setelah deploy, klien perlu **Buat
+Versi Baru** BOM MALABAR dan mengisi kolom Warna — data prod tidak diubah otomatis.
+
+**Import BOM ternyata sudah ada** (daftar BOM), tapi tidak ada di form Buat BOM, langsung
+menyimpan, dan wajib kolom Produk. `app-0mc0` menaruhnya di form dan hanya mengisi baris.
+
+Urutan: `app-2ar3` + `app-k575` (kecil, independen) → `app-0vqt` → `app-0mc0`.
+
 ### 🔜 GELOMBANG I — Sederhanakan sidebar: gabung menu jadi tab (18 Sep 2026)
 
 Ide Abu: sidebar terlalu banyak item (Master Data 15, Laporan 5, Vendor & Gudang
@@ -353,6 +374,8 @@ Prompt eksekusi per issue di `docs/prompts/`. Tahap 1 (jpn.1-14) sudah selesai �
 
 ## 📜 Changelog
 
+- **2026-09-24 (2)** — Gelombang L selesai: 5 kartu dikerjakan subagent Sonnet, review Claude tanpa fix. Tambahan dari uji Abu: toleransi dihapus dari form/template BOM (prod: 4 baris MALABAR 0,1% di-nol-kan + audit_log), template import kolom Warna/Ukuran ("Semua" = kosong, ukuran divalidasi ke varian), nomor baris error = nomor baris Excel, dan `app-0fci` (kolom Untuk + peringatan varian tanpa bahan) karena hitungan per warna benar tapi alasannya tak terlihat.
+- **2026-09-24** — Planning Gelombang L (feedback klien): 4 issue di-plan+beads+GH+prompt (`app-2ar3`, `app-k575`, `app-0vqt`, `app-0mc0`) + 1 follow-up `app-b444`. Keluhan PO MALABAR ternyata BOM tanpa filter warna, bukan bug hitung; kolom `bom_detail.berlaku_warna_ids` sudah di-migrate dev+prod. Siap eksekusi Antigravity.
 - **2026-09-21 (13)** — `app-z4wp` poin 3 & 4 selesai, poin 5 ditambahkan. **Poin 3 (Laporan):** 5 halaman jadi 1 bertab, instruksinya sengaja kebalikan poin 1-2 (reuse `Client` bukan `Table`, karena `PageHeader` di sini ada di `page.tsx`). 1 fix dariku: pemuatan pertama tiap tab tak punya indikator — `DataTable` ternyata sudah punya `isLoading` + skeleton, cuma tak pernah disambungkan. **Poin 4 (QC 10→8):** tanpa fix. Alur kerja diverifikasi di browser, bukan cuma tampilan — kirim bundel ke QC, tab Penerimaan 0→1 dan Antrean 6→4 tanpa reload. Sempat terlihat gagal, ternyata validasi "Penerima wajib diisi" yang menolak; kucek DB dulu sebelum menyimpulkan bug. **Poin 5 baru:** klien bilang QC masih terlalu banyak. Abu menunjukkan aplikasi lama klien membaginya jadi 2 grup sidebar, dan **pembagian itu lebih baik dari caraku** — aku menggabung berdasarkan hulu-hilir, klien memisahkan jalur normal dari jalur pengecualian. Rencananya 3 grup (QC · Rework & Karantina · Finishing & Gudang), 8 entri jadi 7 tapi tiap accordion tinggal 2-3 baris. Plus Finishing+Packing jadi tab — `konsep-produksi.md` sendiri menulisnya sebagai satu langkah. Bagian tersulitnya: role Finishing dan Packing **berbeda**, jadi guard halaman pakai union dan tabnya disaring.
 - **2026-09-21 (12)** — Prompt poin 3 & 4 `app-z4wp` ditulis. Keduanya disesuaikan dengan struktur nyata, bukan disalin dari poin sebelumnya. **Poin 3 (Laporan):** diperiksa dulu — `PageHeader` ada di `page.tsx`, **bukan** di komponen, jadi instruksinya justru **kebalikan** poin 1 & 2: reuse `Client` langsung, bukan cuma `Table`. Kalau ikut kebiasaan poin sebelumnya, semua state filter harus ditulis ulang. Ditambah dua peringatan: state filter tetap milik tiap Client (kalau disatukan, ganti tanggal di satu laporan ikut mengubah yang lain), dan jangan fetch kelima laporan sekaligus karena Nilai Persediaan menghitung seluruh stok. **Poin 4 (QC):** diverifikasi keempat menu yang digabung rolenya **sama persis**, jadi tidak perlu filter tab maupun `opsional()` — lebih sederhana dari poin 2. Bagian Surat Jalan **sengaja dilewati** (dirujuk dua alur). Verifikasi utamanya bukan tampilan tapi **alur kerja**: angka Antrean harus ikut berubah setelah mencatat penerimaan. **Temuan sampingan → `app-yok1` (P3):** nav QC dibatasi `owner, admin_produksi` padahal `READ_ROLES` service mengizinkan semua role — menu lebih **ketat** dari server, kebalikan dari ketimpangan biasa. Saya sendiri yang mengisi roles itu saat `app-qr6o` tanpa mencatat alasannya. Perlu diputuskan mana yang benar sebelum "diperbaiki".
 - **2026-09-21 (11)** — `app-z4wp` poin 2 selesai, **tanpa fix review**. Master Data **12 entri → 4 halaman** bertab, heading dibuang: Data Bahan, Data Produk, Data Mitra, Data QC. 3 halaman baru, 12 route lama jadi redirect, 22 file diubah, 0 error. Bagian baru yang belum pernah ada — **tab difilter per role** — ketiga jebakannya ditangani benar: tab aktif divalidasi terhadap daftar yang *sudah* difilter (bukan daftar penuh), data tab terlarang dibungkus `opsional()` tepat di 4 service terbatas saja, dan halaman gabungan sengaja tak diberi guard supaya role yang cuma boleh sebagian tab tetap bisa masuk. Diverifikasi di layar sebagai Staf Gudang 1: `?tab=bom` → tab BOM hilang dan jatuh ke Produk dengan data tampil; Data QC hanya menyisakan Jenis Cacat; `/vendor/penjahit` mendarat tepat di tab Penjahit dengan Tarif tersembunyi. Sebagai owner keempat tab muncul. Link internal bersih, breadcrumb halaman anak sudah diarahkan ulang, dan `[id]/page.tsx` tak tersentuh sama sekali. Catatan: laporan menyebut "glitch-free navigation" lewat `replaceState`+`popstate` seolah tambahan — dicek, pola itu sudah dipakai sejak poin 1. Sisa: poin 3 (Laporan, plan siap, prompt belum) dan poin 4 (QC + Surat Jalan, paling berisiko).

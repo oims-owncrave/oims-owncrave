@@ -1,7 +1,7 @@
 
 
-- Filter kategori di menu bahan
-- Import excel di BOM
+- [x] Filter kategori di menu bahan
+- [x] Import excel di BOM
 
-- Stok bahan -> tambah kolom Warna
-- Tarif Jahit -> hilangkan varian
+- [x] Stok bahan -> tambah kolom Warna
+- [x] Tarif Jahit -> hilangkan varian

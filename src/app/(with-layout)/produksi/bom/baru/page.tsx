@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { listProduk, listUkuranPerProduk } from "@/services/produk";
+import { listProduk, listUkuranPerProduk, listWarnaPerProduk } from "@/services/produk";
 import { listBahan } from "@/services/bahan";
 import { requireRole } from "@/lib/auth";
 import { BomForm } from "../_components/BomForm";
@@ -19,14 +19,19 @@ export default async function BomBaruPage({
   // ?produk=<id> — jalan pintas dari halaman Produk, produk langsung terpilih
   const { produk } = await searchParams;
 
-  const [produkOptions, bahanOptions, ukuranPerProduk] = await Promise.all([
+  const [produkOptions, bahanOptions, ukuranPerProduk, warnaPerProduk] = await Promise.all([
     listProduk(),
     listBahan(),
     listUkuranPerProduk(),
+    listWarnaPerProduk(),
   ]);
 
   const awal = produk && produkOptions.some((p) => p.id === produk)
-    ? { produkId: produk, catatan: "", details: [{ bahanId: "", kuantitas: 0, toleransiPersen: 0 }] }
+    ? {
+        produkId: produk,
+        catatan: "",
+        details: [{ bahanId: "", kuantitas: 0, toleransiPersen: 0, berlakuWarnaIds: [] }],
+      }
     : undefined;
 
   return (
@@ -43,6 +48,7 @@ export default async function BomBaruPage({
         produkOptions={produkOptions}
         bahanOptions={bahanOptions}
         ukuranPerProduk={ukuranPerProduk}
+        warnaPerProduk={warnaPerProduk}
         defaultValues={awal}
       />
     </div>

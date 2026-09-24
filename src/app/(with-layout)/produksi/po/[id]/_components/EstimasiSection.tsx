@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useEstimasiBahan } from "@/hooks/usePoProduksi";
+import { PeringatanVarian } from "../../_components/PeringatanVarian";
 
 const STATUS_BADGE = {
   tersedia: {
@@ -45,10 +46,14 @@ export function EstimasiSection({ poId }: { poId: string }) {
 
       {data && !("error" in data) && (
         <div className="overflow-x-auto">
+          <div className="px-5 pt-4">
+            <PeringatanVarian labels={data.varianTanpaBahan} />
+          </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-left text-xs uppercase text-gray-500 dark:bg-dark-2 dark:text-gray-400">
                 <th className="px-5 py-3 font-medium">Bahan</th>
+                <th className="px-5 py-3 font-medium">Untuk</th>
                 <th className="px-5 py-3 font-medium text-right">Kebutuhan Standar</th>
                 <th className="px-5 py-3 font-medium text-right">Lebihan</th>
                 <th className="px-5 py-3 font-medium text-right">Total Kebutuhan</th>
@@ -64,6 +69,9 @@ export function EstimasiSection({ poId }: { poId: string }) {
                   <tr key={r.bahanId} className="border-t border-stroke dark:border-dark-3">
                     <td className="px-5 py-3 text-dark dark:text-white">
                       {r.bahanKode} — {r.bahanNama}{r.bahanUkuran ? ` · ${r.bahanUkuran}` : ""}
+                    </td>
+                    <td className="px-5 py-3 text-dark dark:text-white">
+                      {r.untuk.length ? r.untuk.join(", ") : "Semua"}
                     </td>
                     <td className="px-5 py-3 text-right text-dark dark:text-white">
                       {fmtQty(r.kebutuhanStandar)} {r.satuanSingkatan}
