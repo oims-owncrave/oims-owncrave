@@ -2,13 +2,14 @@
 
 import { and, eq, isNull, lte, asc } from "drizzle-orm";
 import { db } from "@/db";
-import { stok, bahan, kategori, satuan } from "@/db/schema";
+import { stok, bahan, kategori, satuan, warna } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
 
 export type StokRow = {
   bahanId: string;
   kode: string;
   nama: string;
+  warnaNama: string | null;
   kategoriNama: string | null;
   satuanSingkatan: string | null;
   kuantitas: string;
@@ -46,6 +47,7 @@ export async function listStok(filter?: {
       bahanId: bahan.id,
       kode: bahan.kode,
       nama: bahan.nama,
+      warnaNama: warna.nama,
       kategoriNama: kategori.nama,
       satuanSingkatan: satuan.singkatan,
       kuantitas: stok.kuantitas,
@@ -56,6 +58,7 @@ export async function listStok(filter?: {
     .innerJoin(stok, eq(stok.bahanId, bahan.id))
     .leftJoin(kategori, eq(bahan.kategoriId, kategori.id))
     .leftJoin(satuan, eq(bahan.satuanId, satuan.id))
+    .leftJoin(warna, eq(bahan.warnaId, warna.id))
     .where(and(...conditions))
     .orderBy(asc(bahan.nama));
 

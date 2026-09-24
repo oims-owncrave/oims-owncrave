@@ -41,6 +41,12 @@ export function StokTable({
     { key: "kode", label: "Kode", mobileRole: "detail" },
     { key: "nama", label: "Nama Bahan", mobileRole: "title" },
     {
+      key: "warnaNama",
+      label: "Warna",
+      mobileRole: "detail",
+      renderCell: (item) => item.warnaNama || "-",
+    },
+    {
       key: "kategoriNama",
       label: "Kategori",
       mobileRole: "detail",
