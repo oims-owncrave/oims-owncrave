@@ -18,8 +18,10 @@ import {
   bomDetail,
   bahan,
   satuan,
+  varianProduk,
 } from "@/db/schema";
 import { requireRole } from "@/lib/auth";
+import { pcsBerlaku, type PcsVarian } from "@/lib/bom-ukuran";
 import { WIP_LABEL, type WipStatus } from "@/lib/wip-status";
 
 const READ_ROLES = [
@@ -316,24 +318,43 @@ export async function getGrafikProduksi() {
     .where(isNull(pemakaianBahan.deletedAt))
     .groupBy(pemakaianBahan.bahanId, bahan.kode, bahan.nama, satuan.singkatan);
 
-  // Standar = Σ (target cutting × kuantitas BOM) per bahan, dari BOM yang terkunci di PO
-  const standarRows = await db
+  // Standar = Σ (target cutting varian yang cocok × kuantitas BOM) per bahan, dari BOM yang terkunci
+  // di PO. Baris BOM khusus ukuran/warna hanya dihitung untuk varian yang cocok (pcsBerlaku).
+  const targetRows = await db
     .select({
+      poId: workOrderCutting.poId,
+      ukuran: varianProduk.ukuran,
+      warnaId: varianProduk.warnaId,
+      pcs: sql<number>`COALESCE(SUM(${workOrderCuttingDetail.targetCutting}), 0)::int`,
+    })
+    .from(workOrderCuttingDetail)
+    .innerJoin(workOrderCutting, eq(workOrderCuttingDetail.woId, workOrderCutting.id))
+    .innerJoin(varianProduk, eq(workOrderCuttingDetail.varianId, varianProduk.id))
+    .where(isNull(workOrderCutting.deletedAt))
+    .groupBy(workOrderCutting.poId, varianProduk.ukuran, varianProduk.warnaId);
+  const targetPerPo = new Map<string, PcsVarian[]>();
+  for (const t of targetRows) {
+    const list = targetPerPo.get(t.poId) ?? [];
+    list.push({ ukuran: t.ukuran, warnaId: t.warnaId, pcs: t.pcs });
+    targetPerPo.set(t.poId, list);
+  }
+
+  const bomPoRows = await db
+    .select({
+      poId: poProduksi.id,
       bahanId: bomDetail.bahanId,
-      standar: sql<string>`COALESCE(SUM(
-        ${bomDetail.kuantitas} * (
-          SELECT COALESCE(SUM(d.target_cutting), 0)
-          FROM work_order_cutting_detail d
-          JOIN work_order_cutting w ON w.id = d.wo_id
-          WHERE w.po_id = ${poProduksi.id} AND w.deleted_at IS NULL
-        )
-      ), 0)`,
+      kuantitas: bomDetail.kuantitas,
+      berlakuUkuran: bomDetail.berlakuUkuran,
+      berlakuWarnaIds: bomDetail.berlakuWarnaIds,
     })
     .from(poProduksi)
     .innerJoin(bomDetail, eq(bomDetail.bomId, poProduksi.bomId))
-    .where(isNull(poProduksi.deletedAt))
-    .groupBy(bomDetail.bahanId);
-  const standarMap = new Map(standarRows.map((r) => [r.bahanId, Number(r.standar)]));
+    .where(isNull(poProduksi.deletedAt));
+  const standarMap = new Map<string, number>();
+  for (const r of bomPoRows) {
+    const pcs = pcsBerlaku(targetPerPo.get(r.poId) ?? [], r.berlakuUkuran, r.berlakuWarnaIds);
+    standarMap.set(r.bahanId, (standarMap.get(r.bahanId) ?? 0) + pcs * Number(r.kuantitas));
+  }
 
   const rowsPemakaian: GrafikPemakaian[] = pemakaianRows.map((r) => {
     const aktual = Number(r.aktual);

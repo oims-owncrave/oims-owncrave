@@ -311,7 +311,7 @@ Semua kerja Gelombang K ada di **satu kartu `app-1u2w`**, plan+prompt sudah siap
 - [x] `app-0vqt` (GH #24) — **BOM berlaku per warna** (P1). Migration `bom_detail.berlaku_warna_ids` sudah dijalankan Claude (dev+prod), Antigravity mulai Task 2
 - [x] `app-0mc0` (GH #25) — **Import Excel di form Buat BOM**, mengisi baris tanpa menyimpan (P2, tunggu `app-0vqt`)
 - [x] `app-0fci` (GH #26) — Estimasi PO: kolom **Untuk** + peringatan varian tanpa bahan khusus (P1; lahir dari uji `app-0vqt`: hitungan benar tapi alasannya tak terlihat)
-- Follow-up: `app-b444` (P3) — grafik WIP hitung standar bahan tanpa filter ukuran/warna
+- [x] `app-b444` (P3) — grafik WIP: standar bahan kini ikut filter ukuran/warna BOM (dev: 3 Coil beda ukuran tadinya 156 masing-masing = 3x lipat, kini 42+114+0)
 
 **Akar keluhan PO MALABAR bukan bug hitung.** BOM cuma bisa disaring per ukuran, jadi
 klien memakai kolom Ukuran untuk membedakan kain per warna (RJN HITAM = M, RJN PETROL = L)
