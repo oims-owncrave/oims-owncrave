@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/Input";
@@ -16,7 +16,6 @@ import {
 import { JENIS_PEKERJAAN, JENIS_PEKERJAAN_LABEL } from "@/lib/schemas/vendor";
 import type { Vendor, Produk } from "@/db/schema";
 import { useTarifJasaJahitMutation } from "@/hooks/useTarifJasaJahit";
-import { getProdukDetail, type VarianRow } from "@/services/varian-produk";
 import type { TarifRow } from "./TarifTable";
 import type { PenjahitRow } from "../../penjahit/_components/PenjahitTable";
 
@@ -55,7 +54,6 @@ export function TarifFormModal({
   const { create, update } = useTarifJasaJahitMutation();
   const isEditing = !!initialData;
   const isPending = create.isPending || update.isPending;
-  const [varianList, setVarianList] = useState<VarianRow[]>([]);
 
   const {
     register,
@@ -95,15 +93,6 @@ export function TarifFormModal({
     }
   }, [open, initialData, reset]);
 
-  // varian ikut produk yang dipilih
-  useEffect(() => {
-    if (!produkId) {
-      setVarianList([]);
-      return;
-    }
-    getProdukDetail(produkId).then((d) => setVarianList(d?.varian ?? []));
-  }, [produkId]);
-
   // ganti pihak: bersihkan sisi lain (DB CHECK: tepat satu terisi)
   useEffect(() => {
     if (pihak === "vendor") setValue("penjahitId", null);
@@ -124,10 +113,6 @@ export function TarifFormModal({
     ...produkList
       .filter((p) => p.isActive || p.id === produkId)
       .map((p) => ({ value: p.id, label: `${p.kode} — ${p.nama}` })),
-  ];
-  const varianOptions = [
-    { value: "", label: "Semua varian" },
-    ...varianList.map((v) => ({ value: v.id, label: `${v.sku} (${v.warnaNama} / ${v.ukuran})` })),
   ];
   const vendorOptions = [
     { value: "", label: "— Pilih vendor —" },
@@ -158,13 +143,6 @@ export function TarifFormModal({
             error={errors.produkId?.message}
             {...register("produkId")}
             disabled={isPending || isEditing}
-          />
-          <Select
-            label="Varian"
-            options={varianOptions}
-            error={errors.varianId?.message}
-            {...register("varianId", { setValueAs: nullable })}
-            disabled={isPending || !produkId}
           />
           <Select
             label="Jenis Pekerjaan"

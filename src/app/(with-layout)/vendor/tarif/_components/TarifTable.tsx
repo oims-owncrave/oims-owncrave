@@ -95,11 +95,6 @@ export function TarifTable({ data, onEdit, onAdd, onVersiBaru }: Props) {
   const columns: ColumnDef<TarifRow>[] = [
     { key: "produkNama", label: "Produk" },
     {
-      key: "varianSku",
-      label: "Varian",
-      renderCell: (item) => item.varianSku || "Semua varian",
-    },
-    {
       key: "jenisPekerjaan",
       label: "Pekerjaan",
       renderCell: (item) => JENIS_PEKERJAAN_LABEL[item.jenisPekerjaan],
